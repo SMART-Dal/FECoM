@@ -1,0 +1,738 @@
+{'from': ['pprint'],
+ 'import': ['tensorflow', 'numpy', 'math', 'random', 'matplotlib.pyplot'],
+ 'required': ['tf']}
+'Required Function Calls and their arguments :'
+['{"funcCall": "tf", "funcArgs": [], "funcKeywords": []}',
+ '{"funcCall": "tf.placeholder", "funcArgs": ["tf.float32", ""], '
+ '"funcKeywords": [""]}',
+ '{"funcCall": "tf.placeholder", "funcArgs": ["tf.float32", ""], '
+ '"funcKeywords": [""]}',
+ '{"funcCall": "tf.Variable", "funcArgs": '
+ '["tf.float32.layer_1_neurons.tf.random_uniform"], "funcKeywords": []}',
+ '{"funcCall": "tf.Variable", "funcArgs": '
+ '["tf.float32.layer_1_neurons.tf.zeros"], "funcKeywords": []}',
+ '{"funcCall": "tf.nn.sigmoid", "funcArgs": ["b_h.w_h.X.tf.matmul"], '
+ '"funcKeywords": []}',
+ '{"funcCall": "tf.Variable", "funcArgs": '
+ '["tf.float32.layer_1_neurons.tf.random_uniform"], "funcKeywords": []}',
+ '{"funcCall": "tf.Variable", "funcArgs": ["tf.float32.tf.zeros"], '
+ '"funcKeywords": []}',
+ '{"funcCall": "tf.train.AdamOptimizer.minimize", "funcArgs": '
+ '["Y.model.tf.nn.l2_loss"], "funcKeywords": []}',
+ '{"funcCall": "tf.Session", "funcArgs": [], "funcKeywords": []}',
+ '{"funcCall": "tf.random_uniform", "funcArgs": ["layer_1_neurons"], '
+ '"funcKeywords": ["", "", "tf.float32"]}',
+ '{"funcCall": "tf.zeros", "funcArgs": ["layer_1_neurons"], "funcKeywords": '
+ '["tf.float32"]}',
+ '{"funcCall": "tf.random_uniform", "funcArgs": ["layer_1_neurons"], '
+ '"funcKeywords": ["", "", "tf.float32"]}',
+ '{"funcCall": "tf.zeros", "funcArgs": [""], "funcKeywords": ["tf.float32"]}',
+ '{"funcCall": "tf.matmul", "funcArgs": ["h", "w_o"], "funcKeywords": []}',
+ '{"funcCall": "tf.nn.l2_loss", "funcArgs": ["Y.model"], "funcKeywords": []}',
+ '{"funcCall": "tf.initialize_all_variables", "funcArgs": [], "funcKeywords": '
+ '[]}',
+ '{"funcCall": "tf.matmul", "funcArgs": ["X", "w_h"], "funcKeywords": []}',
+ '{"funcCall": "tf.train.AdamOptimizer", "funcArgs": [], "funcKeywords": []}',
+ '{"funcCall": "tf.nn.l2_loss", "funcArgs": ["y_validation.model"], '
+ '"funcKeywords": []}']
+['{"funcCall": "tf", "funcArgs": [], "funcKeywords": []}', '{"funcCall": "tf.placeholder", "funcArgs": ["tf.float32", ""], "funcKeywords": [""]}', '{"funcCall": "tf.placeholder", "funcArgs": ["tf.float32", ""], "funcKeywords": [""]}', '{"funcCall": "tf.Variable", "funcArgs": ["tf.float32.layer_1_neurons.tf.random_uniform"], "funcKeywords": []}', '{"funcCall": "tf.Variable", "funcArgs": ["tf.float32.layer_1_neurons.tf.zeros"], "funcKeywords": []}', '{"funcCall": "tf.nn.sigmoid", "funcArgs": ["b_h.w_h.X.tf.matmul"], "funcKeywords": []}', '{"funcCall": "tf.Variable", "funcArgs": ["tf.float32.layer_1_neurons.tf.random_uniform"], "funcKeywords": []}', '{"funcCall": "tf.Variable", "funcArgs": ["tf.float32.tf.zeros"], "funcKeywords": []}', '{"funcCall": "tf.train.AdamOptimizer.minimize", "funcArgs": ["Y.model.tf.nn.l2_loss"], "funcKeywords": []}', '{"funcCall": "tf.Session", "funcArgs": [], "funcKeywords": []}', '{"funcCall": "tf.random_uniform", "funcArgs": ["layer_1_neurons"], "funcKeywords": ["", "", "tf.float32"]}', '{"funcCall": "tf.zeros", "funcArgs": ["layer_1_neurons"], "funcKeywords": ["tf.float32"]}', '{"funcCall": "tf.random_uniform", "funcArgs": ["layer_1_neurons"], "funcKeywords": ["", "", "tf.float32"]}', '{"funcCall": "tf.zeros", "funcArgs": [""], "funcKeywords": ["tf.float32"]}', '{"funcCall": "tf.matmul", "funcArgs": ["h", "w_o"], "funcKeywords": []}', '{"funcCall": "tf.nn.l2_loss", "funcArgs": ["Y.model"], "funcKeywords": []}', '{"funcCall": "tf.initialize_all_variables", "funcArgs": [], "funcKeywords": []}', '{"funcCall": "tf.matmul", "funcArgs": ["X", "w_h"], "funcKeywords": []}', '{"funcCall": "tf.train.AdamOptimizer", "funcArgs": [], "funcKeywords": []}', '{"funcCall": "tf.nn.l2_loss", "funcArgs": ["y_validation.model"], "funcKeywords": []}']
+Module(
+    body=[
+        Import(
+            names=[
+                alias(name='tensorflow', asname='tf')]),
+        Import(
+            names=[
+                alias(name='numpy', asname='np')]),
+        Import(
+            names=[
+                alias(name='math'),
+                alias(name='random')]),
+        Import(
+            names=[
+                alias(name='matplotlib.pyplot', asname='plt')]),
+        ImportFrom(
+            module='pprint',
+            names=[
+                alias(name='pprint')],
+            level=0),
+        Expr(
+            value=Call(
+                func=Attribute(
+                    value=Attribute(
+                        value=Name(id='np', ctx=Load()),
+                        attr='random',
+                        ctx=Load()),
+                    attr='seed',
+                    ctx=Load()),
+                args=[
+                    Constant(value=1000)],
+                keywords=[])),
+        Assign(
+            targets=[
+                Name(id='function_to_learn', ctx=Store())],
+            value=Lambda(
+                args=arguments(
+                    posonlyargs=[],
+                    args=[
+                        arg(arg='x')],
+                    kwonlyargs=[],
+                    kw_defaults=[],
+                    defaults=[]),
+                body=BinOp(
+                    left=Call(
+                        func=Attribute(
+                            value=Name(id='np', ctx=Load()),
+                            attr='cos',
+                            ctx=Load()),
+                        args=[
+                            Name(id='x', ctx=Load())],
+                        keywords=[]),
+                    op=Add(),
+                    right=BinOp(
+                        left=Constant(value=0.1),
+                        op=Mult(),
+                        right=Call(
+                            func=Attribute(
+                                value=Attribute(
+                                    value=Name(id='np', ctx=Load()),
+                                    attr='random',
+                                    ctx=Load()),
+                                attr='randn',
+                                ctx=Load()),
+                            args=[
+                                Starred(
+                                    value=Attribute(
+                                        value=Name(id='x', ctx=Load()),
+                                        attr='shape',
+                                        ctx=Load()),
+                                    ctx=Load())],
+                            keywords=[]))))),
+        Assign(
+            targets=[
+                Name(id='layer_1_neurons', ctx=Store())],
+            value=Constant(value=10)),
+        Assign(
+            targets=[
+                Name(id='NUM_points', ctx=Store())],
+            value=Constant(value=1000)),
+        Assign(
+            targets=[
+                Name(id='batch_size', ctx=Store())],
+            value=Constant(value=100)),
+        Assign(
+            targets=[
+                Name(id='NUM_EPOCHS', ctx=Store())],
+            value=Constant(value=1500)),
+        Assign(
+            targets=[
+                Name(id='all_x', ctx=Store())],
+            value=Attribute(
+                value=Call(
+                    func=Attribute(
+                        value=Name(id='np', ctx=Load()),
+                        attr='float32',
+                        ctx=Load()),
+                    args=[
+                        Call(
+                            func=Attribute(
+                                value=Attribute(
+                                    value=Name(id='np', ctx=Load()),
+                                    attr='random',
+                                    ctx=Load()),
+                                attr='uniform',
+                                ctx=Load()),
+                            args=[
+                                BinOp(
+                                    left=UnaryOp(
+                                        op=USub(),
+                                        operand=Constant(value=2)),
+                                    op=Mult(),
+                                    right=Attribute(
+                                        value=Name(id='math', ctx=Load()),
+                                        attr='pi',
+                                        ctx=Load())),
+                                BinOp(
+                                    left=Constant(value=2),
+                                    op=Mult(),
+                                    right=Attribute(
+                                        value=Name(id='math', ctx=Load()),
+                                        attr='pi',
+                                        ctx=Load())),
+                                Tuple(
+                                    elts=[
+                                        Constant(value=1),
+                                        Name(id='NUM_points', ctx=Load())],
+                                    ctx=Load())],
+                            keywords=[])],
+                    keywords=[]),
+                attr='T',
+                ctx=Load())),
+        Expr(
+            value=Call(
+                func=Attribute(
+                    value=Attribute(
+                        value=Attribute(
+                            value=Attribute(
+                                value=Attribute(
+                                    value=Name(id='np', ctx=Load()),
+                                    attr='random',
+                                    ctx=Load()),
+                                attr='aa',
+                                ctx=Load()),
+                            attr='bb',
+                            ctx=Load()),
+                        attr='cc',
+                        ctx=Load()),
+                    attr='shuffle',
+                    ctx=Load()),
+                args=[
+                    Name(id='all_x', ctx=Load()),
+                    Name(id='at1', ctx=Load()),
+                    Name(id='at2', ctx=Load()),
+                    Name(id='at3', ctx=Load()),
+                    Name(id='at4', ctx=Load())],
+                keywords=[])),
+        Assign(
+            targets=[
+                Name(id='train_size', ctx=Store())],
+            value=Call(
+                func=Name(id='int', ctx=Load()),
+                args=[
+                    Constant(value=900)],
+                keywords=[])),
+        Assign(
+            targets=[
+                Name(id='y_training', ctx=Store())],
+            value=Call(
+                func=Name(id='function_to_learn', ctx=Load()),
+                args=[
+                    Name(id='x_training', ctx=Load())],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Name(id='tf', ctx=Load()),
+                args=[],
+                keywords=[])),
+        Assign(
+            targets=[
+                Name(id='y_validation', ctx=Store())],
+            value=Call(
+                func=Name(id='function_to_learn', ctx=Load()),
+                args=[
+                    Name(id='x_validation', ctx=Load())],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Attribute(
+                    value=Name(id='plt', ctx=Load()),
+                    attr='figure',
+                    ctx=Load()),
+                args=[
+                    Constant(value=1)],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Attribute(
+                    value=Name(id='plt', ctx=Load()),
+                    attr='scatter',
+                    ctx=Load()),
+                args=[
+                    Name(id='x_training', ctx=Load()),
+                    Name(id='y_training', ctx=Load())],
+                keywords=[
+                    keyword(
+                        arg='c',
+                        value=Constant(value='blue')),
+                    keyword(
+                        arg='label',
+                        value=Constant(value='train'))])),
+        Expr(
+            value=Call(
+                func=Attribute(
+                    value=Name(id='plt', ctx=Load()),
+                    attr='scatter',
+                    ctx=Load()),
+                args=[
+                    Name(id='x_validation', ctx=Load()),
+                    Name(id='y_validation', ctx=Load())],
+                keywords=[
+                    keyword(
+                        arg='c',
+                        value=Constant(value='pink')),
+                    keyword(
+                        arg='label',
+                        value=Constant(value='validation'))])),
+        Expr(
+            value=Call(
+                func=Attribute(
+                    value=Name(id='plt', ctx=Load()),
+                    attr='legend',
+                    ctx=Load()),
+                args=[],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Attribute(
+                    value=Name(id='plt', ctx=Load()),
+                    attr='show',
+                    ctx=Load()),
+                args=[],
+                keywords=[])),
+        Assign(
+            targets=[
+                Name(id='X', ctx=Store())],
+            value=Call(
+                func=Attribute(
+                    value=Name(id='tf', ctx=Load()),
+                    attr='placeholder',
+                    ctx=Load()),
+                args=[
+                    Attribute(
+                        value=Name(id='tf', ctx=Load()),
+                        attr='float32',
+                        ctx=Load()),
+                    List(
+                        elts=[
+                            Constant(value=None),
+                            Constant(value=1)],
+                        ctx=Load())],
+                keywords=[
+                    keyword(
+                        arg='name',
+                        value=Constant(value='X'))])),
+        Assign(
+            targets=[
+                Name(id='Y', ctx=Store())],
+            value=Call(
+                func=Attribute(
+                    value=Name(id='tf', ctx=Load()),
+                    attr='placeholder',
+                    ctx=Load()),
+                args=[
+                    Attribute(
+                        value=Name(id='tf', ctx=Load()),
+                        attr='float32',
+                        ctx=Load()),
+                    List(
+                        elts=[
+                            Constant(value=None),
+                            Constant(value=1)],
+                        ctx=Load())],
+                keywords=[
+                    keyword(
+                        arg='name',
+                        value=Constant(value='Y'))])),
+        Assign(
+            targets=[
+                Name(id='w_h', ctx=Store())],
+            value=Call(
+                func=Attribute(
+                    value=Name(id='tf', ctx=Load()),
+                    attr='Variable',
+                    ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='tf', ctx=Load()),
+                            attr='random_uniform',
+                            ctx=Load()),
+                        args=[
+                            List(
+                                elts=[
+                                    Constant(value=1),
+                                    Name(id='layer_1_neurons', ctx=Load())],
+                                ctx=Load())],
+                        keywords=[
+                            keyword(
+                                arg='minval',
+                                value=UnaryOp(
+                                    op=USub(),
+                                    operand=Constant(value=1))),
+                            keyword(
+                                arg='maxval',
+                                value=Constant(value=1)),
+                            keyword(
+                                arg='dtype',
+                                value=Attribute(
+                                    value=Name(id='tf', ctx=Load()),
+                                    attr='float32',
+                                    ctx=Load()))])],
+                keywords=[])),
+        Assign(
+            targets=[
+                Name(id='b_h', ctx=Store())],
+            value=Call(
+                func=Attribute(
+                    value=Name(id='tf', ctx=Load()),
+                    attr='Variable',
+                    ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='tf', ctx=Load()),
+                            attr='zeros',
+                            ctx=Load()),
+                        args=[
+                            List(
+                                elts=[
+                                    Constant(value=1),
+                                    Name(id='layer_1_neurons', ctx=Load())],
+                                ctx=Load())],
+                        keywords=[
+                            keyword(
+                                arg='dtype',
+                                value=Attribute(
+                                    value=Name(id='tf', ctx=Load()),
+                                    attr='float32',
+                                    ctx=Load()))])],
+                keywords=[])),
+        Assign(
+            targets=[
+                Name(id='h', ctx=Store())],
+            value=Call(
+                func=Attribute(
+                    value=Attribute(
+                        value=Name(id='tf', ctx=Load()),
+                        attr='nn',
+                        ctx=Load()),
+                    attr='sigmoid',
+                    ctx=Load()),
+                args=[
+                    BinOp(
+                        left=Call(
+                            func=Attribute(
+                                value=Name(id='tf', ctx=Load()),
+                                attr='matmul',
+                                ctx=Load()),
+                            args=[
+                                Name(id='X', ctx=Load()),
+                                Name(id='w_h', ctx=Load())],
+                            keywords=[]),
+                        op=Add(),
+                        right=Name(id='b_h', ctx=Load()))],
+                keywords=[])),
+        Assign(
+            targets=[
+                Name(id='w_o', ctx=Store())],
+            value=Call(
+                func=Attribute(
+                    value=Name(id='tf', ctx=Load()),
+                    attr='Variable',
+                    ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='tf', ctx=Load()),
+                            attr='random_uniform',
+                            ctx=Load()),
+                        args=[
+                            List(
+                                elts=[
+                                    Name(id='layer_1_neurons', ctx=Load()),
+                                    Constant(value=1)],
+                                ctx=Load())],
+                        keywords=[
+                            keyword(
+                                arg='minval',
+                                value=UnaryOp(
+                                    op=USub(),
+                                    operand=Constant(value=1))),
+                            keyword(
+                                arg='maxval',
+                                value=Constant(value=1)),
+                            keyword(
+                                arg='dtype',
+                                value=Attribute(
+                                    value=Name(id='tf', ctx=Load()),
+                                    attr='float32',
+                                    ctx=Load()))])],
+                keywords=[])),
+        Assign(
+            targets=[
+                Name(id='b_o', ctx=Store())],
+            value=Call(
+                func=Attribute(
+                    value=Name(id='tf', ctx=Load()),
+                    attr='Variable',
+                    ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='tf', ctx=Load()),
+                            attr='zeros',
+                            ctx=Load()),
+                        args=[
+                            List(
+                                elts=[
+                                    Constant(value=1),
+                                    Constant(value=1)],
+                                ctx=Load())],
+                        keywords=[
+                            keyword(
+                                arg='dtype',
+                                value=Attribute(
+                                    value=Name(id='tf', ctx=Load()),
+                                    attr='float32',
+                                    ctx=Load()))])],
+                keywords=[])),
+        Assign(
+            targets=[
+                Name(id='model', ctx=Store())],
+            value=BinOp(
+                left=Call(
+                    func=Attribute(
+                        value=Name(id='tf', ctx=Load()),
+                        attr='matmul',
+                        ctx=Load()),
+                    args=[
+                        Name(id='h', ctx=Load()),
+                        Name(id='w_o', ctx=Load())],
+                    keywords=[]),
+                op=Add(),
+                right=Name(id='b_o', ctx=Load()))),
+        Assign(
+            targets=[
+                Name(id='train_op', ctx=Store())],
+            value=Call(
+                func=Attribute(
+                    value=Call(
+                        func=Attribute(
+                            value=Attribute(
+                                value=Name(id='tf', ctx=Load()),
+                                attr='train',
+                                ctx=Load()),
+                            attr='AdamOptimizer',
+                            ctx=Load()),
+                        args=[],
+                        keywords=[]),
+                    attr='minimize',
+                    ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Attribute(
+                                value=Name(id='tf', ctx=Load()),
+                                attr='nn',
+                                ctx=Load()),
+                            attr='l2_loss',
+                            ctx=Load()),
+                        args=[
+                            BinOp(
+                                left=Name(id='model', ctx=Load()),
+                                op=Sub(),
+                                right=Name(id='Y', ctx=Load()))],
+                        keywords=[])],
+                keywords=[])),
+        Assign(
+            targets=[
+                Name(id='sess', ctx=Store())],
+            value=Call(
+                func=Attribute(
+                    value=Name(id='tf', ctx=Load()),
+                    attr='Session',
+                    ctx=Load()),
+                args=[],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Attribute(
+                    value=Name(id='sess', ctx=Load()),
+                    attr='run',
+                    ctx=Load()),
+                args=[
+                    Call(
+                        func=Attribute(
+                            value=Name(id='tf', ctx=Load()),
+                            attr='initialize_all_variables',
+                            ctx=Load()),
+                        args=[],
+                        keywords=[])],
+                keywords=[])),
+        Assign(
+            targets=[
+                Name(id='errors', ctx=Store())],
+            value=List(elts=[], ctx=Load())),
+        For(
+            target=Name(id='i', ctx=Store()),
+            iter=Call(
+                func=Name(id='range', ctx=Load()),
+                args=[
+                    Name(id='NUM_EPOCHS', ctx=Load())],
+                keywords=[]),
+            body=[
+                For(
+                    target=Tuple(
+                        elts=[
+                            Name(id='start', ctx=Store()),
+                            Name(id='end', ctx=Store())],
+                        ctx=Store()),
+                    iter=Call(
+                        func=Name(id='zip', ctx=Load()),
+                        args=[
+                            Call(
+                                func=Name(id='range', ctx=Load()),
+                                args=[
+                                    Constant(value=0),
+                                    Call(
+                                        func=Name(id='len', ctx=Load()),
+                                        args=[
+                                            Name(id='x_training', ctx=Load())],
+                                        keywords=[]),
+                                    Name(id='batch_size', ctx=Load())],
+                                keywords=[]),
+                            Call(
+                                func=Name(id='range', ctx=Load()),
+                                args=[
+                                    Name(id='batch_size', ctx=Load()),
+                                    Call(
+                                        func=Name(id='len', ctx=Load()),
+                                        args=[
+                                            Name(id='x_training', ctx=Load())],
+                                        keywords=[]),
+                                    Name(id='batch_size', ctx=Load())],
+                                keywords=[])],
+                        keywords=[]),
+                    body=[
+                        Expr(
+                            value=Call(
+                                func=Attribute(
+                                    value=Name(id='sess', ctx=Load()),
+                                    attr='run',
+                                    ctx=Load()),
+                                args=[
+                                    Name(id='train_op', ctx=Load())],
+                                keywords=[
+                                    keyword(
+                                        arg='feed_dict',
+                                        value=Dict(
+                                            keys=[
+                                                Name(id='X', ctx=Load()),
+                                                Name(id='Y', ctx=Load())],
+                                            values=[
+                                                Subscript(
+                                                    value=Name(id='x_training', ctx=Load()),
+                                                    slice=Slice(
+                                                        lower=Name(id='start', ctx=Load()),
+                                                        upper=Name(id='end', ctx=Load())),
+                                                    ctx=Load()),
+                                                Subscript(
+                                                    value=Name(id='y_training', ctx=Load()),
+                                                    slice=Slice(
+                                                        lower=Name(id='start', ctx=Load()),
+                                                        upper=Name(id='end', ctx=Load())),
+                                                    ctx=Load())]))]))],
+                    orelse=[]),
+                Assign(
+                    targets=[
+                        Name(id='cost', ctx=Store())],
+                    value=Call(
+                        func=Attribute(
+                            value=Name(id='sess', ctx=Load()),
+                            attr='run',
+                            ctx=Load()),
+                        args=[
+                            Call(
+                                func=Attribute(
+                                    value=Attribute(
+                                        value=Name(id='tf', ctx=Load()),
+                                        attr='nn',
+                                        ctx=Load()),
+                                    attr='l2_loss',
+                                    ctx=Load()),
+                                args=[
+                                    BinOp(
+                                        left=Name(id='model', ctx=Load()),
+                                        op=Sub(),
+                                        right=Name(id='y_validation', ctx=Load()))],
+                                keywords=[])],
+                        keywords=[
+                            keyword(
+                                arg='feed_dict',
+                                value=Dict(
+                                    keys=[
+                                        Name(id='X', ctx=Load())],
+                                    values=[
+                                        Name(id='x_validation', ctx=Load())]))])),
+                Expr(
+                    value=Call(
+                        func=Attribute(
+                            value=Name(id='errors', ctx=Load()),
+                            attr='append',
+                            ctx=Load()),
+                        args=[
+                            Name(id='cost', ctx=Load())],
+                        keywords=[])),
+                If(
+                    test=Compare(
+                        left=BinOp(
+                            left=Name(id='i', ctx=Load()),
+                            op=Mod(),
+                            right=Constant(value=100)),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Constant(value=0)]),
+                    body=[
+                        Expr(
+                            value=Call(
+                                func=Name(id='print', ctx=Load()),
+                                args=[
+                                    BinOp(
+                                        left=Constant(value='epoch %d, cost = %g'),
+                                        op=Mod(),
+                                        right=Tuple(
+                                            elts=[
+                                                Name(id='i', ctx=Load()),
+                                                Name(id='cost', ctx=Load())],
+                                            ctx=Load()))],
+                                keywords=[]))],
+                    orelse=[])],
+            orelse=[]),
+        Expr(
+            value=Call(
+                func=Attribute(
+                    value=Name(id='plt', ctx=Load()),
+                    attr='plot',
+                    ctx=Load()),
+                args=[
+                    Name(id='errors', ctx=Load())],
+                keywords=[
+                    keyword(
+                        arg='label',
+                        value=Constant(value='MLP Function Approximation'))])),
+        Expr(
+            value=Call(
+                func=Attribute(
+                    value=Name(id='plt', ctx=Load()),
+                    attr='xlabel',
+                    ctx=Load()),
+                args=[
+                    Constant(value='epochs')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Attribute(
+                    value=Name(id='plt', ctx=Load()),
+                    attr='ylabel',
+                    ctx=Load()),
+                args=[
+                    Constant(value='cost')],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Attribute(
+                    value=Name(id='plt', ctx=Load()),
+                    attr='legend',
+                    ctx=Load()),
+                args=[],
+                keywords=[])),
+        Expr(
+            value=Call(
+                func=Attribute(
+                    value=Name(id='plt', ctx=Load()),
+                    attr='show',
+                    ctx=Load()),
+                args=[],
+                keywords=[]))],
+    type_ignores=[])
