@@ -11,11 +11,11 @@ def main():
         tree = ast.parse(source.read())
     analyzer = Analyzer()
     analyzer.visit(tree)
-    analyzer.report()
+    # analyzer.report()
     global requiredAlias
     requiredAlias = analyzer.stats['required']
     print(get_func_calls(tree))
-    print(ast.dump(tree, indent=4))
+    # print(ast.dump(tree, indent=4))
 
 class FuncCallVisitor(ast.NodeVisitor):
     def __init__(self):
@@ -94,9 +94,9 @@ def get_func_calls(tree):
                 data['funcArgs']=func_arguments
                 data['funcKeywords']=func_keywords
                 func_calls.append(json.dumps(data))
-    pprint("Required Function Calls and their arguments :")
-    pprint(func_calls)
-    return list(filter(None, func_calls))
+    # pprint("Required Function Calls and their arguments :")
+    # pprint(func_calls)
+    return func_calls
 
 class Analyzer(ast.NodeVisitor):
     def __init__(self):
