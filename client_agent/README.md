@@ -1,4 +1,4 @@
-# Code Energy Consumption
+# Client Agent Program for Code Energy Consumption
 
 This is the client agent that takes a python program along with list of libraries/function they want to calculate energy consumption for, as inputs. The client agent then runs its analyzer script to extract the function calls using an Abstract Syntax Tree(AST) and creates Request Packets for these calls. Then it filters out the functions that the client/user wants the energy consumption to be calculated for. It will send these filtered request packets to the Server which will run the method,calculate the energy consumption and then send back the required energy data packet for the method calls, as a response packet.
 
