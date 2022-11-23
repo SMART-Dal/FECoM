@@ -13,4 +13,4 @@ exit_script() {
 
 trap exit_script SIGINT SIGTERM
 
-perf stat -I 500 -e power/energy-pkg/,power/energy-ram/ -o perf.txt python3 dummy_serialisation/server.py | ts '[%Y-%m-%d %H:%M:%.S]'
+perf stat -I 500 -e power/energy-pkg/,power/energy-ram/ -o perf.txt -x \; python3 dummy_serialisation/server.py | ts '[%Y-%m-%d %H:%M:%.S]'
