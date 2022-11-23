@@ -1,45 +1,11 @@
 """
 Dummy server, interacts with the client receiving, altering and returning
 compressed numpy arrays.
-Setup/run:
- 1. pip install Flask --user
- 2. export FLASK_APP=server.py; flask run
 """
 
-import io
-import zlib
-
 from flask import Flask, request, Response
-import numpy as np
-
-
-# ## CONFIG
-
-SERVER_HOST= "localhost"
-SERVER_PORT = 12345
-API_PATH = "/api/test"
-
-# ## HELPERS
-
-def compress_nparr(nparr):
-    """
-    Returns the given numpy array as compressed bytestring,
-    the uncompressed and the compressed byte size.
-    """
-    bytestream = io.BytesIO()
-    np.save(bytestream, nparr)
-    uncompressed = bytestream.getvalue()
-    compressed = zlib.compress(uncompressed)
-    return compressed, len(uncompressed), len(compressed)
-
-def uncompress_nparr(bytestring):
-    """
-    """
-    return np.load(io.BytesIO(zlib.decompress(bytestring)))
-
-
-
-# ## MAIN SERVER DESCRIPTOR/ROUTINE
+from config import SERVER_HOST, SERVER_PORT, API_PATH
+from np_compressor import NPCompressor
 
 # Initialize the Flask application
 app = Flask(__name__)
@@ -53,12 +19,12 @@ def test1234():
     """
     r = request
     #
-    data = uncompress_nparr(r.data)
+    data = NPCompressor.uncompress_nparr(r.data)
     #
     data10 = data*10
     print("\n\nReceived array (compressed size = "+\
           str(r.content_length)+"):\n"+str(data))
-    resp, _, _ = compress_nparr(data10)
+    resp, _, _ = NPCompressor.compress_nparr(data10)
     return Response(response=resp, status=200,
                     mimetype="application/octet_stream")
 
