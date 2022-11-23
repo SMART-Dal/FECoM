@@ -1,7 +1,7 @@
 #!/bin/sh -x
 
 # Collect the energy consumption of the GPU
-nvidia-smi -i 0 --loop-ms=1000 --format=csv,noheader --query-gpu=timestamp,power.draw > nvidia_smi.txt &
+nvidia-smi -i 0 --loop-ms=500 --format=csv,noheader --query-gpu=timestamp,power.draw > nvidia_smi.txt &
 
 # Get nvidia-smi's PID
 nvidia_smi_PID=$!
@@ -13,4 +13,4 @@ exit_script() {
 
 trap exit_script SIGINT SIGTERM
 
-perf stat -I 1000 -e power/energy-pkg/,power/energy-ram/ -o perf.txt python3 dummy_serialisation/server.py | ts '[%Y-%m-%d %H:%M:%.S]'
+perf stat -I 500 -e power/energy-pkg/,power/energy-ram/ -o perf.txt python3 dummy_serialisation/server.py | ts '[%Y-%m-%d %H:%M:%.S]'
