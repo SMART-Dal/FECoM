@@ -22,20 +22,15 @@ def send_matmul_request():
     method_details = {
         "library": "numpy",
         "method_sig": "matmul",
-        "method_params": None,
-        "n_serial_data": 2
-    }
-
-    data = {
-        'method_details': method_details,
-        'arr1': arr1.tolist(),
-        'arr2': arr2.tolist()
+        "args": [arr1.tolist(),arr2.tolist()],
+        "arg_types": ["numpy.array", "numpy.array"],
+        "return_type": "numpy.array"
     }
 
     if DEBUG:
         print(f"sending request to {url}")
     
-    resp = requests.post(url, json=data)
+    resp = requests.post(url, json=method_details)
     
     result = np.array(resp.json()["output"])
     

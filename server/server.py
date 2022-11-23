@@ -9,28 +9,56 @@ from flask import Flask, Response, json, request
 
 app = Flask(__name__)
 
+def run_method(library: str, method_sig: str, args: list, arg_types: list, return_type: str):
+    method_to_run = None
 
-@app.route(API_PATH, methods=["POST"])
-def receive_matmul_request():
-    data = request.json
-    method_details = data["method_details"]
-    arr1 = np.array(data["arr1"])
-    arr2 = np.array(data["arr2"])
+    # (1) find the method to run
+    # TODO: how can we generalise this? I.e. how can we automatically import the relevant module?
+    if library == "numpy":
+        method_to_run = getattr(np, method_sig)
     
-    if DEBUG:
-        print(f"Received method details: {method_details}")
-        print(f"Received arrays \n 1: {arr1.shape} \n 2: {arr2.shape}")
+    # (2) convert arguments to correct types
+    for i, arg_type in enumerate(arg_types):
+        if arg_type == "numpy.array":
+            args[i] = np.array(args[i])
     
-    if method_details["library"] == "numpy":
-        method_to_run = getattr(np, method_details["method_sig"])
-    
-    output_arr = method_to_run(arr1,arr2)
+    # (3) run the method with the converted arguments
+    output = method_to_run(*args)
 
     if DEBUG:
         print(f"Performed {str(method_to_run)} on input")
-        print(f"Result: {output_arr.shape}")
+        print(f"Output: {output}")
+    
+    # (4) convert the return type into a json-serialisable format
+    if return_type == "numpy.array":
+        output = output.tolist()
 
-    output = {"output": output_arr.tolist()}
+    return output
+
+
+@app.route(API_PATH, methods=["POST"])
+def run_method_and_return_result():
+    method_details = request.json
+
+    # check that the data format is correct
+    assert("library" in method_details)
+    assert("method_sig" in method_details)
+    assert("args" in method_details)
+    assert("arg_types" in method_details)
+    assert("return_type" in method_details)
+    
+    if DEBUG:
+        print(f"Received method details: {method_details}")
+    
+    output = run_method(
+        method_details["library"],
+        method_details["method_sig"],
+        method_details["args"],
+        method_details["arg_types"],
+        method_details["return_type"]
+    )
+
+    output = {"output": output}
 
     response = Response(
         response=json.dumps(output),
