@@ -1,7 +1,10 @@
 #!/bin/sh -x
 
+# Set default value for count_interval_ms if undefined by user
+count_interval_ms=${1:-500}
+
 # Collect the energy consumption of the GPU
-nvidia-smi -i 0 --loop-ms=500 --format=csv,noheader --query-gpu=timestamp,power.draw > nvidia_smi.txt &
+nvidia-smi -i 0 --loop-ms=$count_interval_ms --format=csv,noheader --query-gpu=timestamp,power.draw > nvidia_smi.txt &
 
 # Get nvidia-smi's PID
 nvidia_smi_PID=$!
@@ -13,4 +16,4 @@ exit_script() {
 
 trap exit_script SIGINT SIGTERM
 
-perf stat -I 500 -e power/energy-pkg/,power/energy-ram/ -o perf.txt -x \; python3 dummy_serialisation/server.py | ts '[%Y-%m-%d %H:%M:%.S]'
+perf stat -I $count_interval_ms -e power/energy-pkg/,power/energy-ram/ -o perf.txt -x \; python3 server/server.py | ts '[%Y-%m-%d %H:%M:%.S]'
