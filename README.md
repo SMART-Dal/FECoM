@@ -36,6 +36,10 @@ Performance counter stats for 'system wide':
        5.001965465 seconds time elapsed
 ```
 
+## Energy Consumption Measurement
+Makes use of [Perf](https://perf.wiki.kernel.org/index.php/Main_Page) to measure CPU and RAM energy consumption and [NVIDIA System Management Interface](https://developer.nvidia.com/nvidia-system-management-interface) to measure GPU energy consumption.
+
+Energy measurement process begins by starting the server with `bash energy_measurement.sh [count_interval]`, where `[count_interval]` is an optional parameter that sets the interval between recording of measurements in milliseconds. If this parameter is not set, the default value of 500ms is used.
 
 ## Contributing
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
