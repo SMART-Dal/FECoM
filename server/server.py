@@ -9,57 +9,51 @@ from flask import Flask, Response, json, request
 
 app = Flask(__name__)
 
-def run_method(library: str, method_name: str, args: list, arg_types: list, return_type: str):
-    method_to_run = None
+def run_method(imports: str, function_to_run: str, args: list, arg_type_conversions: list, return_type_conversion: str):
+    # WARNING: potential security risk from exec and eval statements
 
-    # (1) find the method to run
-    # TODO: how can we generalise this? I.e. how can we automatically import the relevant module?
-    if library == "numpy":
-        method_to_run = getattr(np, method_name)
-    elif library == "numpy.fft":
-        method_to_run = getattr(np.fft, method_name)
+    # (1) import relevant modules
+    exec(imports)
+
+    # (2) convert the args to their correct types specified by arg_type_conversions
+    func_args = [] # func_args is the argument list that will be passed to the function_to_run
+    for i, raw_arg in enumerate(args):
+        if arg_type_conversions[i] is None:
+            func_args.append(raw_arg)
+        else:
+            # raw_data is the argument passed to the conversion function
+            raw_data = raw_arg
+            func_args.append(eval(arg_type_conversions[i]))
     
-    # (2) convert arguments to correct types
-    for i, arg_type in enumerate(arg_types):
-        if arg_type == "numpy.array":
-            args[i] = np.array(args[i])
-    
-    # (3) run the method with the converted arguments
-    output = method_to_run(*args)
+    assert(len(func_args) == len(args))
+
+    # (3) evaluate the function return. This is where we should measure energy.
+    func_return = eval(function_to_run)
 
     if DEBUG:
-        print(f"Performed {str(method_to_run)} on input")
-        print(f"Output: {output}")
+        print(f"Performed {function_to_run} on input")
+        print(f"Output: {func_return}")
     
     # (4) convert the return type into a json-serialisable format
-    if return_type == "numpy.array":
-        output = output.tolist()
-    elif return_type == "complex numpy.array":
-        output = np.real(output).tolist()
-
-    return output
+    if return_type_conversion is None:
+        return func_return
+    else:
+        return eval(return_type_conversion)
 
 
 @app.route(API_PATH, methods=["POST"])
 def run_method_and_return_result():
     method_details = request.json
-
-    # check that the data format is correct
-    assert("library" in method_details)
-    assert("method_name" in method_details)
-    assert("args" in method_details)
-    assert("arg_types" in method_details)
-    assert("return_type" in method_details)
     
     if DEBUG:
         print(f"Received method details: {method_details}")
     
     output = run_method(
-        method_details["library"],
-        method_details["method_name"],
+        method_details["imports"],
+        method_details["function"],
         method_details["args"],
-        method_details["arg_types"],
-        method_details["return_type"]
+        method_details["arg_type_conversions"],
+        method_details["return_type_conversion"]
     )
 
     output = {"output": output}
