@@ -22,27 +22,53 @@ Press return in the client terminal to send a request to the server and receive 
 ## API Spec
 The API (path specified in `config.py`) expects a POST request with request.data being a pickled python dictionary in the following format:
 ```
-{
+method_details = {
     "imports": imports,
     "function": function_to_run,
     "args": function_args,
+    "kwargs": function_kwargs
 }
+
+# serialising with pickle
+data = pickle.dumps(method_details)
+
+# sending the POST request
+resp = requests.post(url, data=data, headers={'Content-Type': 'application/octet-stream'})
 ```
-With the following variables:
+The dictionary has the following variables:
 
 `imports` is a string of runnable python code that specifies the imports necessary to run the given function. E.g.  
 ```
 imports = "import numpy as np"
 ```
 
-`function_to_run` is a string of runnable python code that includes the full method signature with `*args` as the function argument. E.g.  
+`function_to_run` is a string of runnable python code that includes the full method signature with `*args` and/or `**kwargs` as the function arguments. E.g.  
 ```
+# only positional function arguments
 function_to_run = "np.matmul(*args)"
+
+# only keyword function arguments
+function_to_run = "np.matmul(**kwargs)"
+
+# both positional and keyword function arguments
+function_to_run = "np.matmul(*args, **kwargs"
 ```
 
-`function_args` is a list of the arguments that should be passed to the `function_to_run`. These arguments can be any kind of python object that can be serialised with pickle ([almost every object](https://machinelearningmastery.com/a-gentle-introduction-to-serialization-for-python/)). E.g.  
+`function_args` is an ordered `list` of the positional arguments that should be passed to the `function_to_run`. Each argument can be any kind of python object that can be serialised with pickle ([almost every object](https://machinelearningmastery.com/a-gentle-introduction-to-serialization-for-python/)). E.g.  
 ```
 arr1 = np.random.rand(100,100)
 arr2 = np.random.rand(100,100)
 function_args = [arr1,arr2]
+
+# this also works
+function_args = [np.random.rand(100,100),np.random.rand(100,100)]
+```
+
+`function_kwargs` is a `dict` of the keyword arguments that should be passed to the `function_to_run`. The key-value pairs are of the form `"keyword": argument`. Each argument can be any kind of python object that can be serialised with pickle ([almost every object](https://machinelearningmastery.com/a-gentle-introduction-to-serialization-for-python/)). E.g.  
+```
+function_kwargs = {
+    "minval": -1,
+    "maxval": 1,
+    "dtype": tf.float32
+}
 ```
