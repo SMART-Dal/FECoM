@@ -10,7 +10,12 @@ from flask import Flask, Response, json, request
 
 app = Flask(__name__)
 
-def run_method(imports: str, function_to_run: str, args: list):
+def run_method(imports: str, function_to_run: str, args: list, kwargs: dict):
+    """
+    Run the method given by function_to_run with the given arguments (args) and keyword arguments (kwargs).
+    These two variables appear to not be used, however, they are used when evaluating the function_to_run
+    since this is a string in the format function_signature(*args) or function_signature(*args, **kwargs).
+    """
     # WARNING: potential security risk from exec and eval statements
 
     # (1) import relevant modules
@@ -37,6 +42,7 @@ def run_method_and_return_result():
         method_details["imports"],
         method_details["function"],
         method_details["args"],
+        method_details["kwargs"]
     )
 
     data = pickle.dumps(output)
