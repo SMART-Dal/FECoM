@@ -1,1 +1,175 @@
-['{"funcCall": "tf", "funcArgs": [], "funcKeywords": []}', '{"funcCall": "tf.placeholder", "funcArgs": ["tf.float32", ""], "funcKeywords": [""]}', '{"funcCall": "tf.placeholder", "funcArgs": ["tf.float32", ""], "funcKeywords": [""]}', '{"funcCall": "tf.Variable", "funcArgs": ["tf.float32.layer_1_neurons.tf.random_uniform"], "funcKeywords": []}', '{"funcCall": "tf.Variable", "funcArgs": ["tf.float32.layer_1_neurons.tf.zeros"], "funcKeywords": []}', '{"funcCall": "tf.nn.sigmoid", "funcArgs": ["b_h.w_h.X.tf.matmul"], "funcKeywords": []}', '{"funcCall": "tf.Variable", "funcArgs": ["tf.float32.layer_1_neurons.tf.random_uniform"], "funcKeywords": []}', '{"funcCall": "tf.Variable", "funcArgs": ["tf.float32.tf.zeros"], "funcKeywords": []}', '{"funcCall": "tf.train.AdamOptimizer.minimize", "funcArgs": ["Y.model.tf.nn.l2_loss"], "funcKeywords": []}', '{"funcCall": "tf.Session", "funcArgs": [], "funcKeywords": []}', '{"funcCall": "tf.random_uniform", "funcArgs": ["layer_1_neurons"], "funcKeywords": ["", "", "tf.float32"]}', '{"funcCall": "tf.zeros", "funcArgs": ["layer_1_neurons"], "funcKeywords": ["tf.float32"]}', '{"funcCall": "tf.random_uniform", "funcArgs": ["layer_1_neurons"], "funcKeywords": ["", "", "tf.float32"]}', '{"funcCall": "tf.zeros", "funcArgs": [""], "funcKeywords": ["tf.float32"]}', '{"funcCall": "tf.matmul", "funcArgs": ["h", "w_o"], "funcKeywords": []}', '{"funcCall": "tf.nn.l2_loss", "funcArgs": ["Y.model"], "funcKeywords": []}', '{"funcCall": "tf.initialize_all_variables", "funcArgs": [], "funcKeywords": []}', '{"funcCall": "tf.matmul", "funcArgs": ["X", "w_h"], "funcKeywords": []}', '{"funcCall": "tf.train.AdamOptimizer", "funcArgs": [], "funcKeywords": []}', '{"funcCall": "tf.nn.l2_loss", "funcArgs": ["y_validation.model"], "funcKeywords": []}']
+Module(
+    body=[
+        Import(
+            names=[
+                alias(name='tensorflow', asname='tf')]),
+        Import(
+            names=[
+                alias(name='numpy', asname='np')]),
+        Import(
+            names=[
+                alias(name='math'),
+                alias(name='random')]),
+        Import(
+            names=[
+                alias(name='matplotlib.pyplot', asname='plt')]),
+        ImportFrom(
+            module='pprint',
+            names=[
+                alias(name='pprint')],
+            level=0),
+        Expr(
+            value=Call(
+                func=Name(id='custom_method', ctx=Load()),
+                args=[
+                    Expr(
+                        value=Call(
+                            func=Name(id='tf', ctx=Load()),
+                            args=[],
+                            keywords=[]))],
+                keywords=[])),
+        Assign(
+            targets=[
+                Name(id='X', ctx=Store())],
+            value=Call(
+                func=Name(id='custom_method', ctx=Load()),
+                args=[
+                    Expr(
+                        value=Call(
+                            func=Attribute(
+                                value=Name(id='tf', ctx=Load()),
+                                attr='placeholder',
+                                ctx=Load()),
+                            args=[
+                                Attribute(
+                                    value=Name(id='tf', ctx=Load()),
+                                    attr='float32',
+                                    ctx=Load()),
+                                List(
+                                    elts=[
+                                        Constant(value=None),
+                                        Constant(value=1)],
+                                    ctx=Load())],
+                            keywords=[
+                                keyword(
+                                    arg='name',
+                                    value=Constant(value='X'))]))],
+                keywords=[])),
+        Assign(
+            targets=[
+                Name(id='Y', ctx=Store())],
+            value=Call(
+                func=Name(id='custom_method', ctx=Load()),
+                args=[
+                    Expr(
+                        value=Call(
+                            func=Attribute(
+                                value=Name(id='tf', ctx=Load()),
+                                attr='placeholder',
+                                ctx=Load()),
+                            args=[
+                                Attribute(
+                                    value=Name(id='tf', ctx=Load()),
+                                    attr='float32',
+                                    ctx=Load()),
+                                List(
+                                    elts=[
+                                        Constant(value=None),
+                                        Constant(value=1)],
+                                    ctx=Load())],
+                            keywords=[
+                                keyword(
+                                    arg='name',
+                                    value=Constant(value='Y'))]))],
+                keywords=[])),
+        Assign(
+            targets=[
+                Name(id='w_o', ctx=Store())],
+            value=Call(
+                func=Name(id='custom_method', ctx=Load()),
+                args=[
+                    Expr(
+                        value=Call(
+                            func=Attribute(
+                                value=Name(id='tf', ctx=Load()),
+                                attr='Variable',
+                                ctx=Load()),
+                            args=[
+                                Call(
+                                    func=Attribute(
+                                        value=Name(id='tf', ctx=Load()),
+                                        attr='random_uniform',
+                                        ctx=Load()),
+                                    args=[
+                                        List(
+                                            elts=[
+                                                Name(id='layer_1_neurons', ctx=Load()),
+                                                Constant(value=1)],
+                                            ctx=Load())],
+                                    keywords=[
+                                        keyword(
+                                            arg='minval',
+                                            value=UnaryOp(
+                                                op=USub(),
+                                                operand=Constant(value=1))),
+                                        keyword(
+                                            arg='maxval',
+                                            value=Constant(value=1)),
+                                        keyword(
+                                            arg='dtype',
+                                            value=Attribute(
+                                                value=Name(id='tf', ctx=Load()),
+                                                attr='float32',
+                                                ctx=Load()))])],
+                            keywords=[]))],
+                keywords=[])),
+        Assign(
+            targets=[
+                Name(id='b_o', ctx=Store())],
+            value=Call(
+                func=Name(id='custom_method', ctx=Load()),
+                args=[
+                    Expr(
+                        value=Call(
+                            func=Attribute(
+                                value=Name(id='tf', ctx=Load()),
+                                attr='Variable',
+                                ctx=Load()),
+                            args=[
+                                Call(
+                                    func=Attribute(
+                                        value=Name(id='tf', ctx=Load()),
+                                        attr='zeros',
+                                        ctx=Load()),
+                                    args=[
+                                        List(
+                                            elts=[
+                                                Constant(value=1),
+                                                Constant(value=1)],
+                                            ctx=Load())],
+                                    keywords=[
+                                        keyword(
+                                            arg='dtype',
+                                            value=Attribute(
+                                                value=Name(id='tf', ctx=Load()),
+                                                attr='float32',
+                                                ctx=Load()))])],
+                            keywords=[]))],
+                keywords=[]))],
+    type_ignores=[])
+____________________________________________________________________________________________________
+import tensorflow as tf
+import numpy as np
+import math, random
+import matplotlib.pyplot as plt
+from pprint import pprint
+custom_method(
+tf())
+X = custom_method(
+tf.placeholder(tf.float32, [None, 1], name='X'))
+Y = custom_method(
+tf.placeholder(tf.float32, [None, 1], name='Y'))
+w_o = custom_method(
+tf.Variable(tf.random_uniform([layer_1_neurons, 1], minval=-1, maxval=1, dtype=tf.float32)))
+b_o = custom_method(
+tf.Variable(tf.zeros([1, 1], dtype=tf.float32)))

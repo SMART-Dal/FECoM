@@ -56,19 +56,20 @@ train_op = tf.train.AdamOptimizer().minimize(tf.nn.l2_loss(model - Y))
 #Start the Learning phase 
 sess = tf.Session() 
 sess.run(tf.initialize_all_variables()) 
+testfunc = tempFunc(tf.initialize_all_variables())
 
-errors = [] 
-for i in range(NUM_EPOCHS): 
-   for start, end in zip(range(0, len(x_training), batch_size),range(batch_size, len(x_training), batch_size)): 
-      sess.run(train_op, feed_dict = {X: x_training[start:end], Y: y_training[start:end]})
-   cost = sess.run(tf.nn.l2_loss(model - y_validation), feed_dict = {X:x_validation}) 
-   errors.append(cost) 
+# errors = [] 
+# for i in range(NUM_EPOCHS): 
+#    for start, end in zip(range(0, len(x_training), batch_size),range(batch_size, len(x_training), batch_size)): 
+#       sess.run(train_op, feed_dict = {X: x_training[start:end], Y: y_training[start:end]})
+#    cost = sess.run(tf.nn.l2_loss(model - y_validation), feed_dict = {X:x_validation}) 
+#    errors.append(cost) 
    
-   if i%100 == 0: 
-      print("epoch %d, cost = %g" % (i, cost)) 
+#    if i%100 == 0: 
+#       print("epoch %d, cost = %g" % (i, cost)) 
       
-plt.plot(errors,label='MLP Function Approximation') 
-plt.xlabel('epochs') 
-plt.ylabel('cost') 
-plt.legend() 
-plt.show()
+# plt.plot(errors,label='MLP Function Approximation') 
+# plt.xlabel('epochs') 
+# plt.ylabel('cost') 
+# plt.legend() 
+# plt.show()
