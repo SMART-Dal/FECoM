@@ -14,27 +14,24 @@ app = Flask(__name__)
 
 def is_stable_state(max_wait_secs: int):
     """
-    Return only when the system's energy consumption is stable.
+    Return True only when the system's energy consumption is stable.
     """
     # only consider the last n points
     n = 50
 
     for i in range(max_wait_secs*2):
         data_lines = []
-        with open('energy_measurement/perf.txt', 'r') as f:
+        with open('./energy_measurement/perf.txt', 'r') as f:
             data_lines = f.read().splitlines(True)
-        
-        last_n_energies = [line.strip(' ').split(';')[1] for line in data_lines[-n:]]
+
+        last_n_cpu_energies = [line.strip(' ').split(';')[1] for line in data_lines[2::2][-n:]]
+        last_n_ram_energies = [line.strip(' ').split(';')[1] for line in data_lines[3::2][-n:]]
+        print(f"CPU: {last_n_cpu_energies}")
+        print(f"RAM: {last_n_ram_energies}")
+        return True
 
         energy_vars = [stats.variance(last_n_energies[n/5]) for i in range(n/5)]
 
-        with open('energy_measurement/perf.txt') as f:
-            for index, line in enumerate(f):
-                # ignore the first two lines
-                if index == 0 or index ==1:
-                    continue
-                line_items = line.strip(' ').split(';')[:-2]
-                print("Line {}: {}".format(index, line.strip()))
         time.sleep(0.5)
         
 
@@ -52,8 +49,8 @@ def run_method(imports: str, function_to_run: str, args: list, kwargs: dict, max
     exec(imports)
 
     # # (2) continue only when the system has reached a stable state of energy consumption
-    # if not is_stable_state(max_wait_secs):
-    #     raise TimeoutError(f"System could not reach a stable state within {max_wait_secs} seconds")
+    if not is_stable_state(max_wait_secs):
+        raise TimeoutError(f"System could not reach a stable state within {max_wait_secs} seconds")
 
     # (3) evaluate the function return. This is where we should measure energy.
     func_return = eval(function_to_run)
