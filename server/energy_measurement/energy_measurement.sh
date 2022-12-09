@@ -16,4 +16,5 @@ exit_script() {
 
 trap exit_script SIGINT SIGTERM
 
-perf stat -I $count_interval_ms -e power/energy-pkg/,power/energy-ram/ -o perf.txt -x \; python3 server/server.py | ts '[%Y-%m-%d %H:%M:%.S]'
+perf stat -I $count_interval_ms -e power/energy-pkg/,power/energy-ram/ -o perf.txt -x \;
+# python3 server/server.py | ts '[%Y-%m-%d %H:%M:%.S]'
