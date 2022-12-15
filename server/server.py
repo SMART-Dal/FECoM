@@ -16,6 +16,10 @@ def is_stable_state(max_wait_secs: int):
     """
     Return True only when the system's energy consumption is stable.
     """
+    # For testing purposes
+    if max_wait_secs == 0:
+        return True
+        
     # only consider the last n points
     n = 50
     # tolerance for difference between stable stdev/mean ratio and current ratio
@@ -41,7 +45,8 @@ def is_stable_state(max_wait_secs: int):
         last_n_ram_energies = [float(line.strip(' ').split(';')[1]) for line in cpu_ram[3::2][-n:]]
         last_n_gpu_energies = [float(line.split(' ')[2]) for line in gpu[-n:]]
 
-        # check that stdv/mean ratios are small enough
+        # stable means that stdv/mean ratios are smaller or equal to the stable ratios determined experimentally
+        # the tolerance value set above specifies how much relative deviation we want to allow
         cpu_stable = (stats.stdev(last_n_cpu_energies) / stats.mean(last_n_cpu_energies)) <= ((1 + tolerance)*CPU_STD_TO_MEAN)
         ram_stable = (stats.stdev(last_n_ram_energies) / stats.mean(last_n_ram_energies)) <= ((1 + tolerance)*RAM_STD_TO_MEAN)
         gpu_stable = (stats.stdev(last_n_gpu_energies) / stats.mean(last_n_gpu_energies)) <= ((1 + tolerance)*GPU_STD_TO_MEAN)
@@ -65,7 +70,8 @@ def run_method(imports: str, function_to_run: str, args: list, kwargs: dict, max
     """
     Run the method given by function_to_run with the given arguments (args) and keyword arguments (kwargs).
     These two variables appear to not be used, however, they are used when evaluating the function_to_run
-    since this is a string in the format function_signature(*args) or function_signature(*args, **kwargs).
+    since this is a string in the format function_signature(*args), function_signature(**kwargs) or
+    function_signature(*args, **kwargs).
     """
     # WARNING: potential security risk from exec and eval statements
 
@@ -100,7 +106,7 @@ def run_method_and_return_result():
             method_details["function"],
             method_details["args"],
             method_details["kwargs"],
-            MAX_WAIT_SECS
+            method_details["max_wait_secs"]
         )
         status = 200
     except TimeoutError as e:

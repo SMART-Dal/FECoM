@@ -1,6 +1,7 @@
 SERVER_HOST= "localhost"
 SERVER_PORT = 12345
 API_PATH = "/api/run_experiment"
+URL = "http://"+SERVER_HOST+":"+str(SERVER_PORT)+API_PATH
 
 DEBUG = True
 
