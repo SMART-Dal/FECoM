@@ -6,7 +6,7 @@ import numpy as np
 import time
 import statistics as stats
 import pickle
-from config import API_PATH, DEBUG, SERVER_HOST, SERVER_PORT
+from config import API_PATH, DEBUG, SERVER_HOST, SERVER_PORT, CPU_STD_TO_MEAN, RAM_STD_TO_MEAN, GPU_STD_TO_MEAN
 from flask import Flask, Response, request
 
 
@@ -18,21 +18,45 @@ def is_stable_state(max_wait_secs: int):
     """
     # only consider the last n points
     n = 50
+    # tolerance for difference between stable stdev/mean ratio and current ratio
+    tolerance = 0.1
 
+    filepath = "./energy_measurement/out/2022-11-23/"
+
+    # in each loop iteration, load new data, calculate statistics and check if the energy is stable.
+    # try this for the specified number of seconds
     for i in range(max_wait_secs*2):
-        data_lines = []
-        with open('./energy_measurement/perf.txt', 'r') as f:
-            data_lines = f.read().splitlines(True)
+        # load CPU & RAM data
+        cpu_ram = []
+        with open(f'{filepath}perf.txt', 'r') as f:
+            cpu_ram = f.read().splitlines(True)
+        
+        # load GPU data
+        gpu = []
+        with open(f'{filepath}nvidia_smi.txt', 'r') as f:
+            gpu = f.read().splitlines(True)
 
-        last_n_cpu_energies = [line.strip(' ').split(';')[1] for line in data_lines[2::2][-n:]]
-        last_n_ram_energies = [line.strip(' ').split(';')[1] for line in data_lines[3::2][-n:]]
-        print(f"CPU: {last_n_cpu_energies}")
-        print(f"RAM: {last_n_ram_energies}")
-        return True
+        # generate lists of data
+        last_n_cpu_energies = [float(line.strip(' ').split(';')[1]) for line in cpu_ram[2::2][-n:]]
+        last_n_ram_energies = [float(line.strip(' ').split(';')[1]) for line in cpu_ram[3::2][-n:]]
+        last_n_gpu_energies = [float(line.split(' ')[2]) for line in gpu[-n:]]
 
-        energy_vars = [stats.variance(last_n_energies[n/5]) for i in range(n/5)]
+        # check that stdv/mean ratios are small enough
+        cpu_stable = (stats.stdev(last_n_cpu_energies) / stats.mean(last_n_cpu_energies)) <= ((1 + tolerance)*CPU_STD_TO_MEAN)
+        ram_stable = (stats.stdev(last_n_ram_energies) / stats.mean(last_n_ram_energies)) <= ((1 + tolerance)*RAM_STD_TO_MEAN)
+        gpu_stable = (stats.stdev(last_n_gpu_energies) / stats.mean(last_n_gpu_energies)) <= ((1 + tolerance)*GPU_STD_TO_MEAN)
 
-        time.sleep(0.5)
+        if DEBUG:
+            print(f"CPU: {last_n_cpu_energies} \n stable: {cpu_stable} \n stdv: {stats.stdev(last_n_cpu_energies)} \n mean: {stats.mean(last_n_cpu_energies)}")
+            print()
+            print(f"RAM: {last_n_ram_energies} \n stable: {ram_stable} \nstdv: {stats.stdev(last_n_ram_energies)} \n mean: {stats.mean(last_n_ram_energies)}")
+            print()
+            print(f"GPU: {last_n_gpu_energies} \n stable: {gpu_stable} \nstdv: {stats.stdev(last_n_gpu_energies)} \n mean: {stats.mean(last_n_gpu_energies)}")
+
+        if cpu_stable and ram_stable and gpu_stable:
+            return True
+        else:
+            time.sleep(0.5)
         
 
     return False
@@ -64,25 +88,30 @@ def run_method(imports: str, function_to_run: str, args: list, kwargs: dict, max
 
 @app.route(API_PATH, methods=["POST"])
 def run_method_and_return_result():
-    MAX_WAIT_SECS = 100
+    MAX_WAIT_SECS = 5
     method_details = pickle.loads(request.data)
     
     if DEBUG:
         print(f"Received method details: {method_details}")
     
-    output = run_method(
-        method_details["imports"],
-        method_details["function"],
-        method_details["args"],
-        method_details["kwargs"],
-        MAX_WAIT_SECS
-    )
+    try:
+        output = run_method(
+            method_details["imports"],
+            method_details["function"],
+            method_details["args"],
+            method_details["kwargs"],
+            MAX_WAIT_SECS
+        )
+        status = 200
+    except TimeoutError as e:
+        output = e
+        status = 500
 
     data = pickle.dumps(output)
 
     response = Response(
         response=data,
-        status=200,
+        status=status,
         mimetype='application/octet_stream'
     )
 

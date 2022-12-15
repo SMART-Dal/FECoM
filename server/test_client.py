@@ -32,8 +32,13 @@ def send_request(imports: str, function_to_run: str, function_args: list, functi
     data = pickle.dumps(method_details)
     
     resp = requests.post(url, data=data, headers={'Content-Type': 'application/octet-stream'})
-    
+
     result = pickle.loads(resp.content)
+
+    # if HTTP status code is 500, the server could not reach a stable state.
+    # now, simply raise an error. TODO: send a new request instead.
+    if resp.status_code == 500:
+        raise TimeoutError(result)
     
     if DEBUG:
         print(f"Result: {result}")
@@ -58,7 +63,6 @@ def send_matmul_request():
 
     if DEBUG:
         print(f"Result shape: {result.shape}")
-        print(f"Result: {result}")
         print(f"Means (arr1,arr2,result): ({arr1.mean()},{arr2.mean()},{result.mean()})")
 
 def send_rfft_request():
@@ -77,7 +81,6 @@ def send_rfft_request():
     
     if DEBUG:
         print(f"Result shape: {result.shape}")
-        print(f"Result: {result}")
         print(f"Means (arr1,result): ({arr1.mean()},{result.mean()})")
 
 def send_tf_random_uniform_request():
