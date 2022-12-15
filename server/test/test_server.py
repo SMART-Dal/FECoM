@@ -13,9 +13,8 @@ def test_matmul_request():
     function_to_run = "np.matmul(*args)"
     function_args = [arr1, arr2]
     function_kwargs = None
-    max_wait_secs = 0
 
-    result = send_request(imports, function_to_run, function_args, function_kwargs, max_wait_secs)
+    result = send_request(imports, function_to_run, function_args, function_kwargs)
     
     assert(type(result)==np.ndarray)
     assert(result.shape==(100,100))
@@ -28,9 +27,8 @@ def test_rfft_request():
     function_to_run = "np.fft.rfft(*args)"
     function_args = [arr1.tolist(), 200, -1]
     function_kwargs = None
-    max_wait_secs = 0
 
-    result = send_request(imports, function_to_run, function_args, function_kwargs, max_wait_secs)
+    result = send_request(imports, function_to_run, function_args, function_kwargs)
 
     assert(type(result)==np.ndarray)
     assert(result.shape==(100,101))
@@ -44,9 +42,8 @@ def test_tf_random_uniform_request():
         "maxval": 1,
         "dtype": tf.float32
     }
-    max_wait_secs = 0
     
-    result = send_request(imports, function_to_run, function_args, function_kwargs, max_wait_secs)
+    result = send_request(imports, function_to_run, function_args, function_kwargs)
 
     assert(result.shape==(10,1))
 
@@ -55,8 +52,7 @@ def test_tf_nested_Variable_request():
     function_to_run = "tf.Variable(*args)"
     function_args = [tf.random.uniform([10, 1], minval = -1, maxval = 1, dtype = tf.float32)]
     function_kwargs = None
-    max_wait_secs = 0
     
-    result = send_request(imports, function_to_run, function_args, function_kwargs, max_wait_secs)
+    result = send_request(imports, function_to_run, function_args, function_kwargs)
 
     assert(result.shape==(10,1))

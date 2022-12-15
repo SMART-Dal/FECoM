@@ -19,7 +19,7 @@ def is_stable_state(max_wait_secs: int):
     # For testing purposes
     if max_wait_secs == 0:
         return True
-        
+
     # only consider the last n points
     n = 50
     # tolerance for difference between stable stdev/mean ratio and current ratio
@@ -66,7 +66,7 @@ def is_stable_state(max_wait_secs: int):
 
     return False
 
-def run_method(imports: str, function_to_run: str, args: list, kwargs: dict, max_wait_secs: int):
+def run_method(imports: str, function_to_run: str, method_object: object, args: list, kwargs: dict, max_wait_secs: int):
     """
     Run the method given by function_to_run with the given arguments (args) and keyword arguments (kwargs).
     These two variables appear to not be used, however, they are used when evaluating the function_to_run
@@ -83,7 +83,12 @@ def run_method(imports: str, function_to_run: str, args: list, kwargs: dict, max
         raise TimeoutError(f"System could not reach a stable state within {max_wait_secs} seconds")
 
     # (3) evaluate the function return. This is where we should measure energy.
+    # if this is a method, initialise obj to hold the given object
+    if method_object is not None:
+        obj = method_object
+    
     func_return = eval(function_to_run)
+
 
     if DEBUG:
         print(f"Performed {function_to_run} on input")
@@ -94,7 +99,6 @@ def run_method(imports: str, function_to_run: str, args: list, kwargs: dict, max
 
 @app.route(API_PATH, methods=["POST"])
 def run_method_and_return_result():
-    MAX_WAIT_SECS = 5
     method_details = pickle.loads(request.data)
     
     if DEBUG:
@@ -104,6 +108,7 @@ def run_method_and_return_result():
         output = run_method(
             method_details["imports"],
             method_details["function"],
+            method_details["method_object"],
             method_details["args"],
             method_details["kwargs"],
             method_details["max_wait_secs"]
