@@ -76,3 +76,39 @@ def test_mnist_model_train():
 
     assert(type(test_history) == type(real_history))
     assert(test_history.params == real_history.params)
+
+def test_mnist_model_testing():
+    mnist = tf.keras.datasets.mnist
+
+    (x_train, y_train), (x_test, y_test) = mnist.load_data()
+    x_train, x_test = x_train / 255.0, x_test / 255.0
+
+    model = tf.keras.models.Sequential([
+    tf.keras.layers.Flatten(input_shape=(28, 28)),
+    tf.keras.layers.Dense(128, activation='relu'),
+    tf.keras.layers.Dropout(0.2),
+    tf.keras.layers.Dense(10)
+    ])
+
+    # loss function for training
+    loss_fn = tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True)
+
+    # configure & compile model
+    model.compile(optimizer='adam',
+                loss=loss_fn,
+                metrics=['accuracy'])
+
+    # training
+    model.fit(x_train, y_train, epochs=5)
+
+    # testing
+    imports = "import tensorflow as tf"
+    function_to_run = "obj.evaluate(*args,**kwargs)"
+    function_args = x_test, y_test
+    function_kwargs = {"verbose": 2}
+    method_object = model
+    
+    test_evaluation = send_request(imports, function_to_run, function_args, function_kwargs, method_object=method_object)
+    real_evaluation = model.evaluate(x_test, y_test, verbose=2)
+
+    assert(test_evaluation == real_evaluation)
