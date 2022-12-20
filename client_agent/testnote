@@ -1,3 +1,29 @@
+SSR1: tf()
+type is: <class 'list'>
+SSR_dummynode: Call(func=Name(id='tf', ctx=Load()), args=[], keywords=[])
+SSR_node: Call(func=Name(id='tf', ctx=Load()), args=[], keywords=[])
+SSR1: tf.placeholder(tf.float32, [None, 1], name = "X")
+type is: <class 'list'>
+SSR_dummynode: Call(func=Attribute(value=Name(id='tf', ctx=Load()), attr='placeholder', ctx=Load()), args=[Name(id='*args', ctx=Load())], keywords=[Name(id='**kwargs', ctx=Load())])
+SSR_node: Call(func=Attribute(value=Name(id='tf', ctx=Load()), attr='placeholder', ctx=Load()), args=[Attribute(value=Name(id='tf', ctx=Load()), attr='float32', ctx=Load()), List(elts=[Constant(value=None), Constant(value=1)], ctx=Load())], keywords=[keyword(arg='name', value=Constant(value='X'))])
+SSR1: tf.placeholder(tf.float32, [None, 1], name = "Y")
+type is: <class 'list'>
+SSR_dummynode: Call(func=Attribute(value=Name(id='tf', ctx=Load()), attr='placeholder', ctx=Load()), args=[Name(id='*args', ctx=Load())], keywords=[Name(id='**kwargs', ctx=Load())])
+SSR_node: Call(func=Attribute(value=Name(id='tf', ctx=Load()), attr='placeholder', ctx=Load()), args=[Attribute(value=Name(id='tf', ctx=Load()), attr='float32', ctx=Load()), List(elts=[Constant(value=None), Constant(value=1)], ctx=Load())], keywords=[keyword(arg='name', value=Constant(value='Y'))])
+SSR1: tf.value("aname",bname,name="tname")
+type is: <class 'list'>
+SSR_dummynode: Call(func=Attribute(value=Name(id='tf', ctx=Load()), attr='value', ctx=Load()), args=[Name(id='*args', ctx=Load())], keywords=[Name(id='**kwargs', ctx=Load())])
+SSR_node: Call(func=Attribute(value=Name(id='tf', ctx=Load()), attr='value', ctx=Load()), args=[Constant(value='aname'), Name(id='bname', ctx=Load())], keywords=[keyword(arg='name', value=Constant(value='tname'))])
+SSR1: tf.Variable(
+   tf.random_uniform([layer_1_neurons, 1], minval = -1, maxval = 1, dtype = tf.float32),test1,test2,test3="test3")
+type is: <class 'list'>
+SSR_dummynode: Call(func=Attribute(value=Name(id='tf', ctx=Load()), attr='Variable', ctx=Load()), args=[Name(id='*args', ctx=Load())], keywords=[Name(id='**kwargs', ctx=Load())])
+SSR_node: Call(func=Attribute(value=Name(id='tf', ctx=Load()), attr='Variable', ctx=Load()), args=[Call(func=Attribute(value=Name(id='tf', ctx=Load()), attr='random_uniform', ctx=Load()), args=[List(elts=[Name(id='layer_1_neurons', ctx=Load()), Constant(value=1)], ctx=Load())], keywords=[keyword(arg='minval', value=UnaryOp(op=USub(), operand=Constant(value=1))), keyword(arg='maxval', value=Constant(value=1)), keyword(arg='dtype', value=Attribute(value=Name(id='tf', ctx=Load()), attr='float32', ctx=Load()))]), Name(id='test1', ctx=Load()), Name(id='test2', ctx=Load())], keywords=[keyword(arg='test3', value=Constant(value='test3'))])
+SSR1: tf.Variable(tf.zeros([1, 1], dtype = tf.float32))
+type is: <class 'list'>
+SSR_dummynode: Call(func=Attribute(value=Name(id='tf', ctx=Load()), attr='Variable', ctx=Load()), args=[Name(id='*args', ctx=Load())], keywords=[])
+SSR_node: Call(func=Attribute(value=Name(id='tf', ctx=Load()), attr='Variable', ctx=Load()), args=[Call(func=Attribute(value=Name(id='tf', ctx=Load()), attr='zeros', ctx=Load()), args=[List(elts=[Constant(value=1), Constant(value=1)], ctx=Load())], keywords=[keyword(arg='dtype', value=Attribute(value=Name(id='tf', ctx=Load()), attr='float32', ctx=Load()))])], keywords=[])
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 Module(
     body=[
         Import(
@@ -27,7 +53,34 @@ Module(
                             func=Name(id='tf', ctx=Load()),
                             args=[],
                             keywords=[]))],
-                keywords=[])),
+                keywords=[
+                    keyword(
+                        arg='imports',
+                        value=Constant(value='from pprint import pprint;import matplotlib.pyplot as plt;import math, random;import tensorflow as tf;import numpy as np')),
+                    keyword(
+                        arg='function_to_run',
+                        value=Constant(value='tf()')),
+                    keyword(
+                        arg='method_object',
+                        value=Constant(value='')),
+                    keyword(
+                        arg='function_args',
+                        value=Constant(value='')),
+                    keyword(
+                        arg='function_kwargs',
+                        value=Constant(value='')),
+                    keyword(
+                        arg='max_wait_secs',
+                        value=Constant(value=''))])),
+        Assign(
+            targets=[
+                Name(id='testlist', ctx=Store())],
+            value=List(
+                elts=[
+                    Constant(value='a'),
+                    Constant(value='b'),
+                    Constant(value='c')],
+                ctx=Load())),
         Assign(
             targets=[
                 Name(id='X', ctx=Store())],
@@ -54,7 +107,25 @@ Module(
                                 keyword(
                                     arg='name',
                                     value=Constant(value='X'))]))],
-                keywords=[])),
+                keywords=[
+                    keyword(
+                        arg='imports',
+                        value=Constant(value='from pprint import pprint;import matplotlib.pyplot as plt;import math, random;import tensorflow as tf;import numpy as np')),
+                    keyword(
+                        arg='function_to_run',
+                        value=Constant(value='tf.placeholder(*args, **kwargs)')),
+                    keyword(
+                        arg='method_object',
+                        value=Constant(value='')),
+                    keyword(
+                        arg='function_args',
+                        value=Constant(value='')),
+                    keyword(
+                        arg='function_kwargs',
+                        value=Constant(value='')),
+                    keyword(
+                        arg='max_wait_secs',
+                        value=Constant(value=''))])),
         Assign(
             targets=[
                 Name(id='Y', ctx=Store())],
@@ -81,7 +152,63 @@ Module(
                                 keyword(
                                     arg='name',
                                     value=Constant(value='Y'))]))],
-                keywords=[])),
+                keywords=[
+                    keyword(
+                        arg='imports',
+                        value=Constant(value='from pprint import pprint;import matplotlib.pyplot as plt;import math, random;import tensorflow as tf;import numpy as np')),
+                    keyword(
+                        arg='function_to_run',
+                        value=Constant(value='tf.placeholder(*args, **kwargs)')),
+                    keyword(
+                        arg='method_object',
+                        value=Constant(value='')),
+                    keyword(
+                        arg='function_args',
+                        value=Constant(value='')),
+                    keyword(
+                        arg='function_kwargs',
+                        value=Constant(value='')),
+                    keyword(
+                        arg='max_wait_secs',
+                        value=Constant(value=''))])),
+        Assign(
+            targets=[
+                Name(id='z', ctx=Store())],
+            value=Call(
+                func=Name(id='custom_method', ctx=Load()),
+                args=[
+                    Expr(
+                        value=Call(
+                            func=Attribute(
+                                value=Name(id='tf', ctx=Load()),
+                                attr='value',
+                                ctx=Load()),
+                            args=[
+                                Constant(value='aname'),
+                                Name(id='bname', ctx=Load())],
+                            keywords=[
+                                keyword(
+                                    arg='name',
+                                    value=Constant(value='tname'))]))],
+                keywords=[
+                    keyword(
+                        arg='imports',
+                        value=Constant(value='from pprint import pprint;import matplotlib.pyplot as plt;import math, random;import tensorflow as tf;import numpy as np')),
+                    keyword(
+                        arg='function_to_run',
+                        value=Constant(value='tf.value(*args, **kwargs)')),
+                    keyword(
+                        arg='method_object',
+                        value=Constant(value='')),
+                    keyword(
+                        arg='function_args',
+                        value=Constant(value='')),
+                    keyword(
+                        arg='function_kwargs',
+                        value=Constant(value='')),
+                    keyword(
+                        arg='max_wait_secs',
+                        value=Constant(value=''))])),
         Assign(
             targets=[
                 Name(id='w_o', ctx=Store())],
@@ -120,9 +247,32 @@ Module(
                                             value=Attribute(
                                                 value=Name(id='tf', ctx=Load()),
                                                 attr='float32',
-                                                ctx=Load()))])],
-                            keywords=[]))],
-                keywords=[])),
+                                                ctx=Load()))]),
+                                Name(id='test1', ctx=Load()),
+                                Name(id='test2', ctx=Load())],
+                            keywords=[
+                                keyword(
+                                    arg='test3',
+                                    value=Constant(value='test3'))]))],
+                keywords=[
+                    keyword(
+                        arg='imports',
+                        value=Constant(value='from pprint import pprint;import matplotlib.pyplot as plt;import math, random;import tensorflow as tf;import numpy as np')),
+                    keyword(
+                        arg='function_to_run',
+                        value=Constant(value='tf.Variable(*args, **kwargs)')),
+                    keyword(
+                        arg='method_object',
+                        value=Constant(value='')),
+                    keyword(
+                        arg='function_args',
+                        value=Constant(value='')),
+                    keyword(
+                        arg='function_kwargs',
+                        value=Constant(value='')),
+                    keyword(
+                        arg='max_wait_secs',
+                        value=Constant(value=''))])),
         Assign(
             targets=[
                 Name(id='b_o', ctx=Store())],
@@ -155,7 +305,25 @@ Module(
                                                 attr='float32',
                                                 ctx=Load()))])],
                             keywords=[]))],
-                keywords=[]))],
+                keywords=[
+                    keyword(
+                        arg='imports',
+                        value=Constant(value='from pprint import pprint;import matplotlib.pyplot as plt;import math, random;import tensorflow as tf;import numpy as np')),
+                    keyword(
+                        arg='function_to_run',
+                        value=Constant(value='tf.Variable(*args)')),
+                    keyword(
+                        arg='method_object',
+                        value=Constant(value='')),
+                    keyword(
+                        arg='function_args',
+                        value=Constant(value='')),
+                    keyword(
+                        arg='function_kwargs',
+                        value=Constant(value='')),
+                    keyword(
+                        arg='max_wait_secs',
+                        value=Constant(value=''))]))],
     type_ignores=[])
 ____________________________________________________________________________________________________
 import tensorflow as tf
@@ -164,12 +332,15 @@ import math, random
 import matplotlib.pyplot as plt
 from pprint import pprint
 custom_method(
-tf())
+tf(), imports='from pprint import pprint;import matplotlib.pyplot as plt;import math, random;import tensorflow as tf;import numpy as np', function_to_run='tf()', method_object='', function_args='', function_kwargs='', max_wait_secs='')
+testlist = ['a', 'b', 'c']
 X = custom_method(
-tf.placeholder(tf.float32, [None, 1], name='X'))
+tf.placeholder(tf.float32, [None, 1], name='X'), imports='from pprint import pprint;import matplotlib.pyplot as plt;import math, random;import tensorflow as tf;import numpy as np', function_to_run='tf.placeholder(*args, **kwargs)', method_object='', function_args='', function_kwargs='', max_wait_secs='')
 Y = custom_method(
-tf.placeholder(tf.float32, [None, 1], name='Y'))
+tf.placeholder(tf.float32, [None, 1], name='Y'), imports='from pprint import pprint;import matplotlib.pyplot as plt;import math, random;import tensorflow as tf;import numpy as np', function_to_run='tf.placeholder(*args, **kwargs)', method_object='', function_args='', function_kwargs='', max_wait_secs='')
+z = custom_method(
+tf.value('aname', bname, name='tname'), imports='from pprint import pprint;import matplotlib.pyplot as plt;import math, random;import tensorflow as tf;import numpy as np', function_to_run='tf.value(*args, **kwargs)', method_object='', function_args='', function_kwargs='', max_wait_secs='')
 w_o = custom_method(
-tf.Variable(tf.random_uniform([layer_1_neurons, 1], minval=-1, maxval=1, dtype=tf.float32)))
+tf.Variable(tf.random_uniform([layer_1_neurons, 1], minval=-1, maxval=1, dtype=tf.float32), test1, test2, test3='test3'), imports='from pprint import pprint;import matplotlib.pyplot as plt;import math, random;import tensorflow as tf;import numpy as np', function_to_run='tf.Variable(*args, **kwargs)', method_object='', function_args='', function_kwargs='', max_wait_secs='')
 b_o = custom_method(
-tf.Variable(tf.zeros([1, 1], dtype=tf.float32)))
+tf.Variable(tf.zeros([1, 1], dtype=tf.float32)), imports='from pprint import pprint;import matplotlib.pyplot as plt;import math, random;import tensorflow as tf;import numpy as np', function_to_run='tf.Variable(*args)', method_object='', function_args='', function_kwargs='', max_wait_secs='')

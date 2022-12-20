@@ -6,12 +6,13 @@ import matplotlib.pyplot as plt
 from pprint import pprint
 
 tf()
-
+testlist = ['a','b','c']
 X = tf.placeholder(tf.float32, [None, 1], name = "X")
 Y = tf.placeholder(tf.float32, [None, 1], name = "Y")
-
+z = tf.value("aname",bname,name="tname")
+# testlist.func()
 #output layer 
 #Number of neurons = 10 
 w_o = tf.Variable(
-   tf.random_uniform([layer_1_neurons, 1], minval = -1, maxval = 1, dtype = tf.float32)) 
+   tf.random_uniform([layer_1_neurons, 1], minval = -1, maxval = 1, dtype = tf.float32),test1,test2,test3="test3") 
 b_o = tf.Variable(tf.zeros([1, 1], dtype = tf.float32)) 
