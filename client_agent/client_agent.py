@@ -1,43 +1,54 @@
 import ast
+from ast import literal_eval
 from pprint import pprint
 from collections import deque
 import json
 import inspect
 import copy
+import json
 
 requiredLibraries = ["tensorflow"]
 requiredAlias = []
+requiredObjects = []
 importScriptList = ''
 sourceCode = ''
 
 def main():
+
+    #Step1: Create an AST from the client python code
     with open("code_snippet2.py", "r") as source:
         global sourceCode
         sourceCode = source.read()
         tree = ast.parse(sourceCode)
-        # ast.get_source_segment(source.read(), node)
-        # code = """if 1 == 1 and 2 == 2 and 3 == 3:
-        #     test = 1
-        # """
-        # node1 = ast.parse(code)
-        # print(ast.get_source_segment(code, node1.body[0]))
+
+    #Step2: Extract list of libraries and aliases for energy calculation
     analyzer = Analyzer()
     analyzer.visit(tree)
-    # pprint(sourceCode)
-    # print("Test analyzer :",analyzer.lineno)
     global requiredAlias
     global importScriptList
     requiredAlias = analyzer.stats['required']
     importScriptList = ';'.join(list(set(analyzer.stats['importScript'])))
+
+    #Step3: Get list of objects created from the required libraries
+    global requiredObjects
+    objAnalyzer = ObjectAnalyzer()
+    objAnalyzer.visit(tree)
+    requiredObjects = objAnalyzer.stats['objects']
+    print("requiredObjects",requiredObjects)
+
+    #Step4: Tranform the client script by adding custom method calls
     transf = TransformCall()
     transf.visit(tree)
-    # tree.body.insert(0, new_node)
+    with open("custom_method.py", "r") as source:
+        cm = source.read()
+        cm_node = ast.parse(cm)
+        tree.body.insert(0, cm_node)
+
     print('+'*100)
     print(ast.dump(tree, indent=4))
     print('_'*100)
-    # for fcall in tree.body:
-    #     # if(isinstance(fcall[7], ast.Call)):
-    #     print("FCALL:",fcall)
+
+    #Step5: Unparse and convert AST to final code
     print(ast.unparse(tree))
 
 
@@ -69,23 +80,29 @@ class FuncCallVisitor(ast.NodeVisitor):
 class TransformCall(ast.NodeTransformer):
     def __init__(self):
         global requiredAlias
+        global sourceCode
 
     def visit_Call(self, node):
         callvisitor = FuncCallVisitor()
         callvisitor.visit(node.func)
+        print("blah1",node.func," Value:",callvisitor.name)
 
         if(any(lib in callvisitor.name for lib in requiredAlias)):
-            print("SSR1:",ast.get_source_segment(sourceCode, node))
             dummyNode=copy.deepcopy(node)
-            print("type is:",type(dummyNode.args))
             dummyNode.args.clear()
             dummyNode.keywords.clear()
+            # print("SSR args:",ast.get_source_segment(sourceCode, node))
+            print(ast.get_source_segment(sourceCode, node))
+            argList = [ast.get_source_segment(sourceCode, a) for a in node.args]
+            # argList = ast.literal_eval(ast.get_source_segment(sourceCode, node.args))
+            # print("SSR arguments:",argList)
+            # print("SSR args:",node.args)
+            keywordsDict = {a.arg:ast.get_source_segment(sourceCode, a.value) for a in node.keywords}
+            # print("SSR keywords:",keywordsDict)
             if(node.args):
                 dummyNode.args.append(ast.Name(id='*args', ctx=ast.Load()))
             if(node.keywords):
                 dummyNode.keywords.append(ast.Name(id='**kwargs', ctx=ast.Load()))
-            print("SSR_dummynode:",ast.dump(dummyNode))
-            print("SSR_node:",ast.dump(node))
             new_node = ast.Call(func=ast.Name(id='custom_method', ctx=ast.Load()),
                                 args=[ast.Expr(node)],
                                 keywords=[
@@ -100,13 +117,13 @@ class TransformCall(ast.NodeTransformer):
                                         value=ast.Constant('')),
                                     ast.keyword(
                                         arg='function_args',
-                                        value=ast.Constant('')),
+                                        value=ast.Constant(argList)),
                                     ast.keyword(
                                         arg='function_kwargs',
-                                        value=ast.Constant('')),
+                                        value=ast.Constant(keywordsDict)),
                                     ast.keyword(
                                         arg='max_wait_secs',
-                                        value=ast.Constant('')),
+                                        value=ast.Constant(30)),
                                         ],
                                         starargs=None, kwargs=None
                                 )
@@ -114,6 +131,59 @@ class TransformCall(ast.NodeTransformer):
             ast.fix_missing_locations(new_node)
             return new_node
         
+        return node
+
+    # def visit_Expr(self, node):
+    #     # --------------------
+    #     return node
+    #     # --------------------
+
+    #     callvisitor = FuncCallVisitor()
+    #     callvisitor.visit(node.func)
+
+    #     if(any(lib in callvisitor.name for lib in requiredAlias)):
+    #         dummyNode=copy.deepcopy(node)
+    #         dummyNode.args.clear()
+    #         dummyNode.keywords.clear()
+    #         # print("SSR args:",ast.get_source_segment(sourceCode, node))
+    #         print(ast.get_source_segment(sourceCode, node))
+    #         argList = [ast.get_source_segment(sourceCode, a) for a in node.args]
+    #         # argList = ast.literal_eval(ast.get_source_segment(sourceCode, node.args))
+    #         # print("SSR arguments:",argList)
+    #         # print("SSR args:",node.args)
+    #         keywordsDict = {a.arg:ast.get_source_segment(sourceCode, a.value) for a in node.keywords}
+    #         # print("SSR keywords:",keywordsDict)
+    #         if(node.args):
+    #             dummyNode.args.append(ast.Name(id='*args', ctx=ast.Load()))
+    #         if(node.keywords):
+    #             dummyNode.keywords.append(ast.Name(id='**kwargs', ctx=ast.Load()))
+    #         new_node = ast.Call(func=ast.Name(id='custom_method', ctx=ast.Load()),
+    #                             args=[ast.Expr(node)],
+    #                             keywords=[
+    #                                 ast.keyword(
+    #                                     arg='imports',
+    #                                     value=ast.Constant(importScriptList)),
+    #                                 ast.keyword(
+    #                                     arg='function_to_run',
+    #                                     value=ast.Constant(ast.unparse(dummyNode))),
+    #                                 ast.keyword(
+    #                                     arg='method_object',
+    #                                     value=ast.Constant('')),
+    #                                 ast.keyword(
+    #                                     arg='function_args',
+    #                                     value=ast.Constant(argList)),
+    #                                 ast.keyword(
+    #                                     arg='function_kwargs',
+    #                                     value=ast.Constant(keywordsDict)),
+    #                                 ast.keyword(
+    #                                     arg='max_wait_secs',
+    #                                     value=ast.Constant(30)),
+    #                                     ],
+    #                                     starargs=None, kwargs=None
+    #                             )
+    #         ast.copy_location(new_node, node)
+    #         ast.fix_missing_locations(new_node)
+    #         return new_node  
 
 def get_func_calls(tree):
     global requiredAlias
@@ -125,6 +195,7 @@ def get_func_calls(tree):
             callvisitor = FuncCallVisitor()
             callTransformer = TransformCall()
             callvisitor.visit(node.func)
+            print("blah2",node.func," Value:",callvisitor.name)
             if(any(lib in callvisitor.name for lib in requiredAlias)):
                 tree = callTransformer.visit(node)
                 print("---",ast.unparse(node))
@@ -152,6 +223,24 @@ class Analyzer(ast.NodeVisitor):
 
     def report(self):
         pprint(self.stats)
+
+class ObjectAnalyzer(ast.NodeVisitor):
+    def __init__(self):
+        self.stats = {"objects": []}
+        global sourceCode
+        
+    def visit_Assign(self, node):
+        if isinstance(node.value, ast.Call):
+            print("Inside OA:",node.targets[0].id)
+            pprint(vars(node))
+            callvisitor2 = FuncCallVisitor()
+            callvisitor2.visit(node.value.func)
+            print("blah3",node.value," Value:",callvisitor2.name)
+            pprint(vars(node.value.func))
+            if((any(lib in callvisitor2.name for lib in requiredAlias)) and (isinstance(node.targets[0], ast.Name))):
+                print("Lib is :",requiredAlias," got name :",callvisitor2.name)
+                self.stats["objects"].append(node.targets[0].id)
+        self.generic_visit(node)
 
 
 if __name__ == "__main__":

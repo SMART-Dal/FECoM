@@ -90,3 +90,39 @@ def custom_method(func,imports,function_to_run,method_object,function_args,funct
 
    # sending the POST request
    resp = requests.post(url, data=data, headers={'Content-Type': 'application/octet-stream'})
+
+   return func
+
+
+
+   t = []
+
+def fun2(t):
+   print("success!!!",t)
+   x=t*t
+   return x
+
+def fun(a, fun2, c=10):
+   print('test2',fun2)
+   z = a*c
+   return z
+  
+# import required modules 
+import inspect 
+
+# print(fun(8,fun2(3)))
+fun2(3)
+
+# use signature() 
+# ba = inspect.signature(fun)
+
+# # ba.apply_defaults()
+# print(ba)
+
+# for param in ba.parameters.values():
+#    print('Parameter:', param)
+
+
+# bound_values = inspect.signature(fun).bind(*args, **kwargs)
+# for name, value in bound_values.arguments.items():
+#    print("Name is:",name," and Value is:",value)
