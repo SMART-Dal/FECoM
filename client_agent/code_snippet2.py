@@ -29,3 +29,5 @@ model = tf.keras.models.Sequential([
     ])
 
 model.compile()
+f_o = b_o.test.compile()
+z_o = c_o.compile()

@@ -1,178 +1,109 @@
-Inside OA: X
 {'col_offset': 0,
  'end_col_offset': 53,
  'end_lineno': 10,
  'lineno': 10,
- 'targets': [<ast.Name object at 0x7f517afdb130>],
+ 'targets': [<ast.Name object at 0x7f03a97abac0>],
  'type_comment': None,
- 'value': <ast.Call object at 0x7f517afdb100>}
-blah3 <ast.Call object at 0x7f517afdb100>  Value: tf.placeholder
-{'attr': 'placeholder',
- 'col_offset': 4,
- 'ctx': <ast.Load object at 0x7f517b0af610>,
- 'end_col_offset': 18,
- 'end_lineno': 10,
- 'lineno': 10,
- 'value': <ast.Name object at 0x7f517afdb0a0>}
-Lib is : ['tf']  got name : tf.placeholder
-Inside OA: Y
+ 'value': <ast.Call object at 0x7f03a97aba90>}
 {'col_offset': 0,
  'end_col_offset': 53,
  'end_lineno': 11,
  'lineno': 11,
- 'targets': [<ast.Name object at 0x7f517afdaef0>],
+ 'targets': [<ast.Name object at 0x7f03a97ab880>],
  'type_comment': None,
- 'value': <ast.Call object at 0x7f517afdaec0>}
-blah3 <ast.Call object at 0x7f517afdaec0>  Value: tf.placeholder
-{'attr': 'placeholder',
- 'col_offset': 4,
- 'ctx': <ast.Load object at 0x7f517b0af610>,
- 'end_col_offset': 18,
- 'end_lineno': 11,
- 'lineno': 11,
- 'value': <ast.Name object at 0x7f517afdae60>}
-Lib is : ['tf']  got name : tf.placeholder
-Inside OA: z
+ 'value': <ast.Call object at 0x7f03a97ab850>}
 {'col_offset': 0,
  'end_col_offset': 40,
  'end_lineno': 12,
  'lineno': 12,
- 'targets': [<ast.Name object at 0x7f517afdacb0>],
+ 'targets': [<ast.Name object at 0x7f03a97ab640>],
  'type_comment': None,
- 'value': <ast.Call object at 0x7f517afdac80>}
-blah3 <ast.Call object at 0x7f517afdac80>  Value: tf.value
-{'attr': 'value',
- 'col_offset': 4,
- 'ctx': <ast.Load object at 0x7f517b0af610>,
- 'end_col_offset': 12,
- 'end_lineno': 12,
- 'lineno': 12,
- 'value': <ast.Name object at 0x7f517afdac20>}
-Lib is : ['tf']  got name : tf.value
-Inside OA: w_o
+ 'value': <ast.Call object at 0x7f03a97ab610>}
 {'col_offset': 0,
  'end_col_offset': 114,
  'end_lineno': 17,
  'lineno': 16,
- 'targets': [<ast.Name object at 0x7f517afdab00>],
+ 'targets': [<ast.Name object at 0x7f03a97ab490>],
  'type_comment': None,
- 'value': <ast.Call object at 0x7f517afdaad0>}
-blah3 <ast.Call object at 0x7f517afdaad0>  Value: tf.Variable
-{'attr': 'Variable',
- 'col_offset': 6,
- 'ctx': <ast.Load object at 0x7f517b0af610>,
- 'end_col_offset': 17,
- 'end_lineno': 16,
- 'lineno': 16,
- 'value': <ast.Name object at 0x7f517afdaa70>}
-Lib is : ['tf']  got name : tf.Variable
-Inside OA: b_o
+ 'value': <ast.Call object at 0x7f03a97ab460>}
 {'col_offset': 0,
  'end_col_offset': 55,
  'end_lineno': 18,
  'lineno': 18,
- 'targets': [<ast.Name object at 0x7f517afda6b0>],
+ 'targets': [<ast.Name object at 0x7f03a97ab040>],
  'type_comment': None,
- 'value': <ast.Call object at 0x7f517afda680>}
-blah3 <ast.Call object at 0x7f517afda680>  Value: tf.Variable
-{'attr': 'Variable',
- 'col_offset': 6,
- 'ctx': <ast.Load object at 0x7f517b0af610>,
- 'end_col_offset': 17,
- 'end_lineno': 18,
- 'lineno': 18,
- 'value': <ast.Name object at 0x7f517afda620>}
-Lib is : ['tf']  got name : tf.Variable
-Inside OA: cd
+ 'value': <ast.Call object at 0x7f03a97ab010>}
 {'col_offset': 0,
  'end_col_offset': 17,
  'end_lineno': 20,
  'lineno': 20,
- 'targets': [<ast.Name object at 0x7f517afda410>],
+ 'targets': [<ast.Name object at 0x7f03a97aada0>],
  'type_comment': None,
- 'value': <ast.Call object at 0x7f517afda3e0>}
-blah3 <ast.Call object at 0x7f517afda3e0>  Value: ab.test
-{'attr': 'test',
- 'col_offset': 5,
- 'ctx': <ast.Load object at 0x7f517b0af610>,
- 'end_col_offset': 12,
- 'end_lineno': 20,
- 'lineno': 20,
- 'value': <ast.Name object at 0x7f517afda380>}
-Inside OA: c_o
+ 'value': <ast.Call object at 0x7f03a97aad70>}
 {'col_offset': 0,
  'end_col_offset': 15,
  'end_lineno': 21,
  'lineno': 21,
- 'targets': [<ast.Name object at 0x7f517afda2c0>],
+ 'targets': [<ast.Name object at 0x7f03a97aac50>],
  'type_comment': None,
- 'value': <ast.Call object at 0x7f517afda290>}
-blah3 <ast.Call object at 0x7f517afda290>  Value: xf.test
-{'attr': 'test',
- 'col_offset': 6,
- 'ctx': <ast.Load object at 0x7f517b0af610>,
- 'end_col_offset': 13,
- 'end_lineno': 21,
- 'lineno': 21,
- 'value': <ast.Name object at 0x7f517afda230>}
-Inside OA: d_o
+ 'value': <ast.Call object at 0x7f03a97aac20>}
 {'col_offset': 0,
  'end_col_offset': 15,
  'end_lineno': 22,
  'lineno': 22,
- 'targets': [<ast.Name object at 0x7f517afda1d0>],
+ 'targets': [<ast.Name object at 0x7f03a97aab60>],
  'type_comment': None,
- 'value': <ast.Call object at 0x7f517afda1a0>}
-blah3 <ast.Call object at 0x7f517afda1a0>  Value: xy.test
-{'attr': 'test',
- 'col_offset': 6,
- 'ctx': <ast.Load object at 0x7f517b0af610>,
- 'end_col_offset': 13,
- 'end_lineno': 22,
- 'lineno': 22,
- 'value': <ast.Name object at 0x7f517afda140>}
-Inside OA: model
+ 'value': <ast.Call object at 0x7f03a97aab30>}
 {'col_offset': 0,
  'end_col_offset': 6,
  'end_lineno': 29,
  'lineno': 24,
- 'targets': [<ast.Name object at 0x7f517afda0e0>],
+ 'targets': [<ast.Name object at 0x7f03a97aaa70>],
  'type_comment': None,
- 'value': <ast.Call object at 0x7f517afda0b0>}
-blah3 <ast.Call object at 0x7f517afda0b0>  Value: tf.keras.models.Sequential
-{'attr': 'Sequential',
- 'col_offset': 8,
- 'ctx': <ast.Load object at 0x7f517b0af610>,
- 'end_col_offset': 34,
- 'end_lineno': 24,
- 'lineno': 24,
- 'value': <ast.Attribute object at 0x7f517afda050>}
-Lib is : ['tf']  got name : tf.keras.models.Sequential
+ 'value': <ast.Call object at 0x7f03a97aaa40>}
+{'col_offset': 0,
+ 'end_col_offset': 24,
+ 'end_lineno': 32,
+ 'lineno': 32,
+ 'targets': [<ast.Name object at 0x7f03a97aa290>],
+ 'type_comment': None,
+ 'value': <ast.Call object at 0x7f03a97aa260>}
+{'col_offset': 0,
+ 'end_col_offset': 19,
+ 'end_lineno': 33,
+ 'lineno': 33,
+ 'targets': [<ast.Name object at 0x7f03a97aa170>],
+ 'type_comment': None,
+ 'value': <ast.Call object at 0x7f03a97aa140>}
 requiredObjects ['X', 'Y', 'z', 'w_o', 'b_o', 'model']
-blah1 <ast.Name object at 0x7f517afdbc70>  Value: tf
+blah1 <ast.Name object at 0x7f03a97abc70>  Value: tf  Split:  tf
 tf()
-blah1 <ast.Attribute object at 0x7f517afdb0d0>  Value: tf.placeholder
+blah1 <ast.Attribute object at 0x7f03a97aba60>  Value: tf.placeholder  Split:  tf
 tf.placeholder(tf.float32, [None, 1], name = "X")
-blah1 <ast.Attribute object at 0x7f517afdae90>  Value: tf.placeholder
+blah1 <ast.Attribute object at 0x7f03a97ab820>  Value: tf.placeholder  Split:  tf
 tf.placeholder(tf.float32, [None, 1], name = "Y")
-blah1 <ast.Attribute object at 0x7f517afdac50>  Value: tf.value
+blah1 <ast.Attribute object at 0x7f03a97ab5e0>  Value: tf.value  Split:  tf
 tf.value("aname",bname,name="tname")
-blah1 <ast.Attribute object at 0x7f517afdaaa0>  Value: tf.Variable
+blah1 <ast.Attribute object at 0x7f03a97ab430>  Value: tf.Variable  Split:  tf
 tf.Variable(
    tf.random_uniform([layer_1_neurons, 1], minval = -1, maxval = 1, dtype = tf.float32),test1,test2,test3="test3")
-blah1 <ast.Attribute object at 0x7f517afda650>  Value: tf.Variable
+blah1 <ast.Attribute object at 0x7f03a97aafe0>  Value: tf.Variable  Split:  tf
 tf.Variable(tf.zeros([1, 1], dtype = tf.float32))
-blah1 <ast.Attribute object at 0x7f517afda3b0>  Value: ab.test
-blah1 <ast.Attribute object at 0x7f517afda260>  Value: xf.test
-blah1 <ast.Attribute object at 0x7f517afda170>  Value: xy.test
-blah1 <ast.Attribute object at 0x7f517afda080>  Value: tf.keras.models.Sequential
+blah1 <ast.Attribute object at 0x7f03a97aad40>  Value: ab.test  Split:  ab
+blah1 <ast.Attribute object at 0x7f03a97aabf0>  Value: xf.test  Split:  xf
+blah1 <ast.Attribute object at 0x7f03a97aab00>  Value: xy.test  Split:  xy
+blah1 <ast.Attribute object at 0x7f03a97aaa10>  Value: tf.keras.models.Sequential  Split:  tf
 tf.keras.models.Sequential([
     tf.keras.layers.Flatten(input_shape=(28, 28)),
     tf.keras.layers.Dense(128, activation='relu'),
     tf.keras.layers.Dropout(0.2),
     tf.keras.layers.Dense(10)
     ])
-blah1 <ast.Attribute object at 0x7f517afd9510>  Value: model.compile
+blah1 <ast.Attribute object at 0x7f03a97aa350>  Value: model.compile  Split:  model
+Obj: model.compile()
+blah1 <ast.Attribute object at 0x7f03a97aa230>  Value: b_o.test.compile  Split:  b_o
+Obj: b_o.test.compile()
+blah1 <ast.Attribute object at 0x7f03a97aa110>  Value: c_o.compile  Split:  c_o
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 Module(
     body=[
@@ -278,13 +209,13 @@ Module(
                 keywords=[
                     keyword(
                         arg='imports',
-                        value=Constant(value='from pprint import pprint;import math, random;import matplotlib.pyplot as plt;import tensorflow as tf;import numpy as np')),
+                        value=Constant(value='from pprint import pprint;import tensorflow as tf;import math, random;import matplotlib.pyplot as plt;import numpy as np')),
                     keyword(
                         arg='function_to_run',
                         value=Constant(value='tf()')),
                     keyword(
                         arg='method_object',
-                        value=Constant(value='')),
+                        value=Constant(value=None)),
                     keyword(
                         arg='function_args',
                         value=Constant(value=[])),
@@ -332,13 +263,13 @@ Module(
                 keywords=[
                     keyword(
                         arg='imports',
-                        value=Constant(value='from pprint import pprint;import math, random;import matplotlib.pyplot as plt;import tensorflow as tf;import numpy as np')),
+                        value=Constant(value='from pprint import pprint;import tensorflow as tf;import math, random;import matplotlib.pyplot as plt;import numpy as np')),
                     keyword(
                         arg='function_to_run',
                         value=Constant(value='tf.placeholder(*args, **kwargs)')),
                     keyword(
                         arg='method_object',
-                        value=Constant(value='')),
+                        value=Constant(value=None)),
                     keyword(
                         arg='function_args',
                         value=Constant(
@@ -380,13 +311,13 @@ Module(
                 keywords=[
                     keyword(
                         arg='imports',
-                        value=Constant(value='from pprint import pprint;import math, random;import matplotlib.pyplot as plt;import tensorflow as tf;import numpy as np')),
+                        value=Constant(value='from pprint import pprint;import tensorflow as tf;import math, random;import matplotlib.pyplot as plt;import numpy as np')),
                     keyword(
                         arg='function_to_run',
                         value=Constant(value='tf.placeholder(*args, **kwargs)')),
                     keyword(
                         arg='method_object',
-                        value=Constant(value='')),
+                        value=Constant(value=None)),
                     keyword(
                         arg='function_args',
                         value=Constant(
@@ -421,13 +352,13 @@ Module(
                 keywords=[
                     keyword(
                         arg='imports',
-                        value=Constant(value='from pprint import pprint;import math, random;import matplotlib.pyplot as plt;import tensorflow as tf;import numpy as np')),
+                        value=Constant(value='from pprint import pprint;import tensorflow as tf;import math, random;import matplotlib.pyplot as plt;import numpy as np')),
                     keyword(
                         arg='function_to_run',
                         value=Constant(value='tf.value(*args, **kwargs)')),
                     keyword(
                         arg='method_object',
-                        value=Constant(value='')),
+                        value=Constant(value=None)),
                     keyword(
                         arg='function_args',
                         value=Constant(
@@ -488,13 +419,13 @@ Module(
                 keywords=[
                     keyword(
                         arg='imports',
-                        value=Constant(value='from pprint import pprint;import math, random;import matplotlib.pyplot as plt;import tensorflow as tf;import numpy as np')),
+                        value=Constant(value='from pprint import pprint;import tensorflow as tf;import math, random;import matplotlib.pyplot as plt;import numpy as np')),
                     keyword(
                         arg='function_to_run',
                         value=Constant(value='tf.Variable(*args, **kwargs)')),
                     keyword(
                         arg='method_object',
-                        value=Constant(value='')),
+                        value=Constant(value=None)),
                     keyword(
                         arg='function_args',
                         value=Constant(
@@ -543,13 +474,13 @@ Module(
                 keywords=[
                     keyword(
                         arg='imports',
-                        value=Constant(value='from pprint import pprint;import math, random;import matplotlib.pyplot as plt;import tensorflow as tf;import numpy as np')),
+                        value=Constant(value='from pprint import pprint;import tensorflow as tf;import math, random;import matplotlib.pyplot as plt;import numpy as np')),
                     keyword(
                         arg='function_to_run',
                         value=Constant(value='tf.Variable(*args)')),
                     keyword(
                         arg='method_object',
-                        value=Constant(value='')),
+                        value=Constant(value=None)),
                     keyword(
                         arg='function_args',
                         value=Constant(
@@ -684,13 +615,13 @@ Module(
                 keywords=[
                     keyword(
                         arg='imports',
-                        value=Constant(value='from pprint import pprint;import math, random;import matplotlib.pyplot as plt;import tensorflow as tf;import numpy as np')),
+                        value=Constant(value='from pprint import pprint;import tensorflow as tf;import math, random;import matplotlib.pyplot as plt;import numpy as np')),
                     keyword(
                         arg='function_to_run',
                         value=Constant(value='tf.keras.models.Sequential(*args)')),
                     keyword(
                         arg='method_object',
-                        value=Constant(value='')),
+                        value=Constant(value=None)),
                     keyword(
                         arg='function_args',
                         value=Constant(
@@ -704,8 +635,77 @@ Module(
                         value=Constant(value=30))])),
         Expr(
             value=Call(
+                func=Name(id='custom_method', ctx=Load()),
+                args=[
+                    Expr(
+                        value=Call(
+                            func=Attribute(
+                                value=Name(id='model', ctx=Load()),
+                                attr='compile',
+                                ctx=Load()),
+                            args=[],
+                            keywords=[]))],
+                keywords=[
+                    keyword(
+                        arg='imports',
+                        value=Constant(value='from pprint import pprint;import tensorflow as tf;import math, random;import matplotlib.pyplot as plt;import numpy as np')),
+                    keyword(
+                        arg='function_to_run',
+                        value=Constant(value='obj.compile()')),
+                    keyword(
+                        arg='method_object',
+                        value=Constant(value='model')),
+                    keyword(
+                        arg='function_args',
+                        value=Constant(value=[])),
+                    keyword(
+                        arg='function_kwargs',
+                        value=Constant(value={})),
+                    keyword(
+                        arg='max_wait_secs',
+                        value=Constant(value=30))])),
+        Assign(
+            targets=[
+                Name(id='f_o', ctx=Store())],
+            value=Call(
+                func=Name(id='custom_method', ctx=Load()),
+                args=[
+                    Expr(
+                        value=Call(
+                            func=Attribute(
+                                value=Attribute(
+                                    value=Name(id='b_o', ctx=Load()),
+                                    attr='test',
+                                    ctx=Load()),
+                                attr='compile',
+                                ctx=Load()),
+                            args=[],
+                            keywords=[]))],
+                keywords=[
+                    keyword(
+                        arg='imports',
+                        value=Constant(value='from pprint import pprint;import tensorflow as tf;import math, random;import matplotlib.pyplot as plt;import numpy as np')),
+                    keyword(
+                        arg='function_to_run',
+                        value=Constant(value='obj.test.compile()')),
+                    keyword(
+                        arg='method_object',
+                        value=Constant(value='b_o')),
+                    keyword(
+                        arg='function_args',
+                        value=Constant(value=[])),
+                    keyword(
+                        arg='function_kwargs',
+                        value=Constant(value={})),
+                    keyword(
+                        arg='max_wait_secs',
+                        value=Constant(value=30))])),
+        Assign(
+            targets=[
+                Name(id='z_o', ctx=Store())],
+            value=Call(
                 func=Attribute(
-                    value=Name(id='model', ctx=Load()),
+                    value=Name(id='c_o', ctx=Load()),
                     attr='compile',
                     ctx=Load()),
                 args=[],
@@ -723,21 +723,25 @@ import math, random
 import matplotlib.pyplot as plt
 from pprint import pprint
 custom_method(
-tf(), imports='from pprint import pprint;import math, random;import matplotlib.pyplot as plt;import tensorflow as tf;import numpy as np', function_to_run='tf()', method_object='', function_args=[], function_kwargs={}, max_wait_secs=30)
+tf(), imports='from pprint import pprint;import tensorflow as tf;import math, random;import matplotlib.pyplot as plt;import numpy as np', function_to_run='tf()', method_object=None, function_args=[], function_kwargs={}, max_wait_secs=30)
 testlist = ['a', 'b', 'c']
 X = custom_method(
-tf.placeholder(tf.float32, [None, 1], name='X'), imports='from pprint import pprint;import math, random;import matplotlib.pyplot as plt;import tensorflow as tf;import numpy as np', function_to_run='tf.placeholder(*args, **kwargs)', method_object='', function_args=['tf.float32', '[None, 1]'], function_kwargs={'name': '"X"'}, max_wait_secs=30)
+tf.placeholder(tf.float32, [None, 1], name='X'), imports='from pprint import pprint;import tensorflow as tf;import math, random;import matplotlib.pyplot as plt;import numpy as np', function_to_run='tf.placeholder(*args, **kwargs)', method_object=None, function_args=['tf.float32', '[None, 1]'], function_kwargs={'name': '"X"'}, max_wait_secs=30)
 Y = custom_method(
-tf.placeholder(tf.float32, [None, 1], name='Y'), imports='from pprint import pprint;import math, random;import matplotlib.pyplot as plt;import tensorflow as tf;import numpy as np', function_to_run='tf.placeholder(*args, **kwargs)', method_object='', function_args=['tf.float32', '[None, 1]'], function_kwargs={'name': '"Y"'}, max_wait_secs=30)
+tf.placeholder(tf.float32, [None, 1], name='Y'), imports='from pprint import pprint;import tensorflow as tf;import math, random;import matplotlib.pyplot as plt;import numpy as np', function_to_run='tf.placeholder(*args, **kwargs)', method_object=None, function_args=['tf.float32', '[None, 1]'], function_kwargs={'name': '"Y"'}, max_wait_secs=30)
 z = custom_method(
-tf.value('aname', bname, name='tname'), imports='from pprint import pprint;import math, random;import matplotlib.pyplot as plt;import tensorflow as tf;import numpy as np', function_to_run='tf.value(*args, **kwargs)', method_object='', function_args=['"aname"', 'bname'], function_kwargs={'name': '"tname"'}, max_wait_secs=30)
+tf.value('aname', bname, name='tname'), imports='from pprint import pprint;import tensorflow as tf;import math, random;import matplotlib.pyplot as plt;import numpy as np', function_to_run='tf.value(*args, **kwargs)', method_object=None, function_args=['"aname"', 'bname'], function_kwargs={'name': '"tname"'}, max_wait_secs=30)
 w_o = custom_method(
-tf.Variable(tf.random_uniform([layer_1_neurons, 1], minval=-1, maxval=1, dtype=tf.float32), test1, test2, test3='test3'), imports='from pprint import pprint;import math, random;import matplotlib.pyplot as plt;import tensorflow as tf;import numpy as np', function_to_run='tf.Variable(*args, **kwargs)', method_object='', function_args=['tf.random_uniform([layer_1_neurons, 1], minval = -1, maxval = 1, dtype = tf.float32)', 'test1', 'test2'], function_kwargs={'test3': '"test3"'}, max_wait_secs=30)
+tf.Variable(tf.random_uniform([layer_1_neurons, 1], minval=-1, maxval=1, dtype=tf.float32), test1, test2, test3='test3'), imports='from pprint import pprint;import tensorflow as tf;import math, random;import matplotlib.pyplot as plt;import numpy as np', function_to_run='tf.Variable(*args, **kwargs)', method_object=None, function_args=['tf.random_uniform([layer_1_neurons, 1], minval = -1, maxval = 1, dtype = tf.float32)', 'test1', 'test2'], function_kwargs={'test3': '"test3"'}, max_wait_secs=30)
 b_o = custom_method(
-tf.Variable(tf.zeros([1, 1], dtype=tf.float32)), imports='from pprint import pprint;import math, random;import matplotlib.pyplot as plt;import tensorflow as tf;import numpy as np', function_to_run='tf.Variable(*args)', method_object='', function_args=['tf.zeros([1, 1], dtype = tf.float32)'], function_kwargs={}, max_wait_secs=30)
+tf.Variable(tf.zeros([1, 1], dtype=tf.float32)), imports='from pprint import pprint;import tensorflow as tf;import math, random;import matplotlib.pyplot as plt;import numpy as np', function_to_run='tf.Variable(*args)', method_object=None, function_args=['tf.zeros([1, 1], dtype = tf.float32)'], function_kwargs={}, max_wait_secs=30)
 cd = ab.test(a, b)
 c_o = xf.test()
 d_o = xy.test()
 model = custom_method(
-tf.keras.models.Sequential([tf.keras.layers.Flatten(input_shape=(28, 28)), tf.keras.layers.Dense(128, activation='relu'), tf.keras.layers.Dropout(0.2), tf.keras.layers.Dense(10)]), imports='from pprint import pprint;import math, random;import matplotlib.pyplot as plt;import tensorflow as tf;import numpy as np', function_to_run='tf.keras.models.Sequential(*args)', method_object='', function_args=["[\n    tf.keras.layers.Flatten(input_shape=(28, 28)),\n    tf.keras.layers.Dense(128, activation='relu'),\n    tf.keras.layers.Dropout(0.2),\n    tf.keras.layers.Dense(10)\n    ]"], function_kwargs={}, max_wait_secs=30)
-model.compile()
+tf.keras.models.Sequential([tf.keras.layers.Flatten(input_shape=(28, 28)), tf.keras.layers.Dense(128, activation='relu'), tf.keras.layers.Dropout(0.2), tf.keras.layers.Dense(10)]), imports='from pprint import pprint;import tensorflow as tf;import math, random;import matplotlib.pyplot as plt;import numpy as np', function_to_run='tf.keras.models.Sequential(*args)', method_object=None, function_args=["[\n    tf.keras.layers.Flatten(input_shape=(28, 28)),\n    tf.keras.layers.Dense(128, activation='relu'),\n    tf.keras.layers.Dropout(0.2),\n    tf.keras.layers.Dense(10)\n    ]"], function_kwargs={}, max_wait_secs=30)
+custom_method(
+model.compile(), imports='from pprint import pprint;import tensorflow as tf;import math, random;import matplotlib.pyplot as plt;import numpy as np', function_to_run='obj.compile()', method_object='model', function_args=[], function_kwargs={}, max_wait_secs=30)
+f_o = custom_method(
+b_o.test.compile(), imports='from pprint import pprint;import tensorflow as tf;import math, random;import matplotlib.pyplot as plt;import numpy as np', function_to_run='obj.test.compile()', method_object='b_o', function_args=[], function_kwargs={}, max_wait_secs=30)
+z_o = c_o.compile()
