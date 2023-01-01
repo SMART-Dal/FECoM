@@ -88,6 +88,13 @@ def run_method(imports: str, function_to_run: str, method_object: object, args: 
     
     func_return = eval(function_to_run)
 
+    # if we run a method, also return the object
+    if method_object is not None:
+        func_return = {
+            "return": func_return,
+            "method_object": obj
+        }
+
 
     if DEBUG:
         print(f"Performed {function_to_run} on input")

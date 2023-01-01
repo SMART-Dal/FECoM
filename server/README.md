@@ -37,6 +37,15 @@ data = pickle.dumps(method_details)
 # sending the POST request
 resp = requests.post(url, data=data, headers={'Content-Type': 'application/octet-stream'})
 ```
+
+The response `resp` contains the function return as a pickled python object that can be retrieved by calling `pickle.loads(resp.content)`. If a method (and not a function) was run, i.e. method_object is not `None`, this object is a dictionary:  
+```
+content = {
+    "return": function_return,
+    "method_object": method_object
+}
+```
+
 The dictionary has the following variables:
 
 ### Imports

@@ -5,7 +5,7 @@ import sys
 sys.path.insert(0,'..')
 from config import URL, DEBUG
 
-def send_request(imports: str, function_to_run: str, function_args: list, function_kwargs: dict, max_wait_secs=0, method_object=None):
+def send_request(imports: str, function_to_run: str, function_args: list = None, function_kwargs: dict = None, max_wait_secs=0, method_object=None):
     """
     Send a request to execute any function and show the result
     TODO continue here: test compatibility with other functions and modules

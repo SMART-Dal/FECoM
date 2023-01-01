@@ -67,27 +67,49 @@ def net():
     
     return Net()
 
+
 @pytest.fixture
 def criterion():
     return nn.CrossEntropyLoss()
 
+
 @pytest.fixture
-def optimizer():
+def optimizer(net):
     return optim.SGD(net.parameters(), lr=0.001, momentum=0.9)
 
+@pytest.fixture
+def training_batch(dataset):
+    """
+    returns tuple(inputs, labels) for one batch from the training dataset
+    """
+    trainloader = dataset["trainloader"]
+    return next(iter(trainloader))
 
-def test_mnist_load():
-    imports = "import tensorflow as tf"
-    function_to_run = "tf.keras.datasets.mnist.load_data()"
-    function_args = None
-    function_kwargs = None
 
-    result = send_request(imports, function_to_run, function_args, function_kwargs)
+def test_optimizer_zero_grad(optimizer):
+    imports = "import torch.optim as optim"
+    function_to_run = "obj.zero_grad()"
+    method_object = optimizer
 
-    # compare result from server with the real results
-    mnist = tf.keras.datasets.mnist
-    (x_train, y_train), (x_test, y_test) = mnist.load_data()
-    assert(result[0][0].all() == x_train.all())
-    assert(result[0][1].all() == y_train.all())
-    assert(result[1][0].all() == x_test.all())
-    assert(result[1][1].all() == y_test.all())
+    return_dict = send_request(imports, function_to_run, method_object=method_object)
+    zero_grad_optimizer = return_dict["method_object"]
+
+    optimizer.zero_grad()
+
+    assert return_dict["return"] is None
+    assert zero_grad_optimizer.state_dict() == optimizer.state_dict()
+
+
+def test_forward_pass(net, training_batch):
+    inputs = training_batch[0]
+
+    imports = "import torch.nn as nn"
+    function_to_run = "obj(*args)"
+    method_object = net
+    function_args = [inputs]
+
+    return_dict = send_request(imports, function_to_run, function_args=function_args, method_object=method_object)
+
+    outputs = net(inputs)
+
+    assert return_dict["return"] == outputs
