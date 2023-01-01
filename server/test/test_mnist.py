@@ -1,5 +1,4 @@
 import tensorflow as tf
-import numpy as np
 from send_request import send_request
 
 def test_mnist_load():

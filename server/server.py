@@ -2,7 +2,6 @@
 Server to receive client requests to run ML methods and measure energy.
 """
 
-import numpy as np
 import time
 import statistics as stats
 import pickle
