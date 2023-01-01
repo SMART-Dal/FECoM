@@ -25,9 +25,9 @@ The API (path specified in `config.py`) expects a POST request with request.data
 method_details = {
     "imports": imports,
     "function": function_to_run,
-    "method_object": method_object
+    "method_object": method_object,
     "args": function_args,
-    "kwargs": function_kwargs
+    "kwargs": function_kwargs,
     "max_wait_secs": max_wait_secs
 }
 
@@ -39,11 +39,13 @@ resp = requests.post(url, data=data, headers={'Content-Type': 'application/octet
 ```
 The dictionary has the following variables:
 
+### Imports
 `imports` is a string of runnable python code that specifies the imports necessary to run the given function. E.g.  
 ```
 imports = "import numpy as np"
 ```
 
+### Function to run
 `function_to_run` is a string of runnable python code that includes the full method signature with `*args` and/or `**kwargs` as the function arguments. If this is a method call, i.e. a function called on an object that has been instantiated previously in the code, the variable name has to be substituted with `obj`. E.g.  
 ```
 """
@@ -65,6 +67,7 @@ CASE 2: method call
 function_to_run = "obj.compile(**kwargs)"
 ```
 
+### Method object
 `method_object` specifies the object to run the method on, if it is a method called on a previously initialised object and not a function. If it is a function, this parameter is set to `None`. This is any python object stored under name equal to the name specified in the `function_to_run` parameter. E.g.  
 ```
 """
@@ -90,6 +93,7 @@ model = tf.keras.models.Sequential([
 method_object = model
 ```
 
+### Function arguments
 `function_args` is an ordered `list` of the positional arguments that should be passed to the `function_to_run`. Each argument can be any kind of python object that can be serialised with pickle ([almost every object](https://machinelearningmastery.com/a-gentle-introduction-to-serialization-for-python/)). E.g.  
 ```
 arr1 = np.random.rand(100,100)
@@ -100,6 +104,7 @@ function_args = [arr1,arr2]
 function_args = [np.random.rand(100,100),np.random.rand(100,100)]
 ```
 
+### Function keyword arguments
 `function_kwargs` is a `dict` of the keyword arguments that should be passed to the `function_to_run`. The key-value pairs are of the form `"keyword": argument`. Each argument can be any kind of python object that can be serialised with pickle ([almost every object](https://machinelearningmastery.com/a-gentle-introduction-to-serialization-for-python/)). E.g.  
 ```
 function_kwargs = {
@@ -109,6 +114,7 @@ function_kwargs = {
 }
 ```
 
+### Max wait seconds
 `max_wait_secs` is an `int` specifying the number of seconds the server should wait for the system to reach a stable state. If a stable state is not reached within this time, the server will abort and return an error. The special value `0` tells the server to not check for stable state and simply execute the method, which can be useful for testing purposes. E.g.  
 ```
 max_wait_secs = 30
