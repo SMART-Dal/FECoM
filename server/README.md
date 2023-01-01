@@ -9,8 +9,8 @@ Activate the venv (Linux):
 ```source venv/bin/activate```  
 Activate the venv (Windows):  
 ```venv\Scripts\activate```    
-Install dependencies (matplotlib, pandas & scikit-learn are optional for energy measurement processing & graphing):  
-```pip install flask numpy requests tensorflow pandas matplotlib scikit-learn```
+Install dependencies (pandas, matplotlib & scikit-learn are optional for energy measurement processing & graphing):  
+```pip install flask numpy requests tensorflow torch torchvision torchaudio pandas matplotlib scikit-learn```
 
 ## Run
 Start the client:  
