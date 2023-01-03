@@ -16,7 +16,7 @@ sourceCode = ''
 def main():
 
     #Step1: Create an AST from the client python code
-    with open("code_snippet2.py", "r") as source:
+    with open("code_snippet.py", "r") as source:
         global sourceCode
         sourceCode = source.read()
         tree = ast.parse(sourceCode)
@@ -34,7 +34,7 @@ def main():
     objAnalyzer = ObjectAnalyzer()
     objAnalyzer.visit(tree)
     requiredObjects = objAnalyzer.stats['objects']
-    print("requiredObjects",requiredObjects)
+    # print("requiredObjects",requiredObjects)
 
     #Step4: Tranform the client script by adding custom method calls
     transf = TransformCall()
@@ -44,13 +44,13 @@ def main():
         cm_node = ast.parse(cm)
         tree.body.insert(0, cm_node)
 
-    print('+'*100)
-    print(ast.dump(tree, indent=4))
-    print('_'*100)
+    # print('+'*100)
+    # print(ast.dump(tree, indent=4))
+    # print('_'*100)
 
     #Step5: Unparse and convert AST to final code
     print(ast.unparse(tree))
-    print('+'*100)
+    # print('+'*100)
 
 
 class FuncCallVisitor(ast.NodeVisitor):
@@ -87,14 +87,14 @@ class TransformCall(ast.NodeTransformer):
     def visit_Call(self, node):
         callvisitor = FuncCallVisitor()
         callvisitor.visit(node.func)
-        print("blah1",node.func," Value:",callvisitor.name," Split: ",callvisitor.name.split('.')[0])
+        # print("blah1",node.func," Value:",callvisitor.name," Split: ",callvisitor.name.split('.')[0])
 
         if(any(lib in callvisitor.name for lib in requiredAlias)):
             dummyNode=copy.deepcopy(node)
             dummyNode.args.clear()
             dummyNode.keywords.clear()
             # print("Args:",ast.get_source_segment(sourceCode, node))
-            print(ast.get_source_segment(sourceCode, node))
+            # print(ast.get_source_segment(sourceCode, node))
             argList = [ast.get_source_segment(sourceCode, a) for a in node.args]
             # argList = ast.literal_eval(ast.get_source_segment(sourceCode, node.args))
             # print("SSR arguments:",argList)
@@ -111,9 +111,6 @@ class TransformCall(ast.NodeTransformer):
                                     ast.keyword(
                                         arg='imports',
                                         value=ast.Constant(importScriptList)),
-                                    ast.keyword(
-                                        arg='functionDef',
-                                        value=ast.Constant(ast.unparse(node.func))),
                                     ast.keyword(
                                         arg='function_to_run',
                                         value=ast.Constant(ast.unparse(dummyNode))),
@@ -174,9 +171,6 @@ class TransformCall(ast.NodeTransformer):
                                         arg='imports',
                                         value=ast.Constant(importScriptList)),
                                     ast.keyword(
-                                        arg='functionDef',
-                                        value=ast.Constant(ast.unparse(node.func))),
-                                    ast.keyword(
                                         arg='function_to_run',
                                         value=ast.Constant(ast.unparse(dummyNode).replace(callvisitor.name.split('.')[0], 'obj', 1))),
                                     ast.keyword(
@@ -184,10 +178,25 @@ class TransformCall(ast.NodeTransformer):
                                         value=ast.Constant(callvisitor.name.split('.')[0])),
                                     ast.keyword(
                                         arg='function_args',
-                                        value=ast.Constant(argList)),
+                                        value=ast.List(
+                                            elts=[
+                                                ast.Call(
+                                                    func=ast.Name(id='eval', ctx=ast.Load()),
+                                                    args=[
+                                                        ast.Constant(value=argItem)],
+                                                    keywords=[]) for argItem in argList],
+                                            ctx=ast.Load())),
                                     ast.keyword(
                                         arg='function_kwargs',
-                                        value=ast.Constant(keywordsDict)),
+                                        value=ast.Dict(
+                                            keys=[
+                                                ast.Constant(value=KWItem) for KWItem in keywordsDict],
+                                            values=[
+                                                ast.Call(
+                                                    func=ast.Name(id='eval', ctx=ast.Load()),
+                                                    args=[
+                                                        ast.Constant(value=keywordsDict[KWItem])],
+                                                    keywords=[]) for KWItem in keywordsDict])),
                                     ast.keyword(
                                         arg='max_wait_secs',
                                         value=ast.Constant(30)),
@@ -262,11 +271,11 @@ def get_func_calls(tree):
             callvisitor = FuncCallVisitor()
             callTransformer = TransformCall()
             callvisitor.visit(node.func)
-            print("blah2",node.func," Value:",callvisitor.name)
+            # print("blah2",node.func," Value:",callvisitor.name)
             if(any(lib in callvisitor.name for lib in requiredAlias)):
                 tree = callTransformer.visit(node)
-                print("---",ast.unparse(node))
-                print(ast.unparse(tree))
+                # print("---",ast.unparse(node))
+                # print(ast.unparse(tree))
 
 class Analyzer(ast.NodeVisitor):
     def __init__(self):
@@ -299,7 +308,7 @@ class ObjectAnalyzer(ast.NodeVisitor):
     def visit_Assign(self, node):
         if isinstance(node.value, ast.Call):
             # print("Inside OA:",node.targets[0].id)
-            pprint(vars(node))
+            # pprint(vars(node))
             callvisitor2 = FuncCallVisitor()
             callvisitor2.visit(node.value.func)
             # print("blah3",node.value," Value:",callvisitor2.name)

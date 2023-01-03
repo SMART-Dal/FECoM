@@ -1,3 +1,6 @@
+import pickle
+import requests
+
 def custom_method(func,imports,function_to_run,method_object,function_args,function_kwargs,max_wait_secs):
    method_details = {
     "imports": imports,
