@@ -2,108 +2,106 @@
  'end_col_offset': 53,
  'end_lineno': 10,
  'lineno': 10,
- 'targets': [<ast.Name object at 0x7f03a97abac0>],
+ 'targets': [<ast.Name object at 0x7f8e9d573ac0>],
  'type_comment': None,
- 'value': <ast.Call object at 0x7f03a97aba90>}
+ 'value': <ast.Call object at 0x7f8e9d573a90>}
 {'col_offset': 0,
  'end_col_offset': 53,
  'end_lineno': 11,
  'lineno': 11,
- 'targets': [<ast.Name object at 0x7f03a97ab880>],
+ 'targets': [<ast.Name object at 0x7f8e9d573880>],
  'type_comment': None,
- 'value': <ast.Call object at 0x7f03a97ab850>}
+ 'value': <ast.Call object at 0x7f8e9d573850>}
 {'col_offset': 0,
  'end_col_offset': 40,
  'end_lineno': 12,
  'lineno': 12,
- 'targets': [<ast.Name object at 0x7f03a97ab640>],
+ 'targets': [<ast.Name object at 0x7f8e9d573640>],
  'type_comment': None,
- 'value': <ast.Call object at 0x7f03a97ab610>}
+ 'value': <ast.Call object at 0x7f8e9d573610>}
 {'col_offset': 0,
  'end_col_offset': 114,
  'end_lineno': 17,
  'lineno': 16,
- 'targets': [<ast.Name object at 0x7f03a97ab490>],
+ 'targets': [<ast.Name object at 0x7f8e9d573490>],
  'type_comment': None,
- 'value': <ast.Call object at 0x7f03a97ab460>}
+ 'value': <ast.Call object at 0x7f8e9d573460>}
 {'col_offset': 0,
  'end_col_offset': 55,
  'end_lineno': 18,
  'lineno': 18,
- 'targets': [<ast.Name object at 0x7f03a97ab040>],
+ 'targets': [<ast.Name object at 0x7f8e9d573040>],
  'type_comment': None,
- 'value': <ast.Call object at 0x7f03a97ab010>}
+ 'value': <ast.Call object at 0x7f8e9d573010>}
 {'col_offset': 0,
  'end_col_offset': 17,
  'end_lineno': 20,
  'lineno': 20,
- 'targets': [<ast.Name object at 0x7f03a97aada0>],
+ 'targets': [<ast.Name object at 0x7f8e9d572da0>],
  'type_comment': None,
- 'value': <ast.Call object at 0x7f03a97aad70>}
+ 'value': <ast.Call object at 0x7f8e9d572d70>}
 {'col_offset': 0,
  'end_col_offset': 15,
  'end_lineno': 21,
  'lineno': 21,
- 'targets': [<ast.Name object at 0x7f03a97aac50>],
+ 'targets': [<ast.Name object at 0x7f8e9d572c50>],
  'type_comment': None,
- 'value': <ast.Call object at 0x7f03a97aac20>}
+ 'value': <ast.Call object at 0x7f8e9d572c20>}
 {'col_offset': 0,
  'end_col_offset': 15,
  'end_lineno': 22,
  'lineno': 22,
- 'targets': [<ast.Name object at 0x7f03a97aab60>],
+ 'targets': [<ast.Name object at 0x7f8e9d572b60>],
  'type_comment': None,
- 'value': <ast.Call object at 0x7f03a97aab30>}
+ 'value': <ast.Call object at 0x7f8e9d572b30>}
 {'col_offset': 0,
  'end_col_offset': 6,
  'end_lineno': 29,
  'lineno': 24,
- 'targets': [<ast.Name object at 0x7f03a97aaa70>],
+ 'targets': [<ast.Name object at 0x7f8e9d572a70>],
  'type_comment': None,
- 'value': <ast.Call object at 0x7f03a97aaa40>}
+ 'value': <ast.Call object at 0x7f8e9d572a40>}
 {'col_offset': 0,
  'end_col_offset': 24,
  'end_lineno': 32,
  'lineno': 32,
- 'targets': [<ast.Name object at 0x7f03a97aa290>],
+ 'targets': [<ast.Name object at 0x7f8e9d571900>],
  'type_comment': None,
- 'value': <ast.Call object at 0x7f03a97aa260>}
+ 'value': <ast.Call object at 0x7f8e9d5718d0>}
 {'col_offset': 0,
  'end_col_offset': 19,
  'end_lineno': 33,
  'lineno': 33,
- 'targets': [<ast.Name object at 0x7f03a97aa170>],
+ 'targets': [<ast.Name object at 0x7f8e9d5717e0>],
  'type_comment': None,
- 'value': <ast.Call object at 0x7f03a97aa140>}
+ 'value': <ast.Call object at 0x7f8e9d5717b0>}
 requiredObjects ['X', 'Y', 'z', 'w_o', 'b_o', 'model']
-blah1 <ast.Name object at 0x7f03a97abc70>  Value: tf  Split:  tf
+blah1 <ast.Name object at 0x7f8e9d573c70>  Value: tf  Split:  tf
 tf()
-blah1 <ast.Attribute object at 0x7f03a97aba60>  Value: tf.placeholder  Split:  tf
+blah1 <ast.Attribute object at 0x7f8e9d573a60>  Value: tf.placeholder  Split:  tf
 tf.placeholder(tf.float32, [None, 1], name = "X")
-blah1 <ast.Attribute object at 0x7f03a97ab820>  Value: tf.placeholder  Split:  tf
+blah1 <ast.Attribute object at 0x7f8e9d573820>  Value: tf.placeholder  Split:  tf
 tf.placeholder(tf.float32, [None, 1], name = "Y")
-blah1 <ast.Attribute object at 0x7f03a97ab5e0>  Value: tf.value  Split:  tf
+blah1 <ast.Attribute object at 0x7f8e9d5735e0>  Value: tf.value  Split:  tf
 tf.value("aname",bname,name="tname")
-blah1 <ast.Attribute object at 0x7f03a97ab430>  Value: tf.Variable  Split:  tf
+blah1 <ast.Attribute object at 0x7f8e9d573430>  Value: tf.Variable  Split:  tf
 tf.Variable(
    tf.random_uniform([layer_1_neurons, 1], minval = -1, maxval = 1, dtype = tf.float32),test1,test2,test3="test3")
-blah1 <ast.Attribute object at 0x7f03a97aafe0>  Value: tf.Variable  Split:  tf
+blah1 <ast.Attribute object at 0x7f8e9d572fe0>  Value: tf.Variable  Split:  tf
 tf.Variable(tf.zeros([1, 1], dtype = tf.float32))
-blah1 <ast.Attribute object at 0x7f03a97aad40>  Value: ab.test  Split:  ab
-blah1 <ast.Attribute object at 0x7f03a97aabf0>  Value: xf.test  Split:  xf
-blah1 <ast.Attribute object at 0x7f03a97aab00>  Value: xy.test  Split:  xy
-blah1 <ast.Attribute object at 0x7f03a97aaa10>  Value: tf.keras.models.Sequential  Split:  tf
+blah1 <ast.Attribute object at 0x7f8e9d572d40>  Value: ab.test  Split:  ab
+blah1 <ast.Attribute object at 0x7f8e9d572bf0>  Value: xf.test  Split:  xf
+blah1 <ast.Attribute object at 0x7f8e9d572b00>  Value: xy.test  Split:  xy
+blah1 <ast.Attribute object at 0x7f8e9d572a10>  Value: tf.keras.models.Sequential  Split:  tf
 tf.keras.models.Sequential([
     tf.keras.layers.Flatten(input_shape=(28, 28)),
     tf.keras.layers.Dense(128, activation='relu'),
     tf.keras.layers.Dropout(0.2),
     tf.keras.layers.Dense(10)
     ])
-blah1 <ast.Attribute object at 0x7f03a97aa350>  Value: model.compile  Split:  model
-Obj: model.compile()
-blah1 <ast.Attribute object at 0x7f03a97aa230>  Value: b_o.test.compile  Split:  b_o
-Obj: b_o.test.compile()
-blah1 <ast.Attribute object at 0x7f03a97aa110>  Value: c_o.compile  Split:  c_o
+blah1 <ast.Attribute object at 0x7f8e9d5719c0>  Value: model.compile  Split:  model
+blah1 <ast.Attribute object at 0x7f8e9d5718a0>  Value: b_o.test.compile  Split:  b_o
+blah1 <ast.Attribute object at 0x7f8e9d571780>  Value: c_o.compile  Split:  c_o
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 Module(
     body=[
@@ -116,6 +114,7 @@ Module(
                         args=[
                             arg(arg='func'),
                             arg(arg='imports'),
+                            arg(arg='functionDef'),
                             arg(arg='function_to_run'),
                             arg(arg='method_object'),
                             arg(arg='function_args'),
@@ -143,6 +142,104 @@ Module(
                                     Name(id='function_args', ctx=Load()),
                                     Name(id='function_kwargs', ctx=Load()),
                                     Name(id='max_wait_secs', ctx=Load())])),
+                        Assign(
+                            targets=[
+                                Tuple(
+                                    elts=[
+                                        Name(id='sig', ctx=Store()),
+                                        Name(id='func_locals', ctx=Store())],
+                                    ctx=Store())],
+                            value=Tuple(
+                                elts=[
+                                    Call(
+                                        func=Attribute(
+                                            value=Name(id='inspect', ctx=Load()),
+                                            attr='signature',
+                                            ctx=Load()),
+                                        args=[
+                                            Name(id='functionDef', ctx=Load())],
+                                        keywords=[]),
+                                    Call(
+                                        func=Name(id='locals', ctx=Load()),
+                                        args=[],
+                                        keywords=[])],
+                                ctx=Load())),
+                        Assign(
+                            targets=[
+                                Name(id='arglist', ctx=Store())],
+                            value=ListComp(
+                                elt=Subscript(
+                                    value=Name(id='func_locals', ctx=Load()),
+                                    slice=Attribute(
+                                        value=Name(id='param', ctx=Load()),
+                                        attr='name',
+                                        ctx=Load()),
+                                    ctx=Load()),
+                                generators=[
+                                    comprehension(
+                                        target=Name(id='param', ctx=Store()),
+                                        iter=Call(
+                                            func=Attribute(
+                                                value=Attribute(
+                                                    value=Name(id='sig', ctx=Load()),
+                                                    attr='parameters',
+                                                    ctx=Load()),
+                                                attr='values',
+                                                ctx=Load()),
+                                            args=[],
+                                            keywords=[]),
+                                        ifs=[
+                                            Compare(
+                                                left=Attribute(
+                                                    value=Name(id='param', ctx=Load()),
+                                                    attr='kind',
+                                                    ctx=Load()),
+                                                ops=[
+                                                    Eq()],
+                                                comparators=[
+                                                    Attribute(
+                                                        value=Name(id='param', ctx=Load()),
+                                                        attr='POSITIONAL_OR_KEYWORD',
+                                                        ctx=Load())])],
+                                        is_async=0)])),
+                        Assign(
+                            targets=[
+                                Name(id='keywordDict', ctx=Store())],
+                            value=ListComp(
+                                elt=Subscript(
+                                    value=Name(id='func_locals', ctx=Load()),
+                                    slice=Attribute(
+                                        value=Name(id='param', ctx=Load()),
+                                        attr='name',
+                                        ctx=Load()),
+                                    ctx=Load()),
+                                generators=[
+                                    comprehension(
+                                        target=Name(id='param', ctx=Store()),
+                                        iter=Call(
+                                            func=Attribute(
+                                                value=Attribute(
+                                                    value=Name(id='sig', ctx=Load()),
+                                                    attr='parameters',
+                                                    ctx=Load()),
+                                                attr='values',
+                                                ctx=Load()),
+                                            args=[],
+                                            keywords=[]),
+                                        ifs=[
+                                            Compare(
+                                                left=Attribute(
+                                                    value=Name(id='param', ctx=Load()),
+                                                    attr='kind',
+                                                    ctx=Load()),
+                                                ops=[
+                                                    Eq()],
+                                                comparators=[
+                                                    Attribute(
+                                                        value=Name(id='param', ctx=Load()),
+                                                        attr='KEYWORD_ONLY',
+                                                        ctx=Load())])],
+                                        is_async=0)])),
                         Assign(
                             targets=[
                                 Name(id='data', ctx=Store())],
@@ -175,6 +272,77 @@ Module(
                                                 Constant(value='Content-Type')],
                                             values=[
                                                 Constant(value='application/octet-stream')]))])),
+                        Expr(
+                            value=Call(
+                                func=Name(id='custom_method', ctx=Load()),
+                                args=[
+                                    Call(
+                                        func=Attribute(
+                                            value=Name(id='tf', ctx=Load()),
+                                            attr='placeholder',
+                                            ctx=Load()),
+                                        args=[
+                                            Attribute(
+                                                value=Name(id='tf', ctx=Load()),
+                                                attr='float32',
+                                                ctx=Load()),
+                                            List(
+                                                elts=[
+                                                    Constant(value=None),
+                                                    Constant(value=1)],
+                                                ctx=Load())],
+                                        keywords=[
+                                            keyword(
+                                                arg='name',
+                                                value=Constant(value='X'))])],
+                                keywords=[
+                                    keyword(
+                                        arg='imports',
+                                        value=Constant(value='import tensorflow as tf;import math, random;from pprint import pprint;import matplotlib.pyplot as plt;import numpy as np')),
+                                    keyword(
+                                        arg='functionDef',
+                                        value=Constant(value='tf.placeholder')),
+                                    keyword(
+                                        arg='function_to_run',
+                                        value=Constant(value='tf.placeholder(*args, **kwargs)')),
+                                    keyword(
+                                        arg='method_object',
+                                        value=Constant(value=None)),
+                                    keyword(
+                                        arg='function_args',
+                                        value=List(
+                                            elts=[
+                                                Call(
+                                                    func=Name(id='eval', ctx=Load()),
+                                                    args=[
+                                                        Constant(value='tf.float32')],
+                                                    keywords=[]),
+                                                Call(
+                                                    func=Name(id='eval', ctx=Load()),
+                                                    args=[
+                                                        Constant(value='[None, 1]')],
+                                                    keywords=[])],
+                                            ctx=Load())),
+                                    keyword(
+                                        arg='function_kwargs',
+                                        value=Dict(
+                                            keys=[
+                                                Constant(value='name'),
+                                                Constant(value='keyname')],
+                                            values=[
+                                                Call(
+                                                    func=Name(id='eval', ctx=Load()),
+                                                    args=[
+                                                        Constant(value='"X"')],
+                                                    keywords=[]),
+                                                Call(
+                                                    func=Name(id='eval', ctx=Load()),
+                                                    args=[
+                                                        Constant(value='"Y"')],
+                                                    keywords=[])])),
+                                    keyword(
+                                        arg='max_wait_secs',
+                                        value=Constant(value=30))])),
                         Return(
                             value=Name(id='func', ctx=Load()))],
                     decorator_list=[])],
@@ -209,7 +377,10 @@ Module(
                 keywords=[
                     keyword(
                         arg='imports',
-                        value=Constant(value='from pprint import pprint;import tensorflow as tf;import math, random;import matplotlib.pyplot as plt;import numpy as np')),
+                        value=Constant(value='import matplotlib.pyplot as plt;import tensorflow as tf;from pprint import pprint;import numpy as np;import math, random')),
+                    keyword(
+                        arg='functionDef',
+                        value=Constant(value='tf')),
                     keyword(
                         arg='function_to_run',
                         value=Constant(value='tf()')),
@@ -218,10 +389,10 @@ Module(
                         value=Constant(value=None)),
                     keyword(
                         arg='function_args',
-                        value=Constant(value=[])),
+                        value=List(elts=[], ctx=Load())),
                     keyword(
                         arg='function_kwargs',
-                        value=Constant(value={})),
+                        value=Dict(keys=[], values=[])),
                     keyword(
                         arg='max_wait_secs',
                         value=Constant(value=30))])),
@@ -263,7 +434,10 @@ Module(
                 keywords=[
                     keyword(
                         arg='imports',
-                        value=Constant(value='from pprint import pprint;import tensorflow as tf;import math, random;import matplotlib.pyplot as plt;import numpy as np')),
+                        value=Constant(value='import matplotlib.pyplot as plt;import tensorflow as tf;from pprint import pprint;import numpy as np;import math, random')),
+                    keyword(
+                        arg='functionDef',
+                        value=Constant(value='tf.placeholder')),
                     keyword(
                         arg='function_to_run',
                         value=Constant(value='tf.placeholder(*args, **kwargs)')),
@@ -272,13 +446,30 @@ Module(
                         value=Constant(value=None)),
                     keyword(
                         arg='function_args',
-                        value=Constant(
-                            value=[
-                                'tf.float32',
-                                '[None, 1]'])),
+                        value=List(
+                            elts=[
+                                Call(
+                                    func=Name(id='eval', ctx=Load()),
+                                    args=[
+                                        Constant(value='tf.float32')],
+                                    keywords=[]),
+                                Call(
+                                    func=Name(id='eval', ctx=Load()),
+                                    args=[
+                                        Constant(value='[None, 1]')],
+                                    keywords=[])],
+                            ctx=Load())),
                     keyword(
                         arg='function_kwargs',
-                        value=Constant(value={'name': '"X"'})),
+                        value=Dict(
+                            keys=[
+                                Constant(value='name')],
+                            values=[
+                                Call(
+                                    func=Name(id='eval', ctx=Load()),
+                                    args=[
+                                        Constant(value='"X"')],
+                                    keywords=[])])),
                     keyword(
                         arg='max_wait_secs',
                         value=Constant(value=30))])),
@@ -311,7 +502,10 @@ Module(
                 keywords=[
                     keyword(
                         arg='imports',
-                        value=Constant(value='from pprint import pprint;import tensorflow as tf;import math, random;import matplotlib.pyplot as plt;import numpy as np')),
+                        value=Constant(value='import matplotlib.pyplot as plt;import tensorflow as tf;from pprint import pprint;import numpy as np;import math, random')),
+                    keyword(
+                        arg='functionDef',
+                        value=Constant(value='tf.placeholder')),
                     keyword(
                         arg='function_to_run',
                         value=Constant(value='tf.placeholder(*args, **kwargs)')),
@@ -320,13 +514,30 @@ Module(
                         value=Constant(value=None)),
                     keyword(
                         arg='function_args',
-                        value=Constant(
-                            value=[
-                                'tf.float32',
-                                '[None, 1]'])),
+                        value=List(
+                            elts=[
+                                Call(
+                                    func=Name(id='eval', ctx=Load()),
+                                    args=[
+                                        Constant(value='tf.float32')],
+                                    keywords=[]),
+                                Call(
+                                    func=Name(id='eval', ctx=Load()),
+                                    args=[
+                                        Constant(value='[None, 1]')],
+                                    keywords=[])],
+                            ctx=Load())),
                     keyword(
                         arg='function_kwargs',
-                        value=Constant(value={'name': '"Y"'})),
+                        value=Dict(
+                            keys=[
+                                Constant(value='name')],
+                            values=[
+                                Call(
+                                    func=Name(id='eval', ctx=Load()),
+                                    args=[
+                                        Constant(value='"Y"')],
+                                    keywords=[])])),
                     keyword(
                         arg='max_wait_secs',
                         value=Constant(value=30))])),
@@ -352,7 +563,10 @@ Module(
                 keywords=[
                     keyword(
                         arg='imports',
-                        value=Constant(value='from pprint import pprint;import tensorflow as tf;import math, random;import matplotlib.pyplot as plt;import numpy as np')),
+                        value=Constant(value='import matplotlib.pyplot as plt;import tensorflow as tf;from pprint import pprint;import numpy as np;import math, random')),
+                    keyword(
+                        arg='functionDef',
+                        value=Constant(value='tf.value')),
                     keyword(
                         arg='function_to_run',
                         value=Constant(value='tf.value(*args, **kwargs)')),
@@ -361,13 +575,30 @@ Module(
                         value=Constant(value=None)),
                     keyword(
                         arg='function_args',
-                        value=Constant(
-                            value=[
-                                '"aname"',
-                                'bname'])),
+                        value=List(
+                            elts=[
+                                Call(
+                                    func=Name(id='eval', ctx=Load()),
+                                    args=[
+                                        Constant(value='"aname"')],
+                                    keywords=[]),
+                                Call(
+                                    func=Name(id='eval', ctx=Load()),
+                                    args=[
+                                        Constant(value='bname')],
+                                    keywords=[])],
+                            ctx=Load())),
                     keyword(
                         arg='function_kwargs',
-                        value=Constant(value={'name': '"tname"'})),
+                        value=Dict(
+                            keys=[
+                                Constant(value='name')],
+                            values=[
+                                Call(
+                                    func=Name(id='eval', ctx=Load()),
+                                    args=[
+                                        Constant(value='"tname"')],
+                                    keywords=[])])),
                     keyword(
                         arg='max_wait_secs',
                         value=Constant(value=30))])),
@@ -419,7 +650,10 @@ Module(
                 keywords=[
                     keyword(
                         arg='imports',
-                        value=Constant(value='from pprint import pprint;import tensorflow as tf;import math, random;import matplotlib.pyplot as plt;import numpy as np')),
+                        value=Constant(value='import matplotlib.pyplot as plt;import tensorflow as tf;from pprint import pprint;import numpy as np;import math, random')),
+                    keyword(
+                        arg='functionDef',
+                        value=Constant(value='tf.Variable')),
                     keyword(
                         arg='function_to_run',
                         value=Constant(value='tf.Variable(*args, **kwargs)')),
@@ -428,14 +662,35 @@ Module(
                         value=Constant(value=None)),
                     keyword(
                         arg='function_args',
-                        value=Constant(
-                            value=[
-                                'tf.random_uniform([layer_1_neurons, 1], minval = -1, maxval = 1, dtype = tf.float32)',
-                                'test1',
-                                'test2'])),
+                        value=List(
+                            elts=[
+                                Call(
+                                    func=Name(id='eval', ctx=Load()),
+                                    args=[
+                                        Constant(value='tf.random_uniform([layer_1_neurons, 1], minval = -1, maxval = 1, dtype = tf.float32)')],
+                                    keywords=[]),
+                                Call(
+                                    func=Name(id='eval', ctx=Load()),
+                                    args=[
+                                        Constant(value='test1')],
+                                    keywords=[]),
+                                Call(
+                                    func=Name(id='eval', ctx=Load()),
+                                    args=[
+                                        Constant(value='test2')],
+                                    keywords=[])],
+                            ctx=Load())),
                     keyword(
                         arg='function_kwargs',
-                        value=Constant(value={'test3': '"test3"'})),
+                        value=Dict(
+                            keys=[
+                                Constant(value='test3')],
+                            values=[
+                                Call(
+                                    func=Name(id='eval', ctx=Load()),
+                                    args=[
+                                        Constant(value='"test3"')],
+                                    keywords=[])])),
                     keyword(
                         arg='max_wait_secs',
                         value=Constant(value=30))])),
@@ -474,7 +729,10 @@ Module(
                 keywords=[
                     keyword(
                         arg='imports',
-                        value=Constant(value='from pprint import pprint;import tensorflow as tf;import math, random;import matplotlib.pyplot as plt;import numpy as np')),
+                        value=Constant(value='import matplotlib.pyplot as plt;import tensorflow as tf;from pprint import pprint;import numpy as np;import math, random')),
+                    keyword(
+                        arg='functionDef',
+                        value=Constant(value='tf.Variable')),
                     keyword(
                         arg='function_to_run',
                         value=Constant(value='tf.Variable(*args)')),
@@ -483,12 +741,17 @@ Module(
                         value=Constant(value=None)),
                     keyword(
                         arg='function_args',
-                        value=Constant(
-                            value=[
-                                'tf.zeros([1, 1], dtype = tf.float32)'])),
+                        value=List(
+                            elts=[
+                                Call(
+                                    func=Name(id='eval', ctx=Load()),
+                                    args=[
+                                        Constant(value='tf.zeros([1, 1], dtype = tf.float32)')],
+                                    keywords=[])],
+                            ctx=Load())),
                     keyword(
                         arg='function_kwargs',
-                        value=Constant(value={})),
+                        value=Dict(keys=[], values=[])),
                     keyword(
                         arg='max_wait_secs',
                         value=Constant(value=30))])),
@@ -615,7 +878,10 @@ Module(
                 keywords=[
                     keyword(
                         arg='imports',
-                        value=Constant(value='from pprint import pprint;import tensorflow as tf;import math, random;import matplotlib.pyplot as plt;import numpy as np')),
+                        value=Constant(value='import matplotlib.pyplot as plt;import tensorflow as tf;from pprint import pprint;import numpy as np;import math, random')),
+                    keyword(
+                        arg='functionDef',
+                        value=Constant(value='tf.keras.models.Sequential')),
                     keyword(
                         arg='function_to_run',
                         value=Constant(value='tf.keras.models.Sequential(*args)')),
@@ -624,12 +890,17 @@ Module(
                         value=Constant(value=None)),
                     keyword(
                         arg='function_args',
-                        value=Constant(
-                            value=[
-                                "[\n    tf.keras.layers.Flatten(input_shape=(28, 28)),\n    tf.keras.layers.Dense(128, activation='relu'),\n    tf.keras.layers.Dropout(0.2),\n    tf.keras.layers.Dense(10)\n    ]"])),
+                        value=List(
+                            elts=[
+                                Call(
+                                    func=Name(id='eval', ctx=Load()),
+                                    args=[
+                                        Constant(value="[\n    tf.keras.layers.Flatten(input_shape=(28, 28)),\n    tf.keras.layers.Dense(128, activation='relu'),\n    tf.keras.layers.Dropout(0.2),\n    tf.keras.layers.Dense(10)\n    ]")],
+                                    keywords=[])],
+                            ctx=Load())),
                     keyword(
                         arg='function_kwargs',
-                        value=Constant(value={})),
+                        value=Dict(keys=[], values=[])),
                     keyword(
                         arg='max_wait_secs',
                         value=Constant(value=30))])),
@@ -648,7 +919,10 @@ Module(
                 keywords=[
                     keyword(
                         arg='imports',
-                        value=Constant(value='from pprint import pprint;import tensorflow as tf;import math, random;import matplotlib.pyplot as plt;import numpy as np')),
+                        value=Constant(value='import matplotlib.pyplot as plt;import tensorflow as tf;from pprint import pprint;import numpy as np;import math, random')),
+                    keyword(
+                        arg='functionDef',
+                        value=Constant(value='model.compile')),
                     keyword(
                         arg='function_to_run',
                         value=Constant(value='obj.compile()')),
@@ -684,7 +958,10 @@ Module(
                 keywords=[
                     keyword(
                         arg='imports',
-                        value=Constant(value='from pprint import pprint;import tensorflow as tf;import math, random;import matplotlib.pyplot as plt;import numpy as np')),
+                        value=Constant(value='import matplotlib.pyplot as plt;import tensorflow as tf;from pprint import pprint;import numpy as np;import math, random')),
+                    keyword(
+                        arg='functionDef',
+                        value=Constant(value='b_o.test.compile')),
                     keyword(
                         arg='function_to_run',
                         value=Constant(value='obj.test.compile()')),
@@ -712,10 +989,14 @@ Module(
                 keywords=[]))],
     type_ignores=[])
 ____________________________________________________________________________________________________
-def custom_method(func, imports, function_to_run, method_object, function_args, function_kwargs, max_wait_secs):
+def custom_method(func, imports, functionDef, function_to_run, method_object, function_args, function_kwargs, max_wait_secs):
     method_details = {'imports': imports, 'function': function_to_run, 'method_object': method_object, 'args': function_args, 'kwargs': function_kwargs, 'max_wait_secs': max_wait_secs}
+    (sig, func_locals) = (inspect.signature(functionDef), locals())
+    arglist = [func_locals[param.name] for param in sig.parameters.values() if param.kind == param.POSITIONAL_OR_KEYWORD]
+    keywordDict = [func_locals[param.name] for param in sig.parameters.values() if param.kind == param.KEYWORD_ONLY]
     data = pickle.dumps(method_details)
     resp = requests.post(url, data=data, headers={'Content-Type': 'application/octet-stream'})
+    custom_method(tf.placeholder(tf.float32, [None, 1], name='X'), imports='import tensorflow as tf;import math, random;from pprint import pprint;import matplotlib.pyplot as plt;import numpy as np', functionDef='tf.placeholder', function_to_run='tf.placeholder(*args, **kwargs)', method_object=None, function_args=[eval('tf.float32'), eval('[None, 1]')], function_kwargs={'name': eval('"X"'), 'keyname': eval('"Y"')}, max_wait_secs=30)
     return func
 import tensorflow as tf
 import numpy as np
@@ -723,25 +1004,26 @@ import math, random
 import matplotlib.pyplot as plt
 from pprint import pprint
 custom_method(
-tf(), imports='from pprint import pprint;import tensorflow as tf;import math, random;import matplotlib.pyplot as plt;import numpy as np', function_to_run='tf()', method_object=None, function_args=[], function_kwargs={}, max_wait_secs=30)
+tf(), imports='import matplotlib.pyplot as plt;import tensorflow as tf;from pprint import pprint;import numpy as np;import math, random', functionDef='tf', function_to_run='tf()', method_object=None, function_args=[], function_kwargs={}, max_wait_secs=30)
 testlist = ['a', 'b', 'c']
 X = custom_method(
-tf.placeholder(tf.float32, [None, 1], name='X'), imports='from pprint import pprint;import tensorflow as tf;import math, random;import matplotlib.pyplot as plt;import numpy as np', function_to_run='tf.placeholder(*args, **kwargs)', method_object=None, function_args=['tf.float32', '[None, 1]'], function_kwargs={'name': '"X"'}, max_wait_secs=30)
+tf.placeholder(tf.float32, [None, 1], name='X'), imports='import matplotlib.pyplot as plt;import tensorflow as tf;from pprint import pprint;import numpy as np;import math, random', functionDef='tf.placeholder', function_to_run='tf.placeholder(*args, **kwargs)', method_object=None, function_args=[eval('tf.float32'), eval('[None, 1]')], function_kwargs={'name': eval('"X"')}, max_wait_secs=30)
 Y = custom_method(
-tf.placeholder(tf.float32, [None, 1], name='Y'), imports='from pprint import pprint;import tensorflow as tf;import math, random;import matplotlib.pyplot as plt;import numpy as np', function_to_run='tf.placeholder(*args, **kwargs)', method_object=None, function_args=['tf.float32', '[None, 1]'], function_kwargs={'name': '"Y"'}, max_wait_secs=30)
+tf.placeholder(tf.float32, [None, 1], name='Y'), imports='import matplotlib.pyplot as plt;import tensorflow as tf;from pprint import pprint;import numpy as np;import math, random', functionDef='tf.placeholder', function_to_run='tf.placeholder(*args, **kwargs)', method_object=None, function_args=[eval('tf.float32'), eval('[None, 1]')], function_kwargs={'name': eval('"Y"')}, max_wait_secs=30)
 z = custom_method(
-tf.value('aname', bname, name='tname'), imports='from pprint import pprint;import tensorflow as tf;import math, random;import matplotlib.pyplot as plt;import numpy as np', function_to_run='tf.value(*args, **kwargs)', method_object=None, function_args=['"aname"', 'bname'], function_kwargs={'name': '"tname"'}, max_wait_secs=30)
+tf.value('aname', bname, name='tname'), imports='import matplotlib.pyplot as plt;import tensorflow as tf;from pprint import pprint;import numpy as np;import math, random', functionDef='tf.value', function_to_run='tf.value(*args, **kwargs)', method_object=None, function_args=[eval('"aname"'), eval('bname')], function_kwargs={'name': eval('"tname"')}, max_wait_secs=30)
 w_o = custom_method(
-tf.Variable(tf.random_uniform([layer_1_neurons, 1], minval=-1, maxval=1, dtype=tf.float32), test1, test2, test3='test3'), imports='from pprint import pprint;import tensorflow as tf;import math, random;import matplotlib.pyplot as plt;import numpy as np', function_to_run='tf.Variable(*args, **kwargs)', method_object=None, function_args=['tf.random_uniform([layer_1_neurons, 1], minval = -1, maxval = 1, dtype = tf.float32)', 'test1', 'test2'], function_kwargs={'test3': '"test3"'}, max_wait_secs=30)
+tf.Variable(tf.random_uniform([layer_1_neurons, 1], minval=-1, maxval=1, dtype=tf.float32), test1, test2, test3='test3'), imports='import matplotlib.pyplot as plt;import tensorflow as tf;from pprint import pprint;import numpy as np;import math, random', functionDef='tf.Variable', function_to_run='tf.Variable(*args, **kwargs)', method_object=None, function_args=[eval('tf.random_uniform([layer_1_neurons, 1], minval = -1, maxval = 1, dtype = tf.float32)'), eval('test1'), eval('test2')], function_kwargs={'test3': eval('"test3"')}, max_wait_secs=30)
 b_o = custom_method(
-tf.Variable(tf.zeros([1, 1], dtype=tf.float32)), imports='from pprint import pprint;import tensorflow as tf;import math, random;import matplotlib.pyplot as plt;import numpy as np', function_to_run='tf.Variable(*args)', method_object=None, function_args=['tf.zeros([1, 1], dtype = tf.float32)'], function_kwargs={}, max_wait_secs=30)
+tf.Variable(tf.zeros([1, 1], dtype=tf.float32)), imports='import matplotlib.pyplot as plt;import tensorflow as tf;from pprint import pprint;import numpy as np;import math, random', functionDef='tf.Variable', function_to_run='tf.Variable(*args)', method_object=None, function_args=[eval('tf.zeros([1, 1], dtype = tf.float32)')], function_kwargs={}, max_wait_secs=30)
 cd = ab.test(a, b)
 c_o = xf.test()
 d_o = xy.test()
 model = custom_method(
-tf.keras.models.Sequential([tf.keras.layers.Flatten(input_shape=(28, 28)), tf.keras.layers.Dense(128, activation='relu'), tf.keras.layers.Dropout(0.2), tf.keras.layers.Dense(10)]), imports='from pprint import pprint;import tensorflow as tf;import math, random;import matplotlib.pyplot as plt;import numpy as np', function_to_run='tf.keras.models.Sequential(*args)', method_object=None, function_args=["[\n    tf.keras.layers.Flatten(input_shape=(28, 28)),\n    tf.keras.layers.Dense(128, activation='relu'),\n    tf.keras.layers.Dropout(0.2),\n    tf.keras.layers.Dense(10)\n    ]"], function_kwargs={}, max_wait_secs=30)
+tf.keras.models.Sequential([tf.keras.layers.Flatten(input_shape=(28, 28)), tf.keras.layers.Dense(128, activation='relu'), tf.keras.layers.Dropout(0.2), tf.keras.layers.Dense(10)]), imports='import matplotlib.pyplot as plt;import tensorflow as tf;from pprint import pprint;import numpy as np;import math, random', functionDef='tf.keras.models.Sequential', function_to_run='tf.keras.models.Sequential(*args)', method_object=None, function_args=[eval("[\n    tf.keras.layers.Flatten(input_shape=(28, 28)),\n    tf.keras.layers.Dense(128, activation='relu'),\n    tf.keras.layers.Dropout(0.2),\n    tf.keras.layers.Dense(10)\n    ]")], function_kwargs={}, max_wait_secs=30)
 custom_method(
-model.compile(), imports='from pprint import pprint;import tensorflow as tf;import math, random;import matplotlib.pyplot as plt;import numpy as np', function_to_run='obj.compile()', method_object='model', function_args=[], function_kwargs={}, max_wait_secs=30)
+model.compile(), imports='import matplotlib.pyplot as plt;import tensorflow as tf;from pprint import pprint;import numpy as np;import math, random', functionDef='model.compile', function_to_run='obj.compile()', method_object='model', function_args=[], function_kwargs={}, max_wait_secs=30)
 f_o = custom_method(
-b_o.test.compile(), imports='from pprint import pprint;import tensorflow as tf;import math, random;import matplotlib.pyplot as plt;import numpy as np', function_to_run='obj.test.compile()', method_object='b_o', function_args=[], function_kwargs={}, max_wait_secs=30)
+b_o.test.compile(), imports='import matplotlib.pyplot as plt;import tensorflow as tf;from pprint import pprint;import numpy as np;import math, random', functionDef='b_o.test.compile', function_to_run='obj.test.compile()', method_object='b_o', function_args=[], function_kwargs={}, max_wait_secs=30)
 z_o = c_o.compile()
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

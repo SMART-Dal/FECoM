@@ -50,6 +50,7 @@ def main():
 
     #Step5: Unparse and convert AST to final code
     print(ast.unparse(tree))
+    print('+'*100)
 
 
 class FuncCallVisitor(ast.NodeVisitor):
@@ -97,7 +98,7 @@ class TransformCall(ast.NodeTransformer):
             argList = [ast.get_source_segment(sourceCode, a) for a in node.args]
             # argList = ast.literal_eval(ast.get_source_segment(sourceCode, node.args))
             # print("SSR arguments:",argList)
-            # print("SSR args:",node.args)
+            # print("SSR args:",node)
             keywordsDict = {a.arg:ast.get_source_segment(sourceCode, a.value) for a in node.keywords}
             # print("SSR keywords:",keywordsDict)
             if(node.args):
@@ -111,6 +112,9 @@ class TransformCall(ast.NodeTransformer):
                                         arg='imports',
                                         value=ast.Constant(importScriptList)),
                                     ast.keyword(
+                                        arg='functionDef',
+                                        value=ast.Constant(ast.unparse(node.func))),
+                                    ast.keyword(
                                         arg='function_to_run',
                                         value=ast.Constant(ast.unparse(dummyNode))),
                                     ast.keyword(
@@ -118,10 +122,25 @@ class TransformCall(ast.NodeTransformer):
                                         value=ast.Constant(None)),
                                     ast.keyword(
                                         arg='function_args',
-                                        value=ast.Constant(argList)),
+                                        value=ast.List(
+                                            elts=[
+                                                ast.Call(
+                                                    func=ast.Name(id='eval', ctx=ast.Load()),
+                                                    args=[
+                                                        ast.Constant(value=argItem)],
+                                                    keywords=[]) for argItem in argList],
+                                            ctx=ast.Load())),
                                     ast.keyword(
                                         arg='function_kwargs',
-                                        value=ast.Constant(keywordsDict)),
+                                        value=ast.Dict(
+                                            keys=[
+                                                ast.Constant(value=KWItem) for KWItem in keywordsDict],
+                                            values=[
+                                                ast.Call(
+                                                    func=ast.Name(id='eval', ctx=ast.Load()),
+                                                    args=[
+                                                        ast.Constant(value=keywordsDict[KWItem])],
+                                                    keywords=[]) for KWItem in keywordsDict])),
                                     ast.keyword(
                                         arg='max_wait_secs',
                                         value=ast.Constant(30)),
@@ -137,7 +156,7 @@ class TransformCall(ast.NodeTransformer):
             dummyNode.args.clear()
             dummyNode.keywords.clear()
             # print("SSR args:",ast.get_source_segment(sourceCode, node))
-            print("Obj:",ast.get_source_segment(sourceCode, node))
+            # print("Obj:",ast.get_source_segment(sourceCode, node))
             argList = [ast.get_source_segment(sourceCode, a) for a in node.args]
             # argList = ast.literal_eval(ast.get_source_segment(sourceCode, node.args))
             # print("SSR arguments:",argList)
@@ -154,6 +173,9 @@ class TransformCall(ast.NodeTransformer):
                                     ast.keyword(
                                         arg='imports',
                                         value=ast.Constant(importScriptList)),
+                                    ast.keyword(
+                                        arg='functionDef',
+                                        value=ast.Constant(ast.unparse(node.func))),
                                     ast.keyword(
                                         arg='function_to_run',
                                         value=ast.Constant(ast.unparse(dummyNode).replace(callvisitor.name.split('.')[0], 'obj', 1))),
