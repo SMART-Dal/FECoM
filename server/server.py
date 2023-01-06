@@ -7,6 +7,7 @@ import statistics as stats
 import pickle
 from config import API_PATH, DEBUG, SERVER_HOST, SERVER_PORT, CPU_STD_TO_MEAN, RAM_STD_TO_MEAN, GPU_STD_TO_MEAN
 from flask import Flask, Response, request
+from function_details import FunctionDetails
 
 
 app = Flask(__name__)
@@ -65,7 +66,7 @@ def is_stable_state(max_wait_secs: int):
 
     return False
 
-def run_method(imports: str, function_to_run: str, method_object: object, args: list, kwargs: dict, max_wait_secs: int):
+def run_function(imports: str, function_to_run: str, method_object: object, args: list, kwargs: dict, max_wait_secs: int):
     """
     Run the method given by function_to_run with the given arguments (args) and keyword arguments (kwargs).
     These two variables appear to not be used, however, they are used when evaluating the function_to_run
@@ -77,7 +78,7 @@ def run_method(imports: str, function_to_run: str, method_object: object, args: 
     # (1) import relevant modules
     exec(imports)
 
-    # # (2) continue only when the system has reached a stable state of energy consumption
+    # (2) continue only when the system has reached a stable state of energy consumption
     if not is_stable_state(max_wait_secs):
         raise TimeoutError(f"System could not reach a stable state within {max_wait_secs} seconds")
 
@@ -104,20 +105,31 @@ def run_method(imports: str, function_to_run: str, method_object: object, args: 
 
 
 @app.route(API_PATH, methods=["POST"])
-def run_method_and_return_result():
-    method_details = pickle.loads(request.data)
+def run_function_and_return_result():
+    # (1) deserialise request data
+    function_details = pickle.loads(request.data)
     
     if DEBUG:
-        print(f"Received method details: {method_details}")
+        print(f"Received function details: {function_details}")
+
+    # (2) import custom class definition if needed
+    if function_details.custom_class is not None:
+        # TODO instead of executing, here we should create a new module with the custom class and import it
+        # exec(function_details.custom_class)
+        with open(f"{function_details.module_name}.py", "w") as f:
+            f.writelines(function_details.imports  + "\n")
+            f.writelines(function_details.custom_class)
+        
+        exec(f"import {function_details.module_name}")
     
     try:
-        output = run_method(
-            method_details["imports"],
-            method_details["function"],
-            method_details["method_object"],
-            method_details["args"],
-            method_details["kwargs"],
-            method_details["max_wait_secs"]
+        output = run_function(
+            function_details.imports,
+            function_details.function_to_run,
+            function_details.method_object,
+            function_details.args,
+            function_details.kwargs,
+            function_details.max_wait_secs
         )
         status = 200
     except TimeoutError as e:
@@ -137,4 +149,4 @@ def run_method_and_return_result():
 
 # start flask app
 if __name__ == "__main__":
-    app.run(host=SERVER_HOST, port=SERVER_PORT, debug=True)
+    app.run(host=SERVER_HOST, port=SERVER_PORT)

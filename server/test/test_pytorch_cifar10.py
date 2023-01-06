@@ -9,6 +9,26 @@ from send_request import send_request
 
 import pytest
 
+
+class Net(nn.Module):
+    def __init__(self):
+        super().__init__()
+        self.conv1 = nn.Conv2d(3, 6, 5)
+        self.pool = nn.MaxPool2d(2, 2)
+        self.conv2 = nn.Conv2d(6, 16, 5)
+        self.fc1 = nn.Linear(16 * 5 * 5, 120)
+        self.fc2 = nn.Linear(120, 84)
+        self.fc3 = nn.Linear(84, 10)
+
+    def forward(self, x):
+        x = self.pool(F.relu(self.conv1(x)))
+        x = self.pool(F.relu(self.conv2(x)))
+        x = torch.flatten(x, 1) # flatten all dimensions except batch
+        x = F.relu(self.fc1(x))
+        x = F.relu(self.fc2(x))
+        x = self.fc3(x)
+        return x
+
 @pytest.fixture
 def dataset():
     DATA_PATH = 'data/cifar-10-python.tar.gz'
@@ -46,25 +66,6 @@ def dataset():
 
 @pytest.fixture
 def net():
-    class Net(nn.Module):
-        def __init__(self):
-            super().__init__()
-            self.conv1 = nn.Conv2d(3, 6, 5)
-            self.pool = nn.MaxPool2d(2, 2)
-            self.conv2 = nn.Conv2d(6, 16, 5)
-            self.fc1 = nn.Linear(16 * 5 * 5, 120)
-            self.fc2 = nn.Linear(120, 84)
-            self.fc3 = nn.Linear(84, 10)
-
-        def forward(self, x):
-            x = self.pool(F.relu(self.conv1(x)))
-            x = self.pool(F.relu(self.conv2(x)))
-            x = torch.flatten(x, 1) # flatten all dimensions except batch
-            x = F.relu(self.fc1(x))
-            x = F.relu(self.fc2(x))
-            x = self.fc3(x)
-            return x
-    
     return Net()
 
 
@@ -103,13 +104,33 @@ def test_optimizer_zero_grad(optimizer):
 def test_forward_pass(net, training_batch):
     inputs = training_batch[0]
 
-    imports = "import torch.nn as nn"
+    imports = """import torch
+import torch.nn as nn
+import torch.nn.functional as F"""
+    custom_class =  """class Net(nn.Module):
+    def __init__(self):
+        super().__init__()
+        self.conv1 = nn.Conv2d(3, 6, 5)
+        self.pool = nn.MaxPool2d(2, 2)
+        self.conv2 = nn.Conv2d(6, 16, 5)
+        self.fc1 = nn.Linear(16 * 5 * 5, 120)
+        self.fc2 = nn.Linear(120, 84)
+        self.fc3 = nn.Linear(84, 10)
+
+    def forward(self, x):
+        x = self.pool(F.relu(self.conv1(x)))
+        x = self.pool(F.relu(self.conv2(x)))
+        x = torch.flatten(x, 1) # flatten all dimensions except batch
+        x = F.relu(self.fc1(x))
+        x = F.relu(self.fc2(x))
+        x = self.fc3(x)
+        return x"""
     function_to_run = "obj(*args)"
     method_object = net
     function_args = [inputs]
 
-    return_dict = send_request(imports, function_to_run, function_args=function_args, method_object=method_object)
+    return_dict = send_request(imports, function_to_run, function_args=function_args, method_object=method_object, custom_class=custom_class)
 
     outputs = net(inputs)
 
-    assert return_dict["return"] == outputs
+    assert torch.equal(return_dict["return"], outputs)
