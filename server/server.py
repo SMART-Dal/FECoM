@@ -3,6 +3,7 @@ Server to receive client requests to run ML methods and measure energy.
 """
 
 import time
+import os
 import statistics as stats
 import pickle
 from config import API_PATH, DEBUG, SERVER_HOST, SERVER_PORT, CPU_STD_TO_MEAN, RAM_STD_TO_MEAN, GPU_STD_TO_MEAN
@@ -112,16 +113,18 @@ def run_function_and_return_result():
     if DEBUG:
         print(f"Received function details: {function_details}")
 
-    # (2) import custom class definition if needed
+    # (2) if needed, create module with custom class definition and import it
+    custom_class_file = None
     if function_details.custom_class is not None:
-        # TODO instead of executing, here we should create a new module with the custom class and import it
-        # exec(function_details.custom_class)
-        with open(f"{function_details.module_name}.py", "w") as f:
+        custom_class_file = f"{function_details.module_name}.py"
+        with open(custom_class_file, "w") as f:
             f.writelines(function_details.imports  + "\n")
             f.writelines(function_details.custom_class)
         
         exec(f"import {function_details.module_name}")
     
+    # (3) Try reaching a stable state and running the function
+    # TODO add energy measurement
     try:
         output = run_function(
             function_details.imports,
@@ -138,11 +141,19 @@ def run_function_and_return_result():
 
     data = pickle.dumps(output)
 
+    # (4) send response to client
     response = Response(
         response=data,
         status=status,
         mimetype='application/octet_stream'
     )
+
+    # (5) if needed, delete the module created for the custom class definition
+    if custom_class_file is not None:
+        if os.path.isfile(custom_class_file):
+            os.remove(custom_class_file)
+        else:
+           raise OSError("Could not remove custom class file")
 
     return response
 

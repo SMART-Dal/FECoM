@@ -5,6 +5,9 @@ import torch.nn as nn
 import torch.nn.functional as F
 import torch.optim as optim
 from os.path import exists
+# add parent directory to path
+import sys
+sys.path.insert(0,'..')
 from send_request import send_request
 
 import pytest
@@ -63,20 +66,13 @@ def dataset():
     
     return dataset
 
-
 @pytest.fixture
 def net():
     return Net()
 
-
 @pytest.fixture
 def criterion():
     return nn.CrossEntropyLoss()
-
-
-@pytest.fixture
-def optimizer(net):
-    return optim.SGD(net.parameters(), lr=0.001, momentum=0.9)
 
 @pytest.fixture
 def training_batch(dataset):
@@ -87,7 +83,8 @@ def training_batch(dataset):
     return next(iter(trainloader))
 
 
-def test_optimizer_zero_grad(optimizer):
+def test_optimizer_zero_grad(net):
+    optimizer = optim.SGD(net.parameters(), lr=0.001, momentum=0.9)
     imports = "import torch.optim as optim"
     function_to_run = "obj.zero_grad()"
     method_object = optimizer
@@ -134,3 +131,52 @@ import torch.nn.functional as F"""
     outputs = net(inputs)
 
     assert torch.equal(return_dict["return"], outputs)
+
+def test_loss_function(net, training_batch, criterion):
+    labels = training_batch[1]
+    outputs = net(training_batch[0])
+
+    imports = "import torch.nn as nn"
+    function_to_run = "obj(*args)"
+    method_object = criterion
+    function_args = [outputs, labels]
+
+    return_dict = send_request(imports, function_to_run, function_args, method_object=method_object)
+
+    assert return_dict["return"] == criterion(outputs, labels)
+
+# incomplete
+def test_backward_pass(net, training_batch, criterion):
+    labels = training_batch[1]
+    outputs = net(training_batch[0])
+    loss = criterion(outputs, labels)
+
+    imports = "import torch"
+    function_to_run = "obj.backward()"
+    method_object = loss
+    required_data = [outputs, ]
+
+    return_dict = send_request(imports, function_to_run, method_object=method_object)
+
+    assert torch.equal(return_dict["method_object"], loss)
+    # TODO also test whether the backward pass correctly stores gradients in the associated tensors (outputs, net parameters).
+    # This will likely require an extension to the current API such that these tensors can be sent to the server, too
+    # see this for more on the internal functioning of torch
+    # https://stackoverflow.com/questions/53975717/pytorch-connection-between-loss-backward-and-optimizer-step
+
+# incomplete, see above 
+def test_optimizer_step(net, training_batch, criterion):
+    optimizer = optim.SGD(net.parameters(), lr=0.001, momentum=0.9)
+
+    labels = training_batch[1]
+    outputs = net(training_batch[0])
+    loss = criterion(outputs, labels)
+    loss.backward()
+
+    imports = "import torch.optim as optim"
+    function_to_run = "obj.step()"
+    method_object = optimizer
+    print(optimizer)
+
+    return_dict = send_request(imports, function_to_run, method_object=method_object)
+    # TODO add assertions, see above

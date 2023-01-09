@@ -4,6 +4,9 @@ Test
 
 import tensorflow as tf
 import pytest
+# add parent directory to path
+import sys
+sys.path.insert(0,'..')
 from send_request import send_request
 
 @pytest.fixture
@@ -86,9 +89,16 @@ def test_mnist_model_train(compiled_model, mnist):
     assert(type(test_history) == type(real_history))
     assert(test_history.params == real_history.params)
 
+    test_trained_model = return_dict["method_object"]
+
+    assert test_trained_model.layers[1].get_weights()[0].all() == compiled_model.layers[1].get_weights()[0].all()
+    assert test_trained_model.layers[1].get_weights()[1].all() == compiled_model.layers[1].get_weights()[1].all()
+    assert test_trained_model.layers[3].get_weights()[0].all() == compiled_model.layers[3].get_weights()[0].all()
+    assert test_trained_model.layers[3].get_weights()[1].all() == compiled_model.layers[3].get_weights()[1].all()
+
 def test_mnist_model_testing(compiled_model, mnist):
     x_train, y_train, x_test, y_test = mnist
-    
+
     # training
     compiled_model.fit(x_train, y_train, epochs=5)
 

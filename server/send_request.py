@@ -1,8 +1,5 @@
 import pickle
 import requests
-# add parent directory to path
-import sys
-sys.path.insert(0,'..')
 from config import URL, DEBUG
 from function_details import FunctionDetails
 
