@@ -3,7 +3,31 @@ import tensorflow as tf
 import numpy as np 
 import math, random 
 import matplotlib.pyplot as plt 
-from pprint import pprint
+from pprint.xyz.abc import pprint as ppr
+import torch
+import torchvision
+import torchvision.transforms as transforms
+from tf import trans as tf1
+from pt import trans as tf2
+import torch.nn as nn
+import torch.nn.functional as F
+import torch.optim as optim
+from os.path import exists
+# add parent directory to path
+import sys
+
+import tensorflow as tf
+from tensorflow import keras
+from tensorflow.keras import layers
+from tensorflow.keras.layers import Dense, Dropout as drop
+from tensorflow.keras.layers import *
+import tensorflow.keras.backend as K
+import tensorflow.keras.layers as L
+import tensorflow.compat.v1 as tf
+from tensorflow.keras.layers import Dense, Dropout, Conv2D
+from tensorflow.keras.backend import clear_session, set_session
+from tensorflow.keras.layers import Dense as dense_layer, Dropout as drop, Conv2D as conv
+
 
 tf()
 testlist = ['a','b','c']

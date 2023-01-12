@@ -7,16 +7,17 @@ import inspect
 import copy
 import json
 
-requiredLibraries = ["tensorflow"]
+requiredLibraries = ["tensorflow","torch","math"]
 requiredAlias = []
 requiredObjects = []
 importScriptList = ''
 sourceCode = ''
 
 def main():
-
+# /home/saurabh/code-energy-consumption/server/test/test_pytorch_cifar10.py
     #Step1: Create an AST from the client python code
-    with open("code_snippet.py", "r") as source:
+    # ../server/test/sample_code/pytorch_cifar10.py
+    with open("code_snippet2.py", "r") as source:
         global sourceCode
         sourceCode = source.read()
         tree = ast.parse(sourceCode)
@@ -27,6 +28,7 @@ def main():
     global requiredAlias
     global importScriptList
     requiredAlias = analyzer.stats['required']
+    print("required Alias:",requiredAlias)
     importScriptList = ';'.join(list(set(analyzer.stats['importScript'])))
 
     #Step3: Get list of objects created from the required libraries
@@ -44,9 +46,9 @@ def main():
         cm_node = ast.parse(cm)
         tree.body.insert(0, cm_node)
 
-    # print('+'*100)
-    # print(ast.dump(tree, indent=4))
-    # print('_'*100)
+    print('+'*100)
+    print(ast.dump(tree, indent=4))
+    print('_'*100)
 
     #Step5: Unparse and convert AST to final code
     print(ast.unparse(tree))
@@ -105,6 +107,7 @@ class TransformCall(ast.NodeTransformer):
                 dummyNode.args.append(ast.Name(id='*args', ctx=ast.Load()))
             if(node.keywords):
                 dummyNode.keywords.append(ast.Name(id='**kwargs', ctx=ast.Load()))
+
             new_node = ast.Call(func=ast.Name(id='custom_method', ctx=ast.Load()),
                                 args=[ast.Expr(node)],
                                 keywords=[
@@ -287,14 +290,30 @@ class Analyzer(ast.NodeVisitor):
             self.stats["importScript"].append(ast.get_source_segment(sourceCode, node))
             # pprint(vars(node))
             self.stats["import"].append(alias.name)
-            if(any(lib in alias.name for lib in requiredLibraries)):
-                self.stats["required"].append(alias.asname)
+            lib_path = alias.name.split('.')
+            # print("lib_path:",lib_path)
+            if(any(lib in lib_path for lib in requiredLibraries)):
+                if(alias.asname):
+                    self.stats["required"].append(alias.asname)
+                else:
+                    self.stats["required"].append(lib_path[-1])
         self.generic_visit(node)
 
     def visit_ImportFrom(self, node):
+        lib_path = node.module.split('.')
         for alias in node.names:
             self.stats["importScript"].append(ast.get_source_segment(sourceCode, node))
             self.stats["from"].append(alias.name)
+            # print("lib_path:",lib_path)
+            if(any(lib in lib_path for lib in requiredLibraries)):
+                if(alias.asname):
+                    self.stats["required"].append(alias.asname)
+                elif(alias.name == '*'):
+                    # print("star :",dir(ast))
+                    # print("node module:",node.module)
+                    self.stats["required"].extend(dir(eval(node.module)))
+                else:
+                    self.stats["required"].append(alias.name)
         self.generic_visit(node)
 
     def report(self):
