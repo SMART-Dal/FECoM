@@ -90,7 +90,7 @@ Module(
                 keywords=[
                     keyword(
                         arg='imports',
-                        value=Constant(value='import logging;import tensorflow as tf;import matplotlib.pyplot as plt;import numpy as np')),
+                        value=Constant(value='import matplotlib.pyplot as plt;import tensorflow as tf;import logging;import numpy as np')),
                     keyword(
                         arg='function_to_run',
                         value=Constant(value='tf.get_logger()')),
@@ -125,7 +125,7 @@ Module(
                 keywords=[
                     keyword(
                         arg='imports',
-                        value=Constant(value='import logging;import tensorflow as tf;import matplotlib.pyplot as plt;import numpy as np')),
+                        value=Constant(value='import matplotlib.pyplot as plt;import tensorflow as tf;import logging;import numpy as np')),
                     keyword(
                         arg='function_to_run',
                         value=Constant(value='obj.setLevel(*args)')),
@@ -265,7 +265,7 @@ Module(
                 keywords=[
                     keyword(
                         arg='imports',
-                        value=Constant(value='import logging;import tensorflow as tf;import matplotlib.pyplot as plt;import numpy as np')),
+                        value=Constant(value='import matplotlib.pyplot as plt;import tensorflow as tf;import logging;import numpy as np')),
                     keyword(
                         arg='function_to_run',
                         value=Constant(value='tf.keras.layers.Dense(**kwargs)')),
@@ -319,7 +319,7 @@ Module(
                 keywords=[
                     keyword(
                         arg='imports',
-                        value=Constant(value='import logging;import tensorflow as tf;import matplotlib.pyplot as plt;import numpy as np')),
+                        value=Constant(value='import matplotlib.pyplot as plt;import tensorflow as tf;import logging;import numpy as np')),
                     keyword(
                         arg='function_to_run',
                         value=Constant(value='tf.keras.Sequential(*args)')),
@@ -376,7 +376,7 @@ Module(
                 keywords=[
                     keyword(
                         arg='imports',
-                        value=Constant(value='import logging;import tensorflow as tf;import matplotlib.pyplot as plt;import numpy as np')),
+                        value=Constant(value='import matplotlib.pyplot as plt;import tensorflow as tf;import logging;import numpy as np')),
                     keyword(
                         arg='function_to_run',
                         value=Constant(value='obj.compile(**kwargs)')),
@@ -434,7 +434,7 @@ Module(
                 keywords=[
                     keyword(
                         arg='imports',
-                        value=Constant(value='import logging;import tensorflow as tf;import matplotlib.pyplot as plt;import numpy as np')),
+                        value=Constant(value='import matplotlib.pyplot as plt;import tensorflow as tf;import logging;import numpy as np')),
                     keyword(
                         arg='function_to_run',
                         value=Constant(value='obj.fit(*args, **kwargs)')),
@@ -588,7 +588,7 @@ Module(
                 keywords=[
                     keyword(
                         arg='imports',
-                        value=Constant(value='import logging;import tensorflow as tf;import matplotlib.pyplot as plt;import numpy as np')),
+                        value=Constant(value='import matplotlib.pyplot as plt;import tensorflow as tf;import logging;import numpy as np')),
                     keyword(
                         arg='function_to_run',
                         value=Constant(value='tf.keras.layers.Dense(**kwargs)')),
@@ -644,7 +644,7 @@ Module(
                 keywords=[
                     keyword(
                         arg='imports',
-                        value=Constant(value='import logging;import tensorflow as tf;import matplotlib.pyplot as plt;import numpy as np')),
+                        value=Constant(value='import matplotlib.pyplot as plt;import tensorflow as tf;import logging;import numpy as np')),
                     keyword(
                         arg='function_to_run',
                         value=Constant(value='tf.keras.layers.Dense(**kwargs)')),
@@ -694,7 +694,7 @@ Module(
                 keywords=[
                     keyword(
                         arg='imports',
-                        value=Constant(value='import logging;import tensorflow as tf;import matplotlib.pyplot as plt;import numpy as np')),
+                        value=Constant(value='import matplotlib.pyplot as plt;import tensorflow as tf;import logging;import numpy as np')),
                     keyword(
                         arg='function_to_run',
                         value=Constant(value='tf.keras.layers.Dense(**kwargs)')),
@@ -744,7 +744,7 @@ Module(
                 keywords=[
                     keyword(
                         arg='imports',
-                        value=Constant(value='import logging;import tensorflow as tf;import matplotlib.pyplot as plt;import numpy as np')),
+                        value=Constant(value='import matplotlib.pyplot as plt;import tensorflow as tf;import logging;import numpy as np')),
                     keyword(
                         arg='function_to_run',
                         value=Constant(value='tf.keras.Sequential(*args)')),
@@ -801,7 +801,7 @@ Module(
                 keywords=[
                     keyword(
                         arg='imports',
-                        value=Constant(value='import logging;import tensorflow as tf;import matplotlib.pyplot as plt;import numpy as np')),
+                        value=Constant(value='import matplotlib.pyplot as plt;import tensorflow as tf;import logging;import numpy as np')),
                     keyword(
                         arg='function_to_run',
                         value=Constant(value='obj.compile(**kwargs)')),
@@ -857,7 +857,7 @@ Module(
                 keywords=[
                     keyword(
                         arg='imports',
-                        value=Constant(value='import logging;import tensorflow as tf;import matplotlib.pyplot as plt;import numpy as np')),
+                        value=Constant(value='import matplotlib.pyplot as plt;import tensorflow as tf;import logging;import numpy as np')),
                     keyword(
                         arg='function_to_run',
                         value=Constant(value='obj.fit(*args, **kwargs)')),
@@ -1017,21 +1017,21 @@ import tensorflow as tf
 import numpy as np
 import logging
 logger = custom_method(
-tf.get_logger(), imports='import logging;import tensorflow as tf;import matplotlib.pyplot as plt;import numpy as np', function_to_run='tf.get_logger()', method_object=None, function_args=[], function_kwargs={}, max_wait_secs=30)
+tf.get_logger(), imports='import matplotlib.pyplot as plt;import tensorflow as tf;import logging;import numpy as np', function_to_run='tf.get_logger()', method_object=None, function_args=[], function_kwargs={}, max_wait_secs=30)
 custom_method(
-logger.setLevel(logging.ERROR), imports='import logging;import tensorflow as tf;import matplotlib.pyplot as plt;import numpy as np', function_to_run='obj.setLevel(*args)', method_object='logger', function_args=[eval('logging.ERROR')], function_kwargs={}, max_wait_secs=30, custom_class=None)
+logger.setLevel(logging.ERROR), imports='import matplotlib.pyplot as plt;import tensorflow as tf;import logging;import numpy as np', function_to_run='obj.setLevel(*args)', method_object='logger', function_args=[eval('logging.ERROR')], function_kwargs={}, max_wait_secs=30, custom_class=None)
 celsius_q = np.array([-40, -10, 0, 8, 15, 22, 38], dtype=float)
 fahrenheit_a = np.array([-40, 14, 32, 46, 59, 72, 100], dtype=float)
 for (i, c) in enumerate(celsius_q):
     print('{} degrees Celsius = {} degrees Fahrenheit'.format(c, fahrenheit_a[i]))
 l0 = custom_method(
-tf.keras.layers.Dense(units=1, input_shape=[1]), imports='import logging;import tensorflow as tf;import matplotlib.pyplot as plt;import numpy as np', function_to_run='tf.keras.layers.Dense(**kwargs)', method_object=None, function_args=[], function_kwargs={'units': eval('1'), 'input_shape': eval('[1]')}, max_wait_secs=30)
+tf.keras.layers.Dense(units=1, input_shape=[1]), imports='import matplotlib.pyplot as plt;import tensorflow as tf;import logging;import numpy as np', function_to_run='tf.keras.layers.Dense(**kwargs)', method_object=None, function_args=[], function_kwargs={'units': eval('1'), 'input_shape': eval('[1]')}, max_wait_secs=30)
 model = custom_method(
-tf.keras.Sequential([l0]), imports='import logging;import tensorflow as tf;import matplotlib.pyplot as plt;import numpy as np', function_to_run='tf.keras.Sequential(*args)', method_object=None, function_args=[eval('[l0]')], function_kwargs={}, max_wait_secs=30)
+tf.keras.Sequential([l0]), imports='import matplotlib.pyplot as plt;import tensorflow as tf;import logging;import numpy as np', function_to_run='tf.keras.Sequential(*args)', method_object=None, function_args=[eval('[l0]')], function_kwargs={}, max_wait_secs=30)
 custom_method(
-model.compile(loss='mean_squared_error', optimizer=tf.keras.optimizers.Adam(0.1)), imports='import logging;import tensorflow as tf;import matplotlib.pyplot as plt;import numpy as np', function_to_run='obj.compile(**kwargs)', method_object='model', function_args=[], function_kwargs={'loss': eval("'mean_squared_error'"), 'optimizer': eval('tf.keras.optimizers.Adam(0.1)')}, max_wait_secs=30, custom_class=None)
+model.compile(loss='mean_squared_error', optimizer=tf.keras.optimizers.Adam(0.1)), imports='import matplotlib.pyplot as plt;import tensorflow as tf;import logging;import numpy as np', function_to_run='obj.compile(**kwargs)', method_object='model', function_args=[], function_kwargs={'loss': eval("'mean_squared_error'"), 'optimizer': eval('tf.keras.optimizers.Adam(0.1)')}, max_wait_secs=30, custom_class=None)
 history = custom_method(
-model.fit(celsius_q, fahrenheit_a, epochs=500, verbose=False), imports='import logging;import tensorflow as tf;import matplotlib.pyplot as plt;import numpy as np', function_to_run='obj.fit(*args, **kwargs)', method_object='model', function_args=[eval('celsius_q'), eval('fahrenheit_a')], function_kwargs={'epochs': eval('500'), 'verbose': eval('False')}, max_wait_secs=30, custom_class=None)
+model.fit(celsius_q, fahrenheit_a, epochs=500, verbose=False), imports='import matplotlib.pyplot as plt;import tensorflow as tf;import logging;import numpy as np', function_to_run='obj.fit(*args, **kwargs)', method_object='model', function_args=[eval('celsius_q'), eval('fahrenheit_a')], function_kwargs={'epochs': eval('500'), 'verbose': eval('False')}, max_wait_secs=30, custom_class=None)
 print('Finished training the model')
 import matplotlib.pyplot as plt
 plt.xlabel('Epoch Number')
@@ -1040,17 +1040,17 @@ plt.plot(history.history['loss'])
 print(model.predict([100.0]))
 print('These are the layer variables: {}'.format(l0.get_weights()))
 l0 = custom_method(
-tf.keras.layers.Dense(units=4, input_shape=[1]), imports='import logging;import tensorflow as tf;import matplotlib.pyplot as plt;import numpy as np', function_to_run='tf.keras.layers.Dense(**kwargs)', method_object=None, function_args=[], function_kwargs={'units': eval('4'), 'input_shape': eval('[1]')}, max_wait_secs=30)
+tf.keras.layers.Dense(units=4, input_shape=[1]), imports='import matplotlib.pyplot as plt;import tensorflow as tf;import logging;import numpy as np', function_to_run='tf.keras.layers.Dense(**kwargs)', method_object=None, function_args=[], function_kwargs={'units': eval('4'), 'input_shape': eval('[1]')}, max_wait_secs=30)
 l1 = custom_method(
-tf.keras.layers.Dense(units=4), imports='import logging;import tensorflow as tf;import matplotlib.pyplot as plt;import numpy as np', function_to_run='tf.keras.layers.Dense(**kwargs)', method_object=None, function_args=[], function_kwargs={'units': eval('4')}, max_wait_secs=30)
+tf.keras.layers.Dense(units=4), imports='import matplotlib.pyplot as plt;import tensorflow as tf;import logging;import numpy as np', function_to_run='tf.keras.layers.Dense(**kwargs)', method_object=None, function_args=[], function_kwargs={'units': eval('4')}, max_wait_secs=30)
 l2 = custom_method(
-tf.keras.layers.Dense(units=1), imports='import logging;import tensorflow as tf;import matplotlib.pyplot as plt;import numpy as np', function_to_run='tf.keras.layers.Dense(**kwargs)', method_object=None, function_args=[], function_kwargs={'units': eval('1')}, max_wait_secs=30)
+tf.keras.layers.Dense(units=1), imports='import matplotlib.pyplot as plt;import tensorflow as tf;import logging;import numpy as np', function_to_run='tf.keras.layers.Dense(**kwargs)', method_object=None, function_args=[], function_kwargs={'units': eval('1')}, max_wait_secs=30)
 model = custom_method(
-tf.keras.Sequential([l0, l1, l2]), imports='import logging;import tensorflow as tf;import matplotlib.pyplot as plt;import numpy as np', function_to_run='tf.keras.Sequential(*args)', method_object=None, function_args=[eval('[l0, l1, l2]')], function_kwargs={}, max_wait_secs=30)
+tf.keras.Sequential([l0, l1, l2]), imports='import matplotlib.pyplot as plt;import tensorflow as tf;import logging;import numpy as np', function_to_run='tf.keras.Sequential(*args)', method_object=None, function_args=[eval('[l0, l1, l2]')], function_kwargs={}, max_wait_secs=30)
 custom_method(
-model.compile(loss='mean_squared_error', optimizer=tf.keras.optimizers.Adam(0.1)), imports='import logging;import tensorflow as tf;import matplotlib.pyplot as plt;import numpy as np', function_to_run='obj.compile(**kwargs)', method_object='model', function_args=[], function_kwargs={'loss': eval("'mean_squared_error'"), 'optimizer': eval('tf.keras.optimizers.Adam(0.1)')}, max_wait_secs=30, custom_class=None)
+model.compile(loss='mean_squared_error', optimizer=tf.keras.optimizers.Adam(0.1)), imports='import matplotlib.pyplot as plt;import tensorflow as tf;import logging;import numpy as np', function_to_run='obj.compile(**kwargs)', method_object='model', function_args=[], function_kwargs={'loss': eval("'mean_squared_error'"), 'optimizer': eval('tf.keras.optimizers.Adam(0.1)')}, max_wait_secs=30, custom_class=None)
 custom_method(
-model.fit(celsius_q, fahrenheit_a, epochs=500, verbose=False), imports='import logging;import tensorflow as tf;import matplotlib.pyplot as plt;import numpy as np', function_to_run='obj.fit(*args, **kwargs)', method_object='model', function_args=[eval('celsius_q'), eval('fahrenheit_a')], function_kwargs={'epochs': eval('500'), 'verbose': eval('False')}, max_wait_secs=30, custom_class=None)
+model.fit(celsius_q, fahrenheit_a, epochs=500, verbose=False), imports='import matplotlib.pyplot as plt;import tensorflow as tf;import logging;import numpy as np', function_to_run='obj.fit(*args, **kwargs)', method_object='model', function_args=[eval('celsius_q'), eval('fahrenheit_a')], function_kwargs={'epochs': eval('500'), 'verbose': eval('False')}, max_wait_secs=30, custom_class=None)
 print('Finished training the model')
 print(model.predict([100.0]))
 print('Model predicts that 100 degrees Celsius is: {} degrees Fahrenheit'.format(model.predict([100.0])))
