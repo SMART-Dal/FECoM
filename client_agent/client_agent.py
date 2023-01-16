@@ -10,6 +10,8 @@ import json
 requiredLibraries = ["tensorflow","torch","math"]
 requiredAlias = []
 requiredObjects = []
+requiredClassDefs = {}
+requiredObjClassMapping = {}
 importScriptList = ''
 sourceCode = ''
 
@@ -28,17 +30,27 @@ def main():
     global requiredAlias
     global importScriptList
     requiredAlias = analyzer.stats['required']
-    print("required Alias:",requiredAlias)
+    # print("required Alias:",requiredAlias)
     importScriptList = ';'.join(list(set(analyzer.stats['importScript'])))
 
-    #Step3: Get list of objects created from the required libraries
+    # Step3: Get list of Classdefs having bases from the required libraries
+    global requiredClassDefs
+    classDefAnalyzer = ClassDefAnalyzer()
+    classDefAnalyzer.visit(tree)
+    requiredClassDefs = classDefAnalyzer.classDef
+    print("requiredClass",requiredClassDefs.keys())
+
+    # Step4: Get list of objects created from the required libraries
     global requiredObjects
+    global requiredObjClassMapping
     objAnalyzer = ObjectAnalyzer()
     objAnalyzer.visit(tree)
     requiredObjects = objAnalyzer.stats['objects']
-    # print("requiredObjects",requiredObjects)
+    requiredObjClassMapping = objAnalyzer.userDefObjects
+    print("requiredObjects",requiredObjects)
+    print("requiredObjClassMapping",requiredObjClassMapping)
 
-    #Step4: Tranform the client script by adding custom method calls
+    #Step5: Tranform the client script by adding custom method calls
     transf = TransformCall()
     transf.visit(tree)
     with open("custom_method.py", "r") as source:
@@ -50,7 +62,7 @@ def main():
     print(ast.dump(tree, indent=4))
     print('_'*100)
 
-    #Step5: Unparse and convert AST to final code
+    #Step6: Unparse and convert AST to final code
     print(ast.unparse(tree))
     # print('+'*100)
 
@@ -85,6 +97,7 @@ class TransformCall(ast.NodeTransformer):
         global requiredAlias
         global sourceCode
         global requiredObjects
+        global requiredObjClassMapping
 
     def visit_Call(self, node):
         callvisitor = FuncCallVisitor()
@@ -203,6 +216,9 @@ class TransformCall(ast.NodeTransformer):
                                     ast.keyword(
                                         arg='max_wait_secs',
                                         value=ast.Constant(30)),
+                                    ast.keyword(
+                                        arg='custom_class',
+                                        value=ast.Constant(requiredClassDefs.get(requiredObjClassMapping.get(callvisitor.name.split('.')[0]))))
                                         ],
                                         starargs=None, kwargs=None
                                 )
@@ -309,9 +325,13 @@ class Analyzer(ast.NodeVisitor):
                 if(alias.asname):
                     self.stats["required"].append(alias.asname)
                 elif(alias.name == '*'):
+                    pass
                     # print("star :",dir(ast))
-                    # print("node module:",node.module)
-                    self.stats["required"].extend(dir(eval(node.module)))
+                    # print("node module:",ast.get_source_segment(sourceCode, node))
+                    # exec(ast.get_source_segment(sourceCode, node))
+                    # self.stats["required"].extend(dir(exec(node.module)))
+                    # TODO: Need to find a way to get all the methods from the module without installing the libraries if possible
+                    # print("Star import not supported and is not required for this script")
                 else:
                     self.stats["required"].append(alias.name)
         self.generic_visit(node)
@@ -319,10 +339,22 @@ class Analyzer(ast.NodeVisitor):
     def report(self):
         pprint(self.stats)
 
+class ClassDefAnalyzer(ast.NodeVisitor):
+    def __init__(self):
+        self.classDef = {}
+        global sourceCode
+
+    def visit_ClassDef(self, node):
+        if((node.bases) and any(ast.get_source_segment(sourceCode,lib).split('.')[0] in requiredAlias for lib in node.bases)):
+            # print("visit_ClassDef:",ast.get_source_segment(sourceCode,node.bases[0]).split('.')[0])
+            self.classDef[node.name] = ast.get_source_segment(sourceCode, node)
+
 class ObjectAnalyzer(ast.NodeVisitor):
     def __init__(self):
         self.stats = {"objects": []}
+        self.userDefObjects = {}
         global sourceCode
+        global requiredClassDefs
         
     def visit_Assign(self, node):
         if isinstance(node.value, ast.Call):
@@ -335,6 +367,11 @@ class ObjectAnalyzer(ast.NodeVisitor):
             if((any(lib in callvisitor2.name for lib in requiredAlias)) and (isinstance(node.targets[0], ast.Name))):
                 # print("Lib is :",requiredAlias," got name :",callvisitor2.name)
                 self.stats["objects"].append(node.targets[0].id)
+            
+            if((any(lib in callvisitor2.name.split('.')[0] for lib in list(requiredClassDefs.keys()))) and (isinstance(node.targets[0], ast.Name))):
+                # print("Lib is :",requiredAlias," got name :",callvisitor2.name)
+                self.stats["objects"].append(node.targets[0].id)
+                self.userDefObjects[node.targets[0].id] = callvisitor2.name.split('.')[0]
         self.generic_visit(node)
 
 

@@ -2,7 +2,7 @@ import pickle
 import requests
 from server.send_request import send_request
 
-def custom_method(func,imports,function_to_run,method_object,function_args,function_kwargs,max_wait_secs):
+def custom_method(func,imports: str, function_to_run: str, method_object=None, function_args: list = None, function_kwargs: dict = None,max_wait_secs=0, custom_class=None):
    # method_details = {
    #  "imports": imports,
    #  "function": function_to_run,

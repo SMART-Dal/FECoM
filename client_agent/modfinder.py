@@ -1,13 +1,18 @@
-from modulefinder import ModuleFinder
+import ast
+import inspect
 
-finder = ModuleFinder()
-finder.run_script('code_snippet.py')
+def get_class_def(obj):
+    if obj.__class__.__module__ == "__main__":
+        source = inspect.getsource(obj.__class__)
+        module_ast = ast.parse(source)
+        for node in module_ast.body:
+            if isinstance(node, ast.ClassDef) and node.name == obj.__class__.__name__:
+                return node
+    return None
 
-print('Loaded modules:')
-for name, mod in finder.modules.items():
-    print('%s: ' % name, end='')
-    print(','.join(list(mod.globalnames.keys())[:3]))
+class A:
+    pass
 
-print('-'*50)
-print('Modules not imported:')
-print('\n'.join(finder.badmodules.keys()))
+a = A()
+class_def = get_class_def(a)
+print(class_def)
