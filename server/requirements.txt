@@ -1,0 +1,13 @@
+flask
+Flask-HTTPAuth
+requests
+numpy
+tensorflow
+torch
+torchvision
+torchaudio
+
+# optional for graphing in /energy_measurement
+pandas
+matplotlib
+scikit-learn

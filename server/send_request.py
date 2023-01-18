@@ -25,7 +25,14 @@ def send_request(imports: str, function_to_run: str, function_args: list = None,
 
     run_data = pickle.dumps(function_details)
 
-    run_resp = requests.post(URL, data=run_data, headers={'Content-Type': 'application/octet-stream'})
+    # TODO implement this temporary hack safely
+    username = "tim9220"
+    password = "qQ32XALjF9JqFh!vF3xY"
+
+    # verify = False because the server uses a self-signed certificate
+    # TODO this setting throws a warning, we need to set verify to the trusted certificate path instead.
+    # But this didn't work for a self-signed certificate, since a certificate authority (CA) bundle is required
+    run_resp = requests.post(URL, data=run_data, auth=(username, password), verify=False, headers={'Content-Type': 'application/octet-stream'})
 
     result = pickle.loads(run_resp.content)
 

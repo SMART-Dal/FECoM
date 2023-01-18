@@ -6,12 +6,35 @@ import time
 import os
 import statistics as stats
 import pickle
-from config import API_PATH, DEBUG, SERVER_HOST, SERVER_PORT, CPU_STD_TO_MEAN, RAM_STD_TO_MEAN, GPU_STD_TO_MEAN
 from flask import Flask, Response, request
+from flask_httpauth import HTTPBasicAuth
+from werkzeug.security import check_password_hash
+
+from config import API_PATH, DEBUG, SERVER_HOST, SERVER_PORT, CPU_STD_TO_MEAN, RAM_STD_TO_MEAN, GPU_STD_TO_MEAN, USERS, CA_CERT_PATH, CA_KEY_PATH
 from function_details import FunctionDetails
 
 
 app = Flask(__name__)
+auth = HTTPBasicAuth()
+
+@auth.verify_password
+def verify_password(username, password):
+    if username in USERS.keys() and check_password_hash(USERS[username], password):
+        # typically would return the user object here.
+        return True
+    else:
+        return False
+
+@auth.error_handler
+def auth_error(status_code):
+    data = pickle.dumps(f"{status_code}: Access denied.")
+
+    response = Response(
+        response=data,
+        status=status_code,
+        mimetype='application/octet_stream'
+    )
+    return response
 
 def is_stable_state(max_wait_secs: int):
     """
@@ -106,6 +129,7 @@ def run_function(imports: str, function_to_run: str, method_object: object, args
 
 
 @app.route(API_PATH, methods=["POST"])
+@auth.login_required
 def run_function_and_return_result():
     # (1) deserialise request data
     function_details = pickle.loads(request.data)
@@ -160,4 +184,4 @@ def run_function_and_return_result():
 
 # start flask app
 if __name__ == "__main__":
-    app.run(host=SERVER_HOST, port=SERVER_PORT)
+    app.run(host=SERVER_HOST, port=SERVER_PORT, debug=False, ssl_context=(CA_CERT_PATH, CA_KEY_PATH))
