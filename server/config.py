@@ -27,5 +27,5 @@ USERS = {
 }
 
 # HTTPS certificate relative paths from server directory
-CA_CERT_PATH = "./certificates/cert.pem" # public key
-CA_KEY_PATH = "./certificates/key.pem" # private key
+CA_CERT_PATH = "/certificates/cert.pem" # public key
+CA_KEY_PATH = "/certificates/key.pem" # private key

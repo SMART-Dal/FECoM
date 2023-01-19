@@ -184,4 +184,5 @@ def run_function_and_return_result():
 
 # start flask app
 if __name__ == "__main__":
-    app.run(host=SERVER_HOST, port=SERVER_PORT, debug=False, ssl_context=(CA_CERT_PATH, CA_KEY_PATH))
+    this_dir = os.path.dirname(__file__)
+    app.run(host=SERVER_HOST, port=SERVER_PORT, debug=False, ssl_context=(this_dir+CA_CERT_PATH, this_dir+CA_KEY_PATH))

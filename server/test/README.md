@@ -1,5 +1,5 @@
 # Testing the server
-Before running the tests, make sure `pytest` is installed in the venv. Run this with the venv activated:
+Before running the tests, make sure that `pytest` is installed in the venv and that a server is running in a different terminal. Run this with the venv activated:
 ```
 pip install -U pytest
 ```

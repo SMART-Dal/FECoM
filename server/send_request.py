@@ -3,7 +3,8 @@ import requests
 from config import URL, DEBUG
 from function_details import FunctionDetails
 
-def send_request(imports: str, function_to_run: str, function_args: list = None, function_kwargs: dict = None, max_wait_secs=0, method_object=None, custom_class=None):
+# TODO how can we best pass the username and password to this function? Write a wrapper?
+def send_request(imports: str, function_to_run: str, function_args: list = None, function_kwargs: dict = None, max_wait_secs=0, method_object=None, custom_class=None, username: str = "tim9220", password: str = "qQ32XALjF9JqFh!vF3xY"):
     """
     Send a request to execute any function and show the result
     TODO continue here: test compatibility with other functions and modules
@@ -25,10 +26,6 @@ def send_request(imports: str, function_to_run: str, function_args: list = None,
 
     run_data = pickle.dumps(function_details)
 
-    # TODO implement this temporary hack safely
-    username = "tim9220"
-    password = "qQ32XALjF9JqFh!vF3xY"
-
     # verify = False because the server uses a self-signed certificate
     # TODO this setting throws a warning, we need to set verify to the trusted certificate path instead.
     # But this didn't work for a self-signed certificate, since a certificate authority (CA) bundle is required
@@ -40,6 +37,8 @@ def send_request(imports: str, function_to_run: str, function_args: list = None,
     # now, simply raise an error. TODO: send a new request instead.
     if run_resp.status_code == 500:
         raise TimeoutError(result)
+    elif run_resp.status_code == 401:
+        raise RuntimeError(result)
     
     if DEBUG:
         print(f"Result: {result}")
