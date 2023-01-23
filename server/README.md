@@ -8,16 +8,16 @@ Create a python virtual environment in the `/server` directory:
 Activate the venv (Linux):  
 ```source venv/bin/activate```  
 Activate the venv (Windows):  
-```venv\Scripts\activate```    
+```venv\Scripts\activate```  
+Update pip:  
+```pip install --upgrade pip```    
 Install required dependencies:  
 ```pip install -r requirements.txt```
 
-## Run
-Start the client:  
-```python3 test_client.py```  
-Start the server in a separate terminal (you have to activate the venv here as well):  
-```python3 server.py```  
-Press return in the client terminal to send a request to the server and receive the result as a response.
+## Run  
+In the activated venv run this command to start the server:  
+```python3 server.py```
+To test if you have setup everything correctly, go to the `test` directory and follow the instructions in that directory's README file to run all tests. Make sure to do this in a new terminal with the activated environment. 
 
 ## API Spec
 ### Sending Requests

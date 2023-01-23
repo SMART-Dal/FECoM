@@ -3,6 +3,9 @@ Test
 """
 
 import tensorflow as tf
+tf_config = tf.compat.v1.ConfigProto()
+tf_config.gpu_options.allow_growth = True
+session = tf.compat.v1.Session(config=tf_config)
 import pytest
 # add parent directory to path
 import sys

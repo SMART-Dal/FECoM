@@ -1,3 +1,4 @@
+# TODO update this file once the server environment is setup
 flask
 Flask-HTTPAuth
 requests
