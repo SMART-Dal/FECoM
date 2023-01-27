@@ -3,16 +3,11 @@ The server receives client requests to run ML methods (and in the future also me
 The test client sends sample requests to test the server's methods.
 
 ## Setup
-Create a python virtual environment in the `/server` directory:  
-``` python3 -m venv venv```   
-Activate the venv (Linux):  
-```source venv/bin/activate```  
-Activate the venv (Windows):  
-```venv\Scripts\activate```  
-Update pip:  
-```pip install --upgrade pip```    
-Install required dependencies:  
-```pip install -r requirements.txt```
+Install [miniconda3](https://docs.conda.io/en/latest/miniconda.html)
+In this directory, run the following command to create the required TensorFlow environment from the specified `environment.yml` file:  
+```conda env create -f environment.yml```   
+Activate the environemnt:  
+```conda activate tf2```
 
 ## Run  
 In the activated venv run this command to start the server:  
