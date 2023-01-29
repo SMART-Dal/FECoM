@@ -181,6 +181,10 @@ def run_function_and_return_result():
 
     return response
 
+@app.route("/")
+def index():
+    return '<h1>Application Deployed!</h1>'
+
 
 # start flask app
 if __name__ == "__main__":

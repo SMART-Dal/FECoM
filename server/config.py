@@ -1,7 +1,15 @@
 # server settings for localhost environment
-SERVER_HOST= "localhost"
-SERVER_PORT = 12345
+DEV_HOST = "localhost"
+DEV_PORT = 12345
+
+# server settings for production environment
+PROD_HOST = "0.0.0.0"
+PROD_PORT = 5000
+
+# configure server settings here
 API_PATH = "/api/run_experiment"
+SERVER_HOST = PROD_HOST
+SERVER_PORT = PROD_PORT
 URL = "https://"+SERVER_HOST+":"+str(SERVER_PORT)+API_PATH
 
 # set this to True to get print outs as the server receives and processes requests
