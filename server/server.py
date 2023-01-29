@@ -104,6 +104,7 @@ def run_function(imports: str, function_to_run: str, method_object: object, args
     # WARNING: potential security risk from exec and eval statements
 
     # (1) import relevant modules
+    app.logger.info("Imports value: %s", imports)
     exec(imports)
 
     # (2) continue only when the system has reached a stable state of energy consumption
