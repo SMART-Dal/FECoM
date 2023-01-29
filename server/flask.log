@@ -1,0 +1,229 @@
+2023-01-29 17:41:29,247 INFO werkzeug [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on https://localhost:12345
+2023-01-29 17:41:29,247 INFO werkzeug [33mPress CTRL+C to quit[0m
+2023-01-29 17:41:45,477 INFO server Auth successful
+2023-01-29 17:41:46,008 INFO server Auth successful
+2023-01-29 17:41:46,013 ERROR server Exception on /api/run_experiment [POST]
+Traceback (most recent call last):
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 2525, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1822, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1820, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1796, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask_httpauth.py", line 172, in decorated
+    return self.ensure_sync(f)(*args, **kwargs)
+  File "/home/saurabh/code-energy-consumption/server/server.py", line 140, in run_function_and_return_result
+    function_details = pickle.loads(request.data)
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/keras/__init__.py", line 21, in <module>
+    from keras import models
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/keras/models/__init__.py", line 18, in <module>
+    from keras.engine.functional import Functional
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/keras/engine/functional.py", line 24, in <module>
+    import tensorflow.compat.v2 as tf
+ModuleNotFoundError: No module named 'tensorflow.compat'
+2023-01-29 17:41:46,016 INFO werkzeug 127.0.0.1 - - [29/Jan/2023 17:41:46] "[35m[1mPOST /api/run_experiment HTTP/1.1[0m" 500 -
+2023-01-29 17:41:46,220 DEBUG tensorflow Falling back to TensorFlow client; we recommended you install the Cloud TPU client directly with pip install cloud-tpu-client.
+2023-01-29 17:41:46,348 DEBUG h5py._conv Creating converter from 7 to 5
+2023-01-29 17:41:46,348 DEBUG h5py._conv Creating converter from 5 to 7
+2023-01-29 17:41:46,348 DEBUG h5py._conv Creating converter from 7 to 5
+2023-01-29 17:41:46,348 DEBUG h5py._conv Creating converter from 5 to 7
+2023-01-29 17:41:46,585 ERROR server Exception on /api/run_experiment [POST]
+Traceback (most recent call last):
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/requests/compat.py", line 11, in <module>
+    import chardet
+ModuleNotFoundError: No module named 'chardet'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 2525, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1822, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1820, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1796, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask_httpauth.py", line 172, in decorated
+    return self.ensure_sync(f)(*args, **kwargs)
+  File "/home/saurabh/code-energy-consumption/server/server.py", line 158, in run_function_and_return_result
+    output = run_function(
+  File "/home/saurabh/code-energy-consumption/server/server.py", line 108, in run_function
+    exec(imports)
+  File "<string>", line 1, in <module>
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/tensorflow/__init__.py", line 51, in <module>
+    from ._api.v2 import compat
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/tensorflow/_api/v2/compat/__init__.py", line 37, in <module>
+    from . import v1
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/tensorflow/_api/v2/compat/v1/__init__.py", line 30, in <module>
+    from . import compat
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/tensorflow/_api/v2/compat/v1/compat/__init__.py", line 38, in <module>
+    from . import v2
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/tensorflow/_api/v2/compat/v1/compat/v2/__init__.py", line 28, in <module>
+    from tensorflow._api.v2.compat.v2 import __internal__
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/tensorflow/_api/v2/compat/v2/__init__.py", line 33, in <module>
+    from . import compat
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/tensorflow/_api/v2/compat/v2/compat/__init__.py", line 38, in <module>
+    from . import v2
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/tensorflow/_api/v2/compat/v2/compat/v2/__init__.py", line 37, in <module>
+    from tensorflow._api.v2.compat.v2 import distribute
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/tensorflow/_api/v2/compat/v2/distribute/__init__.py", line 182, in <module>
+    from . import experimental
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/tensorflow/_api/v2/compat/v2/distribute/experimental/__init__.py", line 10, in <module>
+    from . import rpc
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/tensorflow/_api/v2/compat/v2/distribute/experimental/rpc/__init__.py", line 8, in <module>
+    from tensorflow.python.distribute.experimental.rpc.rpc_ops import Client
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/tensorflow/python/distribute/experimental/__init__.py", line 22, in <module>
+    from tensorflow.python.distribute.failure_handling import failure_handling
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/tensorflow/python/distribute/failure_handling/failure_handling.py", line 34, in <module>
+    from tensorflow.python.distribute.failure_handling import gce_util
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/tensorflow/python/distribute/failure_handling/gce_util.py", line 20, in <module>
+    import requests
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/requests/__init__.py", line 45, in <module>
+    from .exceptions import RequestsDependencyWarning
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/requests/exceptions.py", line 9, in <module>
+    from .compat import JSONDecodeError as CompatJSONDecodeError
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/requests/compat.py", line 13, in <module>
+    import charset_normalizer as chardet
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/charset_normalizer/__init__.py", line 23, in <module>
+    from charset_normalizer.api import from_fp, from_path, from_bytes, normalize
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/charset_normalizer/api.py", line 10, in <module>
+    from charset_normalizer.md import mess_ratio
+AttributeError: partially initialized module 'charset_normalizer' has no attribute 'md__mypyc' (most likely due to a circular import)
+2023-01-29 17:41:46,586 INFO werkzeug 127.0.0.1 - - [29/Jan/2023 17:41:46] "[35m[1mPOST /api/run_experiment HTTP/1.1[0m" 500 -
+2023-01-29 17:44:41,861 INFO server Auth successful
+2023-01-29 17:44:41,865 ERROR server Exception on /api/run_experiment [POST]
+Traceback (most recent call last):
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/requests/compat.py", line 11, in <module>
+    import chardet
+ModuleNotFoundError: No module named 'chardet'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 2525, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1822, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1820, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1796, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask_httpauth.py", line 172, in decorated
+    return self.ensure_sync(f)(*args, **kwargs)
+  File "/home/saurabh/code-energy-consumption/server/server.py", line 158, in run_function_and_return_result
+    output = run_function(
+  File "/home/saurabh/code-energy-consumption/server/server.py", line 108, in run_function
+    exec(imports)
+  File "<string>", line 1, in <module>
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/tensorflow/__init__.py", line 51, in <module>
+    from ._api.v2 import compat
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/tensorflow/_api/v2/compat/__init__.py", line 37, in <module>
+    from . import v1
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/tensorflow/_api/v2/compat/v1/__init__.py", line 30, in <module>
+    from . import compat
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/tensorflow/_api/v2/compat/v1/compat/__init__.py", line 38, in <module>
+    from . import v2
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/tensorflow/_api/v2/compat/v1/compat/v2/__init__.py", line 28, in <module>
+    from tensorflow._api.v2.compat.v2 import __internal__
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/tensorflow/_api/v2/compat/v2/__init__.py", line 33, in <module>
+    from . import compat
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/tensorflow/_api/v2/compat/v2/compat/__init__.py", line 38, in <module>
+    from . import v2
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/tensorflow/_api/v2/compat/v2/compat/v2/__init__.py", line 37, in <module>
+    from tensorflow._api.v2.compat.v2 import distribute
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/tensorflow/_api/v2/compat/v2/distribute/__init__.py", line 182, in <module>
+    from . import experimental
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/tensorflow/_api/v2/compat/v2/distribute/experimental/__init__.py", line 10, in <module>
+    from . import rpc
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/tensorflow/_api/v2/compat/v2/distribute/experimental/rpc/__init__.py", line 8, in <module>
+    from tensorflow.python.distribute.experimental.rpc.rpc_ops import Client
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/tensorflow/python/distribute/experimental/__init__.py", line 22, in <module>
+    from tensorflow.python.distribute.failure_handling import failure_handling
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/tensorflow/python/distribute/failure_handling/failure_handling.py", line 34, in <module>
+    from tensorflow.python.distribute.failure_handling import gce_util
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/tensorflow/python/distribute/failure_handling/gce_util.py", line 20, in <module>
+    import requests
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/requests/__init__.py", line 45, in <module>
+    from .exceptions import RequestsDependencyWarning
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/requests/exceptions.py", line 9, in <module>
+    from .compat import JSONDecodeError as CompatJSONDecodeError
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/requests/compat.py", line 13, in <module>
+    import charset_normalizer as chardet
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/charset_normalizer/__init__.py", line 23, in <module>
+    from charset_normalizer.api import from_fp, from_path, from_bytes, normalize
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/charset_normalizer/api.py", line 10, in <module>
+    from charset_normalizer.md import mess_ratio
+AttributeError: partially initialized module 'charset_normalizer' has no attribute 'md__mypyc' (most likely due to a circular import)
+2023-01-29 17:44:41,866 INFO werkzeug 127.0.0.1 - - [29/Jan/2023 17:44:41] "[35m[1mPOST /api/run_experiment HTTP/1.1[0m" 500 -
+2023-01-29 17:44:42,263 INFO server Auth successful
+2023-01-29 17:44:42,268 ERROR server Exception on /api/run_experiment [POST]
+Traceback (most recent call last):
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/requests/compat.py", line 11, in <module>
+    import chardet
+ModuleNotFoundError: No module named 'chardet'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 2525, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1822, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1820, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1796, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask_httpauth.py", line 172, in decorated
+    return self.ensure_sync(f)(*args, **kwargs)
+  File "/home/saurabh/code-energy-consumption/server/server.py", line 140, in run_function_and_return_result
+    function_details = pickle.loads(request.data)
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/keras/__init__.py", line 21, in <module>
+    from keras import models
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/keras/models/__init__.py", line 18, in <module>
+    from keras.engine.functional import Functional
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/keras/engine/functional.py", line 24, in <module>
+    import tensorflow.compat.v2 as tf
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/tensorflow/__init__.py", line 51, in <module>
+    from ._api.v2 import compat
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/tensorflow/_api/v2/compat/__init__.py", line 37, in <module>
+    from . import v1
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/tensorflow/_api/v2/compat/v1/__init__.py", line 30, in <module>
+    from . import compat
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/tensorflow/_api/v2/compat/v1/compat/__init__.py", line 38, in <module>
+    from . import v2
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/tensorflow/_api/v2/compat/v1/compat/v2/__init__.py", line 28, in <module>
+    from tensorflow._api.v2.compat.v2 import __internal__
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/tensorflow/_api/v2/compat/v2/__init__.py", line 33, in <module>
+    from . import compat
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/tensorflow/_api/v2/compat/v2/compat/__init__.py", line 38, in <module>
+    from . import v2
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/tensorflow/_api/v2/compat/v2/compat/v2/__init__.py", line 37, in <module>
+    from tensorflow._api.v2.compat.v2 import distribute
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/tensorflow/_api/v2/compat/v2/distribute/__init__.py", line 182, in <module>
+    from . import experimental
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/tensorflow/_api/v2/compat/v2/distribute/experimental/__init__.py", line 10, in <module>
+    from . import rpc
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/tensorflow/_api/v2/compat/v2/distribute/experimental/rpc/__init__.py", line 8, in <module>
+    from tensorflow.python.distribute.experimental.rpc.rpc_ops import Client
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/tensorflow/python/distribute/experimental/__init__.py", line 22, in <module>
+    from tensorflow.python.distribute.failure_handling import failure_handling
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/tensorflow/python/distribute/failure_handling/failure_handling.py", line 34, in <module>
+    from tensorflow.python.distribute.failure_handling import gce_util
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/tensorflow/python/distribute/failure_handling/gce_util.py", line 20, in <module>
+    import requests
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/requests/__init__.py", line 45, in <module>
+    from .exceptions import RequestsDependencyWarning
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/requests/exceptions.py", line 9, in <module>
+    from .compat import JSONDecodeError as CompatJSONDecodeError
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/requests/compat.py", line 13, in <module>
+    import charset_normalizer as chardet
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/charset_normalizer/__init__.py", line 23, in <module>
+    from charset_normalizer.api import from_fp, from_path, from_bytes, normalize
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/charset_normalizer/api.py", line 10, in <module>
+    from charset_normalizer.md import mess_ratio
+AttributeError: partially initialized module 'charset_normalizer' has no attribute 'md__mypyc' (most likely due to a circular import)
+2023-01-29 17:44:42,269 INFO werkzeug 127.0.0.1 - - [29/Jan/2023 17:44:42] "[35m[1mPOST /api/run_experiment HTTP/1.1[0m" 500 -

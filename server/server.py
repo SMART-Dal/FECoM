@@ -12,15 +12,19 @@ from werkzeug.security import check_password_hash
 
 from config import API_PATH, DEBUG, SERVER_HOST, SERVER_PORT, CPU_STD_TO_MEAN, RAM_STD_TO_MEAN, GPU_STD_TO_MEAN, USERS, CA_CERT_PATH, CA_KEY_PATH
 from function_details import FunctionDetails
-
+import logging
 
 app = Flask(__name__)
 auth = HTTPBasicAuth()
+
+logging.basicConfig(filename='flask.log', level=logging.DEBUG,
+                    format='%(asctime)s %(levelname)s %(name)s %(message)s')
 
 @auth.verify_password
 def verify_password(username, password):
     if username in USERS.keys() and check_password_hash(USERS[username], password):
         # typically would return the user object here.
+        app.logger.info('Auth successful')
         return True
     else:
         return False
