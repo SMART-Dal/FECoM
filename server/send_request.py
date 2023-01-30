@@ -65,7 +65,7 @@ def store_response(future_response):
     if response.content:
         try:
             data = json.loads(response.content)
-            with open('data.json', 'w') as f:
+            with open('methodcall-energy-dataset.json', 'w') as f:
                 existing_data.append(data)
                 json.dump(existing_data, f)
         except json.decoder.JSONDecodeError as e:
