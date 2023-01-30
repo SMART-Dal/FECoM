@@ -183,7 +183,7 @@ def run_function_and_return_result():
             os.remove(custom_class_file)
         else:
            raise OSError("Could not remove custom class file")
-
+    app.logger.info("response-value: %s", response)
     return response
 
 @app.route("/")
