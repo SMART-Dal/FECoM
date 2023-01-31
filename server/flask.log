@@ -245,3 +245,54 @@ Traceback (most recent call last):
     data = pickle.dumps(output)
 TypeError: cannot pickle '_thread.RLock' object
 2023-01-29 18:45:12,175 INFO werkzeug 127.0.0.1 - - [29/Jan/2023 18:45:12] "[35m[1mPOST /api/run_experiment HTTP/1.1[0m" 500 -
+2023-01-31 17:49:00,622 INFO werkzeug [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on https://localhost:12345
+2023-01-31 17:49:00,622 INFO werkzeug [33mPress CTRL+C to quit[0m
+2023-01-31 17:49:09,021 INFO werkzeug [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on https://localhost:12345
+2023-01-31 17:49:09,021 INFO werkzeug [33mPress CTRL+C to quit[0m
+2023-01-31 17:49:23,517 INFO server Auth successful
+2023-01-31 17:49:23,579 INFO server Imports value: import numpy as np
+2023-01-31 17:49:23,582 INFO server response-value: <Response 80161 bytes [200 OK]>
+2023-01-31 17:49:23,582 INFO werkzeug 127.0.0.1 - - [31/Jan/2023 17:49:23] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-01-31 17:49:24,274 INFO server Auth successful
+2023-01-31 17:49:24,275 INFO server Imports value: import numpy as np
+2023-01-31 17:49:24,279 INFO server response-value: <Response 161762 bytes [200 OK]>
+2023-01-31 17:49:24,279 INFO werkzeug 127.0.0.1 - - [31/Jan/2023 17:49:24] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-01-31 17:49:24,453 INFO server Auth successful
+2023-01-31 17:49:26,136 DEBUG tensorflow Falling back to TensorFlow client; we recommended you install the Cloud TPU client directly with pip install cloud-tpu-client.
+2023-01-31 17:49:26,281 DEBUG h5py._conv Creating converter from 7 to 5
+2023-01-31 17:49:26,281 DEBUG h5py._conv Creating converter from 5 to 7
+2023-01-31 17:49:26,281 DEBUG h5py._conv Creating converter from 7 to 5
+2023-01-31 17:49:26,281 DEBUG h5py._conv Creating converter from 5 to 7
+2023-01-31 17:49:27,307 INFO server Imports value: import tensorflow as tf
+2023-01-31 17:49:27,321 INFO server response-value: <Response 249 bytes [200 OK]>
+2023-01-31 17:49:27,322 INFO werkzeug 127.0.0.1 - - [31/Jan/2023 17:49:27] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-01-31 17:49:27,503 INFO server Auth successful
+2023-01-31 17:49:27,503 INFO server Imports value: import tensorflow as tf
+2023-01-31 17:49:27,507 INFO server response-value: <Response 449 bytes [200 OK]>
+2023-01-31 17:49:27,507 INFO werkzeug 127.0.0.1 - - [31/Jan/2023 17:49:27] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-01-31 18:30:27,942 INFO werkzeug [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on https://localhost:12345
+2023-01-31 18:30:27,942 INFO werkzeug [33mPress CTRL+C to quit[0m
+2023-01-31 18:30:38,170 INFO server Auth successful
+2023-01-31 18:30:38,231 INFO server Imports value: import numpy as np
+2023-01-31 18:30:38,233 INFO server response-value: <Response 80161 bytes [200 OK]>
+2023-01-31 18:30:38,233 INFO werkzeug 127.0.0.1 - - [31/Jan/2023 18:30:38] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-01-31 18:30:38,925 INFO server Auth successful
+2023-01-31 18:30:38,926 INFO server Imports value: import numpy as np
+2023-01-31 18:30:38,928 INFO server response-value: <Response 161762 bytes [200 OK]>
+2023-01-31 18:30:38,928 INFO werkzeug 127.0.0.1 - - [31/Jan/2023 18:30:38] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-01-31 18:30:39,103 INFO server Auth successful
+2023-01-31 18:30:40,786 DEBUG tensorflow Falling back to TensorFlow client; we recommended you install the Cloud TPU client directly with pip install cloud-tpu-client.
+2023-01-31 18:30:40,931 DEBUG h5py._conv Creating converter from 7 to 5
+2023-01-31 18:30:40,932 DEBUG h5py._conv Creating converter from 5 to 7
+2023-01-31 18:30:40,932 DEBUG h5py._conv Creating converter from 7 to 5
+2023-01-31 18:30:40,932 DEBUG h5py._conv Creating converter from 5 to 7
+2023-01-31 18:30:42,014 INFO server Imports value: import tensorflow as tf
+2023-01-31 18:30:42,029 INFO server response-value: <Response 249 bytes [200 OK]>
+2023-01-31 18:30:42,030 INFO werkzeug 127.0.0.1 - - [31/Jan/2023 18:30:42] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-01-31 18:30:42,215 INFO server Auth successful
+2023-01-31 18:30:42,215 INFO server Imports value: import tensorflow as tf
+2023-01-31 18:30:42,219 INFO server response-value: <Response 449 bytes [200 OK]>
+2023-01-31 18:30:42,219 INFO werkzeug 127.0.0.1 - - [31/Jan/2023 18:30:42] "POST /api/run_experiment HTTP/1.1" 200 -

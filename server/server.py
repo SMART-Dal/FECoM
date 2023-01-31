@@ -6,6 +6,8 @@ import time
 import os
 import statistics as stats
 import pickle
+from pathlib import Path
+
 from flask import Flask, Response, request
 from flask_httpauth import HTTPBasicAuth
 from werkzeug.security import check_password_hash
@@ -40,7 +42,32 @@ def auth_error(status_code):
     )
     return response
 
-def is_stable_state(max_wait_secs: int):
+def load_last_n_cpu_ram_gpu(n: int, filepath: Path) -> tuple:
+    """
+    Helper method for is_stable_state to load the last n energy data points
+    for CPU, RAM and GPU (in this order)
+    """
+    # load CPU & RAM data
+    cpu_ram = []
+    with open(filepath/"perf.txt", 'r') as f:
+        cpu_ram = f.read().splitlines(True)
+    
+    # load GPU data
+    gpu = []
+    with open(filepath/"nvidia_smi.txt", 'r') as f:
+        gpu = f.read().splitlines(True)
+
+    # generate lists of data
+    last_n_cpu_energies = [float(line.strip(' ').split(';')[1]) for line in cpu_ram[2::2][-n:]]
+    last_n_ram_energies = [float(line.strip(' ').split(';')[1]) for line in cpu_ram[3::2][-n:]]
+    last_n_gpu_energies = [float(line.split(' ')[2]) for line in gpu[-n:]]
+
+    return last_n_cpu_energies, last_n_ram_energies, last_n_gpu_energies
+
+def data_is_stable(data: list[float], tolerance: float, stable_std_mean_ratio: float) -> bool:
+    return (stats.stdev(data) / stats.mean(data)) <= ((1 + tolerance)*stable_std_mean_ratio)
+
+def server_is_stable(max_wait_secs: int) -> bool:
     """
     Return True only when the system's energy consumption is stable.
     """
@@ -50,41 +77,30 @@ def is_stable_state(max_wait_secs: int):
 
     # only consider the last n points
     n = 50
-    # tolerance for difference between stable stdev/mean ratio and current ratio
+
+    # relative tolerance for difference between stable stdev/mean ratio and current ratio
+    # e.g. 0.1 would mean allowing a ratio that's 10% higher than the stable stdev/mean ratio
     tolerance = 0.1
 
-    filepath = "./energy_measurement/out/2022-11-23/"
+    filepath = Path("./energy_measurement/out/2022-11-23")
 
     # in each loop iteration, load new data, calculate statistics and check if the energy is stable.
     # try this for the specified number of seconds
-    for i in range(max_wait_secs*2):
-        # load CPU & RAM data
-        cpu_ram = []
-        with open(f'{filepath}perf.txt', 'r') as f:
-            cpu_ram = f.read().splitlines(True)
-        
-        # load GPU data
-        gpu = []
-        with open(f'{filepath}nvidia_smi.txt', 'r') as f:
-            gpu = f.read().splitlines(True)
-
-        # generate lists of data
-        last_n_cpu_energies = [float(line.strip(' ').split(';')[1]) for line in cpu_ram[2::2][-n:]]
-        last_n_ram_energies = [float(line.strip(' ').split(';')[1]) for line in cpu_ram[3::2][-n:]]
-        last_n_gpu_energies = [float(line.split(' ')[2]) for line in gpu[-n:]]
+    for _ in range(max_wait_secs*2):
+        cpu_energies, ram_energies, gpu_energies = load_last_n_cpu_ram_gpu(n, filepath)
 
         # stable means that stdv/mean ratios are smaller or equal to the stable ratios determined experimentally
         # the tolerance value set above specifies how much relative deviation we want to allow
-        cpu_stable = (stats.stdev(last_n_cpu_energies) / stats.mean(last_n_cpu_energies)) <= ((1 + tolerance)*CPU_STD_TO_MEAN)
-        ram_stable = (stats.stdev(last_n_ram_energies) / stats.mean(last_n_ram_energies)) <= ((1 + tolerance)*RAM_STD_TO_MEAN)
-        gpu_stable = (stats.stdev(last_n_gpu_energies) / stats.mean(last_n_gpu_energies)) <= ((1 + tolerance)*GPU_STD_TO_MEAN)
+        cpu_stable = data_is_stable(cpu_energies, tolerance, CPU_STD_TO_MEAN)
+        ram_stable = data_is_stable(ram_energies, tolerance, RAM_STD_TO_MEAN)
+        gpu_stable = data_is_stable(gpu_energies, tolerance, GPU_STD_TO_MEAN)
 
         if DEBUG:
-            print(f"CPU: {last_n_cpu_energies} \n stable: {cpu_stable} \n stdv: {stats.stdev(last_n_cpu_energies)} \n mean: {stats.mean(last_n_cpu_energies)}")
+            print(f"CPU: {cpu_energies} \n stable: {cpu_stable} \n stdv: {stats.stdev(cpu_energies)} \n mean: {stats.mean(cpu_energies)}")
             print()
-            print(f"RAM: {last_n_ram_energies} \n stable: {ram_stable} \nstdv: {stats.stdev(last_n_ram_energies)} \n mean: {stats.mean(last_n_ram_energies)}")
+            print(f"RAM: {ram_energies} \n stable: {ram_stable} \nstdv: {stats.stdev(ram_energies)} \n mean: {stats.mean(ram_energies)}")
             print()
-            print(f"GPU: {last_n_gpu_energies} \n stable: {gpu_stable} \nstdv: {stats.stdev(last_n_gpu_energies)} \n mean: {stats.mean(last_n_gpu_energies)}")
+            print(f"GPU: {gpu_energies} \n stable: {gpu_stable} \nstdv: {stats.stdev(gpu_energies)} \n mean: {stats.mean(gpu_energies)}")
 
         if cpu_stable and ram_stable and gpu_stable:
             return True
@@ -108,7 +124,7 @@ def run_function(imports: str, function_to_run: str, method_object: object, args
     exec(imports)
 
     # (2) continue only when the system has reached a stable state of energy consumption
-    if not is_stable_state(max_wait_secs):
+    if not server_is_stable(max_wait_secs):
         raise TimeoutError(f"System could not reach a stable state within {max_wait_secs} seconds")
 
     # (3) evaluate the function return. This is where we should measure energy.
@@ -193,5 +209,4 @@ def index():
 
 # start flask app
 if __name__ == "__main__":
-    this_dir = os.path.dirname(__file__)
-    app.run(host=SERVER_HOST, port=SERVER_PORT, debug=False, ssl_context=(this_dir+CA_CERT_PATH, this_dir+CA_KEY_PATH))
+    app.run(host=SERVER_HOST, port=SERVER_PORT, debug=False, ssl_context=(CA_CERT_PATH, CA_KEY_PATH))

@@ -1,15 +1,20 @@
+from pathlib import Path
+
 # server settings for localhost environment
 DEV_HOST = "localhost"
 DEV_PORT = 12345
 
 # server settings for production environment
-PROD_HOST = "0.0.0.0"
-PROD_PORT = 5000
+PROD_HOST = "129.173.67.60" # set to "0.0.0.0" on the server
+PROD_PORT = 8080
+
+### SET TO FALSE FOR DEV SETTINGS ###
+PROD = False
 
 # configure server settings here
 API_PATH = "/api/run_experiment"
-SERVER_HOST = PROD_HOST
-SERVER_PORT = PROD_PORT
+SERVER_HOST = PROD_HOST if PROD else DEV_HOST
+SERVER_PORT = PROD_PORT if PROD else DEV_PORT
 URL = "https://"+SERVER_HOST+":"+str(SERVER_PORT)+API_PATH
 
 # set this to True to get print outs as the server receives and processes requests
@@ -35,5 +40,5 @@ USERS = {
 }
 
 # HTTPS certificate relative paths from server directory
-CA_CERT_PATH = "/certificates/cert.pem" # public key
-CA_KEY_PATH = "/certificates/key.pem" # private key
+CA_CERT_PATH = Path("certificates/cert.pem") # public key
+CA_KEY_PATH = Path("certificates/key.pem") # private key
