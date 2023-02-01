@@ -3,6 +3,7 @@ Server to receive client requests to run ML methods and measure energy.
 """
 
 import time
+import math
 import os
 import statistics as stats
 import pickle
@@ -12,7 +13,7 @@ from flask import Flask, Response, request
 from flask_httpauth import HTTPBasicAuth
 from werkzeug.security import check_password_hash
 
-from config import API_PATH, DEBUG, SERVER_HOST, SERVER_PORT, CPU_STD_TO_MEAN, RAM_STD_TO_MEAN, GPU_STD_TO_MEAN, USERS, CA_CERT_PATH, CA_KEY_PATH
+from config import API_PATH, DEBUG, SERVER_HOST, SERVER_PORT, CPU_STD_TO_MEAN, RAM_STD_TO_MEAN, GPU_STD_TO_MEAN, USERS, CA_CERT_PATH, CA_KEY_PATH, ENERGY_DATA_DIR
 from function_details import FunctionDetails # shown unused but still required
 import logging
 
@@ -42,19 +43,19 @@ def auth_error(status_code):
     )
     return response
 
-def load_last_n_cpu_ram_gpu(n: int, filepath: Path) -> tuple:
+def load_last_n_cpu_ram_gpu(n: int, parent_dir: Path) -> tuple:
     """
     Helper method for is_stable_state to load the last n energy data points
     for CPU, RAM and GPU (in this order)
     """
     # load CPU & RAM data
     cpu_ram = []
-    with open(filepath/"perf.txt", 'r') as f:
+    with open(parent_dir/"perf.txt", 'r') as f:
         cpu_ram = f.read().splitlines(True)
     
     # load GPU data
     gpu = []
-    with open(filepath/"nvidia_smi.txt", 'r') as f:
+    with open(parent_dir/"nvidia_smi.txt", 'r') as f:
         gpu = f.read().splitlines(True)
 
     # generate lists of data
@@ -74,6 +75,10 @@ def server_is_stable(max_wait_secs: int) -> bool:
     # For testing purposes
     if max_wait_secs == 0:
         return True
+    
+    # re-calculate statistics every wait_per_loop_secs seconds
+    # TODO play around with different values to see impact on energy data
+    wait_per_loop_secs = 0.5
 
     # only consider the last n points
     n = 50
@@ -82,12 +87,10 @@ def server_is_stable(max_wait_secs: int) -> bool:
     # e.g. 0.1 would mean allowing a ratio that's 10% higher than the stable stdev/mean ratio
     tolerance = 0.1
 
-    filepath = Path("./energy_measurement/out/2022-11-23")
-
     # in each loop iteration, load new data, calculate statistics and check if the energy is stable.
     # try this for the specified number of seconds
-    for _ in range(max_wait_secs*2):
-        cpu_energies, ram_energies, gpu_energies = load_last_n_cpu_ram_gpu(n, filepath)
+    for _ in range(int(max_wait_secs/wait_per_loop_secs)):
+        cpu_energies, ram_energies, gpu_energies = load_last_n_cpu_ram_gpu(n, ENERGY_DATA_DIR)
 
         # stable means that stdv/mean ratios are smaller or equal to the stable ratios determined experimentally
         # the tolerance value set above specifies how much relative deviation we want to allow
@@ -105,10 +108,20 @@ def server_is_stable(max_wait_secs: int) -> bool:
         if cpu_stable and ram_stable and gpu_stable:
             return True
         else:
-            time.sleep(0.5)
+            time.sleep(wait_per_loop_secs)
         
 
     return False
+
+def write_start_or_end_symbol(parent_dir: Path, start: bool):
+    if start:
+        symbol = "##START_EXECUTION##\n"
+    else:
+        symbol = "##END_EXECUTION##\n"
+    with open(parent_dir/"perf.txt", 'r') as f:
+        f.write(symbol)
+    with open(parent_dir/"nvidia_smi.txt", 'r') as f:
+        f.write(symbol)
 
 def run_function(imports: str, function_to_run: str, method_object: object, args: list, kwargs: dict, max_wait_secs: int, wait_after_run_secs: int, return_result: bool):
     """
@@ -131,31 +144,32 @@ def run_function(imports: str, function_to_run: str, method_object: object, args
     if not server_is_stable(max_wait_secs):
         raise TimeoutError(f"System could not reach a stable state within {max_wait_secs} seconds")
 
-    # (4) evaluate the function return. This is where we should measure energy.
+    # (4) evaluate the function return. Mark the start & end times in the files and save their exact values.
+    write_start_or_end_symbol(ENERGY_DATA_DIR, start=True)
     start_time = time.time_ns()
     func_return = eval(function_to_run)
     end_time = time.time_ns()
+    write_start_or_end_symbol(ENERGY_DATA_DIR, start=False)
 
     # (5) Wait some specified amount of time to measure potentially elevated energy consumption after the function has terminated
-    print(f"waiting idle for {wait_after_run_secs} seconds")
-    time.sleep(wait_after_run_secs)
+    if DEBUG:
+        print(f"waiting idle for {wait_after_run_secs} seconds")
+    if wait_after_run_secs > 0:
+        time.sleep(wait_after_run_secs)
 
-    # (5) get the energy data since run_function has been invoked
+    # (5) get the energy data since run_function has been invoked and clear the files
     # TODO implement this
 
     # (6) return the energy data, times and status
     return_dict = {
         "energy_data": [], # TODO insert a dataframe here
         "start_time": start_time,
-        "end_time": end_time,
-        "status": "success"
+        "end_time": end_time
     }
 
     if return_result:
         return_dict["return"] = func_return
         return_dict["method_object"] = obj
-        # pickle to transmit TODO rethink this
-        return_dict = pickle.dumps(return_dict)
 
     if DEBUG:
         print(f"Performed {function_to_run} on input")
@@ -186,7 +200,7 @@ def run_function_and_return_result():
     # (3) Try reaching a stable state and running the function
     # TODO add energy measurement
     try:
-        output = run_function(
+        results = run_function(
             function_details.imports,
             function_details.function_to_run,
             function_details.method_object,
@@ -199,19 +213,19 @@ def run_function_and_return_result():
         status = 200
     # TODO format the output dict the same way as in run_function
     except TimeoutError as e:
-        output = e
+        results = e
         status = 500
 
     # (4) send response to client
     if function_details.return_result:
         response = Response(
-            response=output,
+            response=pickle.dumps(results),
             status=status,
             mimetype='application/octet_stream'
         )
     else:
         response = Response(
-            response=output,
+            response=results,
             status=status
         )
 

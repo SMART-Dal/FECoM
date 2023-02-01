@@ -1,6 +1,6 @@
 # Server Application
-The server receives client requests to run ML methods (and in the future also measure their energy consumption).
-The test client sends sample requests to test the server's methods.
+The server receives client requests to run ML methods and measure their energy consumption.
+Start the server by following the instructions below, wait a minute and then start sending requests from the client.
 
 ## Setup
 Install [miniconda3](https://docs.conda.io/en/latest/miniconda.html)
@@ -21,13 +21,15 @@ The API (path specified in `config.py`) expects a POST request with request.data
 # read the following as "attribute: type = default_value". Attributes with default values are not required to be specified at initialisation.
 
 function_details = FunctionDetails(
-    imports: str
-    function_to_run: str
-    args: list = None
-    kwargs: dict = None
-    max_wait_secs: int = 0
-    method_object: object = None
-    custom_class: str = None
+    imports: str,
+    function_to_run: str,
+    args: list = None,
+    kwargs: dict = None,
+    max_wait_secs: int = 0,
+    wait_after_run_secs: int = 0,
+    return_result: bool = False,
+    method_object: object = None,
+    custom_class: str = None,
     module_name: str = None
 )
 
@@ -35,16 +37,28 @@ function_details = FunctionDetails(
 data = pickle.dumps(function_details)
 
 # sending the POST request
-resp = requests.post(url, data=data, headers={'Content-Type': 'application/octet-stream'})
-```
+resp = requests.post(url, data=data, headers={'Content-Type': 'application/octet-stream'})  
+```  
 
-The response `resp` contains the function return as a pickled python object that can be retrieved by calling `pickle.loads(resp.content)`. If a method (and not a function) was run, i.e. method_object is not `None`, this object is a dictionary:  
+### Processing the Response
+The response `resp` contains a json object of the following format:  
 ```
-resp.content = {
+{
+    "energy_data": energy_json,
+    "start_time": start_time,
+    "end_time": end_time
+}
+```  
+Where `energy_json` is a Pandas DataFrame encoded as json through `pandas.DataFrame.to_json(orient='split')` which can be decoded into a DataFrame by calling `pd.read_json(energy_json, orient=‘split’)`. The other two entries `start_time` & `end_time` are integers indicating time since epoch in nanoseconds. If `return_result` is set to `True`, the response `resp` is a pickled python object that can be retrieved by calling `pickle.loads(resp.content)`. This object is a dictionary of the following form  
+```
+{
+    "energy_data": energy_json,
+    "start_time": start_time,
+    "end_time": end_time
     "return": function_return,
     "method_object": method_object
 }
-```
+```  
 ***The file `send_request.py` contains a function that can be used to send and receive such a request!***  
 
 More on each of the FunctionDetails object's attributes:
@@ -99,10 +113,13 @@ kwargs = {
 ```
 
 ### Max wait seconds
-`max_wait_secs` is an `int` specifying the number of seconds the server should wait for the system to reach a stable state. If a stable state is not reached within this time, the server will abort and return an error. The special value `0` tells the server to not check for stable state and simply execute the method, which can be useful for testing purposes. E.g.  
-```
-max_wait_secs = 30
-```
+`max_wait_secs` is an `int` specifying the number of seconds the server should wait for the system to reach a stable state. If a stable state is not reached within this time, the server will abort and return an error. The special value `0` tells the server to not check for stable state and simply execute the method, which can be useful for testing purposes.  
+
+### Wait after run seconds
+`wait_after_run_secs` is an `int` specifying the number of seconds the server should wait after running the function. Setting this to a value other than 0 can be useful for determining whether there is additional energy consumption caused by a function call after execution.  
+
+### Return result
+`return result` is a `bool` set to `False` by default. It can be set to `True` for testing purposes to check whether the server runs the functions as expected. However, note the changes in the response format mentioned when set to `True`  
 
 ### Method object
 `method_object` specifies the object to run the method on, if it is a method called on a previously initialised object and not a function. If it is a function, this parameter is set to `None`. This is any python object stored under name equal to the name specified in the `function_to_run` parameter. E.g.  

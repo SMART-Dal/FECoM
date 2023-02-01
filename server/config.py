@@ -8,7 +8,7 @@ DEV_PORT = 12345
 PROD_HOST = "129.173.67.60" # set to "0.0.0.0" on the server
 PROD_PORT = 8080
 
-### SET TO FALSE FOR DEV SETTINGS ###
+### SET TO FALSE FOR DEV SETTINGS ON YOUR LOCAL MACHINE ###
 PROD = False
 
 # configure server settings here
@@ -32,6 +32,9 @@ ram_mean = 3.490937
 GPU_STD_TO_MEAN = 0.0100381 # ~0.01
 CPU_STD_TO_MEAN = 0.0292644 # ~0.03
 RAM_STD_TO_MEAN = 0.0245123 # ~0.025
+
+# path to find energy data
+ENERGY_DATA_DIR = Path("energy_measurement/out")
 
 # authentication
 USERS = {
