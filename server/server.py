@@ -13,7 +13,7 @@ from flask_httpauth import HTTPBasicAuth
 from werkzeug.security import check_password_hash
 
 from config import API_PATH, DEBUG, SERVER_HOST, SERVER_PORT, CPU_STD_TO_MEAN, RAM_STD_TO_MEAN, GPU_STD_TO_MEAN, USERS, CA_CERT_PATH, CA_KEY_PATH
-from function_details import FunctionDetails
+from function_details import FunctionDetails # shown unused but still required
 import logging
 
 app = Flask(__name__)
@@ -110,7 +110,7 @@ def server_is_stable(max_wait_secs: int) -> bool:
 
     return False
 
-def run_function(imports: str, function_to_run: str, method_object: object, args: list, kwargs: dict, max_wait_secs: int):
+def run_function(imports: str, function_to_run: str, method_object: object, args: list, kwargs: dict, max_wait_secs: int, wait_after_run_secs: int, return_result: bool):
     """
     Run the method given by function_to_run with the given arguments (args) and keyword arguments (kwargs).
     These two variables appear to not be used, however, they are used when evaluating the function_to_run
@@ -123,30 +123,45 @@ def run_function(imports: str, function_to_run: str, method_object: object, args
     app.logger.info("Imports value: %s", imports)
     exec(imports)
 
-    # (2) continue only when the system has reached a stable state of energy consumption
+    # (2) if this is a method, initialise the local variable obj to hold the object the method will be called on
+    if method_object is not None:
+        obj = method_object
+
+    # (3) continue only when the system has reached a stable state of energy consumption
     if not server_is_stable(max_wait_secs):
         raise TimeoutError(f"System could not reach a stable state within {max_wait_secs} seconds")
 
-    # (3) evaluate the function return. This is where we should measure energy.
-    # if this is a method, initialise obj to hold the given object
-    if method_object is not None:
-        obj = method_object
-    
+    # (4) evaluate the function return. This is where we should measure energy.
+    start_time = time.time_ns()
     func_return = eval(function_to_run)
+    end_time = time.time_ns()
 
-    # if we run a method, also return the object
-    if method_object is not None:
-        func_return = {
-            "return": func_return,
-            "method_object": obj
-        }
+    # (5) Wait some specified amount of time to measure potentially elevated energy consumption after the function has terminated
+    print(f"waiting idle for {wait_after_run_secs} seconds")
+    time.sleep(wait_after_run_secs)
 
+    # (5) get the energy data since run_function has been invoked
+    # TODO implement this
+
+    # (6) return the energy data, times and status
+    return_dict = {
+        "energy_data": [], # TODO insert a dataframe here
+        "start_time": start_time,
+        "end_time": end_time,
+        "status": "success"
+    }
+
+    if return_result:
+        return_dict["return"] = func_return
+        return_dict["method_object"] = obj
+        # pickle to transmit TODO rethink this
+        return_dict = pickle.dumps(return_dict)
 
     if DEBUG:
         print(f"Performed {function_to_run} on input")
         print(f"Output: {func_return}")
     
-    return func_return
+    return return_dict
 
 
 @app.route(API_PATH, methods=["POST"])
@@ -177,21 +192,28 @@ def run_function_and_return_result():
             function_details.method_object,
             function_details.args,
             function_details.kwargs,
-            function_details.max_wait_secs
+            function_details.max_wait_secs,
+            function_details.wait_after_run_secs,
+            function_details.return_result
         )
         status = 200
+    # TODO format the output dict the same way as in run_function
     except TimeoutError as e:
         output = e
         status = 500
 
-    data = pickle.dumps(output)
-
     # (4) send response to client
-    response = Response(
-        response=data,
-        status=status,
-        mimetype='application/octet_stream'
-    )
+    if function_details.return_result:
+        response = Response(
+            response=output,
+            status=status,
+            mimetype='application/octet_stream'
+        )
+    else:
+        response = Response(
+            json=output,
+            status=status
+        )
 
     # (5) if needed, delete the module created for the custom class definition
     if custom_class_file is not None:

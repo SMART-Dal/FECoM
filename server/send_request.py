@@ -9,10 +9,9 @@ import json
 import concurrent.futures
 
 # TODO how can we best pass the username and password to this function? Write a wrapper?
-def send_request(imports: str, function_to_run: str, function_args: list = None, function_kwargs: dict = None, max_wait_secs=0, method_object=None, custom_class=None, username: str = "tim9220", password: str = "qQ32XALjF9JqFh!vF3xY"):
+def send_request(imports: str, function_to_run: str, function_args: list = None, function_kwargs: dict = None, max_wait_secs: int = 0, wait_after_run_secs: int = 0, return_result: bool = False, method_object = None, custom_class: str = None, username: str = "tim9220", password: str = "qQ32XALjF9JqFh!vF3xY"):
     """
     Send a request to execute any function and show the result
-    TODO continue here: test compatibility with other functions and modules
     """
 
     function_details = FunctionDetails(
@@ -21,6 +20,8 @@ def send_request(imports: str, function_to_run: str, function_args: list = None,
         function_args,
         function_kwargs,
         max_wait_secs,
+        wait_after_run_secs,
+        return_result,
         method_object,
         custom_class,
         method_object.__module__ if custom_class is not None else None
