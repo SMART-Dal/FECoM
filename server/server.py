@@ -211,7 +211,7 @@ def run_function_and_return_result():
         )
     else:
         response = Response(
-            json=output,
+            response=output,
             status=status
         )
 

@@ -296,3 +296,809 @@ TypeError: cannot pickle '_thread.RLock' object
 2023-01-31 18:30:42,215 INFO server Imports value: import tensorflow as tf
 2023-01-31 18:30:42,219 INFO server response-value: <Response 449 bytes [200 OK]>
 2023-01-31 18:30:42,219 INFO werkzeug 127.0.0.1 - - [31/Jan/2023 18:30:42] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-01 09:26:33,260 INFO werkzeug [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on https://localhost:12345
+2023-02-01 09:26:33,260 INFO werkzeug [33mPress CTRL+C to quit[0m
+2023-02-01 09:27:24,495 INFO server Auth successful
+2023-02-01 09:27:24,495 INFO server Imports value: import tensorflow as tf
+2023-02-01 09:27:24,519 INFO server Auth successful
+2023-02-01 09:27:24,519 INFO server Imports value: import tensorflow as tf
+2023-02-01 09:27:24,542 INFO server Auth successful
+2023-02-01 09:27:24,542 INFO server Imports value: import tensorflow as tf
+2023-02-01 09:27:26,785 DEBUG tensorflow Falling back to TensorFlow client; we recommended you install the Cloud TPU client directly with pip install cloud-tpu-client.
+2023-02-01 09:27:27,075 DEBUG h5py._conv Creating converter from 7 to 5
+2023-02-01 09:27:27,075 DEBUG h5py._conv Creating converter from 5 to 7
+2023-02-01 09:27:27,075 DEBUG h5py._conv Creating converter from 7 to 5
+2023-02-01 09:27:27,075 DEBUG h5py._conv Creating converter from 5 to 7
+2023-02-01 09:27:28,502 INFO server response-value: <Response 4 bytes [200 OK]>
+2023-02-01 09:27:28,503 INFO werkzeug 127.0.0.1 - - [01/Feb/2023 09:27:28] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-01 09:27:28,504 INFO server response-value: <Response 4 bytes [200 OK]>
+2023-02-01 09:27:28,504 INFO werkzeug 127.0.0.1 - - [01/Feb/2023 09:27:28] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-01 09:27:28,505 INFO server response-value: <Response 4 bytes [200 OK]>
+2023-02-01 09:27:28,505 INFO werkzeug 127.0.0.1 - - [01/Feb/2023 09:27:28] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-01 09:27:28,749 INFO server Auth successful
+2023-02-01 09:27:28,750 INFO server Imports value: import tensorflow as tf
+2023-02-01 09:27:28,807 INFO server Auth successful
+2023-02-01 09:27:28,807 INFO server Imports value: import tensorflow as tf
+2023-02-01 09:27:28,808 INFO server Auth successful
+2023-02-01 09:27:28,898 INFO server Imports value: import tensorflow as tf
+2023-02-01 09:27:28,901 INFO server response-value: <Response 223 bytes [200 OK]>
+2023-02-01 09:27:28,901 INFO werkzeug 127.0.0.1 - - [01/Feb/2023 09:27:28] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-01 09:27:28,902 INFO server response-value: <Response 223 bytes [200 OK]>
+2023-02-01 09:27:28,903 INFO werkzeug 127.0.0.1 - - [01/Feb/2023 09:27:28] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-01 09:27:28,903 INFO server response-value: <Response 223 bytes [200 OK]>
+2023-02-01 09:27:28,904 INFO werkzeug 127.0.0.1 - - [01/Feb/2023 09:27:28] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-01 09:27:29,010 INFO server Auth successful
+2023-02-01 09:27:29,011 INFO server Imports value: import tensorflow as tf
+2023-02-01 09:27:29,011 INFO server response-value: <Response 223 bytes [200 OK]>
+2023-02-01 09:27:29,012 INFO werkzeug 127.0.0.1 - - [01/Feb/2023 09:27:29] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-01 09:27:29,023 INFO server Auth successful
+2023-02-01 09:27:29,023 INFO server Imports value: import tensorflow as tf
+2023-02-01 09:27:29,024 INFO server response-value: <Response 223 bytes [200 OK]>
+2023-02-01 09:27:29,024 INFO werkzeug 127.0.0.1 - - [01/Feb/2023 09:27:29] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-01 09:27:29,032 INFO server Auth successful
+2023-02-01 09:27:29,033 INFO server Imports value: import tensorflow as tf
+2023-02-01 09:27:29,033 INFO server response-value: <Response 223 bytes [200 OK]>
+2023-02-01 09:27:29,033 INFO werkzeug 127.0.0.1 - - [01/Feb/2023 09:27:29] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-01 09:29:18,320 INFO server Auth successful
+2023-02-01 09:29:18,320 INFO server Imports value: import tensorflow as tf
+2023-02-01 09:29:18,320 INFO server response-value: <Response 4 bytes [200 OK]>
+2023-02-01 09:29:18,320 INFO werkzeug 127.0.0.1 - - [01/Feb/2023 09:29:18] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-01 09:29:18,344 INFO server Auth successful
+2023-02-01 09:29:18,344 INFO server Imports value: import tensorflow as tf
+2023-02-01 09:29:18,344 INFO server response-value: <Response 4 bytes [200 OK]>
+2023-02-01 09:29:18,344 INFO werkzeug 127.0.0.1 - - [01/Feb/2023 09:29:18] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-01 09:29:18,429 INFO server Auth successful
+2023-02-01 09:29:18,429 INFO server Imports value: import tensorflow as tf
+2023-02-01 09:29:18,430 INFO server response-value: <Response 4 bytes [200 OK]>
+2023-02-01 09:29:18,430 INFO werkzeug 127.0.0.1 - - [01/Feb/2023 09:29:18] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-01 09:29:18,492 INFO server Auth successful
+2023-02-01 09:29:18,492 INFO server Imports value: import tensorflow as tf
+2023-02-01 09:29:18,493 INFO server response-value: <Response 223 bytes [200 OK]>
+2023-02-01 09:29:18,493 INFO werkzeug 127.0.0.1 - - [01/Feb/2023 09:29:18] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-01 09:29:18,500 INFO server Auth successful
+2023-02-01 09:29:18,500 INFO server Imports value: import tensorflow as tf
+2023-02-01 09:29:18,501 INFO server response-value: <Response 223 bytes [200 OK]>
+2023-02-01 09:29:18,501 INFO werkzeug 127.0.0.1 - - [01/Feb/2023 09:29:18] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-01 09:29:18,582 INFO server Auth successful
+2023-02-01 09:29:18,582 INFO server Imports value: import tensorflow as tf
+2023-02-01 09:29:18,582 INFO server response-value: <Response 223 bytes [200 OK]>
+2023-02-01 09:29:18,583 INFO werkzeug 127.0.0.1 - - [01/Feb/2023 09:29:18] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-01 09:29:18,600 INFO server Auth successful
+2023-02-01 09:29:18,600 INFO server Imports value: import tensorflow as tf
+2023-02-01 09:29:18,601 INFO server response-value: <Response 223 bytes [200 OK]>
+2023-02-01 09:29:18,601 INFO werkzeug 127.0.0.1 - - [01/Feb/2023 09:29:18] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-01 09:29:18,608 INFO server Auth successful
+2023-02-01 09:29:18,608 INFO server Imports value: import tensorflow as tf
+2023-02-01 09:29:18,609 INFO server response-value: <Response 223 bytes [200 OK]>
+2023-02-01 09:29:18,609 INFO werkzeug 127.0.0.1 - - [01/Feb/2023 09:29:18] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-01 09:29:18,714 INFO server Auth successful
+2023-02-01 09:29:18,715 INFO server Imports value: import tensorflow as tf
+2023-02-01 09:29:18,715 INFO server response-value: <Response 223 bytes [200 OK]>
+2023-02-01 09:29:18,715 INFO werkzeug 127.0.0.1 - - [01/Feb/2023 09:29:18] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-01 09:30:29,092 INFO server Auth successful
+2023-02-01 09:30:29,092 INFO server Imports value: import tensorflow as tf
+2023-02-01 09:30:29,092 INFO server response-value: <Response 4 bytes [200 OK]>
+2023-02-01 09:30:29,092 INFO werkzeug 127.0.0.1 - - [01/Feb/2023 09:30:29] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-01 09:30:29,114 INFO server Auth successful
+2023-02-01 09:30:29,114 INFO server Imports value: import tensorflow as tf
+2023-02-01 09:30:29,114 INFO server response-value: <Response 4 bytes [200 OK]>
+2023-02-01 09:30:29,114 INFO werkzeug 127.0.0.1 - - [01/Feb/2023 09:30:29] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-01 09:30:29,193 INFO server Auth successful
+2023-02-01 09:30:29,194 INFO server Imports value: import tensorflow as tf
+2023-02-01 09:30:29,194 INFO server response-value: <Response 4 bytes [200 OK]>
+2023-02-01 09:30:29,194 INFO werkzeug 127.0.0.1 - - [01/Feb/2023 09:30:29] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-01 09:30:29,265 INFO server Auth successful
+2023-02-01 09:30:29,265 INFO server Imports value: import tensorflow as tf
+2023-02-01 09:30:29,266 INFO server response-value: <Response 223 bytes [200 OK]>
+2023-02-01 09:30:29,266 INFO werkzeug 127.0.0.1 - - [01/Feb/2023 09:30:29] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-01 09:30:29,272 INFO server Auth successful
+2023-02-01 09:30:29,272 INFO server Imports value: import tensorflow as tf
+2023-02-01 09:30:29,272 INFO server response-value: <Response 223 bytes [200 OK]>
+2023-02-01 09:30:29,272 INFO werkzeug 127.0.0.1 - - [01/Feb/2023 09:30:29] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-01 09:30:29,366 INFO server Auth successful
+2023-02-01 09:30:29,366 INFO server Imports value: import tensorflow as tf
+2023-02-01 09:30:29,366 INFO server response-value: <Response 223 bytes [200 OK]>
+2023-02-01 09:30:29,366 INFO werkzeug 127.0.0.1 - - [01/Feb/2023 09:30:29] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-01 09:30:29,383 INFO server Auth successful
+2023-02-01 09:30:29,383 INFO server Imports value: import tensorflow as tf
+2023-02-01 09:30:29,383 INFO server response-value: <Response 223 bytes [200 OK]>
+2023-02-01 09:30:29,384 INFO werkzeug 127.0.0.1 - - [01/Feb/2023 09:30:29] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-01 09:30:29,414 INFO server Auth successful
+2023-02-01 09:30:29,414 INFO server Imports value: import tensorflow as tf
+2023-02-01 09:30:29,414 INFO server response-value: <Response 223 bytes [200 OK]>
+2023-02-01 09:30:29,415 INFO werkzeug 127.0.0.1 - - [01/Feb/2023 09:30:29] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-01 09:30:29,518 INFO server Auth successful
+2023-02-01 09:30:29,518 INFO server Imports value: import tensorflow as tf
+2023-02-01 09:30:29,519 INFO server response-value: <Response 223 bytes [200 OK]>
+2023-02-01 09:30:29,519 INFO werkzeug 127.0.0.1 - - [01/Feb/2023 09:30:29] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-01 15:07:01,272 INFO werkzeug [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on https://129.173.67.60:8080
+2023-02-01 15:07:01,272 INFO werkzeug [33mPress CTRL+C to quit[0m
+2023-02-01 15:07:55,758 INFO server Auth successful
+2023-02-01 15:07:55,759 INFO server Imports value: import tensorflow as tf
+2023-02-01 15:07:55,782 INFO server Auth successful
+2023-02-01 15:07:55,782 INFO server Imports value: import tensorflow as tf
+2023-02-01 15:07:55,834 INFO server Auth successful
+2023-02-01 15:07:55,835 INFO server Imports value: import tensorflow as tf
+2023-02-01 15:07:56,542 DEBUG tensorflow Falling back to TensorFlow client; we recommended you install the Cloud TPU client directly with pip install cloud-tpu-client.
+2023-02-01 15:07:56,705 DEBUG h5py._conv Creating converter from 7 to 5
+2023-02-01 15:07:56,705 DEBUG h5py._conv Creating converter from 5 to 7
+2023-02-01 15:07:56,705 DEBUG h5py._conv Creating converter from 7 to 5
+2023-02-01 15:07:56,705 DEBUG h5py._conv Creating converter from 5 to 7
+2023-02-01 15:07:57,372 INFO server response-value: <Response 4 bytes [200 OK]>
+2023-02-01 15:07:57,372 INFO werkzeug 129.173.67.60 - - [01/Feb/2023 15:07:57] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-01 15:07:57,373 INFO server response-value: <Response 4 bytes [200 OK]>
+2023-02-01 15:07:57,373 INFO werkzeug 129.173.67.60 - - [01/Feb/2023 15:07:57] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-01 15:07:57,373 INFO server response-value: <Response 4 bytes [200 OK]>
+2023-02-01 15:07:57,374 INFO werkzeug 129.173.67.60 - - [01/Feb/2023 15:07:57] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-01 15:07:57,528 INFO server Auth successful
+2023-02-01 15:07:57,528 INFO server Imports value: import tensorflow as tf
+2023-02-01 15:07:57,575 INFO server Auth successful
+2023-02-01 15:07:57,576 INFO server Auth successful
+2023-02-01 15:07:57,594 INFO server response-value: <Response 223 bytes [200 OK]>
+2023-02-01 15:07:57,594 INFO server Imports value: import tensorflow as tf
+2023-02-01 15:07:57,594 INFO werkzeug 129.173.67.60 - - [01/Feb/2023 15:07:57] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-01 15:07:57,594 INFO server Imports value: import tensorflow as tf
+2023-02-01 15:07:57,595 INFO server response-value: <Response 223 bytes [200 OK]>
+2023-02-01 15:07:57,596 INFO werkzeug 129.173.67.60 - - [01/Feb/2023 15:07:57] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-01 15:07:57,596 INFO server response-value: <Response 223 bytes [200 OK]>
+2023-02-01 15:07:57,597 INFO werkzeug 129.173.67.60 - - [01/Feb/2023 15:07:57] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-01 15:07:57,698 INFO server Auth successful
+2023-02-01 15:07:57,698 INFO server Imports value: import tensorflow as tf
+2023-02-01 15:07:57,698 INFO server response-value: <Response 223 bytes [200 OK]>
+2023-02-01 15:07:57,699 INFO werkzeug 129.173.67.60 - - [01/Feb/2023 15:07:57] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-01 15:07:57,731 INFO server Auth successful
+2023-02-01 15:07:57,731 INFO server Imports value: import tensorflow as tf
+2023-02-01 15:07:57,732 INFO server response-value: <Response 223 bytes [200 OK]>
+2023-02-01 15:07:57,732 INFO werkzeug 129.173.67.60 - - [01/Feb/2023 15:07:57] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-01 15:07:57,753 INFO server Auth successful
+2023-02-01 15:07:57,753 INFO server Imports value: import tensorflow as tf
+2023-02-01 15:07:57,754 INFO server response-value: <Response 223 bytes [200 OK]>
+2023-02-01 15:07:57,754 INFO werkzeug 129.173.67.60 - - [01/Feb/2023 15:07:57] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-01 15:10:30,390 INFO werkzeug [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on https://localhost:12345
+2023-02-01 15:10:30,390 INFO werkzeug [33mPress CTRL+C to quit[0m
+2023-02-01 15:10:39,840 INFO server Auth successful
+2023-02-01 15:10:39,840 INFO server Imports value: import tensorflow as tf
+2023-02-01 15:10:40,143 INFO server Auth successful
+2023-02-01 15:10:40,143 INFO server Imports value: import tensorflow as tf
+2023-02-01 15:10:40,144 INFO server Auth successful
+2023-02-01 15:10:40,145 INFO server Imports value: import tensorflow as tf
+2023-02-01 15:10:40,533 DEBUG tensorflow Falling back to TensorFlow client; we recommended you install the Cloud TPU client directly with pip install cloud-tpu-client.
+2023-02-01 15:10:40,650 DEBUG h5py._conv Creating converter from 7 to 5
+2023-02-01 15:10:40,650 DEBUG h5py._conv Creating converter from 5 to 7
+2023-02-01 15:10:40,650 DEBUG h5py._conv Creating converter from 7 to 5
+2023-02-01 15:10:40,650 DEBUG h5py._conv Creating converter from 5 to 7
+2023-02-01 15:10:41,162 ERROR server Exception on /api/run_experiment [POST]
+Traceback (most recent call last):
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 2525, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1822, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1820, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1796, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask_httpauth.py", line 172, in decorated
+    return self.ensure_sync(f)(*args, **kwargs)
+  File "/home/saurabh/code-energy-consumption/server/server.py", line 213, in run_function_and_return_result
+    response = Response(
+TypeError: __init__() got an unexpected keyword argument 'json'
+2023-02-01 15:10:41,162 ERROR server Exception on /api/run_experiment [POST]
+Traceback (most recent call last):
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 2525, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1822, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1820, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1796, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask_httpauth.py", line 172, in decorated
+    return self.ensure_sync(f)(*args, **kwargs)
+  File "/home/saurabh/code-energy-consumption/server/server.py", line 213, in run_function_and_return_result
+    response = Response(
+TypeError: __init__() got an unexpected keyword argument 'json'
+2023-02-01 15:10:41,162 ERROR server Exception on /api/run_experiment [POST]
+Traceback (most recent call last):
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 2525, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1822, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1820, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1796, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask_httpauth.py", line 172, in decorated
+    return self.ensure_sync(f)(*args, **kwargs)
+  File "/home/saurabh/code-energy-consumption/server/server.py", line 213, in run_function_and_return_result
+    response = Response(
+TypeError: __init__() got an unexpected keyword argument 'json'
+2023-02-01 15:10:41,164 INFO werkzeug 127.0.0.1 - - [01/Feb/2023 15:10:41] "[35m[1mPOST /api/run_experiment HTTP/1.1[0m" 500 -
+2023-02-01 15:10:41,165 INFO werkzeug 127.0.0.1 - - [01/Feb/2023 15:10:41] "[35m[1mPOST /api/run_experiment HTTP/1.1[0m" 500 -
+2023-02-01 15:10:41,166 INFO werkzeug 127.0.0.1 - - [01/Feb/2023 15:10:41] "[35m[1mPOST /api/run_experiment HTTP/1.1[0m" 500 -
+2023-02-01 15:10:41,323 INFO server Auth successful
+2023-02-01 15:10:41,323 INFO server Imports value: import tensorflow as tf
+2023-02-01 15:10:41,371 INFO server Auth successful
+2023-02-01 15:10:41,371 INFO server Auth successful
+2023-02-01 15:10:41,388 INFO server Imports value: import tensorflow as tf
+2023-02-01 15:10:41,388 ERROR server Exception on /api/run_experiment [POST]
+Traceback (most recent call last):
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 2525, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1822, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1820, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1796, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask_httpauth.py", line 172, in decorated
+    return self.ensure_sync(f)(*args, **kwargs)
+  File "/home/saurabh/code-energy-consumption/server/server.py", line 213, in run_function_and_return_result
+    response = Response(
+TypeError: __init__() got an unexpected keyword argument 'json'
+2023-02-01 15:10:41,389 INFO server Imports value: import tensorflow as tf
+2023-02-01 15:10:41,389 INFO werkzeug 127.0.0.1 - - [01/Feb/2023 15:10:41] "[35m[1mPOST /api/run_experiment HTTP/1.1[0m" 500 -
+2023-02-01 15:10:41,390 ERROR server Exception on /api/run_experiment [POST]
+Traceback (most recent call last):
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 2525, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1822, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1820, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1796, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask_httpauth.py", line 172, in decorated
+    return self.ensure_sync(f)(*args, **kwargs)
+  File "/home/saurabh/code-energy-consumption/server/server.py", line 213, in run_function_and_return_result
+    response = Response(
+TypeError: __init__() got an unexpected keyword argument 'json'
+2023-02-01 15:10:41,390 ERROR server Exception on /api/run_experiment [POST]
+Traceback (most recent call last):
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 2525, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1822, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1820, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1796, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask_httpauth.py", line 172, in decorated
+    return self.ensure_sync(f)(*args, **kwargs)
+  File "/home/saurabh/code-energy-consumption/server/server.py", line 213, in run_function_and_return_result
+    response = Response(
+TypeError: __init__() got an unexpected keyword argument 'json'
+2023-02-01 15:10:41,390 INFO werkzeug 127.0.0.1 - - [01/Feb/2023 15:10:41] "[35m[1mPOST /api/run_experiment HTTP/1.1[0m" 500 -
+2023-02-01 15:10:41,391 INFO werkzeug 127.0.0.1 - - [01/Feb/2023 15:10:41] "[35m[1mPOST /api/run_experiment HTTP/1.1[0m" 500 -
+2023-02-01 15:10:41,491 INFO server Auth successful
+2023-02-01 15:10:41,491 INFO server Imports value: import tensorflow as tf
+2023-02-01 15:10:41,492 ERROR server Exception on /api/run_experiment [POST]
+Traceback (most recent call last):
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 2525, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1822, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1820, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1796, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask_httpauth.py", line 172, in decorated
+    return self.ensure_sync(f)(*args, **kwargs)
+  File "/home/saurabh/code-energy-consumption/server/server.py", line 213, in run_function_and_return_result
+    response = Response(
+TypeError: __init__() got an unexpected keyword argument 'json'
+2023-02-01 15:10:41,492 INFO werkzeug 127.0.0.1 - - [01/Feb/2023 15:10:41] "[35m[1mPOST /api/run_experiment HTTP/1.1[0m" 500 -
+2023-02-01 15:10:41,494 INFO server Auth successful
+2023-02-01 15:10:41,495 INFO server Imports value: import tensorflow as tf
+2023-02-01 15:10:41,495 ERROR server Exception on /api/run_experiment [POST]
+Traceback (most recent call last):
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 2525, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1822, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1820, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1796, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask_httpauth.py", line 172, in decorated
+    return self.ensure_sync(f)(*args, **kwargs)
+  File "/home/saurabh/code-energy-consumption/server/server.py", line 213, in run_function_and_return_result
+    response = Response(
+TypeError: __init__() got an unexpected keyword argument 'json'
+2023-02-01 15:10:41,495 INFO werkzeug 127.0.0.1 - - [01/Feb/2023 15:10:41] "[35m[1mPOST /api/run_experiment HTTP/1.1[0m" 500 -
+2023-02-01 15:10:41,527 INFO server Auth successful
+2023-02-01 15:10:41,527 INFO server Imports value: import tensorflow as tf
+2023-02-01 15:10:41,528 ERROR server Exception on /api/run_experiment [POST]
+Traceback (most recent call last):
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 2525, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1822, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1820, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1796, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask_httpauth.py", line 172, in decorated
+    return self.ensure_sync(f)(*args, **kwargs)
+  File "/home/saurabh/code-energy-consumption/server/server.py", line 213, in run_function_and_return_result
+    response = Response(
+TypeError: __init__() got an unexpected keyword argument 'json'
+2023-02-01 15:10:41,529 INFO werkzeug 127.0.0.1 - - [01/Feb/2023 15:10:41] "[35m[1mPOST /api/run_experiment HTTP/1.1[0m" 500 -
+2023-02-01 15:10:58,824 INFO server Auth successful
+2023-02-01 15:10:58,824 INFO server Imports value: import tensorflow as tf
+2023-02-01 15:10:58,824 ERROR server Exception on /api/run_experiment [POST]
+Traceback (most recent call last):
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 2525, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1822, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1820, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1796, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask_httpauth.py", line 172, in decorated
+    return self.ensure_sync(f)(*args, **kwargs)
+  File "/home/saurabh/code-energy-consumption/server/server.py", line 213, in run_function_and_return_result
+    response = Response(
+TypeError: __init__() got an unexpected keyword argument 'json'
+2023-02-01 15:10:58,825 INFO werkzeug 127.0.0.1 - - [01/Feb/2023 15:10:58] "[35m[1mPOST /api/run_experiment HTTP/1.1[0m" 500 -
+2023-02-01 15:10:58,865 INFO server Auth successful
+2023-02-01 15:10:58,865 INFO server Imports value: import tensorflow as tf
+2023-02-01 15:10:58,865 ERROR server Exception on /api/run_experiment [POST]
+Traceback (most recent call last):
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 2525, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1822, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1820, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1796, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask_httpauth.py", line 172, in decorated
+    return self.ensure_sync(f)(*args, **kwargs)
+  File "/home/saurabh/code-energy-consumption/server/server.py", line 213, in run_function_and_return_result
+    response = Response(
+TypeError: __init__() got an unexpected keyword argument 'json'
+2023-02-01 15:10:58,865 INFO werkzeug 127.0.0.1 - - [01/Feb/2023 15:10:58] "[35m[1mPOST /api/run_experiment HTTP/1.1[0m" 500 -
+2023-02-01 15:10:58,868 INFO server Auth successful
+2023-02-01 15:10:58,868 INFO server Imports value: import tensorflow as tf
+2023-02-01 15:10:58,868 ERROR server Exception on /api/run_experiment [POST]
+Traceback (most recent call last):
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 2525, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1822, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1820, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1796, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask_httpauth.py", line 172, in decorated
+    return self.ensure_sync(f)(*args, **kwargs)
+  File "/home/saurabh/code-energy-consumption/server/server.py", line 213, in run_function_and_return_result
+    response = Response(
+TypeError: __init__() got an unexpected keyword argument 'json'
+2023-02-01 15:10:58,869 INFO werkzeug 127.0.0.1 - - [01/Feb/2023 15:10:58] "[35m[1mPOST /api/run_experiment HTTP/1.1[0m" 500 -
+2023-02-01 15:10:58,997 INFO server Auth successful
+2023-02-01 15:10:58,997 INFO server Imports value: import tensorflow as tf
+2023-02-01 15:10:58,997 ERROR server Exception on /api/run_experiment [POST]
+Traceback (most recent call last):
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 2525, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1822, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1820, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1796, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask_httpauth.py", line 172, in decorated
+    return self.ensure_sync(f)(*args, **kwargs)
+  File "/home/saurabh/code-energy-consumption/server/server.py", line 213, in run_function_and_return_result
+    response = Response(
+TypeError: __init__() got an unexpected keyword argument 'json'
+2023-02-01 15:10:58,998 INFO werkzeug 127.0.0.1 - - [01/Feb/2023 15:10:58] "[35m[1mPOST /api/run_experiment HTTP/1.1[0m" 500 -
+2023-02-01 15:10:59,039 INFO server Auth successful
+2023-02-01 15:10:59,039 INFO server Imports value: import tensorflow as tf
+2023-02-01 15:10:59,040 ERROR server Exception on /api/run_experiment [POST]
+Traceback (most recent call last):
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 2525, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1822, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1820, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1796, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask_httpauth.py", line 172, in decorated
+    return self.ensure_sync(f)(*args, **kwargs)
+  File "/home/saurabh/code-energy-consumption/server/server.py", line 213, in run_function_and_return_result
+    response = Response(
+TypeError: __init__() got an unexpected keyword argument 'json'
+2023-02-01 15:10:59,040 INFO werkzeug 127.0.0.1 - - [01/Feb/2023 15:10:59] "[35m[1mPOST /api/run_experiment HTTP/1.1[0m" 500 -
+2023-02-01 15:10:59,052 INFO server Auth successful
+2023-02-01 15:10:59,052 INFO server Imports value: import tensorflow as tf
+2023-02-01 15:10:59,053 ERROR server Exception on /api/run_experiment [POST]
+Traceback (most recent call last):
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 2525, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1822, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1820, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1796, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask_httpauth.py", line 172, in decorated
+    return self.ensure_sync(f)(*args, **kwargs)
+  File "/home/saurabh/code-energy-consumption/server/server.py", line 213, in run_function_and_return_result
+    response = Response(
+TypeError: __init__() got an unexpected keyword argument 'json'
+2023-02-01 15:10:59,053 INFO werkzeug 127.0.0.1 - - [01/Feb/2023 15:10:59] "[35m[1mPOST /api/run_experiment HTTP/1.1[0m" 500 -
+2023-02-01 15:10:59,098 INFO server Auth successful
+2023-02-01 15:10:59,098 INFO server Imports value: import tensorflow as tf
+2023-02-01 15:10:59,098 ERROR server Exception on /api/run_experiment [POST]
+Traceback (most recent call last):
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 2525, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1822, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1820, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1796, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask_httpauth.py", line 172, in decorated
+    return self.ensure_sync(f)(*args, **kwargs)
+  File "/home/saurabh/code-energy-consumption/server/server.py", line 213, in run_function_and_return_result
+    response = Response(
+TypeError: __init__() got an unexpected keyword argument 'json'
+2023-02-01 15:10:59,099 INFO werkzeug 127.0.0.1 - - [01/Feb/2023 15:10:59] "[35m[1mPOST /api/run_experiment HTTP/1.1[0m" 500 -
+2023-02-01 15:10:59,160 INFO server Auth successful
+2023-02-01 15:10:59,160 INFO server Imports value: import tensorflow as tf
+2023-02-01 15:10:59,160 ERROR server Exception on /api/run_experiment [POST]
+Traceback (most recent call last):
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 2525, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1822, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1820, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1796, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask_httpauth.py", line 172, in decorated
+    return self.ensure_sync(f)(*args, **kwargs)
+  File "/home/saurabh/code-energy-consumption/server/server.py", line 213, in run_function_and_return_result
+    response = Response(
+TypeError: __init__() got an unexpected keyword argument 'json'
+2023-02-01 15:10:59,161 INFO werkzeug 127.0.0.1 - - [01/Feb/2023 15:10:59] "[35m[1mPOST /api/run_experiment HTTP/1.1[0m" 500 -
+2023-02-01 15:10:59,184 INFO server Auth successful
+2023-02-01 15:10:59,184 INFO server Imports value: import tensorflow as tf
+2023-02-01 15:10:59,185 ERROR server Exception on /api/run_experiment [POST]
+Traceback (most recent call last):
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 2525, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1822, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1820, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1796, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask_httpauth.py", line 172, in decorated
+    return self.ensure_sync(f)(*args, **kwargs)
+  File "/home/saurabh/code-energy-consumption/server/server.py", line 213, in run_function_and_return_result
+    response = Response(
+TypeError: __init__() got an unexpected keyword argument 'json'
+2023-02-01 15:10:59,185 INFO werkzeug 127.0.0.1 - - [01/Feb/2023 15:10:59] "[35m[1mPOST /api/run_experiment HTTP/1.1[0m" 500 -
+2023-02-01 15:11:20,465 INFO server Auth successful
+2023-02-01 15:11:20,465 INFO server Imports value: import tensorflow as tf
+2023-02-01 15:11:20,465 ERROR server Exception on /api/run_experiment [POST]
+Traceback (most recent call last):
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 2525, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1822, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1820, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1796, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask_httpauth.py", line 172, in decorated
+    return self.ensure_sync(f)(*args, **kwargs)
+  File "/home/saurabh/code-energy-consumption/server/server.py", line 213, in run_function_and_return_result
+    response = Response(
+TypeError: __init__() got an unexpected keyword argument 'json'
+2023-02-01 15:11:20,466 INFO werkzeug 127.0.0.1 - - [01/Feb/2023 15:11:20] "[35m[1mPOST /api/run_experiment HTTP/1.1[0m" 500 -
+2023-02-01 15:11:20,519 INFO server Auth successful
+2023-02-01 15:11:20,519 INFO server Imports value: import tensorflow as tf
+2023-02-01 15:11:20,520 ERROR server Exception on /api/run_experiment [POST]
+Traceback (most recent call last):
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 2525, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1822, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1820, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1796, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask_httpauth.py", line 172, in decorated
+    return self.ensure_sync(f)(*args, **kwargs)
+  File "/home/saurabh/code-energy-consumption/server/server.py", line 213, in run_function_and_return_result
+    response = Response(
+TypeError: __init__() got an unexpected keyword argument 'json'
+2023-02-01 15:11:20,520 INFO werkzeug 127.0.0.1 - - [01/Feb/2023 15:11:20] "[35m[1mPOST /api/run_experiment HTTP/1.1[0m" 500 -
+2023-02-01 15:11:20,571 INFO server Auth successful
+2023-02-01 15:11:20,571 INFO server Imports value: import tensorflow as tf
+2023-02-01 15:11:20,572 ERROR server Exception on /api/run_experiment [POST]
+Traceback (most recent call last):
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 2525, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1822, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1820, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1796, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask_httpauth.py", line 172, in decorated
+    return self.ensure_sync(f)(*args, **kwargs)
+  File "/home/saurabh/code-energy-consumption/server/server.py", line 213, in run_function_and_return_result
+    response = Response(
+TypeError: __init__() got an unexpected keyword argument 'json'
+2023-02-01 15:11:20,572 INFO werkzeug 127.0.0.1 - - [01/Feb/2023 15:11:20] "[35m[1mPOST /api/run_experiment HTTP/1.1[0m" 500 -
+2023-02-01 15:11:20,633 INFO server Auth successful
+2023-02-01 15:11:20,633 INFO server Imports value: import tensorflow as tf
+2023-02-01 15:11:20,634 ERROR server Exception on /api/run_experiment [POST]
+Traceback (most recent call last):
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 2525, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1822, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1820, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1796, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask_httpauth.py", line 172, in decorated
+    return self.ensure_sync(f)(*args, **kwargs)
+  File "/home/saurabh/code-energy-consumption/server/server.py", line 213, in run_function_and_return_result
+    response = Response(
+TypeError: __init__() got an unexpected keyword argument 'json'
+2023-02-01 15:11:20,634 INFO werkzeug 127.0.0.1 - - [01/Feb/2023 15:11:20] "[35m[1mPOST /api/run_experiment HTTP/1.1[0m" 500 -
+2023-02-01 15:11:20,694 INFO server Auth successful
+2023-02-01 15:11:20,694 INFO server Imports value: import tensorflow as tf
+2023-02-01 15:11:20,695 ERROR server Exception on /api/run_experiment [POST]
+Traceback (most recent call last):
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 2525, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1822, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1820, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1796, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask_httpauth.py", line 172, in decorated
+    return self.ensure_sync(f)(*args, **kwargs)
+  File "/home/saurabh/code-energy-consumption/server/server.py", line 213, in run_function_and_return_result
+    response = Response(
+TypeError: __init__() got an unexpected keyword argument 'json'
+2023-02-01 15:11:20,695 INFO werkzeug 127.0.0.1 - - [01/Feb/2023 15:11:20] "[35m[1mPOST /api/run_experiment HTTP/1.1[0m" 500 -
+2023-02-01 15:11:20,726 INFO server Auth successful
+2023-02-01 15:11:20,726 INFO server Imports value: import tensorflow as tf
+2023-02-01 15:11:20,727 ERROR server Exception on /api/run_experiment [POST]
+Traceback (most recent call last):
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 2525, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1822, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1820, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1796, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask_httpauth.py", line 172, in decorated
+    return self.ensure_sync(f)(*args, **kwargs)
+  File "/home/saurabh/code-energy-consumption/server/server.py", line 213, in run_function_and_return_result
+    response = Response(
+TypeError: __init__() got an unexpected keyword argument 'json'
+2023-02-01 15:11:20,727 INFO werkzeug 127.0.0.1 - - [01/Feb/2023 15:11:20] "[35m[1mPOST /api/run_experiment HTTP/1.1[0m" 500 -
+2023-02-01 15:11:20,747 INFO server Auth successful
+2023-02-01 15:11:20,748 INFO server Imports value: import tensorflow as tf
+2023-02-01 15:11:20,749 ERROR server Exception on /api/run_experiment [POST]
+Traceback (most recent call last):
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 2525, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1822, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1820, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1796, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask_httpauth.py", line 172, in decorated
+    return self.ensure_sync(f)(*args, **kwargs)
+  File "/home/saurabh/code-energy-consumption/server/server.py", line 213, in run_function_and_return_result
+    response = Response(
+TypeError: __init__() got an unexpected keyword argument 'json'
+2023-02-01 15:11:20,749 INFO werkzeug 127.0.0.1 - - [01/Feb/2023 15:11:20] "[35m[1mPOST /api/run_experiment HTTP/1.1[0m" 500 -
+2023-02-01 15:11:20,808 INFO server Auth successful
+2023-02-01 15:11:20,809 INFO server Imports value: import tensorflow as tf
+2023-02-01 15:11:20,809 ERROR server Exception on /api/run_experiment [POST]
+Traceback (most recent call last):
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 2525, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1822, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1820, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1796, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask_httpauth.py", line 172, in decorated
+    return self.ensure_sync(f)(*args, **kwargs)
+  File "/home/saurabh/code-energy-consumption/server/server.py", line 213, in run_function_and_return_result
+    response = Response(
+TypeError: __init__() got an unexpected keyword argument 'json'
+2023-02-01 15:11:20,810 INFO werkzeug 127.0.0.1 - - [01/Feb/2023 15:11:20] "[35m[1mPOST /api/run_experiment HTTP/1.1[0m" 500 -
+2023-02-01 15:11:20,867 INFO server Auth successful
+2023-02-01 15:11:20,868 INFO server Imports value: import tensorflow as tf
+2023-02-01 15:11:20,868 ERROR server Exception on /api/run_experiment [POST]
+Traceback (most recent call last):
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 2525, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1822, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1820, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1796, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask_httpauth.py", line 172, in decorated
+    return self.ensure_sync(f)(*args, **kwargs)
+  File "/home/saurabh/code-energy-consumption/server/server.py", line 213, in run_function_and_return_result
+    response = Response(
+TypeError: __init__() got an unexpected keyword argument 'json'
+2023-02-01 15:11:20,869 INFO werkzeug 127.0.0.1 - - [01/Feb/2023 15:11:20] "[35m[1mPOST /api/run_experiment HTTP/1.1[0m" 500 -
+2023-02-01 15:26:51,873 INFO werkzeug [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on https://localhost:12345
+2023-02-01 15:26:51,873 INFO werkzeug [33mPress CTRL+C to quit[0m
+2023-02-01 15:27:01,860 INFO server Auth successful
+2023-02-01 15:27:01,861 INFO server Imports value: import tensorflow as tf
+2023-02-01 15:27:01,946 INFO server Auth successful
+2023-02-01 15:27:01,946 INFO server Imports value: import tensorflow as tf
+2023-02-01 15:27:01,968 INFO server Auth successful
+2023-02-01 15:27:01,969 INFO server Imports value: import tensorflow as tf
+2023-02-01 15:27:02,633 DEBUG tensorflow Falling back to TensorFlow client; we recommended you install the Cloud TPU client directly with pip install cloud-tpu-client.
+2023-02-01 15:27:02,794 DEBUG h5py._conv Creating converter from 7 to 5
+2023-02-01 15:27:02,794 DEBUG h5py._conv Creating converter from 5 to 7
+2023-02-01 15:27:02,794 DEBUG h5py._conv Creating converter from 7 to 5
+2023-02-01 15:27:02,794 DEBUG h5py._conv Creating converter from 5 to 7
+2023-02-01 15:27:03,457 INFO server response-value: <Response likely-streamed [200 OK]>
+2023-02-01 15:27:03,458 INFO werkzeug 127.0.0.1 - - [01/Feb/2023 15:27:03] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-01 15:27:03,458 INFO server response-value: <Response likely-streamed [200 OK]>
+2023-02-01 15:27:03,458 INFO werkzeug 127.0.0.1 - - [01/Feb/2023 15:27:03] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-01 15:27:03,459 INFO server response-value: <Response likely-streamed [200 OK]>
+2023-02-01 15:27:03,460 INFO werkzeug 127.0.0.1 - - [01/Feb/2023 15:27:03] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-01 15:27:03,626 INFO server Auth successful
+2023-02-01 15:27:03,627 INFO server Imports value: import tensorflow as tf
+2023-02-01 15:27:03,684 INFO server Auth successful
+2023-02-01 15:27:03,684 INFO server Auth successful
+2023-02-01 15:27:03,708 INFO server Imports value: import tensorflow as tf
+2023-02-01 15:27:03,708 INFO server Imports value: import tensorflow as tf
+2023-02-01 15:27:03,708 INFO server response-value: <Response likely-streamed [200 OK]>
+2023-02-01 15:27:03,709 INFO werkzeug 127.0.0.1 - - [01/Feb/2023 15:27:03] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-01 15:27:03,709 INFO server response-value: <Response likely-streamed [200 OK]>
+2023-02-01 15:27:03,709 INFO server response-value: <Response likely-streamed [200 OK]>
+2023-02-01 15:27:03,709 INFO werkzeug 127.0.0.1 - - [01/Feb/2023 15:27:03] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-01 15:27:03,710 INFO werkzeug 127.0.0.1 - - [01/Feb/2023 15:27:03] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-01 15:27:03,809 INFO server Auth successful
+2023-02-01 15:27:03,809 INFO server Imports value: import tensorflow as tf
+2023-02-01 15:27:03,810 INFO server response-value: <Response likely-streamed [200 OK]>
+2023-02-01 15:27:03,810 INFO werkzeug 127.0.0.1 - - [01/Feb/2023 15:27:03] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-01 15:27:03,823 INFO server Auth successful
+2023-02-01 15:27:03,823 INFO server Imports value: import tensorflow as tf
+2023-02-01 15:27:03,824 INFO server response-value: <Response likely-streamed [200 OK]>
+2023-02-01 15:27:03,824 INFO werkzeug 127.0.0.1 - - [01/Feb/2023 15:27:03] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-01 15:27:03,853 INFO server Auth successful
+2023-02-01 15:27:03,853 INFO server Imports value: import tensorflow as tf
+2023-02-01 15:27:03,854 INFO server response-value: <Response likely-streamed [200 OK]>
+2023-02-01 15:27:03,854 INFO werkzeug 127.0.0.1 - - [01/Feb/2023 15:27:03] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-01 15:27:24,101 INFO server Auth successful
+2023-02-01 15:27:24,101 INFO server Imports value: import tensorflow as tf
+2023-02-01 15:27:24,101 INFO server response-value: <Response likely-streamed [200 OK]>
+2023-02-01 15:27:24,101 INFO werkzeug 127.0.0.1 - - [01/Feb/2023 15:27:24] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-01 15:27:24,272 INFO server Auth successful
+2023-02-01 15:27:24,273 INFO server Imports value: import tensorflow as tf
+2023-02-01 15:27:24,273 INFO server response-value: <Response likely-streamed [200 OK]>
+2023-02-01 15:27:24,274 INFO werkzeug 127.0.0.1 - - [01/Feb/2023 15:27:24] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-01 15:27:24,282 INFO server Auth successful
+2023-02-01 15:27:24,283 INFO server Imports value: import tensorflow as tf
+2023-02-01 15:27:24,283 INFO server response-value: <Response likely-streamed [200 OK]>
+2023-02-01 15:27:24,283 INFO werkzeug 127.0.0.1 - - [01/Feb/2023 15:27:24] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-01 15:27:24,293 INFO server Auth successful
+2023-02-01 15:27:24,293 INFO server Imports value: import tensorflow as tf
+2023-02-01 15:27:24,293 INFO server response-value: <Response likely-streamed [200 OK]>
+2023-02-01 15:27:24,294 INFO werkzeug 127.0.0.1 - - [01/Feb/2023 15:27:24] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-01 15:27:24,392 INFO server Auth successful
+2023-02-01 15:27:24,392 INFO server Imports value: import tensorflow as tf
+2023-02-01 15:27:24,393 INFO server response-value: <Response likely-streamed [200 OK]>
+2023-02-01 15:27:24,393 INFO werkzeug 127.0.0.1 - - [01/Feb/2023 15:27:24] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-01 15:27:24,463 INFO server Auth successful
+2023-02-01 15:27:24,463 INFO server Imports value: import tensorflow as tf
+2023-02-01 15:27:24,464 INFO server response-value: <Response likely-streamed [200 OK]>
+2023-02-01 15:27:24,464 INFO werkzeug 127.0.0.1 - - [01/Feb/2023 15:27:24] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-01 15:27:24,484 INFO server Auth successful
+2023-02-01 15:27:24,484 INFO server Imports value: import tensorflow as tf
+2023-02-01 15:27:24,484 INFO server response-value: <Response likely-streamed [200 OK]>
+2023-02-01 15:27:24,485 INFO werkzeug 127.0.0.1 - - [01/Feb/2023 15:27:24] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-01 15:27:24,584 INFO server Auth successful
+2023-02-01 15:27:24,584 INFO server Imports value: import tensorflow as tf
+2023-02-01 15:27:24,585 INFO server response-value: <Response likely-streamed [200 OK]>
+2023-02-01 15:27:24,585 INFO werkzeug 127.0.0.1 - - [01/Feb/2023 15:27:24] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-01 15:27:24,606 INFO server Auth successful
+2023-02-01 15:27:24,607 INFO server Imports value: import tensorflow as tf
+2023-02-01 15:27:24,607 INFO server response-value: <Response likely-streamed [200 OK]>
+2023-02-01 15:27:24,607 INFO werkzeug 127.0.0.1 - - [01/Feb/2023 15:27:24] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-01 15:27:38,592 INFO server Auth successful
+2023-02-01 15:27:38,592 INFO server Imports value: import tensorflow as tf
+2023-02-01 15:27:38,592 INFO server response-value: <Response likely-streamed [200 OK]>
+2023-02-01 15:27:38,593 INFO werkzeug 127.0.0.1 - - [01/Feb/2023 15:27:38] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-01 15:27:38,613 INFO server Auth successful
+2023-02-01 15:27:38,613 INFO server Imports value: import tensorflow as tf
+2023-02-01 15:27:38,613 INFO server response-value: <Response likely-streamed [200 OK]>
+2023-02-01 15:27:38,613 INFO werkzeug 127.0.0.1 - - [01/Feb/2023 15:27:38] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-01 15:27:38,706 INFO server Auth successful
+2023-02-01 15:27:38,706 INFO server Imports value: import tensorflow as tf
+2023-02-01 15:27:38,706 INFO server response-value: <Response likely-streamed [200 OK]>
+2023-02-01 15:27:38,707 INFO werkzeug 127.0.0.1 - - [01/Feb/2023 15:27:38] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-01 15:27:38,761 INFO server Auth successful
+2023-02-01 15:27:38,762 INFO server Imports value: import tensorflow as tf
+2023-02-01 15:27:38,762 INFO server response-value: <Response likely-streamed [200 OK]>
+2023-02-01 15:27:38,762 INFO werkzeug 127.0.0.1 - - [01/Feb/2023 15:27:38] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-01 15:27:38,798 INFO server Auth successful
+2023-02-01 15:27:38,798 INFO server Imports value: import tensorflow as tf
+2023-02-01 15:27:38,799 INFO server response-value: <Response likely-streamed [200 OK]>
+2023-02-01 15:27:38,799 INFO werkzeug 127.0.0.1 - - [01/Feb/2023 15:27:38] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-01 15:27:38,868 INFO server Auth successful
+2023-02-01 15:27:38,868 INFO server Imports value: import tensorflow as tf
+2023-02-01 15:27:38,869 INFO server response-value: <Response likely-streamed [200 OK]>
+2023-02-01 15:27:38,869 INFO werkzeug 127.0.0.1 - - [01/Feb/2023 15:27:38] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-01 15:27:38,883 INFO server Auth successful
+2023-02-01 15:27:38,883 INFO server Imports value: import tensorflow as tf
+2023-02-01 15:27:38,884 INFO server response-value: <Response likely-streamed [200 OK]>
+2023-02-01 15:27:38,884 INFO werkzeug 127.0.0.1 - - [01/Feb/2023 15:27:38] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-01 15:27:38,911 INFO server Auth successful
+2023-02-01 15:27:38,911 INFO server Imports value: import tensorflow as tf
+2023-02-01 15:27:38,912 INFO server response-value: <Response likely-streamed [200 OK]>
+2023-02-01 15:27:38,912 INFO werkzeug 127.0.0.1 - - [01/Feb/2023 15:27:38] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-01 15:27:39,004 INFO server Auth successful
+2023-02-01 15:27:39,004 INFO server Imports value: import tensorflow as tf
+2023-02-01 15:27:39,005 INFO server response-value: <Response likely-streamed [200 OK]>
+2023-02-01 15:27:39,005 INFO werkzeug 127.0.0.1 - - [01/Feb/2023 15:27:39] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-01 15:29:32,832 INFO server Auth successful
+2023-02-01 15:29:32,832 INFO server Imports value: import tensorflow as tf
+2023-02-01 15:29:32,832 INFO server response-value: <Response likely-streamed [200 OK]>
+2023-02-01 15:29:32,832 INFO werkzeug 127.0.0.1 - - [01/Feb/2023 15:29:32] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-01 15:29:32,872 INFO server Auth successful
+2023-02-01 15:29:32,872 INFO server Imports value: import tensorflow as tf
+2023-02-01 15:29:32,872 INFO server response-value: <Response likely-streamed [200 OK]>
+2023-02-01 15:29:32,872 INFO werkzeug 127.0.0.1 - - [01/Feb/2023 15:29:32] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-01 15:29:32,989 INFO server Auth successful
+2023-02-01 15:29:32,989 INFO server Imports value: import tensorflow as tf
+2023-02-01 15:29:32,989 INFO server response-value: <Response likely-streamed [200 OK]>
+2023-02-01 15:29:32,990 INFO werkzeug 127.0.0.1 - - [01/Feb/2023 15:29:32] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-01 15:29:33,007 INFO server Auth successful
+2023-02-01 15:29:33,007 INFO server Imports value: import tensorflow as tf
+2023-02-01 15:29:33,008 INFO server response-value: <Response likely-streamed [200 OK]>
+2023-02-01 15:29:33,008 INFO werkzeug 127.0.0.1 - - [01/Feb/2023 15:29:33] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-01 15:29:33,040 INFO server Auth successful
+2023-02-01 15:29:33,040 INFO server Imports value: import tensorflow as tf
+2023-02-01 15:29:33,040 INFO server response-value: <Response likely-streamed [200 OK]>
+2023-02-01 15:29:33,041 INFO werkzeug 127.0.0.1 - - [01/Feb/2023 15:29:33] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-01 15:29:33,130 INFO server Auth successful
+2023-02-01 15:29:33,131 INFO server Imports value: import tensorflow as tf
+2023-02-01 15:29:33,132 INFO server response-value: <Response likely-streamed [200 OK]>
+2023-02-01 15:29:33,132 INFO werkzeug 127.0.0.1 - - [01/Feb/2023 15:29:33] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-01 15:29:33,155 INFO server Auth successful
+2023-02-01 15:29:33,155 INFO server Imports value: import tensorflow as tf
+2023-02-01 15:29:33,156 INFO server response-value: <Response likely-streamed [200 OK]>
+2023-02-01 15:29:33,156 INFO werkzeug 127.0.0.1 - - [01/Feb/2023 15:29:33] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-01 15:29:33,179 INFO server Auth successful
+2023-02-01 15:29:33,180 INFO server Imports value: import tensorflow as tf
+2023-02-01 15:29:33,180 INFO server response-value: <Response likely-streamed [200 OK]>
+2023-02-01 15:29:33,181 INFO werkzeug 127.0.0.1 - - [01/Feb/2023 15:29:33] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-01 15:29:33,300 INFO server Auth successful
+2023-02-01 15:29:33,300 INFO server Imports value: import tensorflow as tf
+2023-02-01 15:29:33,301 INFO server response-value: <Response likely-streamed [200 OK]>
+2023-02-01 15:29:33,301 INFO werkzeug 127.0.0.1 - - [01/Feb/2023 15:29:33] "POST /api/run_experiment HTTP/1.1" 200 -
