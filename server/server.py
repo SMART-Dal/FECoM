@@ -125,7 +125,7 @@ def write_start_or_end_symbol(perf_file: Path, nvidia_smi_file: Path, start: boo
     with open(nvidia_smi_file, 'r') as f:
         f.write(symbol)
 
-def run_function(imports: str, function_to_run: str, method_object: object, args: list, kwargs: dict, max_wait_secs: int, wait_after_run_secs: int, return_result: bool):
+def run_function(imports: str, function_to_run: str, obj: object, args: list, kwargs: dict, max_wait_secs: int, wait_after_run_secs: int, return_result: bool):
     """
     Run the method given by function_to_run with the given arguments (args) and keyword arguments (kwargs).
     These two variables appear to not be used, however, they are used when evaluating the function_to_run
@@ -138,15 +138,11 @@ def run_function(imports: str, function_to_run: str, method_object: object, args
     app.logger.info("Imports value: %s", imports)
     exec(imports)
 
-    # (2) if this is a method, initialise the local variable obj to hold the object the method will be called on
-    if method_object is not None:
-        obj = method_object
-
-    # (3) continue only when the system has reached a stable state of energy consumption
+    # (2) continue only when the system has reached a stable state of energy consumption
     if not server_is_stable(max_wait_secs):
         raise TimeoutError(f"System could not reach a stable state within {max_wait_secs} seconds")
 
-    # (4) evaluate the function return. Mark the start & end times in the files and save their exact values.
+    # (3) evaluate the function return. Mark the start & end times in the files and save their exact values.
     # TODO do we need to write the start and end symbols into the files? If so, we need to adapt the parse_perf and parse_nvidia_smi methods accordingly to take into account these special symbols
     # write_start_or_end_symbol(PERF_FILE, NVIDIA_SMI_FILE, start=True)
     start_time = time.time_ns()
@@ -154,13 +150,13 @@ def run_function(imports: str, function_to_run: str, method_object: object, args
     end_time = time.time_ns()
     # write_start_or_end_symbol(PERF_FILE, NVIDIA_SMI_FILE, start=False)
 
-    # (5) Wait some specified amount of time to measure potentially elevated energy consumption after the function has terminated
+    # (4) Wait some specified amount of time to measure potentially elevated energy consumption after the function has terminated
     if DEBUG:
         print(f"waiting idle for {wait_after_run_secs} seconds")
     if wait_after_run_secs > 0:
         time.sleep(wait_after_run_secs)
 
-    # (6) get the energy data since run_function has been invoked and clear the files
+    # (5) get the energy data since run_function has been invoked and clear the files
     # TODO implement this
     df_cpu, df_ram = parse_perf(PERF_FILE)
     df_gpu = parse_nvidia_smi(NVIDIA_SMI_FILE)
@@ -170,7 +166,7 @@ def run_function(imports: str, function_to_run: str, method_object: object, args
         "gpu": df_gpu.to_json(orient="split") 
     }
 
-    # (7) return the energy data, times and status
+    # (6) return the energy data, times and status
     return_dict = {
         "energy_data": energy_data,
         "start_time": start_time,

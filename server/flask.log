@@ -1102,3 +1102,126 @@ TypeError: __init__() got an unexpected keyword argument 'json'
 2023-02-01 15:29:33,300 INFO server Imports value: import tensorflow as tf
 2023-02-01 15:29:33,301 INFO server response-value: <Response likely-streamed [200 OK]>
 2023-02-01 15:29:33,301 INFO werkzeug 127.0.0.1 - - [01/Feb/2023 15:29:33] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-02 11:08:47,423 INFO werkzeug [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on https://localhost:12345
+2023-02-02 11:08:47,423 INFO werkzeug [33mPress CTRL+C to quit[0m
+2023-02-02 11:09:56,988 INFO werkzeug [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on https://localhost:12345
+2023-02-02 11:09:56,988 INFO werkzeug [33mPress CTRL+C to quit[0m
+2023-02-02 11:24:38,009 INFO werkzeug [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on https://localhost:12345
+2023-02-02 11:24:38,010 INFO werkzeug [33mPress CTRL+C to quit[0m
+2023-02-02 11:26:23,747 INFO werkzeug [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on https://129.173.67.60:8080
+2023-02-02 11:26:23,747 INFO werkzeug [33mPress CTRL+C to quit[0m
+2023-02-02 11:26:34,702 INFO server Auth successful
+2023-02-02 11:26:34,919 INFO server Imports value: import numpy as np
+2023-02-02 11:26:34,949 ERROR server Exception on /api/run_experiment [POST]
+Traceback (most recent call last):
+  File "/home/tim/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 2525, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/tim/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1822, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/tim/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1820, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/tim/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1796, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+  File "/home/tim/miniconda3/envs/tf2/lib/python3.9/site-packages/flask_httpauth.py", line 172, in decorated
+    return self.ensure_sync(f)(*args, **kwargs)
+  File "/home/tim/GreenAI-extension/server/server.py", line 213, in run_function_and_return_result
+    results = run_function(
+  File "/home/tim/GreenAI-extension/server/server.py", line 182, in run_function
+    return_dict["method_object"] = obj
+UnboundLocalError: local variable 'obj' referenced before assignment
+2023-02-02 11:26:34,951 INFO werkzeug 81.129.217.195 - - [02/Feb/2023 11:26:34] "[35m[1mPOST /api/run_experiment HTTP/1.1[0m" 500 -
+2023-02-02 11:28:57,663 INFO werkzeug [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on https://127.0.0.1:8080
+ * Running on https://129.173.67.60:8080
+2023-02-02 11:28:57,663 INFO werkzeug [33mPress CTRL+C to quit[0m
+2023-02-02 11:29:05,039 INFO server Auth successful
+2023-02-02 11:29:05,281 INFO server Imports value: import numpy as np
+2023-02-02 11:29:05,311 ERROR server Exception on /api/run_experiment [POST]
+Traceback (most recent call last):
+  File "/home/tim/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 2525, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/tim/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1822, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/tim/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1820, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/tim/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1796, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+  File "/home/tim/miniconda3/envs/tf2/lib/python3.9/site-packages/flask_httpauth.py", line 172, in decorated
+    return self.ensure_sync(f)(*args, **kwargs)
+  File "/home/tim/GreenAI-extension/server/server.py", line 213, in run_function_and_return_result
+    results = run_function(
+  File "/home/tim/GreenAI-extension/server/server.py", line 182, in run_function
+    return_dict["method_object"] = obj
+UnboundLocalError: local variable 'obj' referenced before assignment
+2023-02-02 11:29:05,314 INFO werkzeug 81.129.217.195 - - [02/Feb/2023 11:29:05] "[35m[1mPOST /api/run_experiment HTTP/1.1[0m" 500 -
+2023-02-02 11:29:58,629 INFO werkzeug [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on https://127.0.0.1:8080
+ * Running on https://129.173.67.60:8080
+2023-02-02 11:29:58,630 INFO werkzeug [33mPress CTRL+C to quit[0m
+2023-02-02 11:30:17,681 INFO werkzeug [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on https://127.0.0.1:8080
+ * Running on https://129.173.67.60:8080
+2023-02-02 11:30:17,681 INFO werkzeug [33mPress CTRL+C to quit[0m
+2023-02-02 11:30:17,682 INFO werkzeug  * Restarting with stat
+2023-02-02 11:30:18,080 WARNING werkzeug  * Debugger is active!
+2023-02-02 11:30:18,080 INFO werkzeug  * Debugger PIN: 752-170-338
+2023-02-02 11:30:22,590 INFO server Auth successful
+2023-02-02 11:30:22,960 INFO server Imports value: import numpy as np
+2023-02-02 11:30:22,998 INFO werkzeug 81.129.217.195 - - [02/Feb/2023 11:30:22] "[35m[1mPOST /api/run_experiment HTTP/1.1[0m" 500 -
+2023-02-02 12:10:56,631 INFO werkzeug [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on https://127.0.0.1:8080
+ * Running on https://129.173.67.60:8080
+2023-02-02 12:10:56,631 INFO werkzeug [33mPress CTRL+C to quit[0m
+2023-02-02 12:10:56,632 INFO werkzeug  * Restarting with stat
+2023-02-02 12:10:56,992 WARNING werkzeug  * Debugger is active!
+2023-02-02 12:10:56,992 INFO werkzeug  * Debugger PIN: 752-170-338
+2023-02-02 12:11:00,810 INFO server Auth successful
+2023-02-02 12:11:01,042 INFO server Imports value: import numpy as np
+2023-02-02 12:11:01,069 INFO server response-value: <Response 87263 bytes [200 OK]>
+2023-02-02 12:11:01,070 INFO werkzeug 81.129.217.195 - - [02/Feb/2023 12:11:01] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-02 12:11:20,938 INFO werkzeug [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on https://127.0.0.1:8080
+ * Running on https://129.173.67.60:8080
+2023-02-02 12:11:20,938 INFO werkzeug [33mPress CTRL+C to quit[0m
+2023-02-02 12:11:20,938 INFO werkzeug  * Restarting with stat
+2023-02-02 12:11:21,287 WARNING werkzeug  * Debugger is active!
+2023-02-02 12:11:21,287 INFO werkzeug  * Debugger PIN: 752-170-338
+2023-02-02 12:15:14,016 INFO server Auth successful
+2023-02-02 12:15:14,235 INFO server Imports value: import numpy as np
+2023-02-02 12:15:14,268 INFO server response-value: <Response 115391 bytes [200 OK]>
+2023-02-02 12:15:14,269 INFO werkzeug 81.129.217.195 - - [02/Feb/2023 12:15:14] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-02 12:16:22,835 INFO server Auth successful
+2023-02-02 12:16:23,080 INFO server Imports value: import numpy as np
+2023-02-02 12:16:23,109 INFO server response-value: <Response 125963 bytes [200 OK]>
+2023-02-02 12:16:23,110 INFO werkzeug 81.129.217.195 - - [02/Feb/2023 12:16:23] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-02 12:19:19,743 INFO werkzeug [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on https://127.0.0.1:8080
+ * Running on https://129.173.67.60:8080
+2023-02-02 12:19:19,743 INFO werkzeug [33mPress CTRL+C to quit[0m
+2023-02-02 12:19:19,744 INFO werkzeug  * Restarting with stat
+2023-02-02 12:19:20,098 WARNING werkzeug  * Debugger is active!
+2023-02-02 12:19:20,099 INFO werkzeug  * Debugger PIN: 752-170-338
+2023-02-02 12:19:22,387 INFO server Auth successful
+2023-02-02 12:19:22,700 INFO server Imports value: import numpy as np
+2023-02-02 12:19:22,737 INFO server response-value: <Response 131529 bytes [200 OK]>
+2023-02-02 12:19:22,739 INFO werkzeug 81.129.217.195 - - [02/Feb/2023 12:19:22] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-02 12:21:12,926 INFO werkzeug [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on https://129.173.67.60:8080
+2023-02-02 12:21:12,926 INFO werkzeug [33mPress CTRL+C to quit[0m
+2023-02-02 12:21:12,927 INFO werkzeug  * Restarting with stat
+2023-02-02 12:21:13,309 WARNING werkzeug  * Debugger is active!
+2023-02-02 12:21:13,309 INFO werkzeug  * Debugger PIN: 752-170-338
+2023-02-02 12:21:22,521 INFO server Auth successful
+2023-02-02 12:21:23,154 INFO server Imports value: import numpy as np
+2023-02-02 12:21:23,191 INFO server response-value: <Response 131529 bytes [200 OK]>
+2023-02-02 12:21:23,192 INFO werkzeug 81.129.217.195 - - [02/Feb/2023 12:21:23] "POST /api/run_experiment HTTP/1.1" 200 -
