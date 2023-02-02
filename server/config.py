@@ -5,7 +5,7 @@ DEV_HOST = "localhost"
 DEV_PORT = 12345
 
 # server settings for production environment
-PROD_HOST = "129.173.67.60" # set to "0.0.0.0" on the server
+PROD_HOST = "129.173.67.60" # can also set to "0.0.0.0" on the server
 PROD_PORT = 8080
 
 ### SET TO FALSE FOR DEV SETTINGS ON YOUR LOCAL MACHINE ###
