@@ -3,8 +3,8 @@ The server receives client requests to run ML methods and measure their energy c
 Start the server by following the instructions below, wait a minute and then start sending requests from the client.
 
 ## Setup
-Install [miniconda3](https://docs.conda.io/en/latest/miniconda.html)
-In this directory, run the following command to create the required TensorFlow environment from the specified `environment.yml` file:  
+Install [miniconda3](https://docs.conda.io/en/latest/miniconda.html). Then change the value under `variables:LD_LIBRARY_PATH:` to point to your miniconda installation.
+Finally, in this directory, run the following command to create the required TensorFlow environment from the specified `environment.yml` file:  
 ```conda env create -f environment.yml```   
 Activate the environemnt:  
 ```conda activate tf2```

@@ -7,7 +7,7 @@ import pytest
 # add parent directory to path
 import sys
 sys.path.insert(0,'..')
-from send_request import send_request
+from send_request import send_single_thread_request as send_request
 
 @pytest.fixture
 def imports():
@@ -46,7 +46,9 @@ def compiled_model(model, loss_fn):
 def test_mnist_load(imports):
     function_to_run = "tf.keras.datasets.mnist.load_data()"
 
-    result = send_request(imports, function_to_run)
+    resp = send_request(imports, function_to_run, return_result=True)
+
+    result = resp["return"]
 
     # compare result from server with the real results
     mnist = tf.keras.datasets.mnist
@@ -67,7 +69,7 @@ def test_mnist_model_compile(model, loss_fn):
     }
     method_object = model
     
-    return_dict = send_request(imports, function_to_run, function_kwargs=function_kwargs, method_object=method_object)
+    return_dict = send_request(imports, function_to_run, function_kwargs=function_kwargs, method_object=method_object, return_result=True)
 
     assert return_dict["return"] is None
     assert type(return_dict["method_object"]) == type(model)
@@ -82,7 +84,7 @@ def test_mnist_model_train(compiled_model, mnist):
     function_kwargs = {"epochs": 5}
     method_object = compiled_model
     
-    return_dict = send_request(imports, function_to_run, function_args, function_kwargs, method_object=method_object)
+    return_dict = send_request(imports, function_to_run, function_args, function_kwargs, method_object=method_object, return_result=True)
     test_history = return_dict["return"]
     real_history = compiled_model.fit(x_train, y_train, epochs=5)
 
@@ -109,7 +111,7 @@ def test_mnist_model_testing(compiled_model, mnist):
     function_kwargs = {"verbose": 2}
     method_object = compiled_model
     
-    return_dict = send_request(imports, function_to_run, function_args, function_kwargs, method_object=method_object)
+    return_dict = send_request(imports, function_to_run, function_args, function_kwargs, method_object=method_object, return_result=True)
     test_evaluation = return_dict["return"]
     real_evaluation = compiled_model.evaluate(x_test, y_test, verbose=2)
 

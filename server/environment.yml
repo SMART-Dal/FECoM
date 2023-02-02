@@ -18,8 +18,8 @@ dependencies:
     - scikit-learn==1.2.1
     - pytest==7.2.1
 
-prefix: /home/tim/miniconda3/envs/tf
+prefix: /home/tim/miniconda3/envs/tf2
 variables:
-  LD_LIBRARY_PATH: $CONDA_PREFIX/lib
+  LD_LIBRARY_PATH: /home/tim/miniconda3/envs/tf2/lib # replace this with your miniconda path, can be found by running "echo $CONDA_PREFIX"
   XLA_FLAGS: --xla_gpu_cuda_data_dir=$CONDA_PREFIX/lib
   TF_FORCE_GPU_ALLOW_GROWTH: 'true'

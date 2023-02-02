@@ -3,7 +3,7 @@ import tensorflow as tf
 # add parent directory to path
 import sys
 sys.path.insert(0,'..')
-from send_request import send_request
+from send_request import send_single_thread_request as send_request
 
 def test_matmul_request():
     arr1 = np.random.rand(100,100)
@@ -14,10 +14,10 @@ def test_matmul_request():
     function_args = [arr1, arr2]
     function_kwargs = None
 
-    result = send_request(imports, function_to_run, function_args, function_kwargs)
+    result = send_request(imports, function_to_run, function_args, function_kwargs, return_result=True)
     
-    assert(type(result)==np.ndarray)
-    assert(result.shape==(100,100))
+    assert(type(result["return"])==np.ndarray)
+    assert(result["return"].shape==(100,100))
 
 def test_rfft_request():
     
@@ -28,10 +28,10 @@ def test_rfft_request():
     function_args = [arr1.tolist(), 200, -1]
     function_kwargs = None
 
-    result = send_request(imports, function_to_run, function_args, function_kwargs)
+    result = send_request(imports, function_to_run, function_args, function_kwargs, return_result=True)
 
-    assert(type(result)==np.ndarray)
-    assert(result.shape==(100,101))
+    assert(type(result["return"])==np.ndarray)
+    assert(result["return"].shape==(100,101))
 
 def test_tf_random_uniform_request():
     imports = "import tensorflow as tf"
@@ -43,9 +43,9 @@ def test_tf_random_uniform_request():
         "dtype": tf.float32
     }
     
-    result = send_request(imports, function_to_run, function_args, function_kwargs)
+    result = send_request(imports, function_to_run, function_args, function_kwargs, return_result=True)
 
-    assert(result.shape==(10,1))
+    assert(result["return"].shape==(10,1))
 
 def test_tf_nested_Variable_request():
     imports = "import tensorflow as tf"
@@ -53,6 +53,6 @@ def test_tf_nested_Variable_request():
     function_args = [tf.random.uniform([10, 1], minval = -1, maxval = 1, dtype = tf.float32)]
     function_kwargs = None
     
-    result = send_request(imports, function_to_run, function_args, function_kwargs)
+    result = send_request(imports, function_to_run, function_args, function_kwargs, return_result=True)
 
-    assert(result.shape==(10,1))
+    assert(result["return"].shape==(10,1))
