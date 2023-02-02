@@ -3,19 +3,21 @@ Server to receive client requests to run ML methods and measure energy.
 """
 
 import time
-import math
 import os
-import statistics as stats
+import logging
 import pickle
+import statistics as stats
 from pathlib import Path
 
 from flask import Flask, Response, request
 from flask_httpauth import HTTPBasicAuth
 from werkzeug.security import check_password_hash
 
-from config import API_PATH, DEBUG, SERVER_HOST, SERVER_PORT, CPU_STD_TO_MEAN, RAM_STD_TO_MEAN, GPU_STD_TO_MEAN, USERS, CA_CERT_PATH, CA_KEY_PATH, ENERGY_DATA_DIR
+from config import API_PATH, DEBUG, SERVER_HOST, SERVER_PORT, CPU_STD_TO_MEAN, RAM_STD_TO_MEAN, GPU_STD_TO_MEAN, USERS, CA_CERT_PATH, CA_KEY_PATH, PERF_FILE, NVIDIA_SMI_FILE
 from function_details import FunctionDetails # shown unused but still required
-import logging
+from measurement_parse import parse_nvidia_smi, parse_perf
+
+
 
 app = Flask(__name__)
 auth = HTTPBasicAuth()
@@ -43,19 +45,19 @@ def auth_error(status_code):
     )
     return response
 
-def load_last_n_cpu_ram_gpu(n: int, parent_dir: Path) -> tuple:
+def load_last_n_cpu_ram_gpu(n: int, perf_file: Path, nvidia_smi_file: Path) -> tuple:
     """
     Helper method for is_stable_state to load the last n energy data points
     for CPU, RAM and GPU (in this order)
     """
     # load CPU & RAM data
     cpu_ram = []
-    with open(parent_dir/"perf.txt", 'r') as f:
+    with open(perf_file, 'r') as f:
         cpu_ram = f.read().splitlines(True)
     
     # load GPU data
     gpu = []
-    with open(parent_dir/"nvidia_smi.txt", 'r') as f:
+    with open(nvidia_smi_file, 'r') as f:
         gpu = f.read().splitlines(True)
 
     # generate lists of data
@@ -90,7 +92,7 @@ def server_is_stable(max_wait_secs: int) -> bool:
     # in each loop iteration, load new data, calculate statistics and check if the energy is stable.
     # try this for the specified number of seconds
     for _ in range(int(max_wait_secs/wait_per_loop_secs)):
-        cpu_energies, ram_energies, gpu_energies = load_last_n_cpu_ram_gpu(n, ENERGY_DATA_DIR)
+        cpu_energies, ram_energies, gpu_energies = load_last_n_cpu_ram_gpu(n, PERF_FILE, NVIDIA_SMI_FILE)
 
         # stable means that stdv/mean ratios are smaller or equal to the stable ratios determined experimentally
         # the tolerance value set above specifies how much relative deviation we want to allow
@@ -113,14 +115,14 @@ def server_is_stable(max_wait_secs: int) -> bool:
 
     return False
 
-def write_start_or_end_symbol(parent_dir: Path, start: bool):
+def write_start_or_end_symbol(perf_file: Path, nvidia_smi_file: Path, start: bool):
     if start:
         symbol = "##START_EXECUTION##\n"
     else:
         symbol = "##END_EXECUTION##\n"
-    with open(parent_dir/"perf.txt", 'r') as f:
+    with open(perf_file, 'r') as f:
         f.write(symbol)
-    with open(parent_dir/"nvidia_smi.txt", 'r') as f:
+    with open(nvidia_smi_file, 'r') as f:
         f.write(symbol)
 
 def run_function(imports: str, function_to_run: str, method_object: object, args: list, kwargs: dict, max_wait_secs: int, wait_after_run_secs: int, return_result: bool):
@@ -145,11 +147,12 @@ def run_function(imports: str, function_to_run: str, method_object: object, args
         raise TimeoutError(f"System could not reach a stable state within {max_wait_secs} seconds")
 
     # (4) evaluate the function return. Mark the start & end times in the files and save their exact values.
-    write_start_or_end_symbol(ENERGY_DATA_DIR, start=True)
+    # TODO do we need to write the start and end symbols into the files? If so, we need to adapt the parse_perf and parse_nvidia_smi methods accordingly to take into account these special symbols
+    # write_start_or_end_symbol(PERF_FILE, NVIDIA_SMI_FILE, start=True)
     start_time = time.time_ns()
     func_return = eval(function_to_run)
     end_time = time.time_ns()
-    write_start_or_end_symbol(ENERGY_DATA_DIR, start=False)
+    # write_start_or_end_symbol(PERF_FILE, NVIDIA_SMI_FILE, start=False)
 
     # (5) Wait some specified amount of time to measure potentially elevated energy consumption after the function has terminated
     if DEBUG:
@@ -157,12 +160,19 @@ def run_function(imports: str, function_to_run: str, method_object: object, args
     if wait_after_run_secs > 0:
         time.sleep(wait_after_run_secs)
 
-    # (5) get the energy data since run_function has been invoked and clear the files
+    # (6) get the energy data since run_function has been invoked and clear the files
     # TODO implement this
+    df_cpu, df_ram = parse_perf(PERF_FILE)
+    df_gpu = parse_nvidia_smi(NVIDIA_SMI_FILE)
+    energy_data = {
+        "cpu": df_cpu.to_json(orient="split"),
+        "ram": df_ram.to_json(orient="split"),
+        "gpu": df_gpu.to_json(orient="split") 
+    }
 
-    # (6) return the energy data, times and status
+    # (7) return the energy data, times and status
     return_dict = {
-        "energy_data": [], # TODO insert a dataframe here
+        "energy_data": energy_data,
         "start_time": start_time,
         "end_time": end_time
     }

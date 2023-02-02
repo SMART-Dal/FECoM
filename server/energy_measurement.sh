@@ -2,13 +2,13 @@
 
 # bash energy_measurement.sh 400
 
-# Set to user specified value or to default value 500ms for count_interval_ms if undefined by user
+# Set to user specified value (by running bash energy_measurement.sh VALUE) or to default value 500ms for count_interval_ms if undefined by user
 count_interval_ms=${1:-500}
 
-# Collect the energy consumption of the GPU
+# Collect the energy consumption of the GPU, run this process in the background
 nvidia-smi -i 0 --loop-ms=$count_interval_ms --format=csv,noheader --query-gpu=timestamp,power.draw > energy_measurement/out/nvidia_smi.txt &
 
-# Get nvidia-smi's PID
+# Get the nvidia-smi's PID
 nvidia_smi_PID=$!
 
 # Trap: When the server is closed, terminate the nvidia-smi process

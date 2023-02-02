@@ -33,8 +33,11 @@ GPU_STD_TO_MEAN = 0.0100381 # ~0.01
 CPU_STD_TO_MEAN = 0.0292644 # ~0.03
 RAM_STD_TO_MEAN = 0.0245123 # ~0.025
 
-# path to find energy data
-ENERGY_DATA_DIR = Path("energy_measurement/out")
+# path to find energy data (this is currently also manually written into the energy_measurement.sh script)
+# TODO make this the single source of truth and somehow pass these variables into the script (e.g. by running it from within python)
+energy_data_dir = Path("energy_measurement/out")
+PERF_FILE = energy_data_dir/"perf.txt"
+NVIDIA_SMI_FILE = energy_data_dir/"nvidia_smi.txt"
 
 # authentication
 USERS = {

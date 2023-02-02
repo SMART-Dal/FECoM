@@ -44,12 +44,16 @@ resp = requests.post(url, data=data, headers={'Content-Type': 'application/octet
 The response `resp` contains a json object of the following format:  
 ```
 {
-    "energy_data": energy_json,
+    "energy_data": {
+        "cpu": df_cpu_json,
+        "ram": df_ram_json,
+        "gpu": df_gpu_json
+    },
     "start_time": start_time,
     "end_time": end_time
 }
 ```  
-Where `energy_json` is a Pandas DataFrame encoded as json through `pandas.DataFrame.to_json(orient='split')` which can be decoded into a DataFrame by calling `pd.read_json(energy_json, orient=‘split’)`. The other two entries `start_time` & `end_time` are integers indicating time since epoch in nanoseconds. If `return_result` is set to `True`, the response `resp` is a pickled python object that can be retrieved by calling `pickle.loads(resp.content)`. This object is a dictionary of the following form  
+Where each entry in `energy_json` is a Pandas DataFrame encoded as json through `pandas.DataFrame.to_json(orient='split')` which can be decoded into a DataFrame by calling `pd.read_json(energy_json, orient=‘split’)`. The other two entries `start_time` & `end_time` are integers indicating time since epoch in nanoseconds. If `return_result` is set to `True`, the response `resp` is a pickled python object that can be retrieved by calling `pickle.loads(resp.content)`. This object is a dictionary of the following form  
 ```
 {
     "energy_data": energy_json,

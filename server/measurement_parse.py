@@ -10,7 +10,7 @@ def parse_nvidia_smi(filename):
     - power_draw (W) (float)
     """
     headers = ['timestamp', 'power_draw (W)']
-    dtypes = {'timestamp': 'str', 'power_draw (W)': 'str'}
+    dtypes = {'timestamp': 'str'}
     parse_dates = ['timestamp']
     convert_power_draw = lambda x: float(x.split()[0])
     converters = {'power_draw (W)': convert_power_draw}
