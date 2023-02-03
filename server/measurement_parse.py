@@ -53,7 +53,7 @@ def parse_perf(filename):
 
 
 if __name__ == "__main__":
-    directory = "./out/2022-12-09/"
+    directory = "energy_measurement/out/2022-12-09/"
     gpu_energy = parse_nvidia_smi(f"{directory}nvidia_smi.txt")
     print(gpu_energy)
     print(gpu_energy.dtypes)
