@@ -44,21 +44,18 @@ def send_request(imports: str, function_to_run: str, function_args: list = None,
 
 def store_response(future_response):
     response = future_response.result()
-    # result = pickle.loads(run_resp.content)
-    result = response.content
     # if HTTP status code is 500, the server could not reach a stable state.
     # now, simply raise an error. TODO: send a new request instead.
     if response.status_code == 500:
-        raise TimeoutError(result)
+        raise TimeoutError(response.content)
     elif response.status_code == 401:
-        raise RuntimeError(result)
+        raise RuntimeError(response.content)
     
     if DEBUG:
-        print(f"Result: {result}")
-    
+        print(f"Result: {response.content}")
     
     try:
-        with open('data.json', 'r') as f:
+        with open('methodcall-energy-dataset.json', 'r') as f:
             existing_data = json.load(f)
     except:
         existing_data = []

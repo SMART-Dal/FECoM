@@ -8,8 +8,8 @@ import logging
 import pickle
 import statistics as stats
 from pathlib import Path
-
-from flask import Flask, Response, request
+import json
+from flask import Flask, Response, request, jsonify
 from flask_httpauth import HTTPBasicAuth
 from werkzeug.security import check_password_hash
 
@@ -172,6 +172,7 @@ def run_function(imports: str, function_to_run: str, obj: object, args: list, kw
         "start_time": start_time,
         "end_time": end_time
     }
+    # TODO: From the meeting: Add Data size,Total Consumption, Add Method Call as the Key for dictionary in the returned response
 
     if return_result:
         return_dict["return"] = func_return
@@ -242,7 +243,9 @@ def run_function_and_return_result():
         else:
            raise OSError("Could not remove custom class file")
     app.logger.info("response-value: %s", response)
-    return response
+
+    return jsonify(results)
+    # return response # TODO Commented for demo as the response was not a json/dict, can change this later
 
 @app.route("/")
 def index():
