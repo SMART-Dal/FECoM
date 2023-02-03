@@ -1225,3 +1225,1155 @@ UnboundLocalError: local variable 'obj' referenced before assignment
 2023-02-02 12:21:23,154 INFO server Imports value: import numpy as np
 2023-02-02 12:21:23,191 INFO server response-value: <Response 131529 bytes [200 OK]>
 2023-02-02 12:21:23,192 INFO werkzeug 81.129.217.195 - - [02/Feb/2023 12:21:23] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-02 19:27:47,198 INFO werkzeug [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on https://129.173.67.60:8080
+2023-02-02 19:27:47,199 INFO werkzeug [33mPress CTRL+C to quit[0m
+2023-02-02 19:28:25,184 INFO server Auth successful
+2023-02-02 19:28:25,184 INFO server Imports value: import tensorflow as tf
+2023-02-02 19:28:25,208 INFO server Auth successful
+2023-02-02 19:28:25,210 INFO server Imports value: import tensorflow as tf
+2023-02-02 19:28:25,256 INFO server Auth successful
+2023-02-02 19:28:25,258 INFO server Imports value: import tensorflow as tf
+2023-02-02 19:28:25,961 DEBUG tensorflow Falling back to TensorFlow client; we recommended you install the Cloud TPU client directly with pip install cloud-tpu-client.
+2023-02-02 19:28:26,076 DEBUG h5py._conv Creating converter from 7 to 5
+2023-02-02 19:28:26,076 DEBUG h5py._conv Creating converter from 5 to 7
+2023-02-02 19:28:26,076 DEBUG h5py._conv Creating converter from 7 to 5
+2023-02-02 19:28:26,076 DEBUG h5py._conv Creating converter from 5 to 7
+2023-02-02 19:28:26,663 INFO server response-value: <Response likely-streamed [200 OK]>
+2023-02-02 19:28:26,665 INFO werkzeug 129.173.67.60 - - [02/Feb/2023 19:28:26] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-02 19:28:26,670 INFO server response-value: <Response likely-streamed [200 OK]>
+2023-02-02 19:28:26,677 INFO werkzeug 129.173.67.60 - - [02/Feb/2023 19:28:26] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-02 19:28:26,692 INFO server response-value: <Response likely-streamed [200 OK]>
+2023-02-02 19:28:26,692 INFO werkzeug 129.173.67.60 - - [02/Feb/2023 19:28:26] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-02 19:28:26,864 INFO server Auth successful
+2023-02-02 19:28:26,864 INFO server Imports value: import tensorflow as tf
+2023-02-02 19:28:26,916 INFO server Auth successful
+2023-02-02 19:28:26,917 INFO server Imports value: import tensorflow as tf
+2023-02-02 19:28:26,938 INFO server Auth successful
+2023-02-02 19:28:26,939 INFO server Imports value: import tensorflow as tf
+2023-02-02 19:28:26,941 ERROR server Exception on /api/run_experiment [POST]
+Traceback (most recent call last):
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 2525, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1822, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1820, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1796, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask_httpauth.py", line 172, in decorated
+    return self.ensure_sync(f)(*args, **kwargs)
+  File "/home/saurabh/code-energy-consumption/server/server.py", line 209, in run_function_and_return_result
+    results = run_function(
+  File "/home/saurabh/code-energy-consumption/server/server.py", line 161, in run_function
+    df_cpu, df_ram = parse_perf(PERF_FILE)
+  File "/home/saurabh/code-energy-consumption/server/measurement_parse.py", line 31, in parse_perf
+    start_datetime = datetime.strptime(start_datetime_str, '%c')
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/_strptime.py", line 568, in _strptime_datetime
+    tt, fraction, gmtoff_fraction = _strptime(data_string, format)
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/_strptime.py", line 349, in _strptime
+    raise ValueError("time data %r does not match format %r" %
+ValueError: time data 'Thu Feb  2 12:11:20 2023' does not match format '%c'
+2023-02-02 19:28:26,941 ERROR server Exception on /api/run_experiment [POST]
+Traceback (most recent call last):
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 2525, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1822, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1820, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1796, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask_httpauth.py", line 172, in decorated
+    return self.ensure_sync(f)(*args, **kwargs)
+  File "/home/saurabh/code-energy-consumption/server/server.py", line 209, in run_function_and_return_result
+    results = run_function(
+  File "/home/saurabh/code-energy-consumption/server/server.py", line 161, in run_function
+    df_cpu, df_ram = parse_perf(PERF_FILE)
+  File "/home/saurabh/code-energy-consumption/server/measurement_parse.py", line 31, in parse_perf
+    start_datetime = datetime.strptime(start_datetime_str, '%c')
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/_strptime.py", line 568, in _strptime_datetime
+    tt, fraction, gmtoff_fraction = _strptime(data_string, format)
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/_strptime.py", line 349, in _strptime
+    raise ValueError("time data %r does not match format %r" %
+ValueError: time data 'Thu Feb  2 12:11:20 2023' does not match format '%c'
+2023-02-02 19:28:26,941 ERROR server Exception on /api/run_experiment [POST]
+Traceback (most recent call last):
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 2525, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1822, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1820, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1796, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask_httpauth.py", line 172, in decorated
+    return self.ensure_sync(f)(*args, **kwargs)
+  File "/home/saurabh/code-energy-consumption/server/server.py", line 209, in run_function_and_return_result
+    results = run_function(
+  File "/home/saurabh/code-energy-consumption/server/server.py", line 161, in run_function
+    df_cpu, df_ram = parse_perf(PERF_FILE)
+  File "/home/saurabh/code-energy-consumption/server/measurement_parse.py", line 31, in parse_perf
+    start_datetime = datetime.strptime(start_datetime_str, '%c')
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/_strptime.py", line 568, in _strptime_datetime
+    tt, fraction, gmtoff_fraction = _strptime(data_string, format)
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/_strptime.py", line 349, in _strptime
+    raise ValueError("time data %r does not match format %r" %
+ValueError: time data 'Thu Feb  2 12:11:20 2023' does not match format '%c'
+2023-02-02 19:28:26,943 INFO werkzeug 129.173.67.60 - - [02/Feb/2023 19:28:26] "[35m[1mPOST /api/run_experiment HTTP/1.1[0m" 500 -
+2023-02-02 19:28:26,943 INFO werkzeug 129.173.67.60 - - [02/Feb/2023 19:28:26] "[35m[1mPOST /api/run_experiment HTTP/1.1[0m" 500 -
+2023-02-02 19:28:26,943 INFO werkzeug 129.173.67.60 - - [02/Feb/2023 19:28:26] "[35m[1mPOST /api/run_experiment HTTP/1.1[0m" 500 -
+2023-02-02 19:28:27,051 INFO server Auth successful
+2023-02-02 19:28:27,052 INFO server Imports value: import tensorflow as tf
+2023-02-02 19:28:27,052 ERROR server Exception on /api/run_experiment [POST]
+Traceback (most recent call last):
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 2525, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1822, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1820, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1796, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask_httpauth.py", line 172, in decorated
+    return self.ensure_sync(f)(*args, **kwargs)
+  File "/home/saurabh/code-energy-consumption/server/server.py", line 209, in run_function_and_return_result
+    results = run_function(
+  File "/home/saurabh/code-energy-consumption/server/server.py", line 161, in run_function
+    df_cpu, df_ram = parse_perf(PERF_FILE)
+  File "/home/saurabh/code-energy-consumption/server/measurement_parse.py", line 31, in parse_perf
+    start_datetime = datetime.strptime(start_datetime_str, '%c')
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/_strptime.py", line 568, in _strptime_datetime
+    tt, fraction, gmtoff_fraction = _strptime(data_string, format)
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/_strptime.py", line 349, in _strptime
+    raise ValueError("time data %r does not match format %r" %
+ValueError: time data 'Thu Feb  2 12:11:20 2023' does not match format '%c'
+2023-02-02 19:28:27,053 INFO werkzeug 129.173.67.60 - - [02/Feb/2023 19:28:27] "[35m[1mPOST /api/run_experiment HTTP/1.1[0m" 500 -
+2023-02-02 19:28:27,053 INFO server Auth successful
+2023-02-02 19:28:27,053 INFO server Imports value: import tensorflow as tf
+2023-02-02 19:28:27,054 ERROR server Exception on /api/run_experiment [POST]
+Traceback (most recent call last):
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 2525, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1822, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1820, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1796, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask_httpauth.py", line 172, in decorated
+    return self.ensure_sync(f)(*args, **kwargs)
+  File "/home/saurabh/code-energy-consumption/server/server.py", line 209, in run_function_and_return_result
+    results = run_function(
+  File "/home/saurabh/code-energy-consumption/server/server.py", line 161, in run_function
+    df_cpu, df_ram = parse_perf(PERF_FILE)
+  File "/home/saurabh/code-energy-consumption/server/measurement_parse.py", line 31, in parse_perf
+    start_datetime = datetime.strptime(start_datetime_str, '%c')
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/_strptime.py", line 568, in _strptime_datetime
+    tt, fraction, gmtoff_fraction = _strptime(data_string, format)
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/_strptime.py", line 349, in _strptime
+    raise ValueError("time data %r does not match format %r" %
+ValueError: time data 'Thu Feb  2 12:11:20 2023' does not match format '%c'
+2023-02-02 19:28:27,054 INFO werkzeug 129.173.67.60 - - [02/Feb/2023 19:28:27] "[35m[1mPOST /api/run_experiment HTTP/1.1[0m" 500 -
+2023-02-02 19:28:27,064 INFO server Auth successful
+2023-02-02 19:28:27,064 INFO server Imports value: import tensorflow as tf
+2023-02-02 19:28:27,065 ERROR server Exception on /api/run_experiment [POST]
+Traceback (most recent call last):
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 2525, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1822, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1820, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1796, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask_httpauth.py", line 172, in decorated
+    return self.ensure_sync(f)(*args, **kwargs)
+  File "/home/saurabh/code-energy-consumption/server/server.py", line 209, in run_function_and_return_result
+    results = run_function(
+  File "/home/saurabh/code-energy-consumption/server/server.py", line 161, in run_function
+    df_cpu, df_ram = parse_perf(PERF_FILE)
+  File "/home/saurabh/code-energy-consumption/server/measurement_parse.py", line 31, in parse_perf
+    start_datetime = datetime.strptime(start_datetime_str, '%c')
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/_strptime.py", line 568, in _strptime_datetime
+    tt, fraction, gmtoff_fraction = _strptime(data_string, format)
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/_strptime.py", line 349, in _strptime
+    raise ValueError("time data %r does not match format %r" %
+ValueError: time data 'Thu Feb  2 12:11:20 2023' does not match format '%c'
+2023-02-02 19:28:27,065 INFO werkzeug 129.173.67.60 - - [02/Feb/2023 19:28:27] "[35m[1mPOST /api/run_experiment HTTP/1.1[0m" 500 -
+2023-02-02 19:28:51,040 INFO server Auth successful
+2023-02-02 19:28:51,040 INFO server Imports value: import tensorflow as tf
+2023-02-02 19:28:51,041 ERROR server Exception on /api/run_experiment [POST]
+Traceback (most recent call last):
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 2525, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1822, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1820, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1796, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask_httpauth.py", line 172, in decorated
+    return self.ensure_sync(f)(*args, **kwargs)
+  File "/home/saurabh/code-energy-consumption/server/server.py", line 209, in run_function_and_return_result
+    results = run_function(
+  File "/home/saurabh/code-energy-consumption/server/server.py", line 161, in run_function
+    df_cpu, df_ram = parse_perf(PERF_FILE)
+  File "/home/saurabh/code-energy-consumption/server/measurement_parse.py", line 31, in parse_perf
+    start_datetime = datetime.strptime(start_datetime_str, '%c')
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/_strptime.py", line 568, in _strptime_datetime
+    tt, fraction, gmtoff_fraction = _strptime(data_string, format)
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/_strptime.py", line 349, in _strptime
+    raise ValueError("time data %r does not match format %r" %
+ValueError: time data 'Thu Feb  2 12:11:20 2023' does not match format '%c'
+2023-02-02 19:28:51,041 INFO werkzeug 129.173.67.60 - - [02/Feb/2023 19:28:51] "[35m[1mPOST /api/run_experiment HTTP/1.1[0m" 500 -
+2023-02-02 19:28:51,064 INFO server Auth successful
+2023-02-02 19:28:51,064 INFO server Imports value: import tensorflow as tf
+2023-02-02 19:28:51,064 ERROR server Exception on /api/run_experiment [POST]
+Traceback (most recent call last):
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 2525, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1822, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1820, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1796, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask_httpauth.py", line 172, in decorated
+    return self.ensure_sync(f)(*args, **kwargs)
+  File "/home/saurabh/code-energy-consumption/server/server.py", line 209, in run_function_and_return_result
+    results = run_function(
+  File "/home/saurabh/code-energy-consumption/server/server.py", line 161, in run_function
+    df_cpu, df_ram = parse_perf(PERF_FILE)
+  File "/home/saurabh/code-energy-consumption/server/measurement_parse.py", line 31, in parse_perf
+    start_datetime = datetime.strptime(start_datetime_str, '%c')
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/_strptime.py", line 568, in _strptime_datetime
+    tt, fraction, gmtoff_fraction = _strptime(data_string, format)
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/_strptime.py", line 349, in _strptime
+    raise ValueError("time data %r does not match format %r" %
+ValueError: time data 'Thu Feb  2 12:11:20 2023' does not match format '%c'
+2023-02-02 19:28:51,065 INFO werkzeug 129.173.67.60 - - [02/Feb/2023 19:28:51] "[35m[1mPOST /api/run_experiment HTTP/1.1[0m" 500 -
+2023-02-02 19:28:51,095 INFO server Auth successful
+2023-02-02 19:28:51,096 INFO server Imports value: import tensorflow as tf
+2023-02-02 19:28:51,096 ERROR server Exception on /api/run_experiment [POST]
+Traceback (most recent call last):
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 2525, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1822, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1820, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1796, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask_httpauth.py", line 172, in decorated
+    return self.ensure_sync(f)(*args, **kwargs)
+  File "/home/saurabh/code-energy-consumption/server/server.py", line 209, in run_function_and_return_result
+    results = run_function(
+  File "/home/saurabh/code-energy-consumption/server/server.py", line 161, in run_function
+    df_cpu, df_ram = parse_perf(PERF_FILE)
+  File "/home/saurabh/code-energy-consumption/server/measurement_parse.py", line 31, in parse_perf
+    start_datetime = datetime.strptime(start_datetime_str, '%c')
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/_strptime.py", line 568, in _strptime_datetime
+    tt, fraction, gmtoff_fraction = _strptime(data_string, format)
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/_strptime.py", line 349, in _strptime
+    raise ValueError("time data %r does not match format %r" %
+ValueError: time data 'Thu Feb  2 12:11:20 2023' does not match format '%c'
+2023-02-02 19:28:51,097 INFO werkzeug 129.173.67.60 - - [02/Feb/2023 19:28:51] "[35m[1mPOST /api/run_experiment HTTP/1.1[0m" 500 -
+2023-02-02 19:28:51,244 INFO server Auth successful
+2023-02-02 19:28:51,245 INFO server Imports value: import tensorflow as tf
+2023-02-02 19:28:51,246 ERROR server Exception on /api/run_experiment [POST]
+Traceback (most recent call last):
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 2525, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1822, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1820, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1796, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask_httpauth.py", line 172, in decorated
+    return self.ensure_sync(f)(*args, **kwargs)
+  File "/home/saurabh/code-energy-consumption/server/server.py", line 209, in run_function_and_return_result
+    results = run_function(
+  File "/home/saurabh/code-energy-consumption/server/server.py", line 161, in run_function
+    df_cpu, df_ram = parse_perf(PERF_FILE)
+  File "/home/saurabh/code-energy-consumption/server/measurement_parse.py", line 31, in parse_perf
+    start_datetime = datetime.strptime(start_datetime_str, '%c')
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/_strptime.py", line 568, in _strptime_datetime
+    tt, fraction, gmtoff_fraction = _strptime(data_string, format)
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/_strptime.py", line 349, in _strptime
+    raise ValueError("time data %r does not match format %r" %
+ValueError: time data 'Thu Feb  2 12:11:20 2023' does not match format '%c'
+2023-02-02 19:28:51,246 INFO werkzeug 129.173.67.60 - - [02/Feb/2023 19:28:51] "[35m[1mPOST /api/run_experiment HTTP/1.1[0m" 500 -
+2023-02-02 19:28:51,251 INFO server Auth successful
+2023-02-02 19:28:51,251 INFO server Imports value: import tensorflow as tf
+2023-02-02 19:28:51,252 ERROR server Exception on /api/run_experiment [POST]
+Traceback (most recent call last):
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 2525, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1822, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1820, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1796, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask_httpauth.py", line 172, in decorated
+    return self.ensure_sync(f)(*args, **kwargs)
+  File "/home/saurabh/code-energy-consumption/server/server.py", line 209, in run_function_and_return_result
+    results = run_function(
+  File "/home/saurabh/code-energy-consumption/server/server.py", line 161, in run_function
+    df_cpu, df_ram = parse_perf(PERF_FILE)
+  File "/home/saurabh/code-energy-consumption/server/measurement_parse.py", line 31, in parse_perf
+    start_datetime = datetime.strptime(start_datetime_str, '%c')
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/_strptime.py", line 568, in _strptime_datetime
+    tt, fraction, gmtoff_fraction = _strptime(data_string, format)
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/_strptime.py", line 349, in _strptime
+    raise ValueError("time data %r does not match format %r" %
+ValueError: time data 'Thu Feb  2 12:11:20 2023' does not match format '%c'
+2023-02-02 19:28:51,252 INFO werkzeug 129.173.67.60 - - [02/Feb/2023 19:28:51] "[35m[1mPOST /api/run_experiment HTTP/1.1[0m" 500 -
+2023-02-02 19:28:51,292 INFO server Auth successful
+2023-02-02 19:28:51,292 INFO server Imports value: import tensorflow as tf
+2023-02-02 19:28:51,293 ERROR server Exception on /api/run_experiment [POST]
+Traceback (most recent call last):
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 2525, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1822, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1820, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1796, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask_httpauth.py", line 172, in decorated
+    return self.ensure_sync(f)(*args, **kwargs)
+  File "/home/saurabh/code-energy-consumption/server/server.py", line 209, in run_function_and_return_result
+    results = run_function(
+  File "/home/saurabh/code-energy-consumption/server/server.py", line 161, in run_function
+    df_cpu, df_ram = parse_perf(PERF_FILE)
+  File "/home/saurabh/code-energy-consumption/server/measurement_parse.py", line 31, in parse_perf
+    start_datetime = datetime.strptime(start_datetime_str, '%c')
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/_strptime.py", line 568, in _strptime_datetime
+    tt, fraction, gmtoff_fraction = _strptime(data_string, format)
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/_strptime.py", line 349, in _strptime
+    raise ValueError("time data %r does not match format %r" %
+ValueError: time data 'Thu Feb  2 12:11:20 2023' does not match format '%c'
+2023-02-02 19:28:51,293 INFO werkzeug 129.173.67.60 - - [02/Feb/2023 19:28:51] "[35m[1mPOST /api/run_experiment HTTP/1.1[0m" 500 -
+2023-02-02 19:28:51,363 INFO server Auth successful
+2023-02-02 19:28:51,363 INFO server Imports value: import tensorflow as tf
+2023-02-02 19:28:51,364 ERROR server Exception on /api/run_experiment [POST]
+Traceback (most recent call last):
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 2525, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1822, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1820, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1796, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask_httpauth.py", line 172, in decorated
+    return self.ensure_sync(f)(*args, **kwargs)
+  File "/home/saurabh/code-energy-consumption/server/server.py", line 209, in run_function_and_return_result
+    results = run_function(
+  File "/home/saurabh/code-energy-consumption/server/server.py", line 161, in run_function
+    df_cpu, df_ram = parse_perf(PERF_FILE)
+  File "/home/saurabh/code-energy-consumption/server/measurement_parse.py", line 31, in parse_perf
+    start_datetime = datetime.strptime(start_datetime_str, '%c')
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/_strptime.py", line 568, in _strptime_datetime
+    tt, fraction, gmtoff_fraction = _strptime(data_string, format)
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/_strptime.py", line 349, in _strptime
+    raise ValueError("time data %r does not match format %r" %
+ValueError: time data 'Thu Feb  2 12:11:20 2023' does not match format '%c'
+2023-02-02 19:28:51,364 INFO werkzeug 129.173.67.60 - - [02/Feb/2023 19:28:51] "[35m[1mPOST /api/run_experiment HTTP/1.1[0m" 500 -
+2023-02-02 19:28:51,381 INFO server Auth successful
+2023-02-02 19:28:51,381 INFO server Imports value: import tensorflow as tf
+2023-02-02 19:28:51,382 ERROR server Exception on /api/run_experiment [POST]
+Traceback (most recent call last):
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 2525, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1822, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1820, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1796, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask_httpauth.py", line 172, in decorated
+    return self.ensure_sync(f)(*args, **kwargs)
+  File "/home/saurabh/code-energy-consumption/server/server.py", line 209, in run_function_and_return_result
+    results = run_function(
+  File "/home/saurabh/code-energy-consumption/server/server.py", line 161, in run_function
+    df_cpu, df_ram = parse_perf(PERF_FILE)
+  File "/home/saurabh/code-energy-consumption/server/measurement_parse.py", line 31, in parse_perf
+    start_datetime = datetime.strptime(start_datetime_str, '%c')
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/_strptime.py", line 568, in _strptime_datetime
+    tt, fraction, gmtoff_fraction = _strptime(data_string, format)
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/_strptime.py", line 349, in _strptime
+    raise ValueError("time data %r does not match format %r" %
+ValueError: time data 'Thu Feb  2 12:11:20 2023' does not match format '%c'
+2023-02-02 19:28:51,382 INFO werkzeug 129.173.67.60 - - [02/Feb/2023 19:28:51] "[35m[1mPOST /api/run_experiment HTTP/1.1[0m" 500 -
+2023-02-02 19:28:51,410 INFO server Auth successful
+2023-02-02 19:28:51,411 INFO server Imports value: import tensorflow as tf
+2023-02-02 19:28:51,412 ERROR server Exception on /api/run_experiment [POST]
+Traceback (most recent call last):
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 2525, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1822, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1820, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1796, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask_httpauth.py", line 172, in decorated
+    return self.ensure_sync(f)(*args, **kwargs)
+  File "/home/saurabh/code-energy-consumption/server/server.py", line 209, in run_function_and_return_result
+    results = run_function(
+  File "/home/saurabh/code-energy-consumption/server/server.py", line 161, in run_function
+    df_cpu, df_ram = parse_perf(PERF_FILE)
+  File "/home/saurabh/code-energy-consumption/server/measurement_parse.py", line 31, in parse_perf
+    start_datetime = datetime.strptime(start_datetime_str, '%c')
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/_strptime.py", line 568, in _strptime_datetime
+    tt, fraction, gmtoff_fraction = _strptime(data_string, format)
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/_strptime.py", line 349, in _strptime
+    raise ValueError("time data %r does not match format %r" %
+ValueError: time data 'Thu Feb  2 12:11:20 2023' does not match format '%c'
+2023-02-02 19:28:51,412 INFO werkzeug 129.173.67.60 - - [02/Feb/2023 19:28:51] "[35m[1mPOST /api/run_experiment HTTP/1.1[0m" 500 -
+2023-02-02 19:31:17,504 INFO server Auth successful
+2023-02-02 19:31:17,504 INFO server Imports value: import tensorflow as tf
+2023-02-02 19:31:17,504 ERROR server Exception on /api/run_experiment [POST]
+Traceback (most recent call last):
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 2525, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1822, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1820, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1796, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask_httpauth.py", line 172, in decorated
+    return self.ensure_sync(f)(*args, **kwargs)
+  File "/home/saurabh/code-energy-consumption/server/server.py", line 209, in run_function_and_return_result
+    results = run_function(
+  File "/home/saurabh/code-energy-consumption/server/server.py", line 161, in run_function
+    df_cpu, df_ram = parse_perf(PERF_FILE)
+  File "/home/saurabh/code-energy-consumption/server/measurement_parse.py", line 31, in parse_perf
+    # start_datetime = datetime.strptime(start_datetime_str, '%c')
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/_strptime.py", line 568, in _strptime_datetime
+    tt, fraction, gmtoff_fraction = _strptime(data_string, format)
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/_strptime.py", line 349, in _strptime
+    raise ValueError("time data %r does not match format %r" %
+ValueError: time data 'Thu Feb  2 12:11:20 2023' does not match format '%c'
+2023-02-02 19:31:17,505 INFO werkzeug 129.173.67.60 - - [02/Feb/2023 19:31:17] "[35m[1mPOST /api/run_experiment HTTP/1.1[0m" 500 -
+2023-02-02 19:31:17,528 INFO server Auth successful
+2023-02-02 19:31:17,528 INFO server Imports value: import tensorflow as tf
+2023-02-02 19:31:17,529 ERROR server Exception on /api/run_experiment [POST]
+Traceback (most recent call last):
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 2525, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1822, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1820, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1796, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask_httpauth.py", line 172, in decorated
+    return self.ensure_sync(f)(*args, **kwargs)
+  File "/home/saurabh/code-energy-consumption/server/server.py", line 209, in run_function_and_return_result
+    results = run_function(
+  File "/home/saurabh/code-energy-consumption/server/server.py", line 161, in run_function
+    df_cpu, df_ram = parse_perf(PERF_FILE)
+  File "/home/saurabh/code-energy-consumption/server/measurement_parse.py", line 31, in parse_perf
+    # start_datetime = datetime.strptime(start_datetime_str, '%c')
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/_strptime.py", line 568, in _strptime_datetime
+    tt, fraction, gmtoff_fraction = _strptime(data_string, format)
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/_strptime.py", line 349, in _strptime
+    raise ValueError("time data %r does not match format %r" %
+ValueError: time data 'Thu Feb  2 12:11:20 2023' does not match format '%c'
+2023-02-02 19:31:17,529 INFO werkzeug 129.173.67.60 - - [02/Feb/2023 19:31:17] "[35m[1mPOST /api/run_experiment HTTP/1.1[0m" 500 -
+2023-02-02 19:31:17,550 INFO server Auth successful
+2023-02-02 19:31:17,550 INFO server Imports value: import tensorflow as tf
+2023-02-02 19:31:17,551 ERROR server Exception on /api/run_experiment [POST]
+Traceback (most recent call last):
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 2525, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1822, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1820, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1796, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask_httpauth.py", line 172, in decorated
+    return self.ensure_sync(f)(*args, **kwargs)
+  File "/home/saurabh/code-energy-consumption/server/server.py", line 209, in run_function_and_return_result
+    results = run_function(
+  File "/home/saurabh/code-energy-consumption/server/server.py", line 161, in run_function
+    df_cpu, df_ram = parse_perf(PERF_FILE)
+  File "/home/saurabh/code-energy-consumption/server/measurement_parse.py", line 31, in parse_perf
+    # start_datetime = datetime.strptime(start_datetime_str, '%c')
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/_strptime.py", line 568, in _strptime_datetime
+    tt, fraction, gmtoff_fraction = _strptime(data_string, format)
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/_strptime.py", line 349, in _strptime
+    raise ValueError("time data %r does not match format %r" %
+ValueError: time data 'Thu Feb  2 12:11:20 2023' does not match format '%c'
+2023-02-02 19:31:17,551 INFO werkzeug 129.173.67.60 - - [02/Feb/2023 19:31:17] "[35m[1mPOST /api/run_experiment HTTP/1.1[0m" 500 -
+2023-02-02 19:31:17,684 INFO server Auth successful
+2023-02-02 19:31:17,685 INFO server Imports value: import tensorflow as tf
+2023-02-02 19:31:17,685 ERROR server Exception on /api/run_experiment [POST]
+Traceback (most recent call last):
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 2525, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1822, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1820, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1796, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask_httpauth.py", line 172, in decorated
+    return self.ensure_sync(f)(*args, **kwargs)
+  File "/home/saurabh/code-energy-consumption/server/server.py", line 209, in run_function_and_return_result
+    results = run_function(
+  File "/home/saurabh/code-energy-consumption/server/server.py", line 161, in run_function
+    df_cpu, df_ram = parse_perf(PERF_FILE)
+  File "/home/saurabh/code-energy-consumption/server/measurement_parse.py", line 31, in parse_perf
+    # start_datetime = datetime.strptime(start_datetime_str, '%c')
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/_strptime.py", line 568, in _strptime_datetime
+    tt, fraction, gmtoff_fraction = _strptime(data_string, format)
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/_strptime.py", line 349, in _strptime
+    raise ValueError("time data %r does not match format %r" %
+ValueError: time data 'Thu Feb  2 12:11:20 2023' does not match format '%c'
+2023-02-02 19:31:17,686 INFO werkzeug 129.173.67.60 - - [02/Feb/2023 19:31:17] "[35m[1mPOST /api/run_experiment HTTP/1.1[0m" 500 -
+2023-02-02 19:31:17,687 INFO server Auth successful
+2023-02-02 19:31:17,687 INFO server Imports value: import tensorflow as tf
+2023-02-02 19:31:17,687 ERROR server Exception on /api/run_experiment [POST]
+Traceback (most recent call last):
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 2525, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1822, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1820, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1796, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask_httpauth.py", line 172, in decorated
+    return self.ensure_sync(f)(*args, **kwargs)
+  File "/home/saurabh/code-energy-consumption/server/server.py", line 209, in run_function_and_return_result
+    results = run_function(
+  File "/home/saurabh/code-energy-consumption/server/server.py", line 161, in run_function
+    df_cpu, df_ram = parse_perf(PERF_FILE)
+  File "/home/saurabh/code-energy-consumption/server/measurement_parse.py", line 31, in parse_perf
+    # start_datetime = datetime.strptime(start_datetime_str, '%c')
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/_strptime.py", line 568, in _strptime_datetime
+    tt, fraction, gmtoff_fraction = _strptime(data_string, format)
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/_strptime.py", line 349, in _strptime
+    raise ValueError("time data %r does not match format %r" %
+ValueError: time data 'Thu Feb  2 12:11:20 2023' does not match format '%c'
+2023-02-02 19:31:17,687 INFO werkzeug 129.173.67.60 - - [02/Feb/2023 19:31:17] "[35m[1mPOST /api/run_experiment HTTP/1.1[0m" 500 -
+2023-02-02 19:31:17,715 INFO server Auth successful
+2023-02-02 19:31:17,715 INFO server Imports value: import tensorflow as tf
+2023-02-02 19:31:17,715 ERROR server Exception on /api/run_experiment [POST]
+Traceback (most recent call last):
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 2525, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1822, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1820, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1796, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask_httpauth.py", line 172, in decorated
+    return self.ensure_sync(f)(*args, **kwargs)
+  File "/home/saurabh/code-energy-consumption/server/server.py", line 209, in run_function_and_return_result
+    results = run_function(
+  File "/home/saurabh/code-energy-consumption/server/server.py", line 161, in run_function
+    df_cpu, df_ram = parse_perf(PERF_FILE)
+  File "/home/saurabh/code-energy-consumption/server/measurement_parse.py", line 31, in parse_perf
+    # start_datetime = datetime.strptime(start_datetime_str, '%c')
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/_strptime.py", line 568, in _strptime_datetime
+    tt, fraction, gmtoff_fraction = _strptime(data_string, format)
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/_strptime.py", line 349, in _strptime
+    raise ValueError("time data %r does not match format %r" %
+ValueError: time data 'Thu Feb  2 12:11:20 2023' does not match format '%c'
+2023-02-02 19:31:17,715 INFO werkzeug 129.173.67.60 - - [02/Feb/2023 19:31:17] "[35m[1mPOST /api/run_experiment HTTP/1.1[0m" 500 -
+2023-02-02 19:31:17,789 INFO server Auth successful
+2023-02-02 19:31:17,789 INFO server Imports value: import tensorflow as tf
+2023-02-02 19:31:17,789 ERROR server Exception on /api/run_experiment [POST]
+Traceback (most recent call last):
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 2525, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1822, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1820, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1796, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask_httpauth.py", line 172, in decorated
+    return self.ensure_sync(f)(*args, **kwargs)
+  File "/home/saurabh/code-energy-consumption/server/server.py", line 209, in run_function_and_return_result
+    results = run_function(
+  File "/home/saurabh/code-energy-consumption/server/server.py", line 161, in run_function
+    df_cpu, df_ram = parse_perf(PERF_FILE)
+  File "/home/saurabh/code-energy-consumption/server/measurement_parse.py", line 31, in parse_perf
+    # start_datetime = datetime.strptime(start_datetime_str, '%c')
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/_strptime.py", line 568, in _strptime_datetime
+    tt, fraction, gmtoff_fraction = _strptime(data_string, format)
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/_strptime.py", line 349, in _strptime
+    raise ValueError("time data %r does not match format %r" %
+ValueError: time data 'Thu Feb  2 12:11:20 2023' does not match format '%c'
+2023-02-02 19:31:17,790 INFO werkzeug 129.173.67.60 - - [02/Feb/2023 19:31:17] "[35m[1mPOST /api/run_experiment HTTP/1.1[0m" 500 -
+2023-02-02 19:31:17,823 INFO server Auth successful
+2023-02-02 19:31:17,824 INFO server Imports value: import tensorflow as tf
+2023-02-02 19:31:17,824 ERROR server Exception on /api/run_experiment [POST]
+Traceback (most recent call last):
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 2525, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1822, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1820, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1796, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask_httpauth.py", line 172, in decorated
+    return self.ensure_sync(f)(*args, **kwargs)
+  File "/home/saurabh/code-energy-consumption/server/server.py", line 209, in run_function_and_return_result
+    results = run_function(
+  File "/home/saurabh/code-energy-consumption/server/server.py", line 161, in run_function
+    df_cpu, df_ram = parse_perf(PERF_FILE)
+  File "/home/saurabh/code-energy-consumption/server/measurement_parse.py", line 31, in parse_perf
+    # start_datetime = datetime.strptime(start_datetime_str, '%c')
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/_strptime.py", line 568, in _strptime_datetime
+    tt, fraction, gmtoff_fraction = _strptime(data_string, format)
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/_strptime.py", line 349, in _strptime
+    raise ValueError("time data %r does not match format %r" %
+ValueError: time data 'Thu Feb  2 12:11:20 2023' does not match format '%c'
+2023-02-02 19:31:17,825 INFO werkzeug 129.173.67.60 - - [02/Feb/2023 19:31:17] "[35m[1mPOST /api/run_experiment HTTP/1.1[0m" 500 -
+2023-02-02 19:31:17,840 INFO server Auth successful
+2023-02-02 19:31:17,841 INFO server Imports value: import tensorflow as tf
+2023-02-02 19:31:17,841 ERROR server Exception on /api/run_experiment [POST]
+Traceback (most recent call last):
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 2525, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1822, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1820, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1796, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask_httpauth.py", line 172, in decorated
+    return self.ensure_sync(f)(*args, **kwargs)
+  File "/home/saurabh/code-energy-consumption/server/server.py", line 209, in run_function_and_return_result
+    results = run_function(
+  File "/home/saurabh/code-energy-consumption/server/server.py", line 161, in run_function
+    df_cpu, df_ram = parse_perf(PERF_FILE)
+  File "/home/saurabh/code-energy-consumption/server/measurement_parse.py", line 31, in parse_perf
+    # start_datetime = datetime.strptime(start_datetime_str, '%c')
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/_strptime.py", line 568, in _strptime_datetime
+    tt, fraction, gmtoff_fraction = _strptime(data_string, format)
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/_strptime.py", line 349, in _strptime
+    raise ValueError("time data %r does not match format %r" %
+ValueError: time data 'Thu Feb  2 12:11:20 2023' does not match format '%c'
+2023-02-02 19:31:17,842 INFO werkzeug 129.173.67.60 - - [02/Feb/2023 19:31:17] "[35m[1mPOST /api/run_experiment HTTP/1.1[0m" 500 -
+2023-02-02 19:31:49,994 INFO server Auth successful
+2023-02-02 19:31:49,994 INFO server Imports value: import tensorflow as tf
+2023-02-02 19:31:49,995 ERROR server Exception on /api/run_experiment [POST]
+Traceback (most recent call last):
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 2525, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1822, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1820, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1796, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask_httpauth.py", line 172, in decorated
+    return self.ensure_sync(f)(*args, **kwargs)
+  File "/home/saurabh/code-energy-consumption/server/server.py", line 209, in run_function_and_return_result
+    results = run_function(
+  File "/home/saurabh/code-energy-consumption/server/server.py", line 161, in run_function
+    df_cpu, df_ram = parse_perf(PERF_FILE)
+  File "/home/saurabh/code-energy-consumption/server/measurement_parse.py", line 31, in parse_perf
+    # start_datetime = datetime.strptime(start_datetime_str, '%c')
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/_strptime.py", line 568, in _strptime_datetime
+    tt, fraction, gmtoff_fraction = _strptime(data_string, format)
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/_strptime.py", line 349, in _strptime
+    raise ValueError("time data %r does not match format %r" %
+ValueError: time data 'Thu Feb  2 12:11:20 2023' does not match format '%c'
+2023-02-02 19:31:49,995 INFO werkzeug 129.173.67.60 - - [02/Feb/2023 19:31:49] "[35m[1mPOST /api/run_experiment HTTP/1.1[0m" 500 -
+2023-02-02 19:31:50,024 INFO server Auth successful
+2023-02-02 19:31:50,024 INFO server Imports value: import tensorflow as tf
+2023-02-02 19:31:50,025 ERROR server Exception on /api/run_experiment [POST]
+Traceback (most recent call last):
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 2525, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1822, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1820, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1796, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask_httpauth.py", line 172, in decorated
+    return self.ensure_sync(f)(*args, **kwargs)
+  File "/home/saurabh/code-energy-consumption/server/server.py", line 209, in run_function_and_return_result
+    results = run_function(
+  File "/home/saurabh/code-energy-consumption/server/server.py", line 161, in run_function
+    df_cpu, df_ram = parse_perf(PERF_FILE)
+  File "/home/saurabh/code-energy-consumption/server/measurement_parse.py", line 31, in parse_perf
+    # start_datetime = datetime.strptime(start_datetime_str, '%c')
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/_strptime.py", line 568, in _strptime_datetime
+    tt, fraction, gmtoff_fraction = _strptime(data_string, format)
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/_strptime.py", line 349, in _strptime
+    raise ValueError("time data %r does not match format %r" %
+ValueError: time data 'Thu Feb  2 12:11:20 2023' does not match format '%c'
+2023-02-02 19:31:50,025 INFO werkzeug 129.173.67.60 - - [02/Feb/2023 19:31:50] "[35m[1mPOST /api/run_experiment HTTP/1.1[0m" 500 -
+2023-02-02 19:31:50,073 INFO server Auth successful
+2023-02-02 19:31:50,074 INFO server Imports value: import tensorflow as tf
+2023-02-02 19:31:50,074 ERROR server Exception on /api/run_experiment [POST]
+Traceback (most recent call last):
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 2525, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1822, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1820, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1796, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask_httpauth.py", line 172, in decorated
+    return self.ensure_sync(f)(*args, **kwargs)
+  File "/home/saurabh/code-energy-consumption/server/server.py", line 209, in run_function_and_return_result
+    results = run_function(
+  File "/home/saurabh/code-energy-consumption/server/server.py", line 161, in run_function
+    df_cpu, df_ram = parse_perf(PERF_FILE)
+  File "/home/saurabh/code-energy-consumption/server/measurement_parse.py", line 31, in parse_perf
+    # start_datetime = datetime.strptime(start_datetime_str, '%c')
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/_strptime.py", line 568, in _strptime_datetime
+    tt, fraction, gmtoff_fraction = _strptime(data_string, format)
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/_strptime.py", line 349, in _strptime
+    raise ValueError("time data %r does not match format %r" %
+ValueError: time data 'Thu Feb  2 12:11:20 2023' does not match format '%c'
+2023-02-02 19:31:50,074 INFO werkzeug 129.173.67.60 - - [02/Feb/2023 19:31:50] "[35m[1mPOST /api/run_experiment HTTP/1.1[0m" 500 -
+2023-02-02 19:31:50,161 INFO server Auth successful
+2023-02-02 19:31:50,162 INFO server Imports value: import tensorflow as tf
+2023-02-02 19:31:50,162 ERROR server Exception on /api/run_experiment [POST]
+Traceback (most recent call last):
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 2525, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1822, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1820, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1796, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask_httpauth.py", line 172, in decorated
+    return self.ensure_sync(f)(*args, **kwargs)
+  File "/home/saurabh/code-energy-consumption/server/server.py", line 209, in run_function_and_return_result
+    results = run_function(
+  File "/home/saurabh/code-energy-consumption/server/server.py", line 161, in run_function
+    df_cpu, df_ram = parse_perf(PERF_FILE)
+  File "/home/saurabh/code-energy-consumption/server/measurement_parse.py", line 31, in parse_perf
+    # start_datetime = datetime.strptime(start_datetime_str, '%c')
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/_strptime.py", line 568, in _strptime_datetime
+    tt, fraction, gmtoff_fraction = _strptime(data_string, format)
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/_strptime.py", line 349, in _strptime
+    raise ValueError("time data %r does not match format %r" %
+ValueError: time data 'Thu Feb  2 12:11:20 2023' does not match format '%c'
+2023-02-02 19:31:50,162 INFO werkzeug 129.173.67.60 - - [02/Feb/2023 19:31:50] "[35m[1mPOST /api/run_experiment HTTP/1.1[0m" 500 -
+2023-02-02 19:31:50,192 INFO server Auth successful
+2023-02-02 19:31:50,192 INFO server Imports value: import tensorflow as tf
+2023-02-02 19:31:50,192 ERROR server Exception on /api/run_experiment [POST]
+Traceback (most recent call last):
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 2525, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1822, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1820, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1796, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask_httpauth.py", line 172, in decorated
+    return self.ensure_sync(f)(*args, **kwargs)
+  File "/home/saurabh/code-energy-consumption/server/server.py", line 209, in run_function_and_return_result
+    results = run_function(
+  File "/home/saurabh/code-energy-consumption/server/server.py", line 161, in run_function
+    df_cpu, df_ram = parse_perf(PERF_FILE)
+  File "/home/saurabh/code-energy-consumption/server/measurement_parse.py", line 31, in parse_perf
+    # start_datetime = datetime.strptime(start_datetime_str, '%c')
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/_strptime.py", line 568, in _strptime_datetime
+    tt, fraction, gmtoff_fraction = _strptime(data_string, format)
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/_strptime.py", line 349, in _strptime
+    raise ValueError("time data %r does not match format %r" %
+ValueError: time data 'Thu Feb  2 12:11:20 2023' does not match format '%c'
+2023-02-02 19:31:50,193 INFO werkzeug 129.173.67.60 - - [02/Feb/2023 19:31:50] "[35m[1mPOST /api/run_experiment HTTP/1.1[0m" 500 -
+2023-02-02 19:31:50,247 INFO server Auth successful
+2023-02-02 19:31:50,247 INFO server Imports value: import tensorflow as tf
+2023-02-02 19:31:50,247 ERROR server Exception on /api/run_experiment [POST]
+Traceback (most recent call last):
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 2525, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1822, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1820, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1796, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask_httpauth.py", line 172, in decorated
+    return self.ensure_sync(f)(*args, **kwargs)
+  File "/home/saurabh/code-energy-consumption/server/server.py", line 209, in run_function_and_return_result
+    results = run_function(
+  File "/home/saurabh/code-energy-consumption/server/server.py", line 161, in run_function
+    df_cpu, df_ram = parse_perf(PERF_FILE)
+  File "/home/saurabh/code-energy-consumption/server/measurement_parse.py", line 31, in parse_perf
+    # start_datetime = datetime.strptime(start_datetime_str, '%c')
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/_strptime.py", line 568, in _strptime_datetime
+    tt, fraction, gmtoff_fraction = _strptime(data_string, format)
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/_strptime.py", line 349, in _strptime
+    raise ValueError("time data %r does not match format %r" %
+ValueError: time data 'Thu Feb  2 12:11:20 2023' does not match format '%c'
+2023-02-02 19:31:50,248 INFO werkzeug 129.173.67.60 - - [02/Feb/2023 19:31:50] "[35m[1mPOST /api/run_experiment HTTP/1.1[0m" 500 -
+2023-02-02 19:31:50,261 INFO server Auth successful
+2023-02-02 19:31:50,261 INFO server Imports value: import tensorflow as tf
+2023-02-02 19:31:50,261 ERROR server Exception on /api/run_experiment [POST]
+Traceback (most recent call last):
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 2525, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1822, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1820, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1796, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask_httpauth.py", line 172, in decorated
+    return self.ensure_sync(f)(*args, **kwargs)
+  File "/home/saurabh/code-energy-consumption/server/server.py", line 209, in run_function_and_return_result
+    results = run_function(
+  File "/home/saurabh/code-energy-consumption/server/server.py", line 161, in run_function
+    df_cpu, df_ram = parse_perf(PERF_FILE)
+  File "/home/saurabh/code-energy-consumption/server/measurement_parse.py", line 31, in parse_perf
+    # start_datetime = datetime.strptime(start_datetime_str, '%c')
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/_strptime.py", line 568, in _strptime_datetime
+    tt, fraction, gmtoff_fraction = _strptime(data_string, format)
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/_strptime.py", line 349, in _strptime
+    raise ValueError("time data %r does not match format %r" %
+ValueError: time data 'Thu Feb  2 12:11:20 2023' does not match format '%c'
+2023-02-02 19:31:50,262 INFO werkzeug 129.173.67.60 - - [02/Feb/2023 19:31:50] "[35m[1mPOST /api/run_experiment HTTP/1.1[0m" 500 -
+2023-02-02 19:31:50,301 INFO server Auth successful
+2023-02-02 19:31:50,301 INFO server Imports value: import tensorflow as tf
+2023-02-02 19:31:50,302 ERROR server Exception on /api/run_experiment [POST]
+Traceback (most recent call last):
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 2525, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1822, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1820, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1796, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask_httpauth.py", line 172, in decorated
+    return self.ensure_sync(f)(*args, **kwargs)
+  File "/home/saurabh/code-energy-consumption/server/server.py", line 209, in run_function_and_return_result
+    results = run_function(
+  File "/home/saurabh/code-energy-consumption/server/server.py", line 161, in run_function
+    df_cpu, df_ram = parse_perf(PERF_FILE)
+  File "/home/saurabh/code-energy-consumption/server/measurement_parse.py", line 31, in parse_perf
+    # start_datetime = datetime.strptime(start_datetime_str, '%c')
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/_strptime.py", line 568, in _strptime_datetime
+    tt, fraction, gmtoff_fraction = _strptime(data_string, format)
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/_strptime.py", line 349, in _strptime
+    raise ValueError("time data %r does not match format %r" %
+ValueError: time data 'Thu Feb  2 12:11:20 2023' does not match format '%c'
+2023-02-02 19:31:50,302 INFO werkzeug 129.173.67.60 - - [02/Feb/2023 19:31:50] "[35m[1mPOST /api/run_experiment HTTP/1.1[0m" 500 -
+2023-02-02 19:31:50,415 INFO server Auth successful
+2023-02-02 19:31:50,415 INFO server Imports value: import tensorflow as tf
+2023-02-02 19:31:50,416 ERROR server Exception on /api/run_experiment [POST]
+Traceback (most recent call last):
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 2525, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1822, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1820, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask/app.py", line 1796, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/site-packages/flask_httpauth.py", line 172, in decorated
+    return self.ensure_sync(f)(*args, **kwargs)
+  File "/home/saurabh/code-energy-consumption/server/server.py", line 209, in run_function_and_return_result
+    results = run_function(
+  File "/home/saurabh/code-energy-consumption/server/server.py", line 161, in run_function
+    df_cpu, df_ram = parse_perf(PERF_FILE)
+  File "/home/saurabh/code-energy-consumption/server/measurement_parse.py", line 31, in parse_perf
+    # start_datetime = datetime.strptime(start_datetime_str, '%c')
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/_strptime.py", line 568, in _strptime_datetime
+    tt, fraction, gmtoff_fraction = _strptime(data_string, format)
+  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/_strptime.py", line 349, in _strptime
+    raise ValueError("time data %r does not match format %r" %
+ValueError: time data 'Thu Feb  2 12:11:20 2023' does not match format '%c'
+2023-02-02 19:31:50,416 INFO werkzeug 129.173.67.60 - - [02/Feb/2023 19:31:50] "[35m[1mPOST /api/run_experiment HTTP/1.1[0m" 500 -
+2023-02-02 19:31:57,904 INFO werkzeug [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on https://129.173.67.60:8080
+2023-02-02 19:31:57,904 INFO werkzeug [33mPress CTRL+C to quit[0m
+2023-02-02 19:32:04,668 INFO server Auth successful
+2023-02-02 19:32:04,669 INFO server Imports value: import tensorflow as tf
+2023-02-02 19:32:04,765 INFO server Auth successful
+2023-02-02 19:32:04,766 INFO server Imports value: import tensorflow as tf
+2023-02-02 19:32:04,958 INFO server Auth successful
+2023-02-02 19:32:04,958 INFO server Imports value: import tensorflow as tf
+2023-02-02 19:32:05,436 DEBUG tensorflow Falling back to TensorFlow client; we recommended you install the Cloud TPU client directly with pip install cloud-tpu-client.
+2023-02-02 19:32:05,549 DEBUG h5py._conv Creating converter from 7 to 5
+2023-02-02 19:32:05,550 DEBUG h5py._conv Creating converter from 5 to 7
+2023-02-02 19:32:05,550 DEBUG h5py._conv Creating converter from 7 to 5
+2023-02-02 19:32:05,550 DEBUG h5py._conv Creating converter from 5 to 7
+2023-02-02 19:32:06,156 INFO server response-value: <Response likely-streamed [200 OK]>
+2023-02-02 19:32:06,159 INFO werkzeug 129.173.67.60 - - [02/Feb/2023 19:32:06] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-02 19:32:06,206 INFO server response-value: <Response likely-streamed [200 OK]>
+2023-02-02 19:32:06,207 INFO werkzeug 129.173.67.60 - - [02/Feb/2023 19:32:06] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-02 19:32:06,217 INFO server response-value: <Response likely-streamed [200 OK]>
+2023-02-02 19:32:06,218 INFO werkzeug 129.173.67.60 - - [02/Feb/2023 19:32:06] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-02 19:32:06,390 INFO server Auth successful
+2023-02-02 19:32:06,390 INFO server Imports value: import tensorflow as tf
+2023-02-02 19:32:06,447 INFO server Auth successful
+2023-02-02 19:32:06,448 INFO server Imports value: import tensorflow as tf
+2023-02-02 19:32:06,448 INFO server Auth successful
+2023-02-02 19:32:06,477 INFO server Imports value: import tensorflow as tf
+2023-02-02 19:32:06,513 INFO server response-value: <Response likely-streamed [200 OK]>
+2023-02-02 19:32:06,514 INFO werkzeug 129.173.67.60 - - [02/Feb/2023 19:32:06] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-02 19:32:06,516 INFO server response-value: <Response likely-streamed [200 OK]>
+2023-02-02 19:32:06,516 INFO server response-value: <Response likely-streamed [200 OK]>
+2023-02-02 19:32:06,517 INFO werkzeug 129.173.67.60 - - [02/Feb/2023 19:32:06] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-02 19:32:06,517 INFO werkzeug 129.173.67.60 - - [02/Feb/2023 19:32:06] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-02 19:32:06,621 INFO server Auth successful
+2023-02-02 19:32:06,622 INFO server Imports value: import tensorflow as tf
+2023-02-02 19:32:06,632 INFO server response-value: <Response likely-streamed [200 OK]>
+2023-02-02 19:32:06,633 INFO werkzeug 129.173.67.60 - - [02/Feb/2023 19:32:06] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-02 19:32:06,633 INFO server Auth successful
+2023-02-02 19:32:06,633 INFO server Imports value: import tensorflow as tf
+2023-02-02 19:32:06,643 INFO server response-value: <Response likely-streamed [200 OK]>
+2023-02-02 19:32:06,644 INFO werkzeug 129.173.67.60 - - [02/Feb/2023 19:32:06] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-02 19:32:06,644 INFO server Auth successful
+2023-02-02 19:32:06,645 INFO server Imports value: import tensorflow as tf
+2023-02-02 19:32:06,655 INFO server response-value: <Response likely-streamed [200 OK]>
+2023-02-02 19:32:06,655 INFO werkzeug 129.173.67.60 - - [02/Feb/2023 19:32:06] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-02 19:33:22,036 INFO server Auth successful
+2023-02-02 19:33:22,036 INFO server Imports value: import tensorflow as tf
+2023-02-02 19:33:22,045 INFO server response-value: <Response likely-streamed [200 OK]>
+2023-02-02 19:33:22,045 INFO werkzeug 129.173.67.60 - - [02/Feb/2023 19:33:22] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-02 19:33:22,117 INFO server Auth successful
+2023-02-02 19:33:22,117 INFO server Imports value: import tensorflow as tf
+2023-02-02 19:33:22,127 INFO server response-value: <Response likely-streamed [200 OK]>
+2023-02-02 19:33:22,127 INFO werkzeug 129.173.67.60 - - [02/Feb/2023 19:33:22] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-02 19:33:22,161 INFO server Auth successful
+2023-02-02 19:33:22,162 INFO server Imports value: import tensorflow as tf
+2023-02-02 19:33:22,170 INFO server response-value: <Response likely-streamed [200 OK]>
+2023-02-02 19:33:22,170 INFO werkzeug 129.173.67.60 - - [02/Feb/2023 19:33:22] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-02 19:33:22,217 INFO server Auth successful
+2023-02-02 19:33:22,217 INFO server Imports value: import tensorflow as tf
+2023-02-02 19:33:22,227 INFO server response-value: <Response likely-streamed [200 OK]>
+2023-02-02 19:33:22,227 INFO werkzeug 129.173.67.60 - - [02/Feb/2023 19:33:22] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-02 19:33:22,313 INFO server Auth successful
+2023-02-02 19:33:22,313 INFO server Imports value: import tensorflow as tf
+2023-02-02 19:33:22,322 INFO server response-value: <Response likely-streamed [200 OK]>
+2023-02-02 19:33:22,322 INFO werkzeug 129.173.67.60 - - [02/Feb/2023 19:33:22] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-02 19:33:22,324 INFO server Auth successful
+2023-02-02 19:33:22,325 INFO server Imports value: import tensorflow as tf
+2023-02-02 19:33:22,332 INFO server response-value: <Response likely-streamed [200 OK]>
+2023-02-02 19:33:22,332 INFO werkzeug 129.173.67.60 - - [02/Feb/2023 19:33:22] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-02 19:33:22,345 INFO server Auth successful
+2023-02-02 19:33:22,346 INFO server Imports value: import tensorflow as tf
+2023-02-02 19:33:22,355 INFO server response-value: <Response likely-streamed [200 OK]>
+2023-02-02 19:33:22,355 INFO werkzeug 129.173.67.60 - - [02/Feb/2023 19:33:22] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-02 19:33:22,425 INFO server Auth successful
+2023-02-02 19:33:22,425 INFO server Imports value: import tensorflow as tf
+2023-02-02 19:33:22,435 INFO server response-value: <Response likely-streamed [200 OK]>
+2023-02-02 19:33:22,435 INFO werkzeug 129.173.67.60 - - [02/Feb/2023 19:33:22] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-02 19:33:22,462 INFO server Auth successful
+2023-02-02 19:33:22,462 INFO server Imports value: import tensorflow as tf
+2023-02-02 19:33:22,471 INFO server response-value: <Response likely-streamed [200 OK]>
+2023-02-02 19:33:22,471 INFO werkzeug 129.173.67.60 - - [02/Feb/2023 19:33:22] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-02 19:33:29,285 INFO werkzeug [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on https://129.173.67.60:8080
+2023-02-02 19:33:29,285 INFO werkzeug [33mPress CTRL+C to quit[0m
+2023-02-02 19:33:36,329 INFO server Auth successful
+2023-02-02 19:33:36,330 INFO server Imports value: import tensorflow as tf
+2023-02-02 19:33:36,398 INFO server Auth successful
+2023-02-02 19:33:36,399 INFO server Imports value: import tensorflow as tf
+2023-02-02 19:33:36,420 INFO server Auth successful
+2023-02-02 19:33:36,424 INFO server Imports value: import tensorflow as tf
+2023-02-02 19:33:37,097 DEBUG tensorflow Falling back to TensorFlow client; we recommended you install the Cloud TPU client directly with pip install cloud-tpu-client.
+2023-02-02 19:33:37,212 DEBUG h5py._conv Creating converter from 7 to 5
+2023-02-02 19:33:37,212 DEBUG h5py._conv Creating converter from 5 to 7
+2023-02-02 19:33:37,212 DEBUG h5py._conv Creating converter from 7 to 5
+2023-02-02 19:33:37,212 DEBUG h5py._conv Creating converter from 5 to 7
+2023-02-02 19:33:37,840 INFO server response-value: <Response likely-streamed [200 OK]>
+2023-02-02 19:33:37,841 INFO werkzeug 129.173.67.60 - - [02/Feb/2023 19:33:37] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-02 19:33:37,886 INFO server response-value: <Response likely-streamed [200 OK]>
+2023-02-02 19:33:37,887 INFO werkzeug 129.173.67.60 - - [02/Feb/2023 19:33:37] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-02 19:33:37,891 INFO server response-value: <Response likely-streamed [200 OK]>
+2023-02-02 19:33:37,891 INFO werkzeug 129.173.67.60 - - [02/Feb/2023 19:33:37] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-02 19:33:38,051 INFO server Auth successful
+2023-02-02 19:33:38,051 INFO server Imports value: import tensorflow as tf
+2023-02-02 19:33:38,100 INFO server Auth successful
+2023-02-02 19:33:38,100 INFO server Auth successful
+2023-02-02 19:33:38,117 INFO server Imports value: import tensorflow as tf
+2023-02-02 19:33:38,121 INFO server Imports value: import tensorflow as tf
+2023-02-02 19:33:38,134 INFO server response-value: <Response likely-streamed [200 OK]>
+2023-02-02 19:33:38,135 INFO werkzeug 129.173.67.60 - - [02/Feb/2023 19:33:38] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-02 19:33:38,142 INFO server response-value: <Response likely-streamed [200 OK]>
+2023-02-02 19:33:38,142 INFO server response-value: <Response likely-streamed [200 OK]>
+2023-02-02 19:33:38,143 INFO werkzeug 129.173.67.60 - - [02/Feb/2023 19:33:38] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-02 19:33:38,143 INFO werkzeug 129.173.67.60 - - [02/Feb/2023 19:33:38] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-02 19:33:38,259 INFO server Auth successful
+2023-02-02 19:33:38,260 INFO server Imports value: import tensorflow as tf
+2023-02-02 19:33:38,269 INFO server response-value: <Response likely-streamed [200 OK]>
+2023-02-02 19:33:38,270 INFO werkzeug 129.173.67.60 - - [02/Feb/2023 19:33:38] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-02 19:33:38,280 INFO server Auth successful
+2023-02-02 19:33:38,280 INFO server Imports value: import tensorflow as tf
+2023-02-02 19:33:38,290 INFO server response-value: <Response likely-streamed [200 OK]>
+2023-02-02 19:33:38,290 INFO werkzeug 129.173.67.60 - - [02/Feb/2023 19:33:38] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-02 19:33:38,303 INFO server Auth successful
+2023-02-02 19:33:38,303 INFO server Imports value: import tensorflow as tf
+2023-02-02 19:33:38,312 INFO server response-value: <Response likely-streamed [200 OK]>
+2023-02-02 19:33:38,313 INFO werkzeug 129.173.67.60 - - [02/Feb/2023 19:33:38] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-02 19:36:30,512 INFO server Auth successful
+2023-02-02 19:36:30,512 INFO server Imports value: import tensorflow as tf
+2023-02-02 19:36:30,523 INFO server response-value: <Response likely-streamed [200 OK]>
+2023-02-02 19:36:30,523 INFO werkzeug 129.173.67.60 - - [02/Feb/2023 19:36:30] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-02 19:36:30,584 INFO server Auth successful
+2023-02-02 19:36:30,584 INFO server Imports value: import tensorflow as tf
+2023-02-02 19:36:30,593 INFO server response-value: <Response likely-streamed [200 OK]>
+2023-02-02 19:36:30,593 INFO werkzeug 129.173.67.60 - - [02/Feb/2023 19:36:30] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-02 19:36:30,612 INFO server Auth successful
+2023-02-02 19:36:30,612 INFO server Imports value: import tensorflow as tf
+2023-02-02 19:36:30,622 INFO server response-value: <Response likely-streamed [200 OK]>
+2023-02-02 19:36:30,622 INFO werkzeug 129.173.67.60 - - [02/Feb/2023 19:36:30] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-02 19:36:30,703 INFO server Auth successful
+2023-02-02 19:36:30,704 INFO server Imports value: import tensorflow as tf
+2023-02-02 19:36:30,711 INFO server response-value: <Response likely-streamed [200 OK]>
+2023-02-02 19:36:30,712 INFO werkzeug 129.173.67.60 - - [02/Feb/2023 19:36:30] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-02 19:36:30,773 INFO server Auth successful
+2023-02-02 19:36:30,773 INFO server Imports value: import tensorflow as tf
+2023-02-02 19:36:30,781 INFO server response-value: <Response likely-streamed [200 OK]>
+2023-02-02 19:36:30,781 INFO werkzeug 129.173.67.60 - - [02/Feb/2023 19:36:30] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-02 19:36:30,788 INFO server Auth successful
+2023-02-02 19:36:30,788 INFO server Imports value: import tensorflow as tf
+2023-02-02 19:36:30,796 INFO server response-value: <Response likely-streamed [200 OK]>
+2023-02-02 19:36:30,796 INFO werkzeug 129.173.67.60 - - [02/Feb/2023 19:36:30] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-02 19:36:30,821 INFO server Auth successful
+2023-02-02 19:36:30,821 INFO server Imports value: import tensorflow as tf
+2023-02-02 19:36:30,828 INFO server response-value: <Response likely-streamed [200 OK]>
+2023-02-02 19:36:30,829 INFO werkzeug 129.173.67.60 - - [02/Feb/2023 19:36:30] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-02 19:36:30,904 INFO server Auth successful
+2023-02-02 19:36:30,904 INFO server Imports value: import tensorflow as tf
+2023-02-02 19:36:30,911 INFO server Auth successful
+2023-02-02 19:36:30,911 INFO server Imports value: import tensorflow as tf
+2023-02-02 19:36:30,915 INFO server response-value: <Response likely-streamed [200 OK]>
+2023-02-02 19:36:30,918 INFO werkzeug 129.173.67.60 - - [02/Feb/2023 19:36:30] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-02 19:36:30,922 INFO server response-value: <Response likely-streamed [200 OK]>
+2023-02-02 19:36:30,922 INFO werkzeug 129.173.67.60 - - [02/Feb/2023 19:36:30] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-02 19:37:26,144 INFO server Auth successful
+2023-02-02 19:37:26,144 INFO server Imports value: import tensorflow as tf
+2023-02-02 19:37:26,153 INFO server response-value: <Response likely-streamed [200 OK]>
+2023-02-02 19:37:26,154 INFO werkzeug 129.173.67.60 - - [02/Feb/2023 19:37:26] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-02 19:37:26,167 INFO server Auth successful
+2023-02-02 19:37:26,167 INFO server Imports value: import tensorflow as tf
+2023-02-02 19:37:26,176 INFO server response-value: <Response likely-streamed [200 OK]>
+2023-02-02 19:37:26,176 INFO werkzeug 129.173.67.60 - - [02/Feb/2023 19:37:26] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-02 19:37:26,203 INFO server Auth successful
+2023-02-02 19:37:26,203 INFO server Imports value: import tensorflow as tf
+2023-02-02 19:37:26,212 INFO server response-value: <Response likely-streamed [200 OK]>
+2023-02-02 19:37:26,212 INFO werkzeug 129.173.67.60 - - [02/Feb/2023 19:37:26] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-02 19:37:26,323 INFO server Auth successful
+2023-02-02 19:37:26,324 INFO server Imports value: import tensorflow as tf
+2023-02-02 19:37:26,332 INFO server response-value: <Response likely-streamed [200 OK]>
+2023-02-02 19:37:26,333 INFO werkzeug 129.173.67.60 - - [02/Feb/2023 19:37:26] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-02 19:37:26,336 INFO server Auth successful
+2023-02-02 19:37:26,336 INFO server Imports value: import tensorflow as tf
+2023-02-02 19:37:26,343 INFO server response-value: <Response likely-streamed [200 OK]>
+2023-02-02 19:37:26,343 INFO werkzeug 129.173.67.60 - - [02/Feb/2023 19:37:26] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-02 19:37:26,380 INFO server Auth successful
+2023-02-02 19:37:26,380 INFO server Imports value: import tensorflow as tf
+2023-02-02 19:37:26,388 INFO server response-value: <Response likely-streamed [200 OK]>
+2023-02-02 19:37:26,389 INFO werkzeug 129.173.67.60 - - [02/Feb/2023 19:37:26] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-02 19:37:26,430 INFO server Auth successful
+2023-02-02 19:37:26,430 INFO server Imports value: import tensorflow as tf
+2023-02-02 19:37:26,437 INFO server response-value: <Response likely-streamed [200 OK]>
+2023-02-02 19:37:26,437 INFO werkzeug 129.173.67.60 - - [02/Feb/2023 19:37:26] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-02 19:37:26,458 INFO server Auth successful
+2023-02-02 19:37:26,459 INFO server Imports value: import tensorflow as tf
+2023-02-02 19:37:26,471 INFO server response-value: <Response likely-streamed [200 OK]>
+2023-02-02 19:37:26,471 INFO werkzeug 129.173.67.60 - - [02/Feb/2023 19:37:26] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-02 19:37:26,503 INFO server Auth successful
+2023-02-02 19:37:26,504 INFO server Imports value: import tensorflow as tf
+2023-02-02 19:37:26,513 INFO server response-value: <Response likely-streamed [200 OK]>
+2023-02-02 19:37:26,513 INFO werkzeug 129.173.67.60 - - [02/Feb/2023 19:37:26] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-02 19:40:31,089 INFO werkzeug 164.90.168.253 - - [02/Feb/2023 19:40:31] "[33mGET /ab2g HTTP/1.1[0m" 404 -
+2023-02-02 19:40:31,537 INFO werkzeug 164.90.168.253 - - [02/Feb/2023 19:40:31] "[33mGET /ab2h HTTP/1.1[0m" 404 -
+2023-02-02 19:40:32,196 INFO werkzeug 164.90.168.253 - - [02/Feb/2023 19:40:32] "GET / HTTP/1.1" 200 -
+2023-02-02 20:41:01,170 INFO werkzeug [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on https://129.173.67.60:8080
+2023-02-02 20:41:01,170 INFO werkzeug [33mPress CTRL+C to quit[0m
+2023-02-02 20:59:37,452 INFO werkzeug [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on https://129.173.67.60:8080
+2023-02-02 20:59:37,452 INFO werkzeug [33mPress CTRL+C to quit[0m
+2023-02-02 20:59:47,820 INFO server Auth successful
+2023-02-02 20:59:47,820 INFO server Imports value: import tensorflow as tf
+2023-02-02 20:59:48,684 DEBUG tensorflow Falling back to TensorFlow client; we recommended you install the Cloud TPU client directly with pip install cloud-tpu-client.
+2023-02-02 20:59:48,792 DEBUG h5py._conv Creating converter from 7 to 5
+2023-02-02 20:59:48,792 DEBUG h5py._conv Creating converter from 5 to 7
+2023-02-02 20:59:48,792 DEBUG h5py._conv Creating converter from 7 to 5
+2023-02-02 20:59:48,792 DEBUG h5py._conv Creating converter from 5 to 7
+2023-02-02 20:59:49,348 INFO server response-value: <Response likely-streamed [200 OK]>
+2023-02-02 20:59:49,348 INFO werkzeug 129.173.67.60 - - [02/Feb/2023 20:59:49] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-02 20:59:49,449 INFO server Auth successful
+2023-02-02 20:59:49,449 INFO server Imports value: import tensorflow as tf
+2023-02-02 20:59:49,457 INFO server response-value: <Response likely-streamed [200 OK]>
+2023-02-02 20:59:49,457 INFO werkzeug 129.173.67.60 - - [02/Feb/2023 20:59:49] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-02 20:59:49,557 INFO server Auth successful
+2023-02-02 20:59:49,557 INFO server Imports value: import tensorflow as tf
+2023-02-02 20:59:49,565 INFO server response-value: <Response likely-streamed [200 OK]>
+2023-02-02 20:59:49,566 INFO werkzeug 129.173.67.60 - - [02/Feb/2023 20:59:49] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-02 21:23:05,086 INFO werkzeug [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on https://129.173.67.60:8080
+2023-02-02 21:23:05,086 INFO werkzeug [33mPress CTRL+C to quit[0m
+2023-02-02 21:23:11,993 INFO server Auth successful
+2023-02-02 21:23:11,993 INFO server Imports value: import tensorflow as tf
+2023-02-02 21:23:12,794 DEBUG tensorflow Falling back to TensorFlow client; we recommended you install the Cloud TPU client directly with pip install cloud-tpu-client.
+2023-02-02 21:23:12,906 DEBUG h5py._conv Creating converter from 7 to 5
+2023-02-02 21:23:12,906 DEBUG h5py._conv Creating converter from 5 to 7
+2023-02-02 21:23:12,906 DEBUG h5py._conv Creating converter from 7 to 5
+2023-02-02 21:23:12,906 DEBUG h5py._conv Creating converter from 5 to 7
+2023-02-02 21:23:13,430 INFO server response-value: <Response likely-streamed [200 OK]>
+2023-02-02 21:23:13,430 INFO werkzeug 129.173.67.60 - - [02/Feb/2023 21:23:13] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-02 21:23:13,540 INFO server Auth successful
+2023-02-02 21:23:13,541 INFO server Imports value: import tensorflow as tf
+2023-02-02 21:23:13,549 INFO server response-value: <Response likely-streamed [200 OK]>
+2023-02-02 21:23:13,549 INFO werkzeug 129.173.67.60 - - [02/Feb/2023 21:23:13] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-02 21:23:13,664 INFO server Auth successful
+2023-02-02 21:23:13,664 INFO server Imports value: import tensorflow as tf
+2023-02-02 21:23:13,672 INFO server response-value: <Response likely-streamed [200 OK]>
+2023-02-02 21:23:13,673 INFO werkzeug 129.173.67.60 - - [02/Feb/2023 21:23:13] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-02 21:24:41,944 INFO server Auth successful
+2023-02-02 21:24:41,945 INFO server Imports value: import tensorflow as tf
+2023-02-02 21:24:41,954 INFO server response-value: <Response likely-streamed [200 OK]>
+2023-02-02 21:24:41,954 INFO werkzeug 129.173.67.60 - - [02/Feb/2023 21:24:41] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-02 21:24:42,061 INFO server Auth successful
+2023-02-02 21:24:42,061 INFO server Imports value: import tensorflow as tf
+2023-02-02 21:24:42,070 INFO server response-value: <Response likely-streamed [200 OK]>
+2023-02-02 21:24:42,071 INFO werkzeug 129.173.67.60 - - [02/Feb/2023 21:24:42] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-02 21:24:42,177 INFO server Auth successful
+2023-02-02 21:24:42,177 INFO server Imports value: import tensorflow as tf
+2023-02-02 21:24:42,187 INFO server response-value: <Response likely-streamed [200 OK]>
+2023-02-02 21:24:42,187 INFO werkzeug 129.173.67.60 - - [02/Feb/2023 21:24:42] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-02 21:29:02,162 INFO werkzeug [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on https://129.173.67.60:8080
+2023-02-02 21:29:02,162 INFO werkzeug [33mPress CTRL+C to quit[0m
+2023-02-02 21:29:07,962 INFO server Auth successful
+2023-02-02 21:29:07,962 INFO server Imports value: import tensorflow as tf
+2023-02-02 21:29:08,704 DEBUG tensorflow Falling back to TensorFlow client; we recommended you install the Cloud TPU client directly with pip install cloud-tpu-client.
+2023-02-02 21:29:08,865 DEBUG h5py._conv Creating converter from 7 to 5
+2023-02-02 21:29:08,865 DEBUG h5py._conv Creating converter from 5 to 7
+2023-02-02 21:29:08,865 DEBUG h5py._conv Creating converter from 7 to 5
+2023-02-02 21:29:08,865 DEBUG h5py._conv Creating converter from 5 to 7
+2023-02-02 21:29:09,409 INFO server response-value: <Response likely-streamed [200 OK]>
+2023-02-02 21:29:09,410 INFO werkzeug 129.173.67.60 - - [02/Feb/2023 21:29:09] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-02 21:29:09,524 INFO server Auth successful
+2023-02-02 21:29:09,525 INFO server Imports value: import tensorflow as tf
+2023-02-02 21:29:09,532 INFO server response-value: <Response likely-streamed [200 OK]>
+2023-02-02 21:29:09,533 INFO werkzeug 129.173.67.60 - - [02/Feb/2023 21:29:09] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-02 21:29:09,649 INFO server Auth successful
+2023-02-02 21:29:09,649 INFO server Imports value: import tensorflow as tf
+2023-02-02 21:29:09,657 INFO server response-value: <Response likely-streamed [200 OK]>
+2023-02-02 21:29:09,657 INFO werkzeug 129.173.67.60 - - [02/Feb/2023 21:29:09] "POST /api/run_experiment HTTP/1.1" 200 -

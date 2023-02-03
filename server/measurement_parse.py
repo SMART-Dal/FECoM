@@ -27,8 +27,9 @@ def parse_perf(filename):
     # remove first two lines (with start datetime)
     with open(filename, 'r') as fin:
         data_with_datetime = fin.read().splitlines(True)
-    start_datetime_str = data_with_datetime[0][len('# started on '):-1]
-    start_datetime = datetime.strptime(start_datetime_str, '%c')
+        #These lines were causing errors and was not used so commented out, change if needed
+    # start_datetime_str = data_with_datetime[0][len('# started on '):-1]
+    # start_datetime = datetime.strptime(start_datetime_str, '%c')
     data_without_datetime = data_with_datetime[2:]
 
     # remove first 5 whitespaces from each line
