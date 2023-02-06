@@ -7,7 +7,10 @@ Install [miniconda3](https://docs.conda.io/en/latest/miniconda.html). Then chang
 Finally, in this directory, run the following command to create the required TensorFlow environment from the specified `environment.yml` file:  
 ```conda env create -f environment.yml```   
 Activate the environemnt:  
-```conda activate tf2```
+```conda activate tf2```  
+Check if the GPU is setup correctly by running  
+```python3 -c "import tensorflow as tf; print(tf.config.list_physical_devices('GPU'))"```  
+This might give some warnings about missing TensorRT libraries, but as long as the output is `[PhysicalDevice(name='/physical_device:GPU:0', device_type='GPU')]` there is a good chance that the GPU has been setup correctly. Despite this, an issue faced was an error message that `libdevice is required by this HLO module but was not found`. A fix for this is highlighted [here](https://discuss.tensorflow.org/t/cant-find-libdevice-directory-cuda-dir-nvvm-libdevice/11896/5).
 
 ## Run  
 In the activated venv run this command to start the server:  
