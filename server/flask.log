@@ -2377,3 +2377,540 @@ ValueError: time data 'Thu Feb  2 12:11:20 2023' does not match format '%c'
 2023-02-02 21:29:09,649 INFO server Imports value: import tensorflow as tf
 2023-02-02 21:29:09,657 INFO server response-value: <Response likely-streamed [200 OK]>
 2023-02-02 21:29:09,657 INFO werkzeug 129.173.67.60 - - [02/Feb/2023 21:29:09] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-03 07:53:12,033 INFO werkzeug [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on https://129.173.67.60:8080
+2023-02-03 07:53:12,033 INFO werkzeug [33mPress CTRL+C to quit[0m
+2023-02-03 07:53:31,991 INFO server Auth successful
+2023-02-03 07:53:32,398 INFO server Imports value: import numpy as np
+2023-02-03 07:53:32,432 INFO server response-value: <Response 131529 bytes [200 OK]>
+2023-02-03 07:53:32,432 INFO werkzeug 109.249.187.110 - - [03/Feb/2023 07:53:32] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-03 07:53:33,413 INFO werkzeug 109.249.187.110 - - [03/Feb/2023 07:53:33] "[31m[1mPOST /api/run_experiment HTTP/1.1[0m" 401 -
+2023-02-03 07:53:34,046 INFO werkzeug 109.249.187.110 - - [03/Feb/2023 07:53:34] "[31m[1mPOST /api/run_experiment HTTP/1.1[0m" 401 -
+2023-02-03 07:53:34,671 INFO server Auth successful
+2023-02-03 07:53:34,671 INFO server Imports value: import numpy as np
+2023-02-03 07:53:34,681 INFO server response-value: <Response 51675 bytes [200 OK]>
+2023-02-03 07:53:34,681 INFO werkzeug 109.249.187.110 - - [03/Feb/2023 07:53:34] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-03 07:53:35,559 INFO server Auth successful
+2023-02-03 07:53:36,142 INFO server Imports value: import numpy as np
+2023-02-03 07:53:36,172 INFO server response-value: <Response 131529 bytes [200 OK]>
+2023-02-03 07:53:36,173 INFO werkzeug 109.249.187.110 - - [03/Feb/2023 07:53:36] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-03 07:53:37,285 INFO server Auth successful
+2023-02-03 07:53:37,626 INFO server Imports value: import numpy as np
+2023-02-03 07:53:37,658 INFO server response-value: <Response 213130 bytes [200 OK]>
+2023-02-03 07:53:37,659 INFO werkzeug 109.249.187.110 - - [03/Feb/2023 07:53:37] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-03 07:53:38,863 INFO server Auth successful
+2023-02-03 07:53:40,945 DEBUG tensorflow Falling back to TensorFlow client; we recommended you install the Cloud TPU client directly with pip install cloud-tpu-client.
+2023-02-03 07:53:41,169 DEBUG h5py._conv Creating converter from 7 to 5
+2023-02-03 07:53:41,169 DEBUG h5py._conv Creating converter from 5 to 7
+2023-02-03 07:53:41,169 DEBUG h5py._conv Creating converter from 7 to 5
+2023-02-03 07:53:41,169 DEBUG h5py._conv Creating converter from 5 to 7
+2023-02-03 07:53:42,224 INFO server Imports value: import tensorflow as tf
+2023-02-03 07:53:43,762 INFO server response-value: <Response 51617 bytes [200 OK]>
+2023-02-03 07:53:43,762 INFO werkzeug 109.249.187.110 - - [03/Feb/2023 07:53:43] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-03 07:53:44,694 INFO server Auth successful
+2023-02-03 07:53:44,695 INFO server Imports value: import tensorflow as tf
+2023-02-03 07:53:44,724 INFO server response-value: <Response 51817 bytes [200 OK]>
+2023-02-03 07:53:44,725 INFO werkzeug 109.249.187.110 - - [03/Feb/2023 07:53:44] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-03 07:53:45,656 INFO server Auth successful
+2023-02-03 07:53:45,656 INFO server Imports value: import tensorflow as tf
+2023-02-03 07:53:45,961 INFO server response-value: <Response 55001653 bytes [200 OK]>
+2023-02-03 07:53:45,962 INFO werkzeug 109.249.187.110 - - [03/Feb/2023 07:53:45] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-03 07:53:53,571 INFO server Auth successful
+2023-02-03 07:53:54,525 INFO server Imports value: import tensorflow as tf
+2023-02-03 07:53:54,578 INFO server response-value: <Response 476239 bytes [200 OK]>
+2023-02-03 07:53:54,578 INFO werkzeug 109.249.187.110 - - [03/Feb/2023 07:53:54] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-03 07:53:56,850 INFO server Auth successful
+2023-02-03 08:30:24,911 INFO werkzeug [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on https://localhost:12345
+2023-02-03 08:30:24,911 INFO werkzeug [33mPress CTRL+C to quit[0m
+2023-02-03 08:30:24,912 INFO werkzeug  * Restarting with stat
+2023-02-03 08:30:25,312 WARNING werkzeug  * Debugger is active!
+2023-02-03 08:30:25,312 INFO werkzeug  * Debugger PIN: 111-053-691
+2023-02-03 08:30:36,345 INFO server Auth successful
+2023-02-03 08:30:36,347 INFO server Imports value: import numpy as np
+2023-02-03 08:30:36,360 INFO server response-value: <Response 131529 bytes [200 OK]>
+2023-02-03 08:30:36,361 INFO werkzeug 127.0.0.1 - - [03/Feb/2023 08:30:36] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-03 08:30:36,442 INFO werkzeug 127.0.0.1 - - [03/Feb/2023 08:30:36] "[31m[1mPOST /api/run_experiment HTTP/1.1[0m" 401 -
+2023-02-03 08:30:36,587 INFO werkzeug 127.0.0.1 - - [03/Feb/2023 08:30:36] "[31m[1mPOST /api/run_experiment HTTP/1.1[0m" 401 -
+2023-02-03 08:30:36,739 INFO server Auth successful
+2023-02-03 08:30:36,739 INFO server Imports value: import numpy as np
+2023-02-03 08:30:36,750 INFO server response-value: <Response 51675 bytes [200 OK]>
+2023-02-03 08:30:36,750 INFO werkzeug 127.0.0.1 - - [03/Feb/2023 08:30:36] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-03 08:30:36,922 INFO server Auth successful
+2023-02-03 08:30:36,923 INFO server Imports value: import numpy as np
+2023-02-03 08:30:36,934 INFO server response-value: <Response 131529 bytes [200 OK]>
+2023-02-03 08:30:36,935 INFO werkzeug 127.0.0.1 - - [03/Feb/2023 08:30:36] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-03 08:30:37,096 INFO server Auth successful
+2023-02-03 08:30:37,097 INFO server Imports value: import numpy as np
+2023-02-03 08:30:37,108 INFO server response-value: <Response 213130 bytes [200 OK]>
+2023-02-03 08:30:37,108 INFO werkzeug 127.0.0.1 - - [03/Feb/2023 08:30:37] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-03 08:30:37,272 INFO server Auth successful
+2023-02-03 08:30:38,056 DEBUG tensorflow Falling back to TensorFlow client; we recommended you install the Cloud TPU client directly with pip install cloud-tpu-client.
+2023-02-03 08:30:38,167 DEBUG h5py._conv Creating converter from 7 to 5
+2023-02-03 08:30:38,167 DEBUG h5py._conv Creating converter from 5 to 7
+2023-02-03 08:30:38,167 DEBUG h5py._conv Creating converter from 7 to 5
+2023-02-03 08:30:38,167 DEBUG h5py._conv Creating converter from 5 to 7
+2023-02-03 08:30:38,825 INFO server Imports value: import tensorflow as tf
+2023-02-03 08:30:38,940 INFO server response-value: <Response 51617 bytes [200 OK]>
+2023-02-03 08:30:38,940 INFO werkzeug 127.0.0.1 - - [03/Feb/2023 08:30:38] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-03 08:30:39,227 INFO server Auth successful
+2023-02-03 08:30:39,227 INFO server Imports value: import tensorflow as tf
+2023-02-03 08:30:39,255 INFO server response-value: <Response 51817 bytes [200 OK]>
+2023-02-03 08:30:39,256 INFO werkzeug 127.0.0.1 - - [03/Feb/2023 08:30:39] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-03 08:30:39,412 INFO server Auth successful
+2023-02-03 08:30:39,413 INFO server Imports value: import tensorflow as tf
+2023-02-03 08:30:39,731 INFO server response-value: <Response 55001653 bytes [200 OK]>
+2023-02-03 08:30:39,732 INFO werkzeug 127.0.0.1 - - [03/Feb/2023 08:30:39] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-03 08:30:40,440 INFO server Auth successful
+2023-02-03 08:30:40,530 INFO server Imports value: import tensorflow as tf
+2023-02-03 08:30:40,574 INFO server response-value: <Response 476239 bytes [200 OK]>
+2023-02-03 08:30:40,575 INFO werkzeug 127.0.0.1 - - [03/Feb/2023 08:30:40] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-03 08:30:41,681 INFO server Auth successful
+2023-02-03 08:30:42,984 INFO server Imports value: import tensorflow as tf
+2023-02-03 08:31:23,392 INFO server response-value: <Response 1298685 bytes [200 OK]>
+2023-02-03 08:31:23,417 INFO werkzeug 127.0.0.1 - - [03/Feb/2023 08:31:23] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-03 08:32:43,744 INFO server Auth successful
+2023-02-03 08:32:43,994 INFO server Imports value: import tensorflow as tf
+2023-02-03 08:32:44,951 INFO server response-value: <Response 482518 bytes [200 OK]>
+2023-02-03 08:32:44,956 INFO werkzeug 127.0.0.1 - - [03/Feb/2023 08:32:44] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-03 08:53:59,319 INFO werkzeug [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on https://localhost:12345
+2023-02-03 08:53:59,319 INFO werkzeug [33mPress CTRL+C to quit[0m
+2023-02-03 08:53:59,320 INFO werkzeug  * Restarting with stat
+2023-02-03 08:53:59,711 WARNING werkzeug  * Debugger is active!
+2023-02-03 08:53:59,711 INFO werkzeug  * Debugger PIN: 111-053-691
+2023-02-03 08:55:42,197 INFO werkzeug  * Detected change in '/home/tim/GreenAI-extension/server/test/demo_3_feb.py', reloading
+2023-02-03 08:55:42,308 INFO werkzeug  * Restarting with stat
+2023-02-03 08:55:42,699 WARNING werkzeug  * Debugger is active!
+2023-02-03 08:55:42,700 INFO werkzeug  * Debugger PIN: 111-053-691
+2023-02-03 08:55:44,714 INFO werkzeug  * Detected change in '/home/tim/GreenAI-extension/server/test/demo_3_feb.py', reloading
+2023-02-03 08:55:44,795 INFO werkzeug  * Restarting with stat
+2023-02-03 08:55:45,196 WARNING werkzeug  * Debugger is active!
+2023-02-03 08:55:45,196 INFO werkzeug  * Debugger PIN: 111-053-691
+2023-02-03 08:56:03,270 INFO werkzeug  * Detected change in '/home/tim/GreenAI-extension/server/test/demo_3_feb.py', reloading
+2023-02-03 08:56:03,374 INFO werkzeug  * Restarting with stat
+2023-02-03 08:56:03,748 WARNING werkzeug  * Debugger is active!
+2023-02-03 08:56:03,748 INFO werkzeug  * Debugger PIN: 111-053-691
+2023-02-03 08:56:04,760 INFO werkzeug  * Detected change in '/home/tim/GreenAI-extension/server/test/demo_3_feb.py', reloading
+2023-02-03 08:56:04,874 INFO werkzeug  * Restarting with stat
+2023-02-03 08:56:05,308 WARNING werkzeug  * Debugger is active!
+2023-02-03 08:56:05,309 INFO werkzeug  * Debugger PIN: 111-053-691
+2023-02-03 08:56:24,382 INFO werkzeug  * Detected change in '/home/tim/GreenAI-extension/server/test/demo_3_feb.py', reloading
+2023-02-03 08:56:24,459 INFO werkzeug  * Restarting with stat
+2023-02-03 08:56:24,847 WARNING werkzeug  * Debugger is active!
+2023-02-03 08:56:24,847 INFO werkzeug  * Debugger PIN: 111-053-691
+2023-02-03 08:56:43,940 INFO werkzeug  * Detected change in '/home/tim/GreenAI-extension/server/test/demo_3_feb.py', reloading
+2023-02-03 08:56:44,043 INFO werkzeug  * Restarting with stat
+2023-02-03 08:56:44,445 WARNING werkzeug  * Debugger is active!
+2023-02-03 08:56:44,445 INFO werkzeug  * Debugger PIN: 111-053-691
+2023-02-03 08:56:46,459 INFO werkzeug  * Detected change in '/home/tim/GreenAI-extension/server/test/demo_3_feb.py', reloading
+2023-02-03 08:56:46,539 INFO werkzeug  * Restarting with stat
+2023-02-03 08:56:46,937 WARNING werkzeug  * Debugger is active!
+2023-02-03 08:56:46,938 INFO werkzeug  * Debugger PIN: 111-053-691
+2023-02-03 08:56:51,066 INFO server Auth successful
+2023-02-03 08:56:53,063 DEBUG tensorflow Falling back to TensorFlow client; we recommended you install the Cloud TPU client directly with pip install cloud-tpu-client.
+2023-02-03 08:56:53,169 DEBUG h5py._conv Creating converter from 7 to 5
+2023-02-03 08:56:53,169 DEBUG h5py._conv Creating converter from 5 to 7
+2023-02-03 08:56:53,169 DEBUG h5py._conv Creating converter from 7 to 5
+2023-02-03 08:56:53,169 DEBUG h5py._conv Creating converter from 5 to 7
+2023-02-03 08:56:53,924 INFO server Imports value: import tensorflow as tf
+2023-02-03 08:57:14,172 INFO server response-value: <Response streamed [500 INTERNAL SERVER ERROR]>
+2023-02-03 08:57:14,177 INFO werkzeug 127.0.0.1 - - [03/Feb/2023 08:57:14] "[35m[1mPOST /api/run_experiment HTTP/1.1[0m" 500 -
+2023-02-03 08:58:25,786 INFO werkzeug  * Detected change in '/home/tim/GreenAI-extension/server/server.py', reloading
+2023-02-03 08:58:26,326 INFO werkzeug  * Restarting with stat
+2023-02-03 08:58:26,741 WARNING werkzeug  * Debugger is active!
+2023-02-03 08:58:26,741 INFO werkzeug  * Debugger PIN: 111-053-691
+2023-02-03 08:58:28,757 INFO werkzeug  * Detected change in '/home/tim/GreenAI-extension/server/server.py', reloading
+2023-02-03 08:58:28,831 INFO werkzeug  * Restarting with stat
+2023-02-03 08:58:29,201 WARNING werkzeug  * Debugger is active!
+2023-02-03 08:58:29,202 INFO werkzeug  * Debugger PIN: 111-053-691
+2023-02-03 08:58:31,216 INFO werkzeug  * Detected change in '/home/tim/GreenAI-extension/server/server.py', reloading
+2023-02-03 08:58:31,293 INFO werkzeug  * Restarting with stat
+2023-02-03 08:58:31,672 WARNING werkzeug  * Debugger is active!
+2023-02-03 08:58:31,673 INFO werkzeug  * Debugger PIN: 111-053-691
+2023-02-03 09:01:01,695 INFO werkzeug [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on https://localhost:12345
+2023-02-03 09:01:01,695 INFO werkzeug [33mPress CTRL+C to quit[0m
+2023-02-03 09:01:01,696 INFO werkzeug  * Restarting with stat
+2023-02-03 09:01:02,058 WARNING werkzeug  * Debugger is active!
+2023-02-03 09:01:02,059 INFO werkzeug  * Debugger PIN: 111-053-691
+2023-02-03 09:01:07,405 INFO server Auth successful
+2023-02-03 09:01:09,168 DEBUG tensorflow Falling back to TensorFlow client; we recommended you install the Cloud TPU client directly with pip install cloud-tpu-client.
+2023-02-03 09:01:09,276 DEBUG h5py._conv Creating converter from 7 to 5
+2023-02-03 09:01:09,276 DEBUG h5py._conv Creating converter from 5 to 7
+2023-02-03 09:01:09,276 DEBUG h5py._conv Creating converter from 7 to 5
+2023-02-03 09:01:09,276 DEBUG h5py._conv Creating converter from 5 to 7
+2023-02-03 09:01:10,021 INFO server Imports value: import tensorflow as tf
+2023-02-03 09:01:30,270 INFO server response-value: <Response streamed [500 INTERNAL SERVER ERROR]>
+2023-02-03 09:01:30,276 INFO werkzeug 127.0.0.1 - - [03/Feb/2023 09:01:30] "[35m[1mPOST /api/run_experiment HTTP/1.1[0m" 500 -
+2023-02-03 09:01:38,371 INFO werkzeug  * Detected change in '/home/tim/GreenAI-extension/server/server.py', reloading
+2023-02-03 09:01:38,806 INFO werkzeug  * Restarting with stat
+2023-02-03 09:01:39,174 WARNING werkzeug  * Debugger is active!
+2023-02-03 09:01:39,174 INFO werkzeug  * Debugger PIN: 111-053-691
+2023-02-03 09:01:41,362 INFO werkzeug [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on https://localhost:12345
+2023-02-03 09:01:41,362 INFO werkzeug [33mPress CTRL+C to quit[0m
+2023-02-03 09:01:41,362 INFO werkzeug  * Restarting with stat
+2023-02-03 09:01:41,768 WARNING werkzeug  * Debugger is active!
+2023-02-03 09:01:41,768 INFO werkzeug  * Debugger PIN: 111-053-691
+2023-02-03 09:01:46,668 INFO server Auth successful
+2023-02-03 09:01:48,210 DEBUG tensorflow Falling back to TensorFlow client; we recommended you install the Cloud TPU client directly with pip install cloud-tpu-client.
+2023-02-03 09:01:48,319 DEBUG h5py._conv Creating converter from 7 to 5
+2023-02-03 09:01:48,320 DEBUG h5py._conv Creating converter from 5 to 7
+2023-02-03 09:01:48,320 DEBUG h5py._conv Creating converter from 7 to 5
+2023-02-03 09:01:48,320 DEBUG h5py._conv Creating converter from 5 to 7
+2023-02-03 09:01:49,001 INFO server Imports value: import tensorflow as tf
+2023-02-03 09:02:26,166 INFO werkzeug [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on https://localhost:12345
+2023-02-03 09:02:26,166 INFO werkzeug [33mPress CTRL+C to quit[0m
+2023-02-03 09:02:26,166 INFO werkzeug  * Restarting with stat
+2023-02-03 09:02:26,530 WARNING werkzeug  * Debugger is active!
+2023-02-03 09:02:26,530 INFO werkzeug  * Debugger PIN: 111-053-691
+2023-02-03 09:02:52,468 INFO server Auth successful
+2023-02-03 09:02:54,460 DEBUG tensorflow Falling back to TensorFlow client; we recommended you install the Cloud TPU client directly with pip install cloud-tpu-client.
+2023-02-03 09:02:54,567 DEBUG h5py._conv Creating converter from 7 to 5
+2023-02-03 09:02:54,567 DEBUG h5py._conv Creating converter from 5 to 7
+2023-02-03 09:02:54,567 DEBUG h5py._conv Creating converter from 7 to 5
+2023-02-03 09:02:54,567 DEBUG h5py._conv Creating converter from 5 to 7
+2023-02-03 09:02:55,299 INFO server Imports value: import tensorflow as tf
+2023-02-03 09:03:15,503 INFO server response-value: <Response streamed [500 INTERNAL SERVER ERROR]>
+2023-02-03 09:03:15,509 INFO werkzeug 127.0.0.1 - - [03/Feb/2023 09:03:15] "[35m[1mPOST /api/run_experiment HTTP/1.1[0m" 500 -
+2023-02-03 09:03:34,040 INFO server Auth successful
+2023-02-03 09:03:35,355 INFO server Imports value: import tensorflow as tf
+2023-02-03 09:03:55,598 INFO server response-value: <Response streamed [500 INTERNAL SERVER ERROR]>
+2023-02-03 09:03:55,601 INFO werkzeug 127.0.0.1 - - [03/Feb/2023 09:03:55] "[35m[1mPOST /api/run_experiment HTTP/1.1[0m" 500 -
+2023-02-03 09:04:26,630 INFO werkzeug [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on https://localhost:12345
+2023-02-03 09:04:26,630 INFO werkzeug [33mPress CTRL+C to quit[0m
+2023-02-03 09:04:26,631 INFO werkzeug  * Restarting with stat
+2023-02-03 09:04:27,020 WARNING werkzeug  * Debugger is active!
+2023-02-03 09:04:27,021 INFO werkzeug  * Debugger PIN: 111-053-691
+2023-02-03 09:05:53,566 INFO server Auth successful
+2023-02-03 09:05:55,547 DEBUG tensorflow Falling back to TensorFlow client; we recommended you install the Cloud TPU client directly with pip install cloud-tpu-client.
+2023-02-03 09:05:55,656 DEBUG h5py._conv Creating converter from 7 to 5
+2023-02-03 09:05:55,656 DEBUG h5py._conv Creating converter from 5 to 7
+2023-02-03 09:05:55,656 DEBUG h5py._conv Creating converter from 7 to 5
+2023-02-03 09:05:55,656 DEBUG h5py._conv Creating converter from 5 to 7
+2023-02-03 09:05:56,430 INFO server Imports value: import tensorflow as tf
+2023-02-03 09:06:38,168 INFO server response-value: <Response likely-streamed [200 OK]>
+2023-02-03 09:06:38,190 INFO werkzeug 127.0.0.1 - - [03/Feb/2023 09:06:38] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-03 09:36:59,044 INFO werkzeug [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on https://localhost:12345
+2023-02-03 09:36:59,044 INFO werkzeug [33mPress CTRL+C to quit[0m
+2023-02-03 09:36:59,045 INFO werkzeug  * Restarting with stat
+2023-02-03 09:36:59,407 WARNING werkzeug  * Debugger is active!
+2023-02-03 09:36:59,408 INFO werkzeug  * Debugger PIN: 118-600-497
+2023-02-03 09:37:13,618 INFO server Auth successful
+2023-02-03 09:37:15,416 DEBUG tensorflow Falling back to TensorFlow client; we recommended you install the Cloud TPU client directly with pip install cloud-tpu-client.
+2023-02-03 09:37:15,529 DEBUG h5py._conv Creating converter from 7 to 5
+2023-02-03 09:37:15,529 DEBUG h5py._conv Creating converter from 5 to 7
+2023-02-03 09:37:15,529 DEBUG h5py._conv Creating converter from 7 to 5
+2023-02-03 09:37:15,529 DEBUG h5py._conv Creating converter from 5 to 7
+2023-02-03 09:37:16,313 INFO server Imports value: import tensorflow as tf
+2023-02-03 09:37:58,160 INFO server response-value: <Response likely-streamed [200 OK]>
+2023-02-03 09:37:58,184 INFO werkzeug 127.0.0.1 - - [03/Feb/2023 09:37:58] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-03 09:39:05,762 INFO werkzeug  * Detected change in '/home/tim/GreenAI-extension/server/send_request.py', reloading
+2023-02-03 09:39:06,279 INFO werkzeug  * Restarting with stat
+2023-02-03 09:39:06,697 WARNING werkzeug  * Debugger is active!
+2023-02-03 09:39:06,697 INFO werkzeug  * Debugger PIN: 118-600-497
+2023-02-03 09:39:09,714 INFO werkzeug  * Detected change in '/home/tim/GreenAI-extension/server/send_request.py', reloading
+2023-02-03 09:39:09,789 INFO werkzeug  * Restarting with stat
+2023-02-03 09:39:10,157 WARNING werkzeug  * Debugger is active!
+2023-02-03 09:39:10,157 INFO werkzeug  * Debugger PIN: 118-600-497
+2023-02-03 09:39:44,325 INFO werkzeug  * Detected change in '/home/tim/GreenAI-extension/server/send_request.py', reloading
+2023-02-03 09:39:44,438 INFO werkzeug  * Restarting with stat
+2023-02-03 09:39:44,813 WARNING werkzeug  * Debugger is active!
+2023-02-03 09:39:44,813 INFO werkzeug  * Debugger PIN: 118-600-497
+2023-02-03 09:39:48,835 INFO werkzeug  * Detected change in '/home/tim/GreenAI-extension/server/send_request.py', reloading
+2023-02-03 09:39:48,929 INFO werkzeug  * Restarting with stat
+2023-02-03 09:39:49,306 WARNING werkzeug  * Debugger is active!
+2023-02-03 09:39:49,306 INFO werkzeug  * Debugger PIN: 118-600-497
+2023-02-03 09:39:50,318 INFO werkzeug  * Detected change in '/home/tim/GreenAI-extension/server/send_request.py', reloading
+2023-02-03 09:39:50,405 INFO werkzeug  * Restarting with stat
+2023-02-03 09:39:50,805 WARNING werkzeug  * Debugger is active!
+2023-02-03 09:39:50,805 INFO werkzeug  * Debugger PIN: 118-600-497
+2023-02-03 09:39:54,826 INFO werkzeug  * Detected change in '/home/tim/GreenAI-extension/server/send_request.py', reloading
+2023-02-03 09:39:54,908 INFO werkzeug  * Restarting with stat
+2023-02-03 09:39:55,315 WARNING werkzeug  * Debugger is active!
+2023-02-03 09:39:55,315 INFO werkzeug  * Debugger PIN: 118-600-497
+2023-02-03 09:40:03,353 INFO werkzeug  * Detected change in '/home/tim/GreenAI-extension/server/send_request.py', reloading
+2023-02-03 09:40:03,465 INFO werkzeug  * Restarting with stat
+2023-02-03 09:40:03,829 WARNING werkzeug  * Debugger is active!
+2023-02-03 09:40:03,829 INFO werkzeug  * Debugger PIN: 118-600-497
+2023-02-03 09:40:18,076 INFO werkzeug [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on https://localhost:12345
+2023-02-03 09:40:18,076 INFO werkzeug [33mPress CTRL+C to quit[0m
+2023-02-03 09:40:18,077 INFO werkzeug  * Restarting with stat
+2023-02-03 09:40:18,441 WARNING werkzeug  * Debugger is active!
+2023-02-03 09:40:18,442 INFO werkzeug  * Debugger PIN: 118-600-497
+2023-02-03 09:40:23,017 INFO server Auth successful
+2023-02-03 09:40:24,766 DEBUG tensorflow Falling back to TensorFlow client; we recommended you install the Cloud TPU client directly with pip install cloud-tpu-client.
+2023-02-03 09:40:24,873 DEBUG h5py._conv Creating converter from 7 to 5
+2023-02-03 09:40:24,873 DEBUG h5py._conv Creating converter from 5 to 7
+2023-02-03 09:40:24,873 DEBUG h5py._conv Creating converter from 7 to 5
+2023-02-03 09:40:24,873 DEBUG h5py._conv Creating converter from 5 to 7
+2023-02-03 09:40:25,448 INFO server Imports value: import tensorflow as tf
+2023-02-03 09:41:08,345 INFO server response-value: <Response likely-streamed [200 OK]>
+2023-02-03 09:41:08,362 INFO werkzeug 127.0.0.1 - - [03/Feb/2023 09:41:08] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-03 09:41:39,252 INFO werkzeug  * Detected change in '/home/tim/GreenAI-extension/server/send_request.py', reloading
+2023-02-03 09:41:39,792 INFO werkzeug  * Restarting with stat
+2023-02-03 09:41:40,150 WARNING werkzeug  * Debugger is active!
+2023-02-03 09:41:40,150 INFO werkzeug  * Debugger PIN: 118-600-497
+2023-02-03 09:41:41,161 INFO werkzeug  * Detected change in '/home/tim/GreenAI-extension/server/send_request.py', reloading
+2023-02-03 09:41:41,244 INFO werkzeug  * Restarting with stat
+2023-02-03 09:41:41,643 WARNING werkzeug  * Debugger is active!
+2023-02-03 09:41:41,643 INFO werkzeug  * Debugger PIN: 118-600-497
+2023-02-03 09:41:42,655 INFO werkzeug  * Detected change in '/home/tim/GreenAI-extension/server/send_request.py', reloading
+2023-02-03 09:41:42,738 INFO werkzeug  * Restarting with stat
+2023-02-03 09:41:43,110 WARNING werkzeug  * Debugger is active!
+2023-02-03 09:41:43,110 INFO werkzeug  * Debugger PIN: 118-600-497
+2023-02-03 09:41:49,138 INFO werkzeug  * Detected change in '/home/tim/GreenAI-extension/server/send_request.py', reloading
+2023-02-03 09:41:49,247 INFO werkzeug  * Restarting with stat
+2023-02-03 09:41:49,611 WARNING werkzeug  * Debugger is active!
+2023-02-03 09:41:49,612 INFO werkzeug  * Debugger PIN: 118-600-497
+2023-02-03 09:41:51,625 INFO werkzeug  * Detected change in '/home/tim/GreenAI-extension/server/send_request.py', reloading
+2023-02-03 09:41:51,717 INFO werkzeug  * Restarting with stat
+2023-02-03 09:41:52,124 WARNING werkzeug  * Debugger is active!
+2023-02-03 09:41:52,124 INFO werkzeug  * Debugger PIN: 118-600-497
+2023-02-03 09:41:53,136 INFO werkzeug  * Detected change in '/home/tim/GreenAI-extension/server/send_request.py', reloading
+2023-02-03 09:41:53,214 INFO werkzeug  * Restarting with stat
+2023-02-03 09:41:53,611 WARNING werkzeug  * Debugger is active!
+2023-02-03 09:41:53,611 INFO werkzeug  * Debugger PIN: 118-600-497
+2023-02-03 09:41:56,630 INFO werkzeug  * Detected change in '/home/tim/GreenAI-extension/server/send_request.py', reloading
+2023-02-03 09:41:56,705 INFO werkzeug  * Restarting with stat
+2023-02-03 09:41:57,067 WARNING werkzeug  * Debugger is active!
+2023-02-03 09:41:57,068 INFO werkzeug  * Debugger PIN: 118-600-497
+2023-02-03 09:42:01,087 INFO werkzeug  * Detected change in '/home/tim/GreenAI-extension/server/send_request.py', reloading
+2023-02-03 09:42:01,167 INFO werkzeug  * Restarting with stat
+2023-02-03 09:42:01,539 WARNING werkzeug  * Debugger is active!
+2023-02-03 09:42:01,539 INFO werkzeug  * Debugger PIN: 118-600-497
+2023-02-03 09:42:04,555 INFO werkzeug  * Detected change in '/home/tim/GreenAI-extension/server/send_request.py', reloading
+2023-02-03 09:42:04,636 INFO werkzeug  * Restarting with stat
+2023-02-03 09:42:05,003 WARNING werkzeug  * Debugger is active!
+2023-02-03 09:42:05,003 INFO werkzeug  * Debugger PIN: 118-600-497
+2023-02-03 09:42:15,051 INFO werkzeug  * Detected change in '/home/tim/GreenAI-extension/server/send_request.py', reloading
+2023-02-03 09:42:15,157 INFO werkzeug  * Restarting with stat
+2023-02-03 09:42:15,533 WARNING werkzeug  * Debugger is active!
+2023-02-03 09:42:15,533 INFO werkzeug  * Debugger PIN: 118-600-497
+2023-02-03 09:42:18,550 INFO werkzeug  * Detected change in '/home/tim/GreenAI-extension/server/send_request.py', reloading
+2023-02-03 09:42:18,643 INFO werkzeug  * Restarting with stat
+2023-02-03 09:42:19,038 WARNING werkzeug  * Debugger is active!
+2023-02-03 09:42:19,039 INFO werkzeug  * Debugger PIN: 118-600-497
+2023-02-03 09:42:26,072 INFO werkzeug  * Detected change in '/home/tim/GreenAI-extension/server/send_request.py', reloading
+2023-02-03 09:42:26,174 INFO werkzeug  * Restarting with stat
+2023-02-03 09:42:26,540 WARNING werkzeug  * Debugger is active!
+2023-02-03 09:42:26,541 INFO werkzeug  * Debugger PIN: 118-600-497
+2023-02-03 09:43:21,801 INFO werkzeug  * Detected change in '/home/tim/GreenAI-extension/server/send_request.py', reloading
+2023-02-03 09:43:21,910 INFO werkzeug  * Restarting with stat
+2023-02-03 09:43:22,268 WARNING werkzeug  * Debugger is active!
+2023-02-03 09:43:22,268 INFO werkzeug  * Debugger PIN: 118-600-497
+2023-02-03 09:43:33,321 INFO werkzeug  * Detected change in '/home/tim/GreenAI-extension/server/send_request.py', reloading
+2023-02-03 09:43:33,423 INFO werkzeug  * Restarting with stat
+2023-02-03 09:43:33,823 WARNING werkzeug  * Debugger is active!
+2023-02-03 09:43:33,823 INFO werkzeug  * Debugger PIN: 118-600-497
+2023-02-03 09:43:34,834 INFO werkzeug  * Detected change in '/home/tim/GreenAI-extension/server/send_request.py', reloading
+2023-02-03 09:43:34,910 INFO werkzeug  * Restarting with stat
+2023-02-03 09:43:35,311 WARNING werkzeug  * Debugger is active!
+2023-02-03 09:43:35,311 INFO werkzeug  * Debugger PIN: 118-600-497
+2023-02-03 09:43:42,344 INFO werkzeug  * Detected change in '/home/tim/GreenAI-extension/server/send_request.py', reloading
+2023-02-03 09:43:42,444 INFO werkzeug  * Restarting with stat
+2023-02-03 09:43:42,824 WARNING werkzeug  * Debugger is active!
+2023-02-03 09:43:42,825 INFO werkzeug  * Debugger PIN: 118-600-497
+2023-02-03 09:43:45,842 INFO werkzeug  * Detected change in '/home/tim/GreenAI-extension/server/send_request.py', reloading
+2023-02-03 09:43:45,919 INFO werkzeug  * Restarting with stat
+2023-02-03 09:43:46,279 WARNING werkzeug  * Debugger is active!
+2023-02-03 09:43:46,280 INFO werkzeug  * Debugger PIN: 118-600-497
+2023-02-03 09:43:48,293 INFO werkzeug  * Detected change in '/home/tim/GreenAI-extension/server/send_request.py', reloading
+2023-02-03 09:43:48,370 INFO werkzeug  * Restarting with stat
+2023-02-03 09:43:48,778 WARNING werkzeug  * Debugger is active!
+2023-02-03 09:43:48,778 INFO werkzeug  * Debugger PIN: 118-600-497
+2023-02-03 09:43:57,820 INFO werkzeug  * Detected change in '/home/tim/GreenAI-extension/server/send_request.py', reloading
+2023-02-03 09:43:57,939 INFO werkzeug  * Restarting with stat
+2023-02-03 09:43:58,287 WARNING werkzeug  * Debugger is active!
+2023-02-03 09:43:58,287 INFO werkzeug  * Debugger PIN: 118-600-497
+2023-02-03 09:44:00,300 INFO werkzeug  * Detected change in '/home/tim/GreenAI-extension/server/send_request.py', reloading
+2023-02-03 09:44:00,369 INFO werkzeug  * Restarting with stat
+2023-02-03 09:44:00,749 WARNING werkzeug  * Debugger is active!
+2023-02-03 09:44:00,749 INFO werkzeug  * Debugger PIN: 118-600-497
+2023-02-03 09:44:05,774 INFO werkzeug  * Detected change in '/home/tim/GreenAI-extension/server/send_request.py', reloading
+2023-02-03 09:44:05,865 INFO werkzeug  * Restarting with stat
+2023-02-03 09:44:06,259 WARNING werkzeug  * Debugger is active!
+2023-02-03 09:44:06,260 INFO werkzeug  * Debugger PIN: 118-600-497
+2023-02-03 09:44:09,277 INFO werkzeug  * Detected change in '/home/tim/GreenAI-extension/server/send_request.py', reloading
+2023-02-03 09:44:09,350 INFO werkzeug  * Restarting with stat
+2023-02-03 09:44:09,722 WARNING werkzeug  * Debugger is active!
+2023-02-03 09:44:09,722 INFO werkzeug  * Debugger PIN: 118-600-497
+2023-02-03 09:44:19,053 INFO werkzeug [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on https://localhost:12345
+2023-02-03 09:44:19,054 INFO werkzeug [33mPress CTRL+C to quit[0m
+2023-02-03 09:44:19,054 INFO werkzeug  * Restarting with stat
+2023-02-03 09:44:19,403 WARNING werkzeug  * Debugger is active!
+2023-02-03 09:44:19,403 INFO werkzeug  * Debugger PIN: 118-600-497
+2023-02-03 09:44:25,245 INFO server Auth successful
+2023-02-03 09:44:26,994 DEBUG tensorflow Falling back to TensorFlow client; we recommended you install the Cloud TPU client directly with pip install cloud-tpu-client.
+2023-02-03 09:44:27,103 DEBUG h5py._conv Creating converter from 7 to 5
+2023-02-03 09:44:27,104 DEBUG h5py._conv Creating converter from 5 to 7
+2023-02-03 09:44:27,104 DEBUG h5py._conv Creating converter from 7 to 5
+2023-02-03 09:44:27,104 DEBUG h5py._conv Creating converter from 5 to 7
+2023-02-03 09:44:27,850 INFO server Imports value: import tensorflow as tf
+2023-02-03 09:45:10,779 INFO server response-value: <Response likely-streamed [200 OK]>
+2023-02-03 09:45:10,803 INFO werkzeug 127.0.0.1 - - [03/Feb/2023 09:45:10] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-03 09:48:08,570 INFO werkzeug  * Detected change in '/home/tim/GreenAI-extension/server/server.py', reloading
+2023-02-03 09:48:09,145 INFO werkzeug  * Restarting with stat
+2023-02-03 09:48:09,512 WARNING werkzeug  * Debugger is active!
+2023-02-03 09:48:09,513 INFO werkzeug  * Debugger PIN: 118-600-497
+2023-02-03 09:48:22,576 INFO werkzeug  * Detected change in '/home/tim/GreenAI-extension/server/server.py', reloading
+2023-02-03 09:48:22,684 INFO werkzeug  * Restarting with stat
+2023-02-03 09:48:23,049 WARNING werkzeug  * Debugger is active!
+2023-02-03 09:48:23,049 INFO werkzeug  * Debugger PIN: 118-600-497
+2023-02-03 09:48:24,061 INFO werkzeug  * Detected change in '/home/tim/GreenAI-extension/server/server.py', reloading
+2023-02-03 09:48:24,140 INFO werkzeug  * Restarting with stat
+2023-02-03 09:48:39,731 INFO werkzeug [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on https://localhost:12345
+2023-02-03 09:48:39,731 INFO werkzeug [33mPress CTRL+C to quit[0m
+2023-02-03 09:48:39,732 INFO werkzeug  * Restarting with stat
+2023-02-03 09:48:40,110 WARNING werkzeug  * Debugger is active!
+2023-02-03 09:48:40,111 INFO werkzeug  * Debugger PIN: 118-600-497
+2023-02-03 09:48:44,963 INFO server Auth successful
+2023-02-03 09:48:46,741 DEBUG tensorflow Falling back to TensorFlow client; we recommended you install the Cloud TPU client directly with pip install cloud-tpu-client.
+2023-02-03 09:48:46,851 DEBUG h5py._conv Creating converter from 7 to 5
+2023-02-03 09:48:46,852 DEBUG h5py._conv Creating converter from 5 to 7
+2023-02-03 09:48:46,852 DEBUG h5py._conv Creating converter from 7 to 5
+2023-02-03 09:48:46,852 DEBUG h5py._conv Creating converter from 5 to 7
+2023-02-03 09:48:47,598 INFO server Imports value: import tensorflow as tf
+2023-02-03 09:49:29,086 INFO server response-value: <Response 28700 bytes [200 OK]>
+2023-02-03 09:49:29,111 INFO werkzeug 127.0.0.1 - - [03/Feb/2023 09:49:29] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-03 10:51:20,194 INFO werkzeug [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on https://localhost:12345
+2023-02-03 10:51:20,194 INFO werkzeug [33mPress CTRL+C to quit[0m
+2023-02-03 10:51:20,195 INFO werkzeug  * Restarting with stat
+2023-02-03 10:51:20,574 WARNING werkzeug  * Debugger is active!
+2023-02-03 10:51:20,574 INFO werkzeug  * Debugger PIN: 125-267-290
+2023-02-03 10:53:40,118 INFO werkzeug [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on https://localhost:12345
+2023-02-03 10:53:40,118 INFO werkzeug [33mPress CTRL+C to quit[0m
+2023-02-03 10:53:40,119 INFO werkzeug  * Restarting with stat
+2023-02-03 10:53:40,484 WARNING werkzeug  * Debugger is active!
+2023-02-03 10:53:40,485 INFO werkzeug  * Debugger PIN: 125-267-290
+2023-02-03 10:54:15,541 INFO server Auth successful
+2023-02-03 10:54:17,273 DEBUG tensorflow Falling back to TensorFlow client; we recommended you install the Cloud TPU client directly with pip install cloud-tpu-client.
+2023-02-03 10:54:17,381 DEBUG h5py._conv Creating converter from 7 to 5
+2023-02-03 10:54:17,381 DEBUG h5py._conv Creating converter from 5 to 7
+2023-02-03 10:54:17,381 DEBUG h5py._conv Creating converter from 7 to 5
+2023-02-03 10:54:17,381 DEBUG h5py._conv Creating converter from 5 to 7
+2023-02-03 10:54:18,054 INFO server Imports value: import tensorflow as tf
+2023-02-03 10:54:59,662 INFO server response-value: <Response 28700 bytes [200 OK]>
+2023-02-03 10:54:59,687 INFO werkzeug 127.0.0.1 - - [03/Feb/2023 10:54:59] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-03 10:55:45,705 INFO werkzeug  * Detected change in '/home/tim/GreenAI-extension/server/test/demo_3_feb.py', reloading
+2023-02-03 10:55:46,264 INFO werkzeug  * Restarting with stat
+2023-02-03 10:55:46,672 WARNING werkzeug  * Debugger is active!
+2023-02-03 10:55:46,673 INFO werkzeug  * Debugger PIN: 125-267-290
+2023-02-03 10:55:47,685 INFO werkzeug  * Detected change in '/home/tim/GreenAI-extension/server/test/demo_3_feb.py', reloading
+2023-02-03 10:55:47,766 INFO werkzeug  * Restarting with stat
+2023-02-03 10:55:48,165 WARNING werkzeug  * Debugger is active!
+2023-02-03 10:55:48,165 INFO werkzeug  * Debugger PIN: 125-267-290
+2023-02-03 10:55:58,216 INFO werkzeug  * Detected change in '/home/tim/GreenAI-extension/server/test/demo_3_feb.py', reloading
+2023-02-03 10:55:58,319 INFO werkzeug  * Restarting with stat
+2023-02-03 10:55:58,702 WARNING werkzeug  * Debugger is active!
+2023-02-03 10:55:58,703 INFO werkzeug  * Debugger PIN: 125-267-290
+2023-02-03 10:56:05,733 INFO werkzeug  * Detected change in '/home/tim/GreenAI-extension/server/test/demo_3_feb.py', reloading
+2023-02-03 10:56:05,838 INFO werkzeug  * Restarting with stat
+2023-02-03 10:56:06,167 WARNING werkzeug  * Debugger is active!
+2023-02-03 10:56:06,168 INFO werkzeug  * Debugger PIN: 125-267-290
+2023-02-03 10:56:52,390 INFO werkzeug  * Detected change in '/home/tim/GreenAI-extension/server/test/demo_3_feb.py', reloading
+2023-02-03 10:56:52,495 INFO werkzeug  * Restarting with stat
+2023-02-03 10:56:52,870 WARNING werkzeug  * Debugger is active!
+2023-02-03 10:56:52,871 INFO werkzeug  * Debugger PIN: 125-267-290
+2023-02-03 10:56:53,882 INFO werkzeug  * Detected change in '/home/tim/GreenAI-extension/server/test/demo_3_feb.py', reloading
+2023-02-03 10:56:53,959 INFO werkzeug  * Restarting with stat
+2023-02-03 10:56:54,350 WARNING werkzeug  * Debugger is active!
+2023-02-03 10:56:54,350 INFO werkzeug  * Debugger PIN: 125-267-290
+2023-02-03 10:56:56,366 INFO werkzeug  * Detected change in '/home/tim/GreenAI-extension/server/test/demo_3_feb.py', reloading
+2023-02-03 10:56:56,477 INFO werkzeug  * Restarting with stat
+2023-02-03 10:56:56,893 WARNING werkzeug  * Debugger is active!
+2023-02-03 10:56:56,893 INFO werkzeug  * Debugger PIN: 125-267-290
+2023-02-03 10:56:59,912 INFO werkzeug  * Detected change in '/home/tim/GreenAI-extension/server/test/demo_3_feb.py', reloading
+2023-02-03 10:56:59,985 INFO werkzeug  * Restarting with stat
+2023-02-03 10:57:00,384 WARNING werkzeug  * Debugger is active!
+2023-02-03 10:57:00,385 INFO werkzeug  * Debugger PIN: 125-267-290
+2023-02-03 10:57:02,399 INFO werkzeug  * Detected change in '/home/tim/GreenAI-extension/server/test/demo_3_feb.py', reloading
+2023-02-03 10:57:02,478 INFO werkzeug  * Restarting with stat
+2023-02-03 10:57:02,876 WARNING werkzeug  * Debugger is active!
+2023-02-03 10:57:02,877 INFO werkzeug  * Debugger PIN: 125-267-290
+2023-02-03 10:57:10,241 INFO server Auth successful
+2023-02-03 10:57:11,799 DEBUG tensorflow Falling back to TensorFlow client; we recommended you install the Cloud TPU client directly with pip install cloud-tpu-client.
+2023-02-03 10:57:11,908 DEBUG h5py._conv Creating converter from 7 to 5
+2023-02-03 10:57:11,908 DEBUG h5py._conv Creating converter from 5 to 7
+2023-02-03 10:57:11,908 DEBUG h5py._conv Creating converter from 7 to 5
+2023-02-03 10:57:11,908 DEBUG h5py._conv Creating converter from 5 to 7
+2023-02-03 10:57:12,640 INFO server Imports value: import tensorflow as tf
+2023-02-03 10:57:54,246 INFO server response-value: <Response 28700 bytes [200 OK]>
+2023-02-03 10:57:54,271 INFO werkzeug 127.0.0.1 - - [03/Feb/2023 10:57:54] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-03 10:59:37,449 INFO werkzeug  * Detected change in '/home/tim/GreenAI-extension/server/test/demo_3_feb.py', reloading
+2023-02-03 10:59:38,057 INFO werkzeug  * Restarting with stat
+2023-02-03 10:59:38,452 WARNING werkzeug  * Debugger is active!
+2023-02-03 10:59:38,452 INFO werkzeug  * Debugger PIN: 125-267-290
+2023-02-03 10:59:40,466 INFO werkzeug  * Detected change in '/home/tim/GreenAI-extension/server/test/demo_3_feb.py', reloading
+2023-02-03 10:59:40,538 INFO werkzeug  * Restarting with stat
+2023-02-03 10:59:40,913 WARNING werkzeug  * Debugger is active!
+2023-02-03 10:59:40,914 INFO werkzeug  * Debugger PIN: 125-267-290
+2023-02-03 10:59:43,930 INFO werkzeug  * Detected change in '/home/tim/GreenAI-extension/server/test/demo_3_feb.py', reloading
+2023-02-03 10:59:44,012 INFO werkzeug  * Restarting with stat
+2023-02-03 10:59:44,401 WARNING werkzeug  * Debugger is active!
+2023-02-03 10:59:44,402 INFO werkzeug  * Debugger PIN: 125-267-290
+2023-02-03 10:59:57,466 INFO werkzeug  * Detected change in '/home/tim/GreenAI-extension/server/test/demo_3_feb.py', reloading
+2023-02-03 10:59:57,568 INFO werkzeug  * Restarting with stat
+2023-02-03 10:59:57,931 WARNING werkzeug  * Debugger is active!
+2023-02-03 10:59:57,932 INFO werkzeug  * Debugger PIN: 125-267-290
+2023-02-03 10:59:58,943 INFO werkzeug  * Detected change in '/home/tim/GreenAI-extension/server/test/demo_3_feb.py', reloading
+2023-02-03 10:59:59,034 INFO werkzeug  * Restarting with stat
+2023-02-03 10:59:59,436 WARNING werkzeug  * Debugger is active!
+2023-02-03 10:59:59,436 INFO werkzeug  * Debugger PIN: 125-267-290
+2023-02-03 11:00:05,463 INFO werkzeug  * Detected change in '/home/tim/GreenAI-extension/server/test/demo_3_feb.py', reloading
+2023-02-03 11:00:05,561 INFO werkzeug  * Restarting with stat
+2023-02-03 11:00:05,955 WARNING werkzeug  * Debugger is active!
+2023-02-03 11:00:05,955 INFO werkzeug  * Debugger PIN: 125-267-290
+2023-02-03 11:00:06,966 INFO werkzeug  * Detected change in '/home/tim/GreenAI-extension/server/test/demo_3_feb.py', reloading
+2023-02-03 11:00:07,052 INFO werkzeug  * Restarting with stat
+2023-02-03 11:00:07,424 WARNING werkzeug  * Debugger is active!
+2023-02-03 11:00:07,424 INFO werkzeug  * Debugger PIN: 125-267-290
+2023-02-03 11:00:10,442 INFO werkzeug  * Detected change in '/home/tim/GreenAI-extension/server/test/demo_3_feb.py', reloading
+2023-02-03 11:00:10,527 INFO werkzeug  * Restarting with stat
+2023-02-03 11:00:10,923 WARNING werkzeug  * Debugger is active!
+2023-02-03 11:00:10,923 INFO werkzeug  * Debugger PIN: 125-267-290
+2023-02-03 11:00:21,969 INFO werkzeug  * Detected change in '/home/tim/GreenAI-extension/server/test/demo_3_feb.py', reloading
+2023-02-03 11:00:22,071 INFO werkzeug  * Restarting with stat
+2023-02-03 11:00:22,470 WARNING werkzeug  * Debugger is active!
+2023-02-03 11:00:22,470 INFO werkzeug  * Debugger PIN: 125-267-290
+2023-02-03 11:00:33,524 INFO werkzeug  * Detected change in '/home/tim/GreenAI-extension/server/test/demo_3_feb.py', reloading
+2023-02-03 11:00:33,626 INFO werkzeug  * Restarting with stat
+2023-02-03 11:00:33,988 WARNING werkzeug  * Debugger is active!
+2023-02-03 11:00:33,989 INFO werkzeug  * Debugger PIN: 125-267-290
+2023-02-03 11:00:44,036 INFO werkzeug  * Detected change in '/home/tim/GreenAI-extension/server/test/demo_3_feb.py', reloading
+2023-02-03 11:00:44,144 INFO werkzeug  * Restarting with stat
+2023-02-03 11:00:44,552 WARNING werkzeug  * Debugger is active!
+2023-02-03 11:00:44,552 INFO werkzeug  * Debugger PIN: 125-267-290
+2023-02-03 11:00:47,454 INFO server Auth successful
+2023-02-03 11:00:49,209 DEBUG tensorflow Falling back to TensorFlow client; we recommended you install the Cloud TPU client directly with pip install cloud-tpu-client.
+2023-02-03 11:00:49,317 DEBUG h5py._conv Creating converter from 7 to 5
+2023-02-03 11:00:49,317 DEBUG h5py._conv Creating converter from 5 to 7
+2023-02-03 11:00:49,317 DEBUG h5py._conv Creating converter from 7 to 5
+2023-02-03 11:00:49,317 DEBUG h5py._conv Creating converter from 5 to 7
+2023-02-03 11:00:49,962 INFO server Imports value: import tensorflow as tf
+2023-02-03 11:01:32,574 INFO server response-value: <Response 28700 bytes [200 OK]>
+2023-02-03 11:01:32,600 INFO werkzeug 127.0.0.1 - - [03/Feb/2023 11:01:32] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-03 11:02:22,874 INFO werkzeug [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on https://localhost:12345
+2023-02-03 11:02:22,874 INFO werkzeug [33mPress CTRL+C to quit[0m
+2023-02-03 11:02:22,875 INFO werkzeug  * Restarting with stat
+2023-02-03 11:02:23,249 WARNING werkzeug  * Debugger is active!
+2023-02-03 11:02:23,249 INFO werkzeug  * Debugger PIN: 125-267-290
+2023-02-03 11:03:03,788 INFO server Auth successful
+2023-02-03 11:03:05,555 DEBUG tensorflow Falling back to TensorFlow client; we recommended you install the Cloud TPU client directly with pip install cloud-tpu-client.
+2023-02-03 11:03:05,664 DEBUG h5py._conv Creating converter from 7 to 5
+2023-02-03 11:03:05,664 DEBUG h5py._conv Creating converter from 5 to 7
+2023-02-03 11:03:05,664 DEBUG h5py._conv Creating converter from 7 to 5
+2023-02-03 11:03:05,664 DEBUG h5py._conv Creating converter from 5 to 7
+2023-02-03 11:03:06,403 INFO server Imports value: import tensorflow as tf
+2023-02-03 11:03:48,648 INFO server response-value: <Response 12797 bytes [200 OK]>
+2023-02-03 11:03:48,675 INFO werkzeug 127.0.0.1 - - [03/Feb/2023 11:03:48] "POST /api/run_experiment HTTP/1.1" 200 -

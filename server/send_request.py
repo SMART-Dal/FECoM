@@ -108,15 +108,14 @@ def send_single_thread_request(imports: str, function_to_run: str, function_args
     
     run_resp = requests.post(URL, data=run_data, auth=(username, password), verify=False, headers={'Content-Type': 'application/octet-stream'})
 
-    result = run_resp.content
     # if HTTP status code is 500, the server could not reach a stable state.
     # now, simply raise an error. TODO: send a new request instead.
     if run_resp.status_code == 500:
-        raise TimeoutError(result)
+        raise TimeoutError(run_resp.content)
     elif run_resp.status_code == 401:
-        raise RuntimeError(result)
+        raise RuntimeError(run_resp.content)
     
     if return_result:
-        result = pickle.loads(result)
-    
-    return result
+        return pickle.loads(run_resp.content)
+    else:
+        return run_resp.json()

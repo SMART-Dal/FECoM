@@ -4,14 +4,16 @@ Server demo for the meeting on 3rd February 2023
 
 import tensorflow as tf
 import pandas as pd
-from send_request import send_single_thread_request as send_request
+import matplotlib.pyplot as plt
 
 import sys
+sys.path.insert(0,'..')
+from send_request import send_single_thread_request as send_request
 sys.path.insert(0,'../energy_measurement')
 from plot_energy import combined_plot
 
 
-def compiled_model():
+def compile_model():
     model = tf.keras.models.Sequential([
     tf.keras.layers.Flatten(input_shape=(28, 28)),
     tf.keras.layers.Dense(128, activation='relu'),
@@ -30,9 +32,9 @@ def mnist():
     x_train, x_test = x_train / 255.0, x_test / 255.0
     return x_train, y_train, x_test, y_test
 
-def run_mnist_model_train(compiled_model, mnist):
+def run_mnist_model_train():
     x_train, y_train, _, _ = mnist()
-    compiled_model = compiled_model()
+    compiled_model = compile_model()
 
     # training
     imports = "import tensorflow as tf"
@@ -41,7 +43,7 @@ def run_mnist_model_train(compiled_model, mnist):
     function_kwargs = {"epochs": 5}
     method_object = compiled_model
     
-    results = send_request(imports, function_to_run, function_args, function_kwargs, method_object=method_object, max_wait_secs=20)
+    results = send_request(imports, function_to_run, function_args, function_kwargs, method_object=method_object, max_wait_secs=0, return_result=False)
 
     return results
     # "energy_data": {
@@ -63,4 +65,8 @@ def convert_json_to_df(results):
 if __name__ == "__main__":
     cpu_df, ram_df, gpu_df, start_time, end_time = convert_json_to_df(run_mnist_model_train())
 
-    combined_plot(cpu_df, ram_df, gpu_df)
+    df = combined_plot(cpu_df, ram_df, gpu_df)
+    print("####DF####")
+    print(df)
+    df.plot()
+    plt.savefig('energy_plot.png')

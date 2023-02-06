@@ -8,6 +8,7 @@ import logging
 import pickle
 import statistics as stats
 from pathlib import Path
+import json
 
 from flask import Flask, Response, request
 from flask_httpauth import HTTPBasicAuth
@@ -87,7 +88,7 @@ def server_is_stable(max_wait_secs: int) -> bool:
 
     # relative tolerance for difference between stable stdev/mean ratio and current ratio
     # e.g. 0.1 would mean allowing a ratio that's 10% higher than the stable stdev/mean ratio
-    tolerance = 0.1
+    tolerance = 2
 
     # in each loop iteration, load new data, calculate statistics and check if the energy is stable.
     # try this for the specified number of seconds
@@ -101,11 +102,11 @@ def server_is_stable(max_wait_secs: int) -> bool:
         gpu_stable = data_is_stable(gpu_energies, tolerance, GPU_STD_TO_MEAN)
 
         if DEBUG:
-            print(f"CPU: {cpu_energies} \n stable: {cpu_stable} \n stdv: {stats.stdev(cpu_energies)} \n mean: {stats.mean(cpu_energies)}")
+            print(f"CPU \n stable: {cpu_stable} \n stdv: {stats.stdev(cpu_energies)} \n mean: {stats.mean(cpu_energies)}")
             print()
-            print(f"RAM: {ram_energies} \n stable: {ram_stable} \nstdv: {stats.stdev(ram_energies)} \n mean: {stats.mean(ram_energies)}")
+            print(f"RAM \n stable: {ram_stable} \nstdv: {stats.stdev(ram_energies)} \n mean: {stats.mean(ram_energies)}")
             print()
-            print(f"GPU: {gpu_energies} \n stable: {gpu_stable} \nstdv: {stats.stdev(gpu_energies)} \n mean: {stats.mean(gpu_energies)}")
+            print(f"GPU \n stable: {gpu_stable} \nstdv: {stats.stdev(gpu_energies)} \n mean: {stats.mean(gpu_energies)}")
 
         if cpu_stable and ram_stable and gpu_stable:
             return True
@@ -224,6 +225,8 @@ def run_function_and_return_result():
 
     # (4) send response to client
     if function_details.return_result:
+        if DEBUG:
+            print("Pickling response to return result")
         response = Response(
             response=pickle.dumps(results),
             status=status,
@@ -231,7 +234,7 @@ def run_function_and_return_result():
         )
     else:
         response = Response(
-            response=results,
+            response=json.dumps(results),
             status=status
         )
 
@@ -251,4 +254,4 @@ def index():
 
 # start flask app
 if __name__ == "__main__":
-    app.run(host=SERVER_HOST, port=SERVER_PORT, debug=False, ssl_context=(CA_CERT_PATH, CA_KEY_PATH))
+    app.run(host=SERVER_HOST, port=SERVER_PORT, debug=True, ssl_context=(CA_CERT_PATH, CA_KEY_PATH))

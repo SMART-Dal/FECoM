@@ -9,7 +9,7 @@ PROD_HOST = "129.173.67.60" # can also set to "0.0.0.0" on the server
 PROD_PORT = 8080
 
 ### SET TO FALSE FOR DEV SETTINGS ON YOUR LOCAL MACHINE ###
-PROD = True
+PROD = False
 
 # configure server settings here
 API_PATH = "/api/run_experiment"
