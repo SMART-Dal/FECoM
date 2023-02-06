@@ -39,6 +39,9 @@ energy_data_dir = Path("energy_measurement/out")
 PERF_FILE = energy_data_dir/"perf.txt"
 NVIDIA_SMI_FILE = energy_data_dir/"nvidia_smi.txt"
 
+START_EXECUTION = "$$START_EXECUTION$$"
+END_EXECUTION = "$$END_EXECUTION$$"
+
 # authentication
 USERS = {
     "tim9220": "pbkdf2:sha256:260000$HCuie8IPjFLW3ZcA$57da68fec635caf7922a77f64781669c5427ace7eae1d8cb67e218f5e363956f",

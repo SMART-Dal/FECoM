@@ -43,7 +43,7 @@ def run_mnist_model_train():
     function_kwargs = {"epochs": 5}
     method_object = compiled_model
     
-    results = send_request(imports, function_to_run, function_args, function_kwargs, method_object=method_object, max_wait_secs=0, return_result=False)
+    results = send_request(imports, function_to_run, function_args, function_kwargs, method_object=method_object, max_wait_secs=0, return_result=False, wait_after_run_secs=30)
 
     return results
     # "energy_data": {
@@ -69,4 +69,9 @@ if __name__ == "__main__":
     print("####DF####")
     print(df)
     df.plot()
+    # ax = cpu_df["time_elapsed", "energy (J)"]
+    # cmap = matplotlib.colors.ListedColormap(['grey', 'white'])
+    # ax.pcolorfast(ax.get_xlim(), ax.get_ylim(),
+    #           cpu_df['in_execution'].values[np.newaxis],
+    #           cmap=cmap, alpha=0.3)
     plt.savefig('energy_plot.png')

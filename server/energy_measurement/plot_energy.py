@@ -45,7 +45,7 @@ def plot_cpu_and_ram(filename, n=100, normalise=True):
 def combined_plot(cpu_energy=None, ram_energy=None, gpu_power=None, directory=None):
     if directory is not None:
         gpu_power = parse_nvidia_smi(f"{directory}nvidia_smi.txt")
-        cpu_energy, ram_energy = parse_perf(f"{directory}perf.txt")
+        cpu_energy, ram_energy, start_time, end_time = parse_perf(f"{directory}perf.txt")
     min_len = min([len(gpu_power), len(cpu_energy), len(ram_energy)]) - 1
     print(min_len)
     df = pd.concat([gpu_power.loc[:min_len]['power_draw (W)'], cpu_energy.loc[:min_len]['energy (J)'], ram_energy.loc[:min_len]['energy (J)']], axis=1)

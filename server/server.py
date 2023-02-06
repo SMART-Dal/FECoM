@@ -10,12 +10,11 @@ import statistics as stats
 from pathlib import Path
 import json
 
-from flask import Flask, Response, request
 from flask import Flask, Response, request, jsonify
 from flask_httpauth import HTTPBasicAuth
 from werkzeug.security import check_password_hash
 
-from config import API_PATH, DEBUG, SERVER_HOST, SERVER_PORT, CPU_STD_TO_MEAN, RAM_STD_TO_MEAN, GPU_STD_TO_MEAN, USERS, CA_CERT_PATH, CA_KEY_PATH, PERF_FILE, NVIDIA_SMI_FILE
+from config import API_PATH, DEBUG, SERVER_HOST, SERVER_PORT, CPU_STD_TO_MEAN, RAM_STD_TO_MEAN, GPU_STD_TO_MEAN, USERS, CA_CERT_PATH, CA_KEY_PATH, PERF_FILE, NVIDIA_SMI_FILE, START_EXECUTION, END_EXECUTION
 from function_details import FunctionDetails # shown unused but still required
 from measurement_parse import parse_nvidia_smi, parse_perf
 
@@ -119,9 +118,9 @@ def server_is_stable(max_wait_secs: int) -> bool:
 
 def write_start_or_end_symbol(perf_file: Path, nvidia_smi_file: Path, start: bool):
     if start:
-        symbol = "##START_EXECUTION##\n"
+        symbol = START_EXECUTION + "\n"
     else:
-        symbol = "##END_EXECUTION##\n"
+        symbol = END_EXECUTION + "\n"
     with open(perf_file, 'r') as f:
         f.write(symbol)
     with open(nvidia_smi_file, 'r') as f:
