@@ -7,12 +7,16 @@ import numpy as np
 
 from config import START_EXECUTION, END_EXECUTION
 
-
-def parse_nvidia_smi(filename):
+def parse_nvidia_smi(filename) -> tuple((pd.DataFrame, float, float)):
     """
-    Given a filename returns a dataframe with columns 
-    - timestamp (datetime)
-    - power_draw (W) (float)
+    Given a filename returns a 3-tuple with
+    - a dataframe with columns 
+        - timestamp (datetime)
+        - power_draw (W) (float)
+    - start_time
+    - end_time
+    The times are determined by parsing the special execution markers START_EXECUTION, END_EXECUTION inserted into the nvidia-smi file by the server.
+    If no markers are found, start_time and end_time are None.
     """
     start_time = None
     end_time = None
@@ -51,11 +55,16 @@ def parse_nvidia_smi(filename):
     return df, start_time, end_time
 
 
-def parse_perf(filename):
+def parse_perf(filename) -> tuple((pd.DataFrame, pd.DataFrame, float, float)):
     """
-    Given a filename returns the tuple of dataframes (cpu_energy, ram_energy) with columns 
-    - time_elapsed (float)
-    - energy (J) (float)
+    Given a filename returns a 4-tuple with
+    - 2 dataframes (cpu_energy, ram_energy) with columns 
+        - time_elapsed (float)
+        - energy (J) (float)
+    - start_time
+    - end_time
+    The times are determined by parsing the special execution markers START_EXECUTION, END_EXECUTION inserted into the perf file by the server.
+    If no markers are found, start_time and end_time are None.
     """
     start_time = None
     end_time = None

@@ -3,6 +3,7 @@ Server to receive client requests to run ML methods and measure energy.
 """
 
 import time
+from datetime import datetime
 import os
 import logging
 import pickle
@@ -15,7 +16,7 @@ from flask_httpauth import HTTPBasicAuth
 from werkzeug.security import check_password_hash
 
 from config import API_PATH, DEBUG, SERVER_HOST, SERVER_PORT, CPU_STD_TO_MEAN, RAM_STD_TO_MEAN, GPU_STD_TO_MEAN, USERS, CA_CERT_PATH, CA_KEY_PATH, PERF_FILE, NVIDIA_SMI_FILE, START_EXECUTION, END_EXECUTION
-from function_details import FunctionDetails # shown unused but still required
+from function_details import FunctionDetails # shown unused but still required since this is the class used for sending function details to the server
 from measurement_parse import parse_nvidia_smi, parse_perf
 
 
@@ -116,14 +117,27 @@ def server_is_stable(max_wait_secs: int) -> bool:
 
     return False
 
+def get_current_times(perf_file: Path, nvidia_smi_file: Path):
+    with open(perf_file, 'r') as f:
+        last_line_perf = f.readlines()[-1]
+    with open(nvidia_smi_file, 'r') as f:
+        last_line_nvidia = f.readlines()[-1]
+    
+    time_perf = float(last_line_perf.strip(' \n').split(';')[0])
+    time_nvidia = datetime.strptime(last_line_nvidia.strip('\n').split(',')[0], '%Y/%m/%d %H:%M:%S.%f').timestamp()
+
+    return time_perf, time_nvidia
+
 def write_start_or_end_symbol(perf_file: Path, nvidia_smi_file: Path, start: bool):
+    raise DeprecationWarning("This method doesn't work as expected and should not be used")
     if start:
         symbol = START_EXECUTION + "\n"
     else:
         symbol = END_EXECUTION + "\n"
-    with open(perf_file, 'r') as f:
+    print(symbol)
+    with open(perf_file, 'a') as f:
         f.write(symbol)
-    with open(nvidia_smi_file, 'r') as f:
+    with open(nvidia_smi_file, 'a') as f:
         f.write(symbol)
 
 def run_function(imports: str, function_to_run: str, obj: object, args: list, kwargs: dict, max_wait_secs: int, wait_after_run_secs: int, return_result: bool):
@@ -144,12 +158,14 @@ def run_function(imports: str, function_to_run: str, obj: object, args: list, kw
         raise TimeoutError(f"System could not reach a stable state within {max_wait_secs} seconds")
 
     # (3) evaluate the function return. Mark the start & end times in the files and save their exact values.
-    # TODO do we need to write the start and end symbols into the files? If so, we need to adapt the parse_perf and parse_nvidia_smi methods accordingly to take into account these special symbols
-    # write_start_or_end_symbol(PERF_FILE, NVIDIA_SMI_FILE, start=True)
-    start_time = time.time_ns()
+    # TODO potentially correct here for the small time offset created by fetching the times for the files. We can use the server times for this.
+    # (old) write_start_or_end_symbol(PERF_FILE, NVIDIA_SMI_FILE, start=True)
+    start_time_perf, start_time_nvidia = get_current_times(PERF_FILE, NVIDIA_SMI_FILE)
+    start_time_server = time.time_ns()
     func_return = eval(function_to_run)
-    end_time = time.time_ns()
-    # write_start_or_end_symbol(PERF_FILE, NVIDIA_SMI_FILE, start=False)
+    end_time_server = time.time_ns()
+    end_time_perf, end_time_nvidia = get_current_times(PERF_FILE, NVIDIA_SMI_FILE)
+    # (old) write_start_or_end_symbol(PERF_FILE, NVIDIA_SMI_FILE, start=False)
 
     # (4) Wait some specified amount of time to measure potentially elevated energy consumption after the function has terminated
     if DEBUG:
@@ -159,8 +175,9 @@ def run_function(imports: str, function_to_run: str, obj: object, args: list, kw
 
     # (5) get the energy data since run_function has been invoked and clear the files
     # TODO implement this
-    df_cpu, df_ram = parse_perf(PERF_FILE)
-    df_gpu = parse_nvidia_smi(NVIDIA_SMI_FILE)
+    df_cpu, df_ram, _, _ = parse_perf(PERF_FILE)
+    df_gpu, _, _ = parse_nvidia_smi(NVIDIA_SMI_FILE)
+    df_gpu[""]
     energy_data = {
         "cpu": df_cpu.to_json(orient="split"),
         "ram": df_ram.to_json(orient="split"),
@@ -170,8 +187,12 @@ def run_function(imports: str, function_to_run: str, obj: object, args: list, kw
     # (6) return the energy data, times and status
     return_dict = {
         "energy_data": energy_data,
-        "start_time": start_time,
-        "end_time": end_time
+        "start_time_server": start_time_server,
+        "end_time_server": end_time_server,
+        "start_time_perf": start_time_perf, 
+        "end_time_perf": end_time_perf,
+        "start_time_nvidia": start_time_nvidia,
+        "end_time_nvidia": end_time_nvidia
     }
     # TODO: From the meeting: Add Data size,Total Consumption, Add Method Call as the Key for dictionary in the returned response
 

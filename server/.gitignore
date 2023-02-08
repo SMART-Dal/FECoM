@@ -6,3 +6,4 @@ data
 *.pth
 patched-code/*
 Repositories/*
+methodcall_energy.json
