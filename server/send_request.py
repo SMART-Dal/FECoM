@@ -115,4 +115,25 @@ def send_single_thread_request(imports: str, function_to_run: str, function_args
     if return_result:
         return pickle.loads(run_resp.content)
     else:
-        return run_resp.json()
+        result = pickle.loads(result)
+
+    try:
+        with open('methodcall-energy-dataset.json', 'r') as f:
+            existing_data = json.load(f)
+    except:
+        existing_data = []
+
+    if result:
+        try:
+            data = json.loads(result)
+            with open('methodcall-energy-dataset.json', 'w') as f:
+                existing_data.append(data)
+                json.dump(existing_data, f)
+        except json.decoder.JSONDecodeError as e:
+            print(f"Error decoding JSON: {e}")
+        except:
+            print("Error writing JSON to file")
+    else:
+        print("Response content is empty")
+    
+    return run_resp.json()
