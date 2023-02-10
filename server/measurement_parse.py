@@ -22,35 +22,39 @@ def parse_nvidia_smi(filename) -> tuple((pd.DataFrame, float, float)):
     end_time = None
     data_list = []
     with open(filename, 'r') as f:
-        in_execution = False
-
-        for line in f:
+        # in_execution = False
+        time_zero = None
+        for i, line in enumerate(f):
             line = line.strip('\n')
-            # look for special execution markers
-            if line == START_EXECUTION:
-                in_execution = True
-                # TODO keep in mind: start & end time will always be slightly sooner than the actual start time because we take the time of the last measurement before execution starts
-                start_time = data_list[-1][0]
-                continue
-            elif line == END_EXECUTION:
-                if in_execution == False:
-                    raise ValueError("END_EXECUTION must be after START_EXECUTION")
-                in_execution = False
-                end_time = data_list[-1][0]
-                continue
+            # # look for special execution markers
+            # if line == START_EXECUTION:
+            #     in_execution = True
+            #     # TODO keep in mind: start & end time will always be slightly sooner than the actual start time because we take the time of the last measurement before execution starts
+            #     start_time = data_list[-1][0]
+            #     continue
+            # elif line == END_EXECUTION:
+            #     if in_execution == False:
+            #         raise ValueError("END_EXECUTION must be after START_EXECUTION")
+            #     in_execution = False
+            #     end_time = data_list[-1][0]
+            #     continue
 
             # 2023/02/06 11:23:08.654, 20.28 W
             raw_data = line.split(',')
+            current_time = datetime.strptime(raw_data[0], '%Y/%m/%d %H:%M:%S.%f').timestamp()
+            # get the time of the first measurement for the time_elapsed column
+            if i==0:
+                time_zero = current_time
             data = [
-                datetime.strptime(raw_data[0], '%Y/%m/%d %H:%M:%S.%f').timestamp(),
+                current_time,
                 float(raw_data[1].split()[0]),
-                in_execution # add boolean in_execution column to data to indicate when the method is executing
+                current_time - time_zero # add time elapsed column to data for graphing
                 ]
 
             data_list.append(data)
     
     df = pd.DataFrame(data_list,
-                      columns=['timestamp', 'power_draw (W)', 'in_execution'])
+                      columns=['timestamp', 'power_draw (W)', 'time_elapsed'])
 
     return df, start_time, end_time
 

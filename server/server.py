@@ -177,7 +177,10 @@ def run_function(imports: str, function_to_run: str, obj: object, args: list, kw
     # TODO implement this
     df_cpu, df_ram, _, _ = parse_perf(PERF_FILE)
     df_gpu, _, _ = parse_nvidia_smi(NVIDIA_SMI_FILE)
-    df_gpu[""]
+
+    start_time_nvidia_normalised = start_time_nvidia - df_gpu["timestamp"][0]
+    end_time_nvidia_normalised = end_time_nvidia - df_gpu["timestamp"][0]
+
     energy_data = {
         "cpu": df_cpu.to_json(orient="split"),
         "ram": df_ram.to_json(orient="split"),
@@ -191,8 +194,8 @@ def run_function(imports: str, function_to_run: str, obj: object, args: list, kw
         "end_time_server": end_time_server,
         "start_time_perf": start_time_perf, 
         "end_time_perf": end_time_perf,
-        "start_time_nvidia": start_time_nvidia,
-        "end_time_nvidia": end_time_nvidia
+        "start_time_nvidia": start_time_nvidia_normalised,
+        "end_time_nvidia": end_time_nvidia_normalised
     }
     # TODO: From the meeting: Add Data size,Total Consumption, Add Method Call as the Key for dictionary in the returned response
 

@@ -2,7 +2,7 @@ from pathlib import Path
 
 # server settings for localhost environment
 DEV_HOST = "localhost"
-DEV_PORT = 12345
+DEV_PORT = 54321
 
 # server settings for production environment
 PROD_HOST = "129.173.67.60" # can also set to "0.0.0.0" on the server

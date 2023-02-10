@@ -76,10 +76,10 @@ def plot_energy_from_dfs(cpu_df, ram_df, gpu_df, start_time_perf, end_time_perf,
     ax2.axvline(x=start_time_perf, color='r',linewidth=1)
     ax2.axvline(x=end_time_perf, color='r',linewidth=1)
 
-    # ax3.set_title("GPU Power over time")
-    # ax3.plot(gpu_df["timestamp"], gpu_df["power_draw (W)"])
-    # ax3.axvline(x=start_time_nvidia, color='r',linewidth=1)
-    # ax3.axvline(x=end_time_nvidia, color='r',linewidth=1)
+    ax3.set_title("GPU Power over time")
+    ax3.plot(gpu_df["time_elapsed"], gpu_df["power_draw (W)"])
+    ax3.axvline(x=start_time_nvidia, color='r',linewidth=1)
+    ax3.axvline(x=end_time_nvidia, color='r',linewidth=1)
 
 # def plot_energy(time, energy, start_time, end_time, title=None):
 #     fig, ax = plt.subplots()
