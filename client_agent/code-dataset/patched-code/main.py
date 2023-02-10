@@ -1,7 +1,20 @@
 import pickle
 import requests
 import sys
-sys.path.append('../../../server')
+import os
+
+# Define the path to the subdirectory, relative to the home directory
+subdir_path = os.path.join(os.path.expanduser("~"), "/home/saurabh/code-energy-consumption/server")
+
+# Get the current working directory
+cwd = os.path.dirname(os.path.realpath(__file__))
+
+
+# Get the relative path from the current working directory to the subdirectory
+rel_path = os.path.relpath(subdir_path, cwd)
+
+sys.path.append(rel_path)
+print(rel_path)
 from send_request import send_request, send_single_thread_request
 
 def custom_method(func, imports: str, function_to_run: str, method_object=None, function_args: list=None, function_kwargs: dict=None, max_wait_secs=0, custom_class=None):

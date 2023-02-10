@@ -6,13 +6,17 @@ import sys
 import shutil
 from clientconfig import *
 # import nbformat
+import importlib
 
-os.environ['PYTHONPATH'] = '../server'
+sys.path.append("../server")
+# from server.send_request import send_request, send_single_thread_request
+
 
 def copy_directory_contents(src, dst):
     if os.path.exists(dst):
         shutil.rmtree(dst)
     shutil.copytree(src, dst)
+    
 
 
 # def ipynb_to_py(ipynb_file):
@@ -50,8 +54,8 @@ def get_python_scripts_path(directory):
     return python_scripts_path
 
 # delete all the files in the output directory before running the script
-for filename in os.listdir(INPUT_DIR):
-    file_path = os.path.join(INPUT_DIR, filename)
+for filename in os.listdir(SOURCE_REPO_DIR):
+    file_path = os.path.join(SOURCE_REPO_DIR, filename)
     try:
         if os.path.isfile(file_path) or os.path.islink(file_path):
             os.unlink(file_path)
@@ -59,10 +63,17 @@ for filename in os.listdir(INPUT_DIR):
         print('Failed to delete %s ,for the Reason: %s' % (file_path, e))
 
 #Create a copy of repository in the output directory
-copy_directory_contents(INPUT_DIR, OUTPUT_DIR)
+copy_directory_contents(SOURCE_REPO_DIR, PATCHED_REPO_DIR)
 
 # run the script for all the files in the input directory and save the patched files in the output directory
-python_scripts = get_python_scripts_path(OUTPUT_DIR)
+python_scripts = get_python_scripts_path(PATCHED_REPO_DIR)
 for input_file_path in python_scripts:
-        with open(input_file_path, 'w') as f:
-            subprocess.run(['python3', PATCHING_SCRIPT_PATH, input_file_path], stdout=f)
+
+    result = subprocess.run(['python3', PATCHING_SCRIPT_PATH, input_file_path], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+
+    with open(input_file_path, 'w') as f:
+        f.write(result.stdout.decode())
+        f.write(result.stderr.decode())
+
+
+print("done....")

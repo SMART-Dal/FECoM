@@ -1,9 +1,22 @@
 import pickle
 import requests
 import sys
-sys.path.append("../../../server")
-from send_request import send_request, send_single_thread_request
-# from dummy_send_request import dummy_send_request
+
+import os
+
+# Define the path to the subdirectory, relative to the home directory
+subdir_path = os.path.join(os.path.expanduser("~"), "/home/saurabh/code-energy-consumption/server")
+
+# Get the current working directory
+# cwd = os.path.dirname(os.path.realpath(__file__))
+cwd = os.getcwd()
+
+# Get the relative path from the current working directory to the subdirectory
+rel_path = os.path.relpath(subdir_path, cwd)
+
+sys.path.append(rel_path)
+from send_request import send_single_thread_request
+
 
 # TODO (by Tim) we also need to pass the wait_after_run_secs argument to send_request to specify
 # the number of seconds we want to wait after the function stops running on the server
