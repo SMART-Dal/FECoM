@@ -62,7 +62,34 @@ def combined_plot(cpu_energy=None, ram_energy=None, gpu_power=None, directory=No
     print(df.std())
     print(df.mean())
     return df
-    
+
+def plot_energy_from_dfs(cpu_df, ram_df, gpu_df, start_time_perf, end_time_perf, start_time_nvidia, end_time_nvidia):
+    fig, [ax1, ax2, ax3] = plt.subplots(nrows=1, ncols=3)
+
+    ax1.set_title("CPU Energy over time")
+    ax1.plot(cpu_df["time_elapsed"], cpu_df["energy (J)"])
+    ax1.axvline(x=start_time_perf, color='r',linewidth=1)
+    ax1.axvline(x=end_time_perf, color='r',linewidth=1)
+
+    ax2.set_title("RAM Energy over time")
+    ax2.plot(ram_df["time_elapsed"], ram_df["energy (J)"])
+    ax2.axvline(x=start_time_perf, color='r',linewidth=1)
+    ax2.axvline(x=end_time_perf, color='r',linewidth=1)
+
+    # ax3.set_title("GPU Power over time")
+    # ax3.plot(gpu_df["timestamp"], gpu_df["power_draw (W)"])
+    # ax3.axvline(x=start_time_nvidia, color='r',linewidth=1)
+    # ax3.axvline(x=end_time_nvidia, color='r',linewidth=1)
+
+# def plot_energy(time, energy, start_time, end_time, title=None):
+#     fig, ax = plt.subplots()
+#     if title is not None:
+#         ax.set_title(title)
+#     ax.plot(time, energy)
+#     ax.axvline(x=start_time, color='r',linewidth=1)
+#     ax.axvline(x=end_time, color='r',linewidth=1)
+
+
 
 if __name__ == "__main__":
     directory = "./out/2022-12-10/"
