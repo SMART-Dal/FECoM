@@ -82,14 +82,14 @@ def server_is_stable(max_wait_secs: int) -> bool:
     
     # re-calculate statistics every wait_per_loop_secs seconds
     # TODO play around with different values to see impact on energy data
-    wait_per_loop_secs = 0.5
+    wait_per_loop_secs = 5
 
-    # only consider the last n points
-    n = 50
+    # only consider the last n points, with perf stat/nvidia-smi interval of 0.5secs this corresponds to the last 10 seconds
+    n = 20
 
     # relative tolerance for difference between stable stdev/mean ratio and current ratio
     # e.g. 0.1 would mean allowing a ratio that's 10% higher than the stable stdev/mean ratio
-    tolerance = 2
+    tolerance = 0.1
 
     # in each loop iteration, load new data, calculate statistics and check if the energy is stable.
     # try this for the specified number of seconds
@@ -229,8 +229,8 @@ def run_function_and_return_result():
         
         exec(f"import {function_details.module_name}")
     
-    # (3) Try reaching a stable state and running the function
-    # TODO add energy measurement
+    # (3) Try reaching a stable state and running the function.
+    # The experimental results are stored in the results variable
     try:
         results = run_function(
             function_details.imports,
@@ -248,7 +248,7 @@ def run_function_and_return_result():
         results = e
         status = 500
 
-    # (4) send response to client
+    # (4) form the response to send to the client, stored in the response variable
     if function_details.return_result:
         if DEBUG:
             print("Pickling response to return result")
@@ -271,8 +271,7 @@ def run_function_and_return_result():
            raise OSError("Could not remove custom class file")
     app.logger.info("response-value: %s", response)
 
-    return jsonify(results)
-    # return response # TODO Commented for demo as the response was not a json/dict, can change this later
+    return response
 
 @app.route("/")
 def index():

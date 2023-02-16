@@ -1,8 +1,11 @@
 import matplotlib.pyplot as plt
-from measurement_parse import parse_nvidia_smi, parse_perf
 import pandas as pd
 from sklearn.preprocessing import MinMaxScaler
 import numpy as np
+
+import sys
+sys.path.insert(0,'..')
+from measurement_parse import parse_nvidia_smi, parse_perf
 
 def normalised(lst, normalise=True):
     if not normalise:
@@ -44,11 +47,11 @@ def plot_cpu_and_ram(filename, n=100, normalise=True):
 
 def combined_plot(cpu_energy=None, ram_energy=None, gpu_power=None, directory=None):
     if directory is not None:
-        gpu_power = parse_nvidia_smi(f"{directory}nvidia_smi.txt")
-        cpu_energy, ram_energy, start_time, end_time = parse_perf(f"{directory}perf.txt")
+        gpu_power, _, _ = parse_nvidia_smi(f"{directory}nvidia_smi.txt")
+        cpu_energy, ram_energy, _, _ = parse_perf(f"{directory}perf.txt")
     min_len = min([len(gpu_power), len(cpu_energy), len(ram_energy)]) - 1
     print(min_len)
-    df = pd.concat([gpu_power.loc[:min_len]['power_draw (W)'], cpu_energy.loc[:min_len]['energy (J)'], ram_energy.loc[:min_len]['energy (J)']], axis=1)
+    df = pd.concat([gpu_power.iloc[:min_len]['power_draw (W)'], cpu_energy.iloc[:min_len]['energy (J)'], ram_energy.iloc[:min_len]['energy (J)']], axis=1)
     df.columns = ['gpu_power', 'cpu_energy', 'ram_energy']
   
     # # apply normalization techniques
@@ -58,7 +61,9 @@ def combined_plot(cpu_energy=None, ram_energy=None, gpu_power=None, directory=No
 
     df['sum'] = df.sum(axis=1)
 
+    print("Combined plot:")
     print(df)
+    print("Statistics (stdv, mean):")
     print(df.std())
     print(df.mean())
     return df
@@ -81,6 +86,41 @@ def plot_energy_from_dfs(cpu_df, ram_df, gpu_df, start_time_perf, end_time_perf,
     ax3.axvline(x=start_time_nvidia, color='r',linewidth=1)
     ax3.axvline(x=end_time_nvidia, color='r',linewidth=1)
 
+
+def split_df_into_n(df: pd.DataFrame, n) -> list:
+    dfs = []
+    prev_i = 0
+    for i in range(n, len(df.index), n):
+        dfs.append(df.iloc[prev_i:i])
+    return dfs
+
+def calc_stats_for_split_data(combined_df: pd.DataFrame, n=20):
+    dfs = split_df_into_n(combined_df, n)
+
+    columns=["cpu_energy_stdv", "cpu_energy_mean", "ram_energy_stdv", "ram_energy_mean", "gpu_power_stdv", "gpu_power_mean"]
+    stats = []
+    for i, df in enumerate(dfs):
+        # TODO: continue here by changing labels of the statistics series and appending them to a list to create a df out of
+        df_mean = df.mean()
+        df_stdv = df.std()
+
+        current_stats = pd.DataFrame(
+            [[
+                df_stdv["cpu_energy"],
+                df_mean["cpu_energy"],
+                df_stdv["ram_energy"],
+                df_mean["ram_energy"],
+                df_stdv["gpu_power"],
+                df_mean["gpu_power"]
+            ]],
+            index=[i],
+            columns=columns)
+
+        stats.append(current_stats)
+    
+    return pd.concat(stats)
+
+
 # def plot_energy(time, energy, start_time, end_time, title=None):
 #     fig, ax = plt.subplots()
 #     if title is not None:
@@ -94,8 +134,9 @@ def plot_energy_from_dfs(cpu_df, ram_df, gpu_df, start_time_perf, end_time_perf,
 if __name__ == "__main__":
     directory = "./out/2022-12-10/"
     # plot_cpu_and_ram(f"{directory}perf.txt", n=10000, normalise=True)
-    parse_nvidia_smi(f"{directory}nvidia_smi.txt").plot(y='power_draw (W)')
+    # parse_nvidia_smi(f"{directory}nvidia_smi.txt").plot(y='power_draw (W)')
     # print(parse_nvidia_smi(f"{directory}nvidia_smi.txt"))
     # print(parse_perf(f"{directory}perf.txt"))
-    # combined_plot(directory=directory).plot()
-    plt.show()
+    # combined_plot(directory=directory)#.plot()
+    print(calc_stats_for_split_data(combined_plot(directory=directory)))
+    # plt.show()
