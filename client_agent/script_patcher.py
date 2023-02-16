@@ -34,7 +34,18 @@ def main():
     global importScriptList
     requiredAlias = analyzer.stats['required']
     # print("required Alias:",requiredAlias)
-    importScriptList = ';'.join(list(set(analyzer.stats['importScript'])))
+    importScriptList = list(set(analyzer.stats['importScript']))
+
+# Get list of libraries and aliases with __future__ imports as they need to be moved to the beginning
+    future_imports = [imp for imp in importScriptList if imp.startswith("from __future__")]
+
+# Get list of libraries and aliases without __future__ imports
+    importScriptList = [imp for imp in importScriptList if not imp.startswith("from __future__")]
+
+# Add __future__ imports to the beginning of the list
+    importScriptList = future_imports + importScriptList
+
+    importScriptList = ';'.join(importScriptList)
 
     # Step3: Get list of Classdefs having bases from the required libraries
     global requiredClassDefs
@@ -56,7 +67,16 @@ def main():
     with open("custom_method.py", "r") as source:
         cm = source.read()
         cm_node = ast.parse(cm)
-        tree.body.insert(0, cm_node)
+
+        first_import = 0
+        while first_import < len(tree.body) and not isinstance(tree.body[first_import], (ast.Import, ast.ImportFrom)):
+            first_import += 1
+
+        first_non_import = first_import
+        while first_non_import < len(tree.body) and isinstance(tree.body[first_non_import], (ast.Import, ast.ImportFrom)):
+            first_non_import += 1
+        # Insert the new import statement before the first non-import statement
+        tree.body.insert(first_non_import, cm_node)
 
     # print('+'*100)
     # print(ast.dump(tree, indent=4))
@@ -177,7 +197,12 @@ class TransformCall(ast.NodeTransformer):
                                         value=ast.Constant(ast.unparse(dummyNode).replace(callvisitor.name.split('.')[0], 'obj', 1))),
                                     ast.keyword(
                                         arg='method_object',
-                                        value=ast.Constant(callvisitor.name.split('.')[0])),
+                                        value= ast.Call(
+                                                    func=ast.Name(id='eval', ctx=ast.Load()),
+                                                    args=[
+                                                        ast.Constant(callvisitor.name.split('.')[0])],
+                                                    keywords=[])
+                                        ),
                                     ast.keyword(
                                         arg='function_args',
                                         value=ast.List(
