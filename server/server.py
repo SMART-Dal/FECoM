@@ -175,8 +175,8 @@ def run_function(imports: str, function_to_run: str, obj: object, args: list, kw
 
     # (5) get the energy data since run_function has been invoked and clear the files
     # TODO implement this
-    df_cpu, df_ram, _, _ = parse_perf(PERF_FILE)
-    df_gpu, _, _ = parse_nvidia_smi(NVIDIA_SMI_FILE)
+    df_cpu, df_ram = parse_perf(PERF_FILE)
+    df_gpu = parse_nvidia_smi(NVIDIA_SMI_FILE)
 
     start_time_nvidia_normalised = start_time_nvidia - df_gpu["timestamp"][0]
     end_time_nvidia_normalised = end_time_nvidia - df_gpu["timestamp"][0]

@@ -7,7 +7,7 @@ import numpy as np
 
 from config import START_EXECUTION, END_EXECUTION
 
-def parse_nvidia_smi(filename) -> tuple((pd.DataFrame, float, float)):
+def parse_nvidia_smi(filename) -> pd.DataFrame:
     """
     Given a filename returns a 3-tuple with
     - a dataframe with columns 
@@ -15,29 +15,13 @@ def parse_nvidia_smi(filename) -> tuple((pd.DataFrame, float, float)):
         - power_draw (W) (float)
     - start_time
     - end_time
-    The times are determined by parsing the special execution markers START_EXECUTION, END_EXECUTION inserted into the nvidia-smi file by the server.
-    If no markers are found, start_time and end_time are None.
     """
-    start_time = None
-    end_time = None
     data_list = []
     with open(filename, 'r') as f:
         # in_execution = False
         time_zero = None
         for i, line in enumerate(f):
             line = line.strip('\n')
-            # # look for special execution markers
-            # if line == START_EXECUTION:
-            #     in_execution = True
-            #     # TODO keep in mind: start & end time will always be slightly sooner than the actual start time because we take the time of the last measurement before execution starts
-            #     start_time = data_list[-1][0]
-            #     continue
-            # elif line == END_EXECUTION:
-            #     if in_execution == False:
-            #         raise ValueError("END_EXECUTION must be after START_EXECUTION")
-            #     in_execution = False
-            #     end_time = data_list[-1][0]
-            #     continue
 
             # 2023/02/06 11:23:08.654, 20.28 W
             raw_data = line.split(',')
@@ -56,10 +40,10 @@ def parse_nvidia_smi(filename) -> tuple((pd.DataFrame, float, float)):
     df = pd.DataFrame(data_list,
                       columns=['timestamp', 'power_draw (W)', 'time_elapsed'])
 
-    return df, start_time, end_time
+    return df
 
 
-def parse_perf(filename) -> tuple((pd.DataFrame, pd.DataFrame, float, float)):
+def parse_perf(filename) -> tuple((pd.DataFrame, pd.DataFrame)):
     """
     Given a filename returns a 4-tuple with
     - 2 dataframes (cpu_energy, ram_energy) with columns 
@@ -70,8 +54,6 @@ def parse_perf(filename) -> tuple((pd.DataFrame, pd.DataFrame, float, float)):
     The times are determined by parsing the special execution markers START_EXECUTION, END_EXECUTION inserted into the perf file by the server.
     If no markers are found, start_time and end_time are None.
     """
-    start_time = None
-    end_time = None
     data_list = []
     with open(filename, 'r') as f:
         in_execution = False
@@ -82,18 +64,6 @@ def parse_perf(filename) -> tuple((pd.DataFrame, pd.DataFrame, float, float)):
                 continue
 
             line = line.strip(' \n')
-            # look for special execution markers
-            if line == START_EXECUTION:
-                in_execution = True
-                # TODO keep in mind: start & end time will always be slightly sooner than the actual start time because we take the time of the last measurement before execution starts
-                start_time = float(data_list[-1][0])
-                continue
-            elif line == END_EXECUTION:
-                if in_execution == False:
-                    raise ValueError("END_EXECUTION must be after START_EXECUTION")
-                in_execution = False
-                end_time = float(data_list[-1][0])
-                continue
             # the last two values in each line are always empty because the line ends with ;;
             data = line.split(';')[:-2]
             # add boolean in_execution column to data to indicate when the method is executing
@@ -113,12 +83,12 @@ def parse_perf(filename) -> tuple((pd.DataFrame, pd.DataFrame, float, float)):
     # split df by event_name
     df_pkg = df[df['event_name'] == 'power/energy-pkg/'].reset_index(drop=True).drop(columns='event_name')
     df_ram = df[df['event_name'] == 'power/energy-ram/'].reset_index(drop=True).drop(columns='event_name')
-    return df_pkg, df_ram, start_time, end_time
+    return df_pkg, df_ram
 
 
 if __name__ == "__main__":
     directory = "energy_measurement/out/"
-    gpu_energy, start_time, end_time = parse_nvidia_smi(f"{directory}nvidia_smi.txt")
+    gpu_energy = parse_nvidia_smi(f"{directory}nvidia_smi.txt")
     ax = gpu_energy.plot(x="timestamp", y="power_draw (W)")
     ax.axvline(x=start_time, color='r',linewidth=1)
     ax.axvline(x=end_time, color='r',linewidth=1)
@@ -126,7 +96,7 @@ if __name__ == "__main__":
     print(gpu_energy)
     print(gpu_energy.dtypes)
 
-    cpu_energy, ram_energy, start_time, end_time = parse_perf(f"{directory}perf.txt")
+    cpu_energy, ram_energy = parse_perf(f"{directory}perf.txt")
     ax = cpu_energy.plot(x="time_elapsed", y="energy (J)")
     ax.axvline(x=start_time, color='r',linewidth=1)
     ax.axvline(x=end_time, color='r',linewidth=1)
