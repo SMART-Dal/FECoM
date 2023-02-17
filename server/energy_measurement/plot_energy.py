@@ -8,6 +8,9 @@ sys.path.insert(0,'..')
 from measurement_parse import parse_nvidia_smi, parse_perf
 
 def normalised(lst, normalise=True):
+    """
+    normalise a list of data using max-min normalisation
+    """
     if not normalise:
         return lst
 
@@ -18,7 +21,7 @@ def normalised(lst, normalise=True):
 
 def plot_cpu_and_ram(filename, n=100, normalise=True):
     """
-    plot the last n data points
+    plot the last n data points without using parse_perf/parse_nvidia_smi
     """
 
     data_lines = []
@@ -46,9 +49,17 @@ def plot_cpu_and_ram(filename, n=100, normalise=True):
     ax4.plot(time, ram_plus_cpu, 'o')
 
 def combined_plot(cpu_energy=None, ram_energy=None, gpu_power=None, directory=None):
+    """
+    Requires either
+    - a path to a directory containing nvidia_smi.txt and perf.txt or
+    - the 3 dataframes as returned by parse_perf and parse_nvidia_smi
+    And concatenates these three dataframes into one containing only energy consumption of each hardware component
+    as well as the sum of these three values over time. It does not attempt to merge the perf and nvidia-smi data
+    in a way that synchronises the measurements in same rows to be at the same time.
+    """
     if directory is not None:
-        gpu_power, _, _ = parse_nvidia_smi(f"{directory}nvidia_smi.txt")
-        cpu_energy, ram_energy, _, _ = parse_perf(f"{directory}perf.txt")
+        gpu_power = parse_nvidia_smi(f"{directory}nvidia_smi.txt")
+        cpu_energy, ram_energy = parse_perf(f"{directory}perf.txt")
     min_len = min([len(gpu_power), len(cpu_energy), len(ram_energy)]) - 1
     print(min_len)
     df = pd.concat([gpu_power.iloc[:min_len]['power_draw (W)'], cpu_energy.iloc[:min_len]['energy (J)'], ram_energy.iloc[:min_len]['energy (J)']], axis=1)
@@ -69,6 +80,11 @@ def combined_plot(cpu_energy=None, ram_energy=None, gpu_power=None, directory=No
     return df
 
 def plot_energy_from_dfs(cpu_df, ram_df, gpu_df, start_time_perf, end_time_perf, start_time_nvidia, end_time_nvidia):
+    """
+    Given the dataframes returned by parse_perf and parse_nvidia_smi, and the start and end times for each file,
+    create a plot with 3 graphs showing the energy consumption over time for CPU, RAM and GPU with start/end
+    times indicated by red lines.
+    """
     fig, [ax1, ax2, ax3] = plt.subplots(nrows=1, ncols=3)
 
     ax1.set_title("CPU Energy over time")
@@ -88,6 +104,11 @@ def plot_energy_from_dfs(cpu_df, ram_df, gpu_df, start_time_perf, end_time_perf,
 
 
 def split_df_into_n(df: pd.DataFrame, n) -> list:
+    """
+    Split the given dataframe into a list of new dataframes, each with n rows.
+    E.g. a dataframe df with 150 rows will be split into
+    [df[0:50], df[50:100], df[100:150]]
+    """
     dfs = []
     prev_i = 0
     for i in range(n, len(df.index), n):
@@ -118,7 +139,9 @@ def calc_stats_for_split_data(combined_df: pd.DataFrame, n=20):
 
         stats.append(current_stats)
     
-    return pd.concat(stats)
+    total = pd.concat(stats)
+    
+    return total.mean()
 
 
 # def plot_energy(time, energy, start_time, end_time, title=None):

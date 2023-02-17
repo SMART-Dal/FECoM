@@ -29,9 +29,21 @@ gpu_mean = 21.061808
 cpu_mean = 17.326540
 ram_mean = 3.490937
 
-GPU_STD_TO_MEAN = 0.0100381 # ~0.01
-CPU_STD_TO_MEAN = 0.0292644 # ~0.03
-RAM_STD_TO_MEAN = 0.0245123 # ~0.025
+# CPU_STD_TO_MEAN = 0.0292644 # ~0.03
+# RAM_STD_TO_MEAN = 0.0245123 # ~0.025
+# GPU_STD_TO_MEAN = 0.0100381 # ~0.01
+
+# average (mean) standard deviations and means for stable energy data for 20 values in a row from 2022-12-10 data, generated with plot_energy.calc_stats_for_split_data()
+cpu_energy_stdv = 0.791626
+cpu_energy_mean = 17.408177
+ram_energy_stdv = 0.107354
+ram_energy_mean = 3.503457
+gpu_power_stdv = 0.190666
+gpu_power_mean = 21.077714
+
+CPU_STD_TO_MEAN = 0.05 # 0.0454744
+RAM_STD_TO_MEAN = 0.03 # 0.0303726
+GPU_STD_TO_MEAN = 0.01 # 0.0090459
 
 # path to find energy data (this is currently also manually written into the energy_measurement.sh script)
 # TODO make this the single source of truth and somehow pass these variables into the script (e.g. by running it from within python)
