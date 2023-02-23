@@ -10,6 +10,7 @@ import pickle
 import statistics as stats
 from pathlib import Path
 import json
+from typing import List
 
 from flask import Flask, Response, request, jsonify
 from flask_httpauth import HTTPBasicAuth
@@ -69,7 +70,7 @@ def load_last_n_cpu_ram_gpu(n: int, perf_file: Path, nvidia_smi_file: Path) -> t
 
     return last_n_cpu_energies, last_n_ram_energies, last_n_gpu_energies
 
-def data_is_stable(data: list[float], tolerance: float, stable_std_mean_ratio: float) -> bool:
+def data_is_stable(data: List[float], tolerance: float, stable_std_mean_ratio: float) -> bool:
     return (stats.stdev(data) / stats.mean(data)) <= ((1 + tolerance)*stable_std_mean_ratio)
 
 def server_is_stable(max_wait_secs: int) -> bool:
