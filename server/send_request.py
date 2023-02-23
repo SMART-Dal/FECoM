@@ -78,7 +78,28 @@ def store_response(future_response):
 # TODO how can we best pass the username and password to this function? Write a wrapper?
 def send_single_thread_request(imports: str, function_to_run: str, function_args: list = None, function_kwargs: dict = None, max_wait_secs: int = 0, wait_after_run_secs: int = 0, return_result: bool = False, method_object = None, custom_class: str = None, username: str = "tim9220", password: str = "qQ32XALjF9JqFh!vF3xY"):
     """
-    Send a request to execute any function and show the result
+    Send a request to execute any function to the server and return specified data.
+    If return_result=False, the returned object is JSON of the following format:
+    function_to_run: {
+        "energy_data": {
+            "cpu": df_cpu_json,
+            "ram": df_ram_json,
+            "gpu": df_gpu_json
+        },
+        "times": {
+            "start_time_server": start_time_server,
+            "end_time_server": end_time_server,
+            "start_time_perf": start_time_perf, 
+            "end_time_perf": end_time_perf,
+            "start_time_nvidia": start_time_nvidia_normalised,
+            "end_time_nvidia": end_time_nvidia_normalised,
+        },
+        "input_sizes" {
+            "args_size": args_size_bit,
+            "kwargs_size": kwargs_size_bit,
+            "object_size": object_size_bit
+        }
+    }
     """
 
     function_details = FunctionDetails(
@@ -95,7 +116,11 @@ def send_single_thread_request(imports: str, function_to_run: str, function_args
     )
 
     if DEBUG:
-        print(f"sending {function_to_run} request to {URL}")
+        print(f"Sending {function_to_run} request to {URL}")
+        print("######SIZES######")
+        print(f"Data size of function_args: {len(pickle.dumps(function_args))}")
+        print(f"Data size of function_kwargs: {len(pickle.dumps(function_kwargs))}")
+        print(f"Data size of method_object: {len(pickle.dumps(method_object))}")
 
     run_data = pickle.dumps(function_details)
 
@@ -104,19 +129,28 @@ def send_single_thread_request(imports: str, function_to_run: str, function_args
     # But this didn't work for a self-signed certificate, since a certificate authority (CA) bundle is required
     
     run_resp = requests.post(URL, data=run_data, auth=(username, password), verify=False, headers={'Content-Type': 'application/octet-stream'})
-
+    
+    if DEBUG:
+        print("RECEIVED RESPONSE")
     # if HTTP status code is 500, the server could not reach a stable state.
     # now, simply raise an error. TODO: send a new request instead.
-
     if run_resp.status_code == 500:
          raise TimeoutError(run_resp.content)
+    # catch internal server errors
     elif run_resp.status_code == 401:
         raise RuntimeError(run_resp.content)
 
+    # get the relevant data from the response
+    # (return_result is used for testing & debugging)
     if return_result:
         return pickle.loads(run_resp.content)
     else:
         return run_resp.json()
+    """
+    """
+    # TODO REMOVE UNUSED CODE
+    """
+    """
     # if run_resp.status_code == 500:
     #     raise TimeoutError(run_resp.content)
     # elif run_resp.status_code == 401:

@@ -188,9 +188,7 @@ def run_function(imports: str, function_to_run: str, obj: object, args: list, kw
         "gpu": df_gpu.to_json(orient="split") 
     }
 
-    # (6) return the energy data, times and status
-    return_dict = {
-        "energy_data": energy_data,
+    times = {
         "start_time_server": start_time_server,
         "end_time_server": end_time_server,
         "start_time_perf": start_time_perf, 
@@ -198,7 +196,13 @@ def run_function(imports: str, function_to_run: str, obj: object, args: list, kw
         "start_time_nvidia": start_time_nvidia_normalised,
         "end_time_nvidia": end_time_nvidia_normalised
     }
-    # TODO: From the meeting: Add Data size,Total Consumption, Add Method Call as the Key for dictionary in the returned response
+
+    # (6) return the energy data, times and status
+    return_dict = {
+        "energy_data": energy_data,
+        "times": times
+    }
+    # TODO From the meeting: add Total Consumption (still needed?)
 
     if return_result:
         return_dict["return"] = func_return
@@ -248,8 +252,19 @@ def run_function_and_return_result():
     except TimeoutError as e:
         results = e
         status = 500
+    
+    # (4) The function has executed successfully. Now add size data and format the return dictionary
+    results["input_sizes"] = {
+        "args_size": len(pickle.dumps(function_details.args)) if function_details.args is not None else None,
+        "kwargs_size": len(pickle.dumps(function_details.kwargs)) if function_details.kwargs is not None else None,
+        "object_size": len(pickle.dumps(function_details.method_object)) if function_details.method_object is not None else None
+    }
 
-    # (4) form the response to send to the client, stored in the response variable
+    results = {
+        function_details.function_to_run: results
+    }
+
+    # (5) form the response to send to the client, stored in the response variable
     if function_details.return_result:
         if DEBUG:
             print("Pickling response to return result")
@@ -264,7 +279,7 @@ def run_function_and_return_result():
             status=status
         )
 
-    # (5) if needed, delete the module created for the custom class definition
+    # (6) if needed, delete the module created for the custom class definition
     if custom_class_file is not None:
         if os.path.isfile(custom_class_file):
             os.remove(custom_class_file)

@@ -44,7 +44,7 @@ def run_mnist_model_train():
     function_kwargs = {"epochs": 5}
     method_object = compiled_model
     
-    results = send_request(imports, function_to_run, function_args, function_kwargs, method_object=method_object, max_wait_secs=0, return_result=False, wait_after_run_secs=30)
+    results = send_request(imports, function_to_run, function_args, function_kwargs, method_object=method_object, max_wait_secs=0, return_result=False, wait_after_run_secs=10)
 
     return results
     # "energy_data": {
@@ -67,22 +67,24 @@ if __name__ == "__main__":
         json.dump(results, f)
 
     cpu_df, ram_df, gpu_df = convert_json_to_df(results)
-    start_time_perf = results["start_time_perf"]
-    end_time_perf = results["end_time_perf"]
-    start_time_nvidia = results ["start_time_nvidia"]
-    end_time_nvidia = results ["end_time_nvidia"]
+    start_time_perf = results["times"]["start_time_perf"]
+    end_time_perf = results["times"]["end_time_perf"]
+    start_time_nvidia = results["times"]["start_time_nvidia"]
+    end_time_nvidia = results["times"]["end_time_nvidia"]
+    print("###INPUT SIZES###")
+    print(results["input_sizes"])
+    print("###DATA FRAMES###")
     print(gpu_df)
     print(cpu_df)
 
-    # TODO CONTINUE WITH: this plot method requires the start and end times from the parsed energy files, the server has to be updated appropriately.
     plot_energy_from_dfs(cpu_df, ram_df, gpu_df, start_time_perf, end_time_perf, start_time_nvidia, end_time_nvidia)
 
     
 
-    # df = combined_plot(cpu_df, ram_df, gpu_df)
-    # print("####DF####")
-    # print(df)
-    # df.plot()
+    df = combined_plot(cpu_df, ram_df, gpu_df)
+    print("###COMBINED DF###")
+    print(df)
+    df.plot()
 
     # ax = cpu_df["time_elapsed", "energy (J)"]
     # cmap = matplotlib.colors.ListedColormap(['grey', 'white'])
