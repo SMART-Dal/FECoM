@@ -1,4 +1,4 @@
-import pickle
+import dill as pickle
 import requests
 from config import URL, DEBUG
 from function_details import FunctionDetails

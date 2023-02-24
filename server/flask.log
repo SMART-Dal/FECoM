@@ -182,325 +182,1314 @@
 2023-02-23 09:05:37,108 INFO server Auth successful
 2023-02-23 09:05:37,778 DEBUG tensorflow Falling back to TensorFlow client; we recommended you install the Cloud TPU client directly with pip install cloud-tpu-client.
 2023-02-23 09:05:38,417 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 09:05:38] "[35m[1mPOST /api/run_experiment HTTP/1.1[0m" 500 -
-2023-02-23 14:27:13,765 INFO werkzeug [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
- * Running on https://localhost:54321
-2023-02-23 14:27:13,765 INFO werkzeug [33mPress CTRL+C to quit[0m
-2023-02-23 14:27:13,766 INFO werkzeug  * Restarting with stat
-2023-02-23 14:27:14,408 WARNING werkzeug  * Debugger is active!
-2023-02-23 14:27:14,409 INFO werkzeug  * Debugger PIN: 482-424-261
-2023-02-23 14:27:28,909 INFO server Auth successful
-2023-02-23 14:27:30,576 DEBUG tensorflow Falling back to TensorFlow client; we recommended you install the Cloud TPU client directly with pip install cloud-tpu-client.
-2023-02-23 14:27:30,685 DEBUG h5py._conv Creating converter from 7 to 5
-2023-02-23 14:27:30,685 DEBUG h5py._conv Creating converter from 5 to 7
-2023-02-23 14:27:30,685 DEBUG h5py._conv Creating converter from 7 to 5
-2023-02-23 14:27:30,685 DEBUG h5py._conv Creating converter from 5 to 7
-2023-02-23 14:27:31,811 INFO server Imports value: import tensorflow as tf
-2023-02-23 14:28:35,586 INFO werkzeug 127.0.0.1 - - [23/Feb/2023 14:28:35] "[35m[1mPOST /api/run_experiment HTTP/1.1[0m" 500 -
-2023-02-23 14:29:05,868 INFO werkzeug [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
- * Running on https://localhost:54321
-2023-02-23 14:29:05,869 INFO werkzeug [33mPress CTRL+C to quit[0m
-2023-02-23 14:29:05,869 INFO werkzeug  * Restarting with stat
-2023-02-23 14:29:06,502 WARNING werkzeug  * Debugger is active!
-2023-02-23 14:29:06,502 INFO werkzeug  * Debugger PIN: 482-424-261
-2023-02-23 14:29:19,489 INFO server Auth successful
-2023-02-23 14:29:21,164 DEBUG tensorflow Falling back to TensorFlow client; we recommended you install the Cloud TPU client directly with pip install cloud-tpu-client.
-2023-02-23 14:29:21,272 DEBUG h5py._conv Creating converter from 7 to 5
-2023-02-23 14:29:21,272 DEBUG h5py._conv Creating converter from 5 to 7
-2023-02-23 14:29:21,272 DEBUG h5py._conv Creating converter from 7 to 5
-2023-02-23 14:29:21,272 DEBUG h5py._conv Creating converter from 5 to 7
-2023-02-23 14:29:22,161 INFO server Imports value: import tensorflow as tf
-2023-02-23 14:30:25,716 INFO server response-value: <Response 17442 bytes [200 OK]>
-2023-02-23 14:30:25,731 INFO werkzeug 127.0.0.1 - - [23/Feb/2023 14:30:25] "POST /api/run_experiment HTTP/1.1" 200 -
-2023-02-23 14:32:31,896 INFO werkzeug [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
- * Running on https://localhost:54321
-2023-02-23 14:32:31,896 INFO werkzeug [33mPress CTRL+C to quit[0m
-2023-02-23 14:32:31,896 INFO werkzeug  * Restarting with stat
-2023-02-23 14:32:32,528 WARNING werkzeug  * Debugger is active!
-2023-02-23 14:32:32,528 INFO werkzeug  * Debugger PIN: 482-424-261
-2023-02-23 14:32:49,921 INFO server Auth successful
-2023-02-23 14:32:51,788 DEBUG tensorflow Falling back to TensorFlow client; we recommended you install the Cloud TPU client directly with pip install cloud-tpu-client.
-2023-02-23 14:32:51,898 DEBUG h5py._conv Creating converter from 7 to 5
-2023-02-23 14:32:51,898 DEBUG h5py._conv Creating converter from 5 to 7
-2023-02-23 14:32:51,898 DEBUG h5py._conv Creating converter from 7 to 5
-2023-02-23 14:32:51,898 DEBUG h5py._conv Creating converter from 5 to 7
-2023-02-23 14:32:53,152 INFO server Imports value: import tensorflow as tf
-2023-02-23 14:33:57,043 INFO server response-value: <Response 18644 bytes [200 OK]>
-2023-02-23 14:33:57,058 INFO werkzeug 127.0.0.1 - - [23/Feb/2023 14:33:57] "POST /api/run_experiment HTTP/1.1" 200 -
-2023-02-23 14:36:57,881 INFO werkzeug [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
- * Running on https://localhost:54321
-2023-02-23 14:36:57,881 INFO werkzeug [33mPress CTRL+C to quit[0m
-2023-02-23 14:36:57,882 INFO werkzeug  * Restarting with stat
-2023-02-23 14:36:58,499 WARNING werkzeug  * Debugger is active!
-2023-02-23 14:36:58,500 INFO werkzeug  * Debugger PIN: 482-424-261
-2023-02-23 14:37:17,450 INFO server Auth successful
-2023-02-23 14:37:19,241 DEBUG tensorflow Falling back to TensorFlow client; we recommended you install the Cloud TPU client directly with pip install cloud-tpu-client.
-2023-02-23 14:37:19,349 DEBUG h5py._conv Creating converter from 7 to 5
-2023-02-23 14:37:19,349 DEBUG h5py._conv Creating converter from 5 to 7
-2023-02-23 14:37:19,349 DEBUG h5py._conv Creating converter from 7 to 5
-2023-02-23 14:37:19,349 DEBUG h5py._conv Creating converter from 5 to 7
-2023-02-23 14:37:20,405 INFO server Imports value: import tensorflow as tf
-2023-02-23 14:38:23,773 INFO server response-value: <Response 18723 bytes [200 OK]>
-2023-02-23 14:38:23,787 INFO werkzeug 127.0.0.1 - - [23/Feb/2023 14:38:23] "POST /api/run_experiment HTTP/1.1" 200 -
-2023-02-23 14:42:20,770 INFO werkzeug  * Detected change in '/home/tim/GreenAI-extension/server/test/demo.py', reloading
-2023-02-23 14:42:21,499 INFO werkzeug  * Restarting with stat
-2023-02-23 14:42:22,164 WARNING werkzeug  * Debugger is active!
-2023-02-23 14:42:22,164 INFO werkzeug  * Debugger PIN: 482-424-261
-2023-02-23 14:42:23,175 INFO werkzeug  * Detected change in '/home/tim/GreenAI-extension/server/test/demo.py', reloading
-2023-02-23 14:42:23,312 INFO werkzeug  * Restarting with stat
-2023-02-23 14:42:23,960 WARNING werkzeug  * Debugger is active!
-2023-02-23 14:42:23,960 INFO werkzeug  * Debugger PIN: 482-424-261
-2023-02-23 14:42:25,974 INFO werkzeug  * Detected change in '/home/tim/GreenAI-extension/server/test/demo.py', reloading
-2023-02-23 14:42:26,101 INFO werkzeug  * Restarting with stat
-2023-02-23 14:42:26,788 WARNING werkzeug  * Debugger is active!
-2023-02-23 14:42:26,789 INFO werkzeug  * Debugger PIN: 482-424-261
-2023-02-23 14:42:30,810 INFO werkzeug  * Detected change in '/home/tim/GreenAI-extension/server/test/demo.py', reloading
-2023-02-23 14:42:30,954 INFO werkzeug  * Restarting with stat
-2023-02-23 14:42:31,591 WARNING werkzeug  * Debugger is active!
-2023-02-23 14:42:31,592 INFO werkzeug  * Debugger PIN: 482-424-261
-2023-02-23 14:42:42,646 INFO werkzeug  * Detected change in '/home/tim/GreenAI-extension/server/test/demo.py', reloading
-2023-02-23 14:42:42,797 INFO werkzeug  * Restarting with stat
-2023-02-23 14:42:43,441 WARNING werkzeug  * Debugger is active!
-2023-02-23 14:42:43,442 INFO werkzeug  * Debugger PIN: 482-424-261
-2023-02-23 14:42:50,475 INFO werkzeug  * Detected change in '/home/tim/GreenAI-extension/server/test/demo.py', reloading
-2023-02-23 14:42:50,642 INFO werkzeug  * Restarting with stat
-2023-02-23 14:42:51,281 WARNING werkzeug  * Debugger is active!
-2023-02-23 14:42:51,282 INFO werkzeug  * Debugger PIN: 482-424-261
-2023-02-23 14:43:13,392 INFO werkzeug  * Detected change in '/home/tim/GreenAI-extension/server/test/demo.py', reloading
-2023-02-23 14:43:13,562 INFO werkzeug  * Restarting with stat
-2023-02-23 14:43:14,199 WARNING werkzeug  * Debugger is active!
-2023-02-23 14:43:14,199 INFO werkzeug  * Debugger PIN: 482-424-261
-2023-02-23 14:43:20,225 INFO werkzeug  * Detected change in '/home/tim/GreenAI-extension/server/test/demo.py', reloading
-2023-02-23 14:43:20,375 INFO werkzeug  * Restarting with stat
-2023-02-23 14:43:21,012 WARNING werkzeug  * Debugger is active!
-2023-02-23 14:43:21,012 INFO werkzeug  * Debugger PIN: 482-424-261
-2023-02-23 14:43:27,042 INFO werkzeug  * Detected change in '/home/tim/GreenAI-extension/server/test/demo.py', reloading
-2023-02-23 14:43:27,207 INFO werkzeug  * Restarting with stat
-2023-02-23 14:43:27,843 WARNING werkzeug  * Debugger is active!
-2023-02-23 14:43:27,844 INFO werkzeug  * Debugger PIN: 482-424-261
-2023-02-23 14:43:28,854 INFO werkzeug  * Detected change in '/home/tim/GreenAI-extension/server/test/demo.py', reloading
-2023-02-23 14:43:28,977 INFO werkzeug  * Restarting with stat
-2023-02-23 14:43:29,647 WARNING werkzeug  * Debugger is active!
-2023-02-23 14:43:29,648 INFO werkzeug  * Debugger PIN: 482-424-261
-2023-02-24 09:31:14,542 INFO werkzeug [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
- * Running on https://localhost:54321
-2023-02-24 09:31:14,542 INFO werkzeug [33mPress CTRL+C to quit[0m
-2023-02-24 09:31:14,543 INFO werkzeug  * Restarting with stat
-2023-02-24 09:31:15,216 WARNING werkzeug  * Debugger is active!
-2023-02-24 09:31:15,216 INFO werkzeug  * Debugger PIN: 423-556-980
-2023-02-24 09:31:40,798 INFO server Auth successful
-2023-02-24 09:31:43,072 DEBUG tensorflow Falling back to TensorFlow client; we recommended you install the Cloud TPU client directly with pip install cloud-tpu-client.
-2023-02-24 09:31:43,185 DEBUG h5py._conv Creating converter from 7 to 5
-2023-02-24 09:31:43,185 DEBUG h5py._conv Creating converter from 5 to 7
-2023-02-24 09:31:43,185 DEBUG h5py._conv Creating converter from 7 to 5
-2023-02-24 09:31:43,185 DEBUG h5py._conv Creating converter from 5 to 7
-2023-02-24 09:31:44,720 INFO server Imports value: import tensorflow as tf
-2023-02-24 09:32:15,448 INFO werkzeug 127.0.0.1 - - [24/Feb/2023 09:32:15] "[35m[1mPOST /api/run_experiment HTTP/1.1[0m" 500 -
-2023-02-24 09:33:52,193 INFO werkzeug  * Detected change in '/home/tim/GreenAI-extension/server/server.py', reloading
-2023-02-24 09:33:52,775 INFO werkzeug  * Restarting with stat
-2023-02-24 09:34:40,380 INFO werkzeug [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
- * Running on https://localhost:54321
-2023-02-24 09:34:40,380 INFO werkzeug [33mPress CTRL+C to quit[0m
-2023-02-24 09:34:40,381 INFO werkzeug  * Restarting with stat
-2023-02-24 09:34:41,064 WARNING werkzeug  * Debugger is active!
-2023-02-24 09:34:41,064 INFO werkzeug  * Debugger PIN: 423-556-980
-2023-02-24 09:34:54,574 INFO server Auth successful
-2023-02-24 09:34:56,787 DEBUG tensorflow Falling back to TensorFlow client; we recommended you install the Cloud TPU client directly with pip install cloud-tpu-client.
-2023-02-24 09:34:56,897 DEBUG h5py._conv Creating converter from 7 to 5
-2023-02-24 09:34:56,897 DEBUG h5py._conv Creating converter from 5 to 7
-2023-02-24 09:34:56,897 DEBUG h5py._conv Creating converter from 7 to 5
-2023-02-24 09:34:56,898 DEBUG h5py._conv Creating converter from 5 to 7
-2023-02-24 09:34:58,515 INFO server Imports value: import tensorflow as tf
-2023-02-24 09:35:28,569 INFO werkzeug 127.0.0.1 - - [24/Feb/2023 09:35:28] "[35m[1mPOST /api/run_experiment HTTP/1.1[0m" 500 -
-2023-02-24 09:35:52,932 INFO werkzeug  * Detected change in '/home/tim/GreenAI-extension/server/server.py', reloading
-2023-02-24 09:35:53,551 INFO werkzeug  * Restarting with stat
-2023-02-24 09:39:01,490 INFO werkzeug [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
- * Running on https://localhost:54321
-2023-02-24 09:39:01,490 INFO werkzeug [33mPress CTRL+C to quit[0m
-2023-02-24 09:39:01,490 INFO werkzeug  * Restarting with stat
-2023-02-24 09:39:02,164 WARNING werkzeug  * Debugger is active!
-2023-02-24 09:39:02,164 INFO werkzeug  * Debugger PIN: 423-556-980
-2023-02-24 09:39:15,550 INFO server Auth successful
-2023-02-24 09:39:17,394 DEBUG tensorflow Falling back to TensorFlow client; we recommended you install the Cloud TPU client directly with pip install cloud-tpu-client.
-2023-02-24 09:39:17,515 DEBUG h5py._conv Creating converter from 7 to 5
-2023-02-24 09:39:17,515 DEBUG h5py._conv Creating converter from 5 to 7
-2023-02-24 09:39:17,515 DEBUG h5py._conv Creating converter from 7 to 5
-2023-02-24 09:39:17,515 DEBUG h5py._conv Creating converter from 5 to 7
-2023-02-24 09:39:19,106 INFO server Imports value: import tensorflow as tf
-2023-02-24 09:39:49,138 INFO server response-value: <Response 102 bytes [500 INTERNAL SERVER ERROR]>
-2023-02-24 09:39:49,140 INFO werkzeug 127.0.0.1 - - [24/Feb/2023 09:39:49] "[35m[1mPOST /api/run_experiment HTTP/1.1[0m" 500 -
-2023-02-24 09:52:24,653 INFO werkzeug [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
- * Running on https://localhost:54321
-2023-02-24 09:52:24,653 INFO werkzeug [33mPress CTRL+C to quit[0m
-2023-02-24 09:52:24,654 INFO werkzeug  * Restarting with stat
-2023-02-24 09:52:25,324 WARNING werkzeug  * Debugger is active!
-2023-02-24 09:52:25,325 INFO werkzeug  * Debugger PIN: 423-556-980
-2023-02-24 09:52:32,460 INFO server Auth successful
-2023-02-24 09:52:34,643 DEBUG tensorflow Falling back to TensorFlow client; we recommended you install the Cloud TPU client directly with pip install cloud-tpu-client.
-2023-02-24 09:52:34,754 DEBUG h5py._conv Creating converter from 7 to 5
-2023-02-24 09:52:34,754 DEBUG h5py._conv Creating converter from 5 to 7
-2023-02-24 09:52:34,754 DEBUG h5py._conv Creating converter from 7 to 5
-2023-02-24 09:52:34,754 DEBUG h5py._conv Creating converter from 5 to 7
-2023-02-24 09:52:36,292 INFO server Imports value: import tensorflow as tf
-2023-02-24 09:53:06,375 INFO werkzeug 127.0.0.1 - - [24/Feb/2023 09:53:06] "[35m[1mPOST /api/run_experiment HTTP/1.1[0m" 500 -
-2023-02-24 09:53:43,818 INFO werkzeug [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
- * Running on https://localhost:54321
-2023-02-24 09:53:43,818 INFO werkzeug [33mPress CTRL+C to quit[0m
-2023-02-24 09:53:43,818 INFO werkzeug  * Restarting with stat
-2023-02-24 09:53:44,518 WARNING werkzeug  * Debugger is active!
-2023-02-24 09:53:44,519 INFO werkzeug  * Debugger PIN: 423-556-980
-2023-02-24 09:53:53,121 INFO server Auth successful
-2023-02-24 09:53:55,365 DEBUG tensorflow Falling back to TensorFlow client; we recommended you install the Cloud TPU client directly with pip install cloud-tpu-client.
-2023-02-24 09:53:55,475 DEBUG h5py._conv Creating converter from 7 to 5
-2023-02-24 09:53:55,475 DEBUG h5py._conv Creating converter from 5 to 7
-2023-02-24 09:53:55,475 DEBUG h5py._conv Creating converter from 7 to 5
-2023-02-24 09:53:55,475 DEBUG h5py._conv Creating converter from 5 to 7
-2023-02-24 09:53:57,038 INFO server Imports value: import tensorflow as tf
-2023-02-24 09:54:27,083 INFO server response-value: <Response 9523 bytes [500 INTERNAL SERVER ERROR]>
-2023-02-24 09:54:27,084 INFO werkzeug 127.0.0.1 - - [24/Feb/2023 09:54:27] "[35m[1mPOST /api/run_experiment HTTP/1.1[0m" 500 -
-2023-02-24 09:54:46,344 INFO werkzeug  * Detected change in '/home/tim/GreenAI-extension/server/send_request.py', reloading
-2023-02-24 09:54:47,020 INFO werkzeug  * Restarting with stat
-2023-02-24 09:54:47,682 WARNING werkzeug  * Debugger is active!
-2023-02-24 09:54:47,683 INFO werkzeug  * Debugger PIN: 423-556-980
-2023-02-24 09:54:59,740 INFO werkzeug  * Detected change in '/home/tim/GreenAI-extension/server/send_request.py', reloading
-2023-02-24 09:54:59,920 INFO werkzeug  * Restarting with stat
-2023-02-24 09:55:00,619 WARNING werkzeug  * Debugger is active!
-2023-02-24 09:55:00,620 INFO werkzeug  * Debugger PIN: 423-556-980
-2023-02-24 09:55:03,636 INFO werkzeug  * Detected change in '/home/tim/GreenAI-extension/server/send_request.py', reloading
-2023-02-24 09:55:03,776 INFO werkzeug  * Restarting with stat
-2023-02-24 09:55:04,428 WARNING werkzeug  * Debugger is active!
-2023-02-24 09:55:04,428 INFO werkzeug  * Debugger PIN: 423-556-980
-2023-02-24 09:55:13,472 INFO werkzeug  * Detected change in '/home/tim/GreenAI-extension/server/send_request.py', reloading
-2023-02-24 09:55:13,640 INFO werkzeug  * Restarting with stat
-2023-02-24 09:55:14,303 WARNING werkzeug  * Debugger is active!
-2023-02-24 09:55:14,303 INFO werkzeug  * Debugger PIN: 423-556-980
-2023-02-24 09:55:18,323 INFO werkzeug  * Detected change in '/home/tim/GreenAI-extension/server/send_request.py', reloading
-2023-02-24 09:55:18,458 INFO werkzeug  * Restarting with stat
-2023-02-24 09:55:19,170 WARNING werkzeug  * Debugger is active!
-2023-02-24 09:55:19,170 INFO werkzeug  * Debugger PIN: 423-556-980
-2023-02-24 09:56:23,228 INFO werkzeug [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
- * Running on https://localhost:54321
-2023-02-24 09:56:23,228 INFO werkzeug [33mPress CTRL+C to quit[0m
-2023-02-24 09:56:23,228 INFO werkzeug  * Restarting with stat
-2023-02-24 09:56:23,887 WARNING werkzeug  * Debugger is active!
-2023-02-24 09:56:23,887 INFO werkzeug  * Debugger PIN: 423-556-980
-2023-02-24 09:57:26,906 INFO werkzeug [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
- * Running on https://localhost:54321
-2023-02-24 09:57:26,906 INFO werkzeug [33mPress CTRL+C to quit[0m
-2023-02-24 09:57:26,907 INFO werkzeug  * Restarting with stat
-2023-02-24 09:57:27,600 WARNING werkzeug  * Debugger is active!
-2023-02-24 09:57:27,600 INFO werkzeug  * Debugger PIN: 423-556-980
-2023-02-24 09:57:40,130 INFO server Auth successful
-2023-02-24 09:57:42,360 DEBUG tensorflow Falling back to TensorFlow client; we recommended you install the Cloud TPU client directly with pip install cloud-tpu-client.
-2023-02-24 09:57:42,471 DEBUG h5py._conv Creating converter from 7 to 5
-2023-02-24 09:57:42,471 DEBUG h5py._conv Creating converter from 5 to 7
-2023-02-24 09:57:42,471 DEBUG h5py._conv Creating converter from 7 to 5
-2023-02-24 09:57:42,471 DEBUG h5py._conv Creating converter from 5 to 7
-2023-02-24 09:57:43,941 INFO server Imports value: import tensorflow as tf
-2023-02-24 09:58:14,008 INFO server response-value: <Response 10363 bytes [500 INTERNAL SERVER ERROR]>
-2023-02-24 09:58:14,010 INFO werkzeug 127.0.0.1 - - [24/Feb/2023 09:58:14] "[35m[1mPOST /api/run_experiment HTTP/1.1[0m" 500 -
-2023-02-24 13:31:32,417 INFO werkzeug [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
- * Running on https://localhost:54321
-2023-02-24 13:31:32,417 INFO werkzeug [33mPress CTRL+C to quit[0m
-2023-02-24 13:31:32,417 INFO werkzeug  * Restarting with stat
-2023-02-24 13:31:33,068 WARNING werkzeug  * Debugger is active!
-2023-02-24 13:31:33,068 INFO werkzeug  * Debugger PIN: 114-307-174
-2023-02-24 13:31:44,982 INFO server Auth successful
-2023-02-24 13:31:47,248 DEBUG tensorflow Falling back to TensorFlow client; we recommended you install the Cloud TPU client directly with pip install cloud-tpu-client.
-2023-02-24 13:31:47,365 DEBUG h5py._conv Creating converter from 7 to 5
-2023-02-24 13:31:47,365 DEBUG h5py._conv Creating converter from 5 to 7
-2023-02-24 13:31:47,365 DEBUG h5py._conv Creating converter from 7 to 5
-2023-02-24 13:31:47,365 DEBUG h5py._conv Creating converter from 5 to 7
-2023-02-24 13:31:48,915 INFO server Imports value: import tensorflow as tf
-2023-02-24 13:33:33,718 INFO werkzeug [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
- * Running on https://localhost:54321
-2023-02-24 13:33:33,718 INFO werkzeug [33mPress CTRL+C to quit[0m
-2023-02-24 13:33:33,719 INFO werkzeug  * Restarting with stat
-2023-02-24 13:33:34,388 WARNING werkzeug  * Debugger is active!
-2023-02-24 13:33:34,389 INFO werkzeug  * Debugger PIN: 114-307-174
-2023-02-24 13:33:50,340 INFO server Auth successful
-2023-02-24 13:33:52,517 DEBUG tensorflow Falling back to TensorFlow client; we recommended you install the Cloud TPU client directly with pip install cloud-tpu-client.
-2023-02-24 13:33:52,630 DEBUG h5py._conv Creating converter from 7 to 5
-2023-02-24 13:33:52,630 DEBUG h5py._conv Creating converter from 5 to 7
-2023-02-24 13:33:52,630 DEBUG h5py._conv Creating converter from 7 to 5
-2023-02-24 13:33:52,630 DEBUG h5py._conv Creating converter from 5 to 7
-2023-02-24 13:33:54,164 INFO server Imports value: import tensorflow as tf
-2023-02-24 13:35:29,919 INFO werkzeug 127.0.0.1 - - [24/Feb/2023 13:35:29] "[35m[1mPOST /api/run_experiment HTTP/1.1[0m" 500 -
-2023-02-24 13:38:14,119 INFO werkzeug [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
- * Running on https://localhost:54321
-2023-02-24 13:38:14,119 INFO werkzeug [33mPress CTRL+C to quit[0m
-2023-02-24 13:38:14,119 INFO werkzeug  * Restarting with stat
-2023-02-24 13:38:14,801 WARNING werkzeug  * Debugger is active!
-2023-02-24 13:38:14,801 INFO werkzeug  * Debugger PIN: 114-307-174
-2023-02-24 13:38:26,651 INFO server Auth successful
-2023-02-24 13:38:28,631 DEBUG tensorflow Falling back to TensorFlow client; we recommended you install the Cloud TPU client directly with pip install cloud-tpu-client.
-2023-02-24 13:38:28,743 DEBUG h5py._conv Creating converter from 7 to 5
-2023-02-24 13:38:28,743 DEBUG h5py._conv Creating converter from 5 to 7
-2023-02-24 13:38:28,743 DEBUG h5py._conv Creating converter from 7 to 5
-2023-02-24 13:38:28,743 DEBUG h5py._conv Creating converter from 5 to 7
-2023-02-24 13:38:30,294 INFO server Imports value: import tensorflow as tf
-2023-02-24 13:40:10,992 INFO werkzeug 127.0.0.1 - - [24/Feb/2023 13:40:10] "[35m[1mPOST /api/run_experiment HTTP/1.1[0m" 500 -
-2023-02-24 13:45:47,668 INFO werkzeug [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
- * Running on https://localhost:54321
-2023-02-24 13:45:47,668 INFO werkzeug [33mPress CTRL+C to quit[0m
-2023-02-24 13:45:47,669 INFO werkzeug  * Restarting with stat
-2023-02-24 13:45:48,341 WARNING werkzeug  * Debugger is active!
-2023-02-24 13:45:48,341 INFO werkzeug  * Debugger PIN: 114-307-174
-2023-02-24 13:46:13,202 INFO server Auth successful
-2023-02-24 13:46:14,900 DEBUG tensorflow Falling back to TensorFlow client; we recommended you install the Cloud TPU client directly with pip install cloud-tpu-client.
-2023-02-24 13:46:14,999 DEBUG h5py._conv Creating converter from 7 to 5
-2023-02-24 13:46:14,999 DEBUG h5py._conv Creating converter from 5 to 7
-2023-02-24 13:46:14,999 DEBUG h5py._conv Creating converter from 7 to 5
-2023-02-24 13:46:14,999 DEBUG h5py._conv Creating converter from 5 to 7
-2023-02-24 13:46:16,490 INFO server Imports value: import tensorflow as tf
-2023-02-24 13:47:01,575 INFO werkzeug 127.0.0.1 - - [24/Feb/2023 13:47:01] "[35m[1mPOST /api/run_experiment HTTP/1.1[0m" 500 -
-2023-02-24 13:47:45,242 INFO werkzeug  * Detected change in '/home/tim/GreenAI-extension/server/energy_measurement/plot_energy.py', reloading
-2023-02-24 13:47:46,089 INFO werkzeug  * Restarting with stat
-2023-02-24 13:47:46,754 WARNING werkzeug  * Debugger is active!
-2023-02-24 13:47:46,754 INFO werkzeug  * Debugger PIN: 114-307-174
-2023-02-24 13:48:04,842 INFO werkzeug  * Detected change in '/home/tim/GreenAI-extension/server/energy_measurement/plot_energy.py', reloading
-2023-02-24 13:48:04,999 INFO werkzeug  * Restarting with stat
-2023-02-24 13:48:05,657 WARNING werkzeug  * Debugger is active!
-2023-02-24 13:48:05,657 INFO werkzeug  * Debugger PIN: 114-307-174
-2023-02-24 13:50:46,506 INFO werkzeug  * Detected change in '/home/tim/GreenAI-extension/server/server.py', reloading
-2023-02-24 13:50:46,670 INFO werkzeug  * Restarting with stat
-2023-02-24 13:50:47,341 WARNING werkzeug  * Debugger is active!
-2023-02-24 13:50:47,341 INFO werkzeug  * Debugger PIN: 114-307-174
-2023-02-24 13:51:01,416 INFO werkzeug  * Detected change in '/home/tim/GreenAI-extension/server/server.py', reloading
-2023-02-24 13:51:01,580 INFO werkzeug  * Restarting with stat
-2023-02-24 13:51:02,288 WARNING werkzeug  * Debugger is active!
-2023-02-24 13:51:02,288 INFO werkzeug  * Debugger PIN: 114-307-174
-2023-02-24 13:51:03,299 INFO werkzeug  * Detected change in '/home/tim/GreenAI-extension/server/server.py', reloading
-2023-02-24 13:51:03,444 INFO werkzeug  * Restarting with stat
-2023-02-24 13:51:04,123 WARNING werkzeug  * Debugger is active!
-2023-02-24 13:51:04,124 INFO werkzeug  * Debugger PIN: 114-307-174
-2023-02-24 13:51:06,137 INFO werkzeug  * Detected change in '/home/tim/GreenAI-extension/server/server.py', reloading
-2023-02-24 13:51:06,284 INFO werkzeug  * Restarting with stat
-2023-02-24 13:51:06,936 WARNING werkzeug  * Debugger is active!
-2023-02-24 13:51:06,936 INFO werkzeug  * Debugger PIN: 114-307-174
-2023-02-24 13:51:15,982 INFO werkzeug  * Detected change in '/home/tim/GreenAI-extension/server/server.py', reloading
-2023-02-24 13:51:16,139 INFO werkzeug  * Restarting with stat
-2023-02-24 13:51:16,807 WARNING werkzeug  * Debugger is active!
-2023-02-24 13:51:16,807 INFO werkzeug  * Debugger PIN: 114-307-174
-2023-02-24 13:51:41,933 INFO werkzeug  * Detected change in '/home/tim/GreenAI-extension/server/server.py', reloading
-2023-02-24 13:51:42,091 INFO werkzeug  * Restarting with stat
-2023-02-24 13:51:42,751 WARNING werkzeug  * Debugger is active!
-2023-02-24 13:51:42,751 INFO werkzeug  * Debugger PIN: 114-307-174
-2023-02-24 13:52:03,860 INFO werkzeug  * Detected change in '/home/tim/GreenAI-extension/server/test/demo.py', reloading
-2023-02-24 13:52:04,027 INFO werkzeug  * Restarting with stat
-2023-02-24 13:52:04,699 WARNING werkzeug  * Debugger is active!
-2023-02-24 13:52:04,699 INFO werkzeug  * Debugger PIN: 114-307-174
-2023-02-24 13:52:18,741 INFO werkzeug [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
- * Running on https://localhost:54321
-2023-02-24 13:52:18,741 INFO werkzeug [33mPress CTRL+C to quit[0m
-2023-02-24 13:52:18,742 INFO werkzeug  * Restarting with stat
-2023-02-24 13:52:19,394 WARNING werkzeug  * Debugger is active!
-2023-02-24 13:52:19,395 INFO werkzeug  * Debugger PIN: 114-307-174
-2023-02-24 13:52:31,640 INFO server Auth successful
-2023-02-24 13:52:33,857 DEBUG tensorflow Falling back to TensorFlow client; we recommended you install the Cloud TPU client directly with pip install cloud-tpu-client.
-2023-02-24 13:52:33,973 DEBUG h5py._conv Creating converter from 7 to 5
-2023-02-24 13:52:33,973 DEBUG h5py._conv Creating converter from 5 to 7
-2023-02-24 13:52:33,973 DEBUG h5py._conv Creating converter from 7 to 5
-2023-02-24 13:52:33,973 DEBUG h5py._conv Creating converter from 5 to 7
-2023-02-24 13:52:35,465 INFO server Imports value: import tensorflow as tf
-2023-02-24 13:54:11,643 INFO server response-value: <Response 24831 bytes [200 OK]>
-2023-02-24 13:54:11,655 INFO werkzeug 127.0.0.1 - - [24/Feb/2023 13:54:11] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 10:11:54,721 INFO werkzeug [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on https://129.173.67.60:8080
+2023-02-23 10:11:54,721 INFO werkzeug [33mPress CTRL+C to quit[0m
+2023-02-23 10:11:54,722 INFO werkzeug  * Restarting with stat
+2023-02-23 10:11:55,425 WARNING werkzeug  * Debugger is active!
+2023-02-23 10:11:55,425 INFO werkzeug  * Debugger PIN: 666-760-317
+2023-02-23 10:12:04,840 INFO server Auth successful
+2023-02-23 10:12:05,471 DEBUG tensorflow Falling back to TensorFlow client; we recommended you install the Cloud TPU client directly with pip install cloud-tpu-client.
+2023-02-23 10:12:06,111 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 10:12:06] "[35m[1mPOST /api/run_experiment HTTP/1.1[0m" 500 -
+2023-02-23 10:21:42,674 INFO werkzeug [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on https://129.173.67.60:8080
+2023-02-23 10:21:42,674 INFO werkzeug [33mPress CTRL+C to quit[0m
+2023-02-23 10:21:42,675 INFO werkzeug  * Restarting with stat
+2023-02-23 10:21:43,379 WARNING werkzeug  * Debugger is active!
+2023-02-23 10:21:43,380 INFO werkzeug  * Debugger PIN: 666-760-317
+2023-02-23 10:21:51,257 INFO server Auth successful
+2023-02-23 10:21:51,952 DEBUG tensorflow Falling back to TensorFlow client; we recommended you install the Cloud TPU client directly with pip install cloud-tpu-client.
+2023-02-23 10:21:52,522 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 10:21:52] "[35m[1mPOST /api/run_experiment HTTP/1.1[0m" 500 -
+2023-02-23 10:31:48,108 INFO werkzeug [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on https://129.173.67.60:8080
+2023-02-23 10:31:48,108 INFO werkzeug [33mPress CTRL+C to quit[0m
+2023-02-23 10:31:48,109 INFO werkzeug  * Restarting with stat
+2023-02-23 10:31:48,805 WARNING werkzeug  * Debugger is active!
+2023-02-23 10:31:48,805 INFO werkzeug  * Debugger PIN: 666-760-317
+2023-02-23 10:31:58,217 INFO server Auth successful
+2023-02-23 10:31:58,861 DEBUG tensorflow Falling back to TensorFlow client; we recommended you install the Cloud TPU client directly with pip install cloud-tpu-client.
+2023-02-23 10:31:59,488 INFO server Imports value: from mrcnn_tf2.runtime.learning_rate import PiecewiseConstantWithWarmupSchedule;from mrcnn_tf2.runtime.evaluation import evaluate;import tensorflow as tf;from mrcnn_tf2.runtime.weights_mapping import WEIGHTS_MAPPING;from mrcnn_tf2.model.mask_rcnn import MaskRCNN;from mrcnn_tf2.runtime.callbacks import DLLoggerMetricsCallback, DLLoggerPerfCallback, PretrainedWeightsLoadingCallback;import logging;import os;import dllogger
+2023-02-23 10:31:59,521 INFO tensorflow Mixed precision compatibility check (mixed_float16): OK
+Your GPU will likely run quickly with dtype policy mixed_float16 as it has compute capability of at least 7.0. Your GPU: NVIDIA GeForce RTX 3070 Ti, compute capability 8.6
+2023-02-23 10:31:59,521 WARNING tensorflow From /usr/local/lib/python3.8/dist-packages/tensorflow/python/keras/mixed_precision/loss_scale.py:56: DynamicLossScale.__init__ (from tensorflow.python.training.experimental.loss_scale) is deprecated and will be removed in a future version.
+Instructions for updating:
+Use tf.keras.mixed_precision.LossScaleOptimizer instead. LossScaleOptimizer now has all the functionality of DynamicLossScale
+2023-02-23 10:32:00,127 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 10:32:00,128 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 10:32:00] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 10:32:00,248 INFO server Auth successful
+2023-02-23 10:32:00,251 INFO server Imports value: from mrcnn_tf2.runtime.learning_rate import PiecewiseConstantWithWarmupSchedule;from mrcnn_tf2.runtime.evaluation import evaluate;import tensorflow as tf;from mrcnn_tf2.runtime.weights_mapping import WEIGHTS_MAPPING;from mrcnn_tf2.model.mask_rcnn import MaskRCNN;from mrcnn_tf2.runtime.callbacks import DLLoggerMetricsCallback, DLLoggerPerfCallback, PretrainedWeightsLoadingCallback;import logging;import os;import dllogger
+2023-02-23 10:32:00,380 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 10:32:00,380 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 10:32:00] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 10:32:00,555 INFO server Auth successful
+2023-02-23 10:32:00,555 INFO server Imports value: from mrcnn_tf2.runtime.learning_rate import PiecewiseConstantWithWarmupSchedule;from mrcnn_tf2.runtime.evaluation import evaluate;import tensorflow as tf;from mrcnn_tf2.runtime.weights_mapping import WEIGHTS_MAPPING;from mrcnn_tf2.model.mask_rcnn import MaskRCNN;from mrcnn_tf2.runtime.callbacks import DLLoggerMetricsCallback, DLLoggerPerfCallback, PretrainedWeightsLoadingCallback;import logging;import os;import dllogger
+2023-02-23 10:32:00,559 INFO tensorflow Using MirroredStrategy with devices ('/job:localhost/replica:0/task:0/device:GPU:0',)
+2023-02-23 10:32:00,758 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 10:32:00,758 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 10:32:00] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 10:33:32,635 INFO werkzeug  * Detected change in '/app/client_agent/custom_method.py', reloading
+2023-02-23 10:33:33,078 INFO werkzeug  * Restarting with stat
+2023-02-23 10:33:33,772 WARNING werkzeug  * Debugger is active!
+2023-02-23 10:33:33,773 INFO werkzeug  * Debugger PIN: 666-760-317
+2023-02-23 10:40:26,929 INFO server Auth successful
+2023-02-23 10:40:26,936 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 10:40:26] "[35m[1mPOST /api/run_experiment HTTP/1.1[0m" 500 -
+2023-02-23 10:40:52,946 INFO server Auth successful
+2023-02-23 10:40:52,950 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 10:40:52] "[35m[1mPOST /api/run_experiment HTTP/1.1[0m" 500 -
+2023-02-23 10:42:12,737 INFO server Auth successful
+2023-02-23 10:42:13,393 DEBUG tensorflow Falling back to TensorFlow client; we recommended you install the Cloud TPU client directly with pip install cloud-tpu-client.
+2023-02-23 10:42:13,990 INFO server Imports value: from mrcnn_tf2.runtime.learning_rate import PiecewiseConstantWithWarmupSchedule;from mrcnn_tf2.runtime.evaluation import evaluate;import tensorflow as tf;from mrcnn_tf2.runtime.weights_mapping import WEIGHTS_MAPPING;from mrcnn_tf2.model.mask_rcnn import MaskRCNN;from mrcnn_tf2.runtime.callbacks import DLLoggerMetricsCallback, DLLoggerPerfCallback, PretrainedWeightsLoadingCallback;import logging;import os;import dllogger
+2023-02-23 10:42:14,025 INFO tensorflow Mixed precision compatibility check (mixed_float16): OK
+Your GPU will likely run quickly with dtype policy mixed_float16 as it has compute capability of at least 7.0. Your GPU: NVIDIA GeForce RTX 3070 Ti, compute capability 8.6
+2023-02-23 10:42:14,025 WARNING tensorflow From /usr/local/lib/python3.8/dist-packages/tensorflow/python/keras/mixed_precision/loss_scale.py:56: DynamicLossScale.__init__ (from tensorflow.python.training.experimental.loss_scale) is deprecated and will be removed in a future version.
+Instructions for updating:
+Use tf.keras.mixed_precision.LossScaleOptimizer instead. LossScaleOptimizer now has all the functionality of DynamicLossScale
+2023-02-23 10:42:14,632 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 10:42:14,632 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 10:42:14] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 10:42:14,797 INFO server Auth successful
+2023-02-23 10:42:14,799 INFO server Imports value: from mrcnn_tf2.runtime.learning_rate import PiecewiseConstantWithWarmupSchedule;from mrcnn_tf2.runtime.evaluation import evaluate;import tensorflow as tf;from mrcnn_tf2.runtime.weights_mapping import WEIGHTS_MAPPING;from mrcnn_tf2.model.mask_rcnn import MaskRCNN;from mrcnn_tf2.runtime.callbacks import DLLoggerMetricsCallback, DLLoggerPerfCallback, PretrainedWeightsLoadingCallback;import logging;import os;import dllogger
+2023-02-23 10:42:14,899 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 10:42:14,900 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 10:42:14] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 10:42:15,047 INFO server Auth successful
+2023-02-23 10:42:15,048 INFO server Imports value: from mrcnn_tf2.runtime.learning_rate import PiecewiseConstantWithWarmupSchedule;from mrcnn_tf2.runtime.evaluation import evaluate;import tensorflow as tf;from mrcnn_tf2.runtime.weights_mapping import WEIGHTS_MAPPING;from mrcnn_tf2.model.mask_rcnn import MaskRCNN;from mrcnn_tf2.runtime.callbacks import DLLoggerMetricsCallback, DLLoggerPerfCallback, PretrainedWeightsLoadingCallback;import logging;import os;import dllogger
+2023-02-23 10:42:15,051 INFO tensorflow Using MirroredStrategy with devices ('/job:localhost/replica:0/task:0/device:GPU:0',)
+2023-02-23 10:42:15,226 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 10:42:15,227 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 10:42:15] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 10:53:23,988 INFO server Auth successful
+2023-02-23 10:53:23,988 INFO server Imports value: from mrcnn_tf2.runtime.learning_rate import PiecewiseConstantWithWarmupSchedule;from mrcnn_tf2.runtime.evaluation import evaluate;import tensorflow as tf;from mrcnn_tf2.runtime.weights_mapping import WEIGHTS_MAPPING;from mrcnn_tf2.model.mask_rcnn import MaskRCNN;from mrcnn_tf2.runtime.callbacks import DLLoggerMetricsCallback, DLLoggerPerfCallback, PretrainedWeightsLoadingCallback;import logging;import os;import dllogger
+2023-02-23 10:53:24,115 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 10:53:24,116 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 10:53:24] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 10:53:24,303 INFO server Auth successful
+2023-02-23 10:53:24,305 INFO server Imports value: from mrcnn_tf2.runtime.learning_rate import PiecewiseConstantWithWarmupSchedule;from mrcnn_tf2.runtime.evaluation import evaluate;import tensorflow as tf;from mrcnn_tf2.runtime.weights_mapping import WEIGHTS_MAPPING;from mrcnn_tf2.model.mask_rcnn import MaskRCNN;from mrcnn_tf2.runtime.callbacks import DLLoggerMetricsCallback, DLLoggerPerfCallback, PretrainedWeightsLoadingCallback;import logging;import os;import dllogger
+2023-02-23 10:53:24,426 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 10:53:24,427 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 10:53:24] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 10:53:24,608 INFO server Auth successful
+2023-02-23 10:53:24,608 INFO server Imports value: from mrcnn_tf2.runtime.learning_rate import PiecewiseConstantWithWarmupSchedule;from mrcnn_tf2.runtime.evaluation import evaluate;import tensorflow as tf;from mrcnn_tf2.runtime.weights_mapping import WEIGHTS_MAPPING;from mrcnn_tf2.model.mask_rcnn import MaskRCNN;from mrcnn_tf2.runtime.callbacks import DLLoggerMetricsCallback, DLLoggerPerfCallback, PretrainedWeightsLoadingCallback;import logging;import os;import dllogger
+2023-02-23 10:53:24,613 INFO tensorflow Using MirroredStrategy with devices ('/job:localhost/replica:0/task:0/device:GPU:0',)
+2023-02-23 10:53:24,733 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 10:53:24,733 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 10:53:24] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 10:56:11,716 INFO werkzeug [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on https://129.173.67.60:8080
+2023-02-23 10:56:11,716 INFO werkzeug [33mPress CTRL+C to quit[0m
+2023-02-23 10:56:11,717 INFO werkzeug  * Restarting with stat
+2023-02-23 10:56:12,411 WARNING werkzeug  * Debugger is active!
+2023-02-23 10:56:12,412 INFO werkzeug  * Debugger PIN: 666-760-317
+2023-02-23 10:56:25,329 INFO server Auth successful
+2023-02-23 10:56:26,018 DEBUG tensorflow Falling back to TensorFlow client; we recommended you install the Cloud TPU client directly with pip install cloud-tpu-client.
+2023-02-23 10:56:26,609 INFO server Imports value: from mrcnn_tf2.runtime.learning_rate import PiecewiseConstantWithWarmupSchedule;from mrcnn_tf2.runtime.evaluation import evaluate;import tensorflow as tf;from mrcnn_tf2.runtime.weights_mapping import WEIGHTS_MAPPING;from mrcnn_tf2.model.mask_rcnn import MaskRCNN;from mrcnn_tf2.runtime.callbacks import DLLoggerMetricsCallback, DLLoggerPerfCallback, PretrainedWeightsLoadingCallback;import logging;import os;import dllogger
+2023-02-23 10:56:26,645 INFO tensorflow Mixed precision compatibility check (mixed_float16): OK
+Your GPU will likely run quickly with dtype policy mixed_float16 as it has compute capability of at least 7.0. Your GPU: NVIDIA GeForce RTX 3070 Ti, compute capability 8.6
+2023-02-23 10:56:26,645 WARNING tensorflow From /usr/local/lib/python3.8/dist-packages/tensorflow/python/keras/mixed_precision/loss_scale.py:56: DynamicLossScale.__init__ (from tensorflow.python.training.experimental.loss_scale) is deprecated and will be removed in a future version.
+Instructions for updating:
+Use tf.keras.mixed_precision.LossScaleOptimizer instead. LossScaleOptimizer now has all the functionality of DynamicLossScale
+2023-02-23 10:56:27,247 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 10:56:27,247 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 10:56:27] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 10:56:27,451 INFO server Auth successful
+2023-02-23 10:56:27,453 INFO server Imports value: from mrcnn_tf2.runtime.learning_rate import PiecewiseConstantWithWarmupSchedule;from mrcnn_tf2.runtime.evaluation import evaluate;import tensorflow as tf;from mrcnn_tf2.runtime.weights_mapping import WEIGHTS_MAPPING;from mrcnn_tf2.model.mask_rcnn import MaskRCNN;from mrcnn_tf2.runtime.callbacks import DLLoggerMetricsCallback, DLLoggerPerfCallback, PretrainedWeightsLoadingCallback;import logging;import os;import dllogger
+2023-02-23 10:56:27,578 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 10:56:27,578 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 10:56:27] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 10:56:27,770 INFO server Auth successful
+2023-02-23 10:56:27,770 INFO server Imports value: from mrcnn_tf2.runtime.learning_rate import PiecewiseConstantWithWarmupSchedule;from mrcnn_tf2.runtime.evaluation import evaluate;import tensorflow as tf;from mrcnn_tf2.runtime.weights_mapping import WEIGHTS_MAPPING;from mrcnn_tf2.model.mask_rcnn import MaskRCNN;from mrcnn_tf2.runtime.callbacks import DLLoggerMetricsCallback, DLLoggerPerfCallback, PretrainedWeightsLoadingCallback;import logging;import os;import dllogger
+2023-02-23 10:56:27,775 INFO tensorflow Using MirroredStrategy with devices ('/job:localhost/replica:0/task:0/device:GPU:0',)
+2023-02-23 10:56:27,978 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 10:56:27,979 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 10:56:27] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 11:06:40,728 INFO server Auth successful
+2023-02-23 11:06:40,728 INFO server Imports value: from mrcnn_tf2.runtime.learning_rate import PiecewiseConstantWithWarmupSchedule;from mrcnn_tf2.runtime.evaluation import evaluate;import tensorflow as tf;from mrcnn_tf2.runtime.weights_mapping import WEIGHTS_MAPPING;from mrcnn_tf2.model.mask_rcnn import MaskRCNN;from mrcnn_tf2.runtime.callbacks import DLLoggerMetricsCallback, DLLoggerPerfCallback, PretrainedWeightsLoadingCallback;import logging;import os;import dllogger
+2023-02-23 11:06:40,849 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 11:06:40,849 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 11:06:40] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 11:06:41,060 INFO server Auth successful
+2023-02-23 11:06:41,062 INFO server Imports value: from mrcnn_tf2.runtime.learning_rate import PiecewiseConstantWithWarmupSchedule;from mrcnn_tf2.runtime.evaluation import evaluate;import tensorflow as tf;from mrcnn_tf2.runtime.weights_mapping import WEIGHTS_MAPPING;from mrcnn_tf2.model.mask_rcnn import MaskRCNN;from mrcnn_tf2.runtime.callbacks import DLLoggerMetricsCallback, DLLoggerPerfCallback, PretrainedWeightsLoadingCallback;import logging;import os;import dllogger
+2023-02-23 11:06:41,181 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 11:06:41,182 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 11:06:41] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 11:06:41,418 INFO server Auth successful
+2023-02-23 11:06:41,418 INFO server Imports value: from mrcnn_tf2.runtime.learning_rate import PiecewiseConstantWithWarmupSchedule;from mrcnn_tf2.runtime.evaluation import evaluate;import tensorflow as tf;from mrcnn_tf2.runtime.weights_mapping import WEIGHTS_MAPPING;from mrcnn_tf2.model.mask_rcnn import MaskRCNN;from mrcnn_tf2.runtime.callbacks import DLLoggerMetricsCallback, DLLoggerPerfCallback, PretrainedWeightsLoadingCallback;import logging;import os;import dllogger
+2023-02-23 11:06:41,423 INFO tensorflow Using MirroredStrategy with devices ('/job:localhost/replica:0/task:0/device:GPU:0',)
+2023-02-23 11:06:41,541 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 11:06:41,542 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 11:06:41] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 11:08:45,641 INFO server Auth successful
+2023-02-23 11:08:45,641 INFO server Imports value: from mrcnn_tf2.runtime.learning_rate import PiecewiseConstantWithWarmupSchedule;from mrcnn_tf2.runtime.evaluation import evaluate;import tensorflow as tf;from mrcnn_tf2.runtime.weights_mapping import WEIGHTS_MAPPING;from mrcnn_tf2.model.mask_rcnn import MaskRCNN;from mrcnn_tf2.runtime.callbacks import DLLoggerMetricsCallback, DLLoggerPerfCallback, PretrainedWeightsLoadingCallback;import logging;import os;import dllogger
+2023-02-23 11:08:45,765 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 11:08:45,766 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 11:08:45] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 11:08:46,020 INFO server Auth successful
+2023-02-23 11:08:46,022 INFO server Imports value: from mrcnn_tf2.runtime.learning_rate import PiecewiseConstantWithWarmupSchedule;from mrcnn_tf2.runtime.evaluation import evaluate;import tensorflow as tf;from mrcnn_tf2.runtime.weights_mapping import WEIGHTS_MAPPING;from mrcnn_tf2.model.mask_rcnn import MaskRCNN;from mrcnn_tf2.runtime.callbacks import DLLoggerMetricsCallback, DLLoggerPerfCallback, PretrainedWeightsLoadingCallback;import logging;import os;import dllogger
+2023-02-23 11:08:46,145 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 11:08:46,145 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 11:08:46] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 11:08:46,435 INFO server Auth successful
+2023-02-23 11:08:46,435 INFO server Imports value: from mrcnn_tf2.runtime.learning_rate import PiecewiseConstantWithWarmupSchedule;from mrcnn_tf2.runtime.evaluation import evaluate;import tensorflow as tf;from mrcnn_tf2.runtime.weights_mapping import WEIGHTS_MAPPING;from mrcnn_tf2.model.mask_rcnn import MaskRCNN;from mrcnn_tf2.runtime.callbacks import DLLoggerMetricsCallback, DLLoggerPerfCallback, PretrainedWeightsLoadingCallback;import logging;import os;import dllogger
+2023-02-23 11:08:46,439 INFO tensorflow Using MirroredStrategy with devices ('/job:localhost/replica:0/task:0/device:GPU:0',)
+2023-02-23 11:08:46,559 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 11:08:46,560 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 11:08:46] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 11:08:58,322 INFO werkzeug [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on https://129.173.67.60:8080
+2023-02-23 11:08:58,323 INFO werkzeug [33mPress CTRL+C to quit[0m
+2023-02-23 11:08:58,323 INFO werkzeug  * Restarting with stat
+2023-02-23 11:08:59,018 WARNING werkzeug  * Debugger is active!
+2023-02-23 11:08:59,019 INFO werkzeug  * Debugger PIN: 666-760-317
+2023-02-23 11:09:09,977 INFO server Auth successful
+2023-02-23 11:09:10,628 DEBUG tensorflow Falling back to TensorFlow client; we recommended you install the Cloud TPU client directly with pip install cloud-tpu-client.
+2023-02-23 11:09:11,186 INFO server Imports value: from mrcnn_tf2.runtime.learning_rate import PiecewiseConstantWithWarmupSchedule;from mrcnn_tf2.runtime.evaluation import evaluate;import tensorflow as tf;from mrcnn_tf2.runtime.weights_mapping import WEIGHTS_MAPPING;from mrcnn_tf2.model.mask_rcnn import MaskRCNN;from mrcnn_tf2.runtime.callbacks import DLLoggerMetricsCallback, DLLoggerPerfCallback, PretrainedWeightsLoadingCallback;import logging;import os;import dllogger
+2023-02-23 11:09:11,221 INFO tensorflow Mixed precision compatibility check (mixed_float16): OK
+Your GPU will likely run quickly with dtype policy mixed_float16 as it has compute capability of at least 7.0. Your GPU: NVIDIA GeForce RTX 3070 Ti, compute capability 8.6
+2023-02-23 11:09:11,222 WARNING tensorflow From /usr/local/lib/python3.8/dist-packages/tensorflow/python/keras/mixed_precision/loss_scale.py:56: DynamicLossScale.__init__ (from tensorflow.python.training.experimental.loss_scale) is deprecated and will be removed in a future version.
+Instructions for updating:
+Use tf.keras.mixed_precision.LossScaleOptimizer instead. LossScaleOptimizer now has all the functionality of DynamicLossScale
+2023-02-23 11:09:11,784 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 11:09:11,784 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 11:09:11] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 11:09:12,008 INFO server Auth successful
+2023-02-23 11:09:12,010 INFO server Imports value: from mrcnn_tf2.runtime.learning_rate import PiecewiseConstantWithWarmupSchedule;from mrcnn_tf2.runtime.evaluation import evaluate;import tensorflow as tf;from mrcnn_tf2.runtime.weights_mapping import WEIGHTS_MAPPING;from mrcnn_tf2.model.mask_rcnn import MaskRCNN;from mrcnn_tf2.runtime.callbacks import DLLoggerMetricsCallback, DLLoggerPerfCallback, PretrainedWeightsLoadingCallback;import logging;import os;import dllogger
+2023-02-23 11:09:12,129 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 11:09:12,129 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 11:09:12] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 11:09:12,428 INFO server Auth successful
+2023-02-23 11:09:12,428 INFO server Imports value: from mrcnn_tf2.runtime.learning_rate import PiecewiseConstantWithWarmupSchedule;from mrcnn_tf2.runtime.evaluation import evaluate;import tensorflow as tf;from mrcnn_tf2.runtime.weights_mapping import WEIGHTS_MAPPING;from mrcnn_tf2.model.mask_rcnn import MaskRCNN;from mrcnn_tf2.runtime.callbacks import DLLoggerMetricsCallback, DLLoggerPerfCallback, PretrainedWeightsLoadingCallback;import logging;import os;import dllogger
+2023-02-23 11:09:12,433 INFO tensorflow Using MirroredStrategy with devices ('/job:localhost/replica:0/task:0/device:GPU:0',)
+2023-02-23 11:09:12,632 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 11:09:12,632 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 11:09:12] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 11:40:01,485 INFO werkzeug [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on https://129.173.67.60:8080
+2023-02-23 11:40:01,485 INFO werkzeug [33mPress CTRL+C to quit[0m
+2023-02-23 11:40:01,485 INFO werkzeug  * Restarting with stat
+2023-02-23 11:40:02,182 WARNING werkzeug  * Debugger is active!
+2023-02-23 11:40:02,182 INFO werkzeug  * Debugger PIN: 666-760-317
+2023-02-23 11:40:13,183 INFO server Auth successful
+2023-02-23 11:40:13,864 DEBUG tensorflow Falling back to TensorFlow client; we recommended you install the Cloud TPU client directly with pip install cloud-tpu-client.
+2023-02-23 11:40:14,431 INFO server Imports value: from mrcnn_tf2.runtime.learning_rate import PiecewiseConstantWithWarmupSchedule;from mrcnn_tf2.runtime.evaluation import evaluate;import tensorflow as tf;from mrcnn_tf2.runtime.weights_mapping import WEIGHTS_MAPPING;from mrcnn_tf2.model.mask_rcnn import MaskRCNN;from mrcnn_tf2.runtime.callbacks import DLLoggerMetricsCallback, DLLoggerPerfCallback, PretrainedWeightsLoadingCallback;import logging;import os;import dllogger
+2023-02-23 11:40:14,465 INFO tensorflow Mixed precision compatibility check (mixed_float16): OK
+Your GPU will likely run quickly with dtype policy mixed_float16 as it has compute capability of at least 7.0. Your GPU: NVIDIA GeForce RTX 3070 Ti, compute capability 8.6
+2023-02-23 11:40:14,465 WARNING tensorflow From /usr/local/lib/python3.8/dist-packages/tensorflow/python/keras/mixed_precision/loss_scale.py:56: DynamicLossScale.__init__ (from tensorflow.python.training.experimental.loss_scale) is deprecated and will be removed in a future version.
+Instructions for updating:
+Use tf.keras.mixed_precision.LossScaleOptimizer instead. LossScaleOptimizer now has all the functionality of DynamicLossScale
+2023-02-23 11:40:15,067 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 11:40:15,068 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 11:40:15] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 11:40:15,335 INFO server Auth successful
+2023-02-23 11:40:15,337 INFO server Imports value: from mrcnn_tf2.runtime.learning_rate import PiecewiseConstantWithWarmupSchedule;from mrcnn_tf2.runtime.evaluation import evaluate;import tensorflow as tf;from mrcnn_tf2.runtime.weights_mapping import WEIGHTS_MAPPING;from mrcnn_tf2.model.mask_rcnn import MaskRCNN;from mrcnn_tf2.runtime.callbacks import DLLoggerMetricsCallback, DLLoggerPerfCallback, PretrainedWeightsLoadingCallback;import logging;import os;import dllogger
+2023-02-23 11:40:15,459 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 11:40:15,460 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 11:40:15] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 11:40:15,812 INFO server Auth successful
+2023-02-23 11:40:15,812 INFO server Imports value: from mrcnn_tf2.runtime.learning_rate import PiecewiseConstantWithWarmupSchedule;from mrcnn_tf2.runtime.evaluation import evaluate;import tensorflow as tf;from mrcnn_tf2.runtime.weights_mapping import WEIGHTS_MAPPING;from mrcnn_tf2.model.mask_rcnn import MaskRCNN;from mrcnn_tf2.runtime.callbacks import DLLoggerMetricsCallback, DLLoggerPerfCallback, PretrainedWeightsLoadingCallback;import logging;import os;import dllogger
+2023-02-23 11:40:15,817 INFO tensorflow Using MirroredStrategy with devices ('/job:localhost/replica:0/task:0/device:GPU:0',)
+2023-02-23 11:40:16,019 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 11:40:16,020 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 11:40:16] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 12:03:11,892 INFO server Auth successful
+2023-02-23 12:03:11,892 INFO server Imports value: from mrcnn_tf2.runtime.learning_rate import PiecewiseConstantWithWarmupSchedule;from mrcnn_tf2.runtime.evaluation import evaluate;import tensorflow as tf;from mrcnn_tf2.runtime.weights_mapping import WEIGHTS_MAPPING;from mrcnn_tf2.model.mask_rcnn import MaskRCNN;from mrcnn_tf2.runtime.callbacks import DLLoggerMetricsCallback, DLLoggerPerfCallback, PretrainedWeightsLoadingCallback;import logging;import os;import dllogger
+2023-02-23 12:03:12,022 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 12:03:12,022 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 12:03:12] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 12:03:12,318 INFO server Auth successful
+2023-02-23 12:03:12,320 INFO server Imports value: from mrcnn_tf2.runtime.learning_rate import PiecewiseConstantWithWarmupSchedule;from mrcnn_tf2.runtime.evaluation import evaluate;import tensorflow as tf;from mrcnn_tf2.runtime.weights_mapping import WEIGHTS_MAPPING;from mrcnn_tf2.model.mask_rcnn import MaskRCNN;from mrcnn_tf2.runtime.callbacks import DLLoggerMetricsCallback, DLLoggerPerfCallback, PretrainedWeightsLoadingCallback;import logging;import os;import dllogger
+2023-02-23 12:03:12,441 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 12:03:12,441 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 12:03:12] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 12:03:12,795 INFO server Auth successful
+2023-02-23 12:03:12,796 INFO server Imports value: from mrcnn_tf2.runtime.learning_rate import PiecewiseConstantWithWarmupSchedule;from mrcnn_tf2.runtime.evaluation import evaluate;import tensorflow as tf;from mrcnn_tf2.runtime.weights_mapping import WEIGHTS_MAPPING;from mrcnn_tf2.model.mask_rcnn import MaskRCNN;from mrcnn_tf2.runtime.callbacks import DLLoggerMetricsCallback, DLLoggerPerfCallback, PretrainedWeightsLoadingCallback;import logging;import os;import dllogger
+2023-02-23 12:03:12,800 INFO tensorflow Using MirroredStrategy with devices ('/job:localhost/replica:0/task:0/device:GPU:0',)
+2023-02-23 12:03:12,919 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 12:03:12,920 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 12:03:12] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 12:04:35,441 INFO server Auth successful
+2023-02-23 12:04:35,442 INFO server Imports value: from mrcnn_tf2.runtime.learning_rate import PiecewiseConstantWithWarmupSchedule;from mrcnn_tf2.runtime.evaluation import evaluate;import tensorflow as tf;from mrcnn_tf2.runtime.weights_mapping import WEIGHTS_MAPPING;from mrcnn_tf2.model.mask_rcnn import MaskRCNN;from mrcnn_tf2.runtime.callbacks import DLLoggerMetricsCallback, DLLoggerPerfCallback, PretrainedWeightsLoadingCallback;import logging;import os;import dllogger
+2023-02-23 12:04:35,590 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 12:04:35,591 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 12:04:35] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 12:04:35,908 INFO server Auth successful
+2023-02-23 12:04:35,912 INFO server Imports value: from mrcnn_tf2.runtime.learning_rate import PiecewiseConstantWithWarmupSchedule;from mrcnn_tf2.runtime.evaluation import evaluate;import tensorflow as tf;from mrcnn_tf2.runtime.weights_mapping import WEIGHTS_MAPPING;from mrcnn_tf2.model.mask_rcnn import MaskRCNN;from mrcnn_tf2.runtime.callbacks import DLLoggerMetricsCallback, DLLoggerPerfCallback, PretrainedWeightsLoadingCallback;import logging;import os;import dllogger
+2023-02-23 12:04:36,026 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 12:04:36,027 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 12:04:36] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 12:04:36,383 INFO server Auth successful
+2023-02-23 12:04:36,384 INFO server Imports value: from mrcnn_tf2.runtime.learning_rate import PiecewiseConstantWithWarmupSchedule;from mrcnn_tf2.runtime.evaluation import evaluate;import tensorflow as tf;from mrcnn_tf2.runtime.weights_mapping import WEIGHTS_MAPPING;from mrcnn_tf2.model.mask_rcnn import MaskRCNN;from mrcnn_tf2.runtime.callbacks import DLLoggerMetricsCallback, DLLoggerPerfCallback, PretrainedWeightsLoadingCallback;import logging;import os;import dllogger
+2023-02-23 12:04:36,387 INFO tensorflow Using MirroredStrategy with devices ('/job:localhost/replica:0/task:0/device:GPU:0',)
+2023-02-23 12:04:36,499 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 12:04:36,499 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 12:04:36] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 12:26:35,392 INFO server Auth successful
+2023-02-23 12:26:35,392 INFO server Imports value: from mrcnn_tf2.runtime.learning_rate import PiecewiseConstantWithWarmupSchedule;from mrcnn_tf2.runtime.evaluation import evaluate;import tensorflow as tf;from mrcnn_tf2.runtime.weights_mapping import WEIGHTS_MAPPING;from mrcnn_tf2.model.mask_rcnn import MaskRCNN;from mrcnn_tf2.runtime.callbacks import DLLoggerMetricsCallback, DLLoggerPerfCallback, PretrainedWeightsLoadingCallback;import logging;import os;import dllogger
+2023-02-23 12:26:35,603 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 12:26:35,604 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 12:26:35] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 12:26:35,976 INFO server Auth successful
+2023-02-23 12:26:35,978 INFO server Imports value: from mrcnn_tf2.runtime.learning_rate import PiecewiseConstantWithWarmupSchedule;from mrcnn_tf2.runtime.evaluation import evaluate;import tensorflow as tf;from mrcnn_tf2.runtime.weights_mapping import WEIGHTS_MAPPING;from mrcnn_tf2.model.mask_rcnn import MaskRCNN;from mrcnn_tf2.runtime.callbacks import DLLoggerMetricsCallback, DLLoggerPerfCallback, PretrainedWeightsLoadingCallback;import logging;import os;import dllogger
+2023-02-23 12:26:36,100 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 12:26:36,100 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 12:26:36] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 12:26:36,467 INFO server Auth successful
+2023-02-23 12:26:36,467 INFO server Imports value: from mrcnn_tf2.runtime.learning_rate import PiecewiseConstantWithWarmupSchedule;from mrcnn_tf2.runtime.evaluation import evaluate;import tensorflow as tf;from mrcnn_tf2.runtime.weights_mapping import WEIGHTS_MAPPING;from mrcnn_tf2.model.mask_rcnn import MaskRCNN;from mrcnn_tf2.runtime.callbacks import DLLoggerMetricsCallback, DLLoggerPerfCallback, PretrainedWeightsLoadingCallback;import logging;import os;import dllogger
+2023-02-23 12:26:36,471 INFO tensorflow Using MirroredStrategy with devices ('/job:localhost/replica:0/task:0/device:GPU:0',)
+2023-02-23 12:26:36,593 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 12:26:36,593 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 12:26:36] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 12:27:54,601 INFO server Auth successful
+2023-02-23 12:27:54,601 INFO server Imports value: from mrcnn_tf2.runtime.learning_rate import PiecewiseConstantWithWarmupSchedule;from mrcnn_tf2.runtime.evaluation import evaluate;import tensorflow as tf;from mrcnn_tf2.runtime.weights_mapping import WEIGHTS_MAPPING;from mrcnn_tf2.model.mask_rcnn import MaskRCNN;from mrcnn_tf2.runtime.callbacks import DLLoggerMetricsCallback, DLLoggerPerfCallback, PretrainedWeightsLoadingCallback;import logging;import os;import dllogger
+2023-02-23 12:27:54,720 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 12:27:54,720 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 12:27:54] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 12:27:55,085 INFO server Auth successful
+2023-02-23 12:27:55,088 INFO server Imports value: from mrcnn_tf2.runtime.learning_rate import PiecewiseConstantWithWarmupSchedule;from mrcnn_tf2.runtime.evaluation import evaluate;import tensorflow as tf;from mrcnn_tf2.runtime.weights_mapping import WEIGHTS_MAPPING;from mrcnn_tf2.model.mask_rcnn import MaskRCNN;from mrcnn_tf2.runtime.callbacks import DLLoggerMetricsCallback, DLLoggerPerfCallback, PretrainedWeightsLoadingCallback;import logging;import os;import dllogger
+2023-02-23 12:27:55,210 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 12:27:55,211 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 12:27:55] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 12:27:55,579 INFO server Auth successful
+2023-02-23 12:27:55,579 INFO server Imports value: from mrcnn_tf2.runtime.learning_rate import PiecewiseConstantWithWarmupSchedule;from mrcnn_tf2.runtime.evaluation import evaluate;import tensorflow as tf;from mrcnn_tf2.runtime.weights_mapping import WEIGHTS_MAPPING;from mrcnn_tf2.model.mask_rcnn import MaskRCNN;from mrcnn_tf2.runtime.callbacks import DLLoggerMetricsCallback, DLLoggerPerfCallback, PretrainedWeightsLoadingCallback;import logging;import os;import dllogger
+2023-02-23 12:27:55,583 INFO tensorflow Using MirroredStrategy with devices ('/job:localhost/replica:0/task:0/device:GPU:0',)
+2023-02-23 12:27:55,786 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 12:27:55,786 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 12:27:55] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 12:28:51,756 INFO server Auth successful
+2023-02-23 12:28:51,757 INFO server Imports value: from mrcnn_tf2.runtime.learning_rate import PiecewiseConstantWithWarmupSchedule;from mrcnn_tf2.runtime.evaluation import evaluate;import tensorflow as tf;from mrcnn_tf2.runtime.weights_mapping import WEIGHTS_MAPPING;from mrcnn_tf2.model.mask_rcnn import MaskRCNN;from mrcnn_tf2.runtime.callbacks import DLLoggerMetricsCallback, DLLoggerPerfCallback, PretrainedWeightsLoadingCallback;import logging;import os;import dllogger
+2023-02-23 12:28:51,885 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 12:28:51,885 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 12:28:51] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 12:28:52,269 INFO server Auth successful
+2023-02-23 12:28:52,272 INFO server Imports value: from mrcnn_tf2.runtime.learning_rate import PiecewiseConstantWithWarmupSchedule;from mrcnn_tf2.runtime.evaluation import evaluate;import tensorflow as tf;from mrcnn_tf2.runtime.weights_mapping import WEIGHTS_MAPPING;from mrcnn_tf2.model.mask_rcnn import MaskRCNN;from mrcnn_tf2.runtime.callbacks import DLLoggerMetricsCallback, DLLoggerPerfCallback, PretrainedWeightsLoadingCallback;import logging;import os;import dllogger
+2023-02-23 12:28:52,392 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 12:28:52,393 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 12:28:52] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 12:28:52,836 INFO server Auth successful
+2023-02-23 12:28:52,836 INFO server Imports value: from mrcnn_tf2.runtime.learning_rate import PiecewiseConstantWithWarmupSchedule;from mrcnn_tf2.runtime.evaluation import evaluate;import tensorflow as tf;from mrcnn_tf2.runtime.weights_mapping import WEIGHTS_MAPPING;from mrcnn_tf2.model.mask_rcnn import MaskRCNN;from mrcnn_tf2.runtime.callbacks import DLLoggerMetricsCallback, DLLoggerPerfCallback, PretrainedWeightsLoadingCallback;import logging;import os;import dllogger
+2023-02-23 12:28:52,840 INFO tensorflow Using MirroredStrategy with devices ('/job:localhost/replica:0/task:0/device:GPU:0',)
+2023-02-23 12:28:52,958 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 12:28:52,958 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 12:28:52] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 12:29:00,702 INFO werkzeug [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on https://129.173.67.60:8080
+2023-02-23 12:29:00,702 INFO werkzeug [33mPress CTRL+C to quit[0m
+2023-02-23 12:29:00,703 INFO werkzeug  * Restarting with stat
+2023-02-23 12:29:01,400 WARNING werkzeug  * Debugger is active!
+2023-02-23 12:29:01,401 INFO werkzeug  * Debugger PIN: 666-760-317
+2023-02-23 12:29:05,077 INFO server Auth successful
+2023-02-23 12:29:05,755 DEBUG tensorflow Falling back to TensorFlow client; we recommended you install the Cloud TPU client directly with pip install cloud-tpu-client.
+2023-02-23 12:29:06,327 INFO server Imports value: from mrcnn_tf2.runtime.learning_rate import PiecewiseConstantWithWarmupSchedule;from mrcnn_tf2.runtime.evaluation import evaluate;import tensorflow as tf;from mrcnn_tf2.runtime.weights_mapping import WEIGHTS_MAPPING;from mrcnn_tf2.model.mask_rcnn import MaskRCNN;from mrcnn_tf2.runtime.callbacks import DLLoggerMetricsCallback, DLLoggerPerfCallback, PretrainedWeightsLoadingCallback;import logging;import os;import dllogger
+2023-02-23 12:29:06,362 INFO tensorflow Mixed precision compatibility check (mixed_float16): OK
+Your GPU will likely run quickly with dtype policy mixed_float16 as it has compute capability of at least 7.0. Your GPU: NVIDIA GeForce RTX 3070 Ti, compute capability 8.6
+2023-02-23 12:29:06,362 WARNING tensorflow From /usr/local/lib/python3.8/dist-packages/tensorflow/python/keras/mixed_precision/loss_scale.py:56: DynamicLossScale.__init__ (from tensorflow.python.training.experimental.loss_scale) is deprecated and will be removed in a future version.
+Instructions for updating:
+Use tf.keras.mixed_precision.LossScaleOptimizer instead. LossScaleOptimizer now has all the functionality of DynamicLossScale
+2023-02-23 12:29:06,975 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 12:29:06,975 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 12:29:06] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 12:29:07,411 INFO server Auth successful
+2023-02-23 12:29:07,413 INFO server Imports value: from mrcnn_tf2.runtime.learning_rate import PiecewiseConstantWithWarmupSchedule;from mrcnn_tf2.runtime.evaluation import evaluate;import tensorflow as tf;from mrcnn_tf2.runtime.weights_mapping import WEIGHTS_MAPPING;from mrcnn_tf2.model.mask_rcnn import MaskRCNN;from mrcnn_tf2.runtime.callbacks import DLLoggerMetricsCallback, DLLoggerPerfCallback, PretrainedWeightsLoadingCallback;import logging;import os;import dllogger
+2023-02-23 12:29:07,534 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 12:29:07,535 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 12:29:07] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 12:29:07,982 INFO server Auth successful
+2023-02-23 12:29:07,983 INFO server Imports value: from mrcnn_tf2.runtime.learning_rate import PiecewiseConstantWithWarmupSchedule;from mrcnn_tf2.runtime.evaluation import evaluate;import tensorflow as tf;from mrcnn_tf2.runtime.weights_mapping import WEIGHTS_MAPPING;from mrcnn_tf2.model.mask_rcnn import MaskRCNN;from mrcnn_tf2.runtime.callbacks import DLLoggerMetricsCallback, DLLoggerPerfCallback, PretrainedWeightsLoadingCallback;import logging;import os;import dllogger
+2023-02-23 12:29:07,987 INFO tensorflow Using MirroredStrategy with devices ('/job:localhost/replica:0/task:0/device:GPU:0',)
+2023-02-23 12:29:08,188 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 12:29:08,188 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 12:29:08] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 12:30:34,163 INFO werkzeug [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on https://129.173.67.60:8080
+2023-02-23 12:30:34,164 INFO werkzeug [33mPress CTRL+C to quit[0m
+2023-02-23 12:30:34,164 INFO werkzeug  * Restarting with stat
+2023-02-23 12:30:34,847 WARNING werkzeug  * Debugger is active!
+2023-02-23 12:30:34,848 INFO werkzeug  * Debugger PIN: 666-760-317
+2023-02-23 12:30:38,909 INFO server Auth successful
+2023-02-23 12:30:39,539 DEBUG tensorflow Falling back to TensorFlow client; we recommended you install the Cloud TPU client directly with pip install cloud-tpu-client.
+2023-02-23 12:30:40,134 INFO server Imports value: from mrcnn_tf2.runtime.learning_rate import PiecewiseConstantWithWarmupSchedule;from mrcnn_tf2.runtime.evaluation import evaluate;import tensorflow as tf;from mrcnn_tf2.runtime.weights_mapping import WEIGHTS_MAPPING;from mrcnn_tf2.model.mask_rcnn import MaskRCNN;from mrcnn_tf2.runtime.callbacks import DLLoggerMetricsCallback, DLLoggerPerfCallback, PretrainedWeightsLoadingCallback;import logging;import os;import dllogger
+2023-02-23 12:30:40,169 INFO tensorflow Mixed precision compatibility check (mixed_float16): OK
+Your GPU will likely run quickly with dtype policy mixed_float16 as it has compute capability of at least 7.0. Your GPU: NVIDIA GeForce RTX 3070 Ti, compute capability 8.6
+2023-02-23 12:30:40,169 WARNING tensorflow From /usr/local/lib/python3.8/dist-packages/tensorflow/python/keras/mixed_precision/loss_scale.py:56: DynamicLossScale.__init__ (from tensorflow.python.training.experimental.loss_scale) is deprecated and will be removed in a future version.
+Instructions for updating:
+Use tf.keras.mixed_precision.LossScaleOptimizer instead. LossScaleOptimizer now has all the functionality of DynamicLossScale
+2023-02-23 12:30:40,764 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 12:30:40,765 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 12:30:40] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 12:30:41,199 INFO server Auth successful
+2023-02-23 12:30:41,201 INFO server Imports value: from mrcnn_tf2.runtime.learning_rate import PiecewiseConstantWithWarmupSchedule;from mrcnn_tf2.runtime.evaluation import evaluate;import tensorflow as tf;from mrcnn_tf2.runtime.weights_mapping import WEIGHTS_MAPPING;from mrcnn_tf2.model.mask_rcnn import MaskRCNN;from mrcnn_tf2.runtime.callbacks import DLLoggerMetricsCallback, DLLoggerPerfCallback, PretrainedWeightsLoadingCallback;import logging;import os;import dllogger
+2023-02-23 12:30:41,322 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 12:30:41,322 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 12:30:41] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 12:30:41,808 INFO server Auth successful
+2023-02-23 12:30:41,809 INFO server Imports value: from mrcnn_tf2.runtime.learning_rate import PiecewiseConstantWithWarmupSchedule;from mrcnn_tf2.runtime.evaluation import evaluate;import tensorflow as tf;from mrcnn_tf2.runtime.weights_mapping import WEIGHTS_MAPPING;from mrcnn_tf2.model.mask_rcnn import MaskRCNN;from mrcnn_tf2.runtime.callbacks import DLLoggerMetricsCallback, DLLoggerPerfCallback, PretrainedWeightsLoadingCallback;import logging;import os;import dllogger
+2023-02-23 12:30:41,813 INFO tensorflow Using MirroredStrategy with devices ('/job:localhost/replica:0/task:0/device:GPU:0',)
+2023-02-23 12:30:42,015 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 12:30:42,015 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 12:30:42] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 12:31:36,992 INFO server Auth successful
+2023-02-23 12:31:36,993 INFO server Imports value: from mrcnn_tf2.runtime.learning_rate import PiecewiseConstantWithWarmupSchedule;from mrcnn_tf2.runtime.evaluation import evaluate;import tensorflow as tf;from mrcnn_tf2.runtime.weights_mapping import WEIGHTS_MAPPING;from mrcnn_tf2.model.mask_rcnn import MaskRCNN;from mrcnn_tf2.runtime.callbacks import DLLoggerMetricsCallback, DLLoggerPerfCallback, PretrainedWeightsLoadingCallback;import logging;import os;import dllogger
+2023-02-23 12:31:37,113 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 12:31:37,113 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 12:31:37] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 12:31:37,233 INFO server Auth successful
+2023-02-23 12:31:37,235 INFO server Imports value: from mrcnn_tf2.runtime.learning_rate import PiecewiseConstantWithWarmupSchedule;from mrcnn_tf2.runtime.evaluation import evaluate;import tensorflow as tf;from mrcnn_tf2.runtime.weights_mapping import WEIGHTS_MAPPING;from mrcnn_tf2.model.mask_rcnn import MaskRCNN;from mrcnn_tf2.runtime.callbacks import DLLoggerMetricsCallback, DLLoggerPerfCallback, PretrainedWeightsLoadingCallback;import logging;import os;import dllogger
+2023-02-23 12:31:37,356 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 12:31:37,356 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 12:31:37] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 12:31:37,535 INFO server Auth successful
+2023-02-23 12:31:37,536 INFO server Imports value: from mrcnn_tf2.runtime.learning_rate import PiecewiseConstantWithWarmupSchedule;from mrcnn_tf2.runtime.evaluation import evaluate;import tensorflow as tf;from mrcnn_tf2.runtime.weights_mapping import WEIGHTS_MAPPING;from mrcnn_tf2.model.mask_rcnn import MaskRCNN;from mrcnn_tf2.runtime.callbacks import DLLoggerMetricsCallback, DLLoggerPerfCallback, PretrainedWeightsLoadingCallback;import logging;import os;import dllogger
+2023-02-23 12:31:37,540 INFO tensorflow Using MirroredStrategy with devices ('/job:localhost/replica:0/task:0/device:GPU:0',)
+2023-02-23 12:31:37,657 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 12:31:37,657 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 12:31:37] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 12:43:21,750 INFO server Auth successful
+2023-02-23 12:43:21,750 INFO server Imports value: from mrcnn_tf2.runtime.learning_rate import PiecewiseConstantWithWarmupSchedule;from mrcnn_tf2.runtime.evaluation import evaluate;import tensorflow as tf;from mrcnn_tf2.runtime.weights_mapping import WEIGHTS_MAPPING;from mrcnn_tf2.model.mask_rcnn import MaskRCNN;from mrcnn_tf2.runtime.callbacks import DLLoggerMetricsCallback, DLLoggerPerfCallback, PretrainedWeightsLoadingCallback;import logging;import os;import dllogger
+2023-02-23 12:43:21,869 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 12:43:21,870 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 12:43:21] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 12:43:22,044 INFO server Auth successful
+2023-02-23 12:43:22,046 INFO server Imports value: from mrcnn_tf2.runtime.learning_rate import PiecewiseConstantWithWarmupSchedule;from mrcnn_tf2.runtime.evaluation import evaluate;import tensorflow as tf;from mrcnn_tf2.runtime.weights_mapping import WEIGHTS_MAPPING;from mrcnn_tf2.model.mask_rcnn import MaskRCNN;from mrcnn_tf2.runtime.callbacks import DLLoggerMetricsCallback, DLLoggerPerfCallback, PretrainedWeightsLoadingCallback;import logging;import os;import dllogger
+2023-02-23 12:43:22,167 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 12:43:22,168 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 12:43:22] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 12:43:22,342 INFO server Auth successful
+2023-02-23 12:43:22,342 INFO server Imports value: from mrcnn_tf2.runtime.learning_rate import PiecewiseConstantWithWarmupSchedule;from mrcnn_tf2.runtime.evaluation import evaluate;import tensorflow as tf;from mrcnn_tf2.runtime.weights_mapping import WEIGHTS_MAPPING;from mrcnn_tf2.model.mask_rcnn import MaskRCNN;from mrcnn_tf2.runtime.callbacks import DLLoggerMetricsCallback, DLLoggerPerfCallback, PretrainedWeightsLoadingCallback;import logging;import os;import dllogger
+2023-02-23 12:43:22,345 INFO tensorflow Using MirroredStrategy with devices ('/job:localhost/replica:0/task:0/device:GPU:0',)
+2023-02-23 12:43:22,458 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 12:43:22,459 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 12:43:22] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 12:45:17,244 INFO server Auth successful
+2023-02-23 12:45:17,244 INFO server Imports value: from mrcnn_tf2.runtime.learning_rate import PiecewiseConstantWithWarmupSchedule;from mrcnn_tf2.runtime.evaluation import evaluate;import tensorflow as tf;from mrcnn_tf2.runtime.weights_mapping import WEIGHTS_MAPPING;from mrcnn_tf2.model.mask_rcnn import MaskRCNN;from mrcnn_tf2.runtime.callbacks import DLLoggerMetricsCallback, DLLoggerPerfCallback, PretrainedWeightsLoadingCallback;import logging;import os;import dllogger
+2023-02-23 12:45:17,463 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 12:45:17,463 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 12:45:17] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 12:45:17,652 INFO server Auth successful
+2023-02-23 12:45:17,655 INFO server Imports value: from mrcnn_tf2.runtime.learning_rate import PiecewiseConstantWithWarmupSchedule;from mrcnn_tf2.runtime.evaluation import evaluate;import tensorflow as tf;from mrcnn_tf2.runtime.weights_mapping import WEIGHTS_MAPPING;from mrcnn_tf2.model.mask_rcnn import MaskRCNN;from mrcnn_tf2.runtime.callbacks import DLLoggerMetricsCallback, DLLoggerPerfCallback, PretrainedWeightsLoadingCallback;import logging;import os;import dllogger
+2023-02-23 12:45:17,774 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 12:45:17,775 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 12:45:17] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 12:45:17,955 INFO server Auth successful
+2023-02-23 12:45:17,955 INFO server Imports value: from mrcnn_tf2.runtime.learning_rate import PiecewiseConstantWithWarmupSchedule;from mrcnn_tf2.runtime.evaluation import evaluate;import tensorflow as tf;from mrcnn_tf2.runtime.weights_mapping import WEIGHTS_MAPPING;from mrcnn_tf2.model.mask_rcnn import MaskRCNN;from mrcnn_tf2.runtime.callbacks import DLLoggerMetricsCallback, DLLoggerPerfCallback, PretrainedWeightsLoadingCallback;import logging;import os;import dllogger
+2023-02-23 12:45:17,959 INFO tensorflow Using MirroredStrategy with devices ('/job:localhost/replica:0/task:0/device:GPU:0',)
+2023-02-23 12:45:18,077 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 12:45:18,078 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 12:45:18] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 12:45:18,255 INFO server Auth successful
+2023-02-23 12:45:18,255 INFO server Imports value: from mrcnn_tf2.runtime.learning_rate import PiecewiseConstantWithWarmupSchedule;from mrcnn_tf2.runtime.evaluation import evaluate;import tensorflow as tf;from mrcnn_tf2.runtime.weights_mapping import WEIGHTS_MAPPING;from mrcnn_tf2.model.mask_rcnn import MaskRCNN;from mrcnn_tf2.runtime.callbacks import DLLoggerMetricsCallback, DLLoggerPerfCallback, PretrainedWeightsLoadingCallback;import logging;import os;import dllogger
+2023-02-23 12:45:18,377 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 12:45:18,378 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 12:45:18] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 12:45:18,570 INFO server Auth successful
+2023-02-23 12:45:18,570 INFO server Imports value: from mrcnn_tf2.runtime.learning_rate import PiecewiseConstantWithWarmupSchedule;from mrcnn_tf2.runtime.evaluation import evaluate;import tensorflow as tf;from mrcnn_tf2.runtime.weights_mapping import WEIGHTS_MAPPING;from mrcnn_tf2.model.mask_rcnn import MaskRCNN;from mrcnn_tf2.runtime.callbacks import DLLoggerMetricsCallback, DLLoggerPerfCallback, PretrainedWeightsLoadingCallback;import logging;import os;import dllogger
+2023-02-23 12:45:18,690 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 12:45:18,691 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 12:45:18] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 12:45:18,945 INFO server Auth successful
+2023-02-23 12:45:18,950 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 12:45:18] "[35m[1mPOST /api/run_experiment HTTP/1.1[0m" 500 -
+2023-02-23 12:47:45,312 INFO server Auth successful
+2023-02-23 12:47:45,312 INFO server Imports value: from mrcnn_tf2.runtime.learning_rate import PiecewiseConstantWithWarmupSchedule;from mrcnn_tf2.runtime.evaluation import evaluate;import tensorflow as tf;from mrcnn_tf2.runtime.weights_mapping import WEIGHTS_MAPPING;from mrcnn_tf2.model.mask_rcnn import MaskRCNN;from mrcnn_tf2.runtime.callbacks import DLLoggerMetricsCallback, DLLoggerPerfCallback, PretrainedWeightsLoadingCallback;import logging;import os;import dllogger
+2023-02-23 12:47:45,514 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 12:47:45,514 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 12:47:45] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 12:47:45,703 INFO server Auth successful
+2023-02-23 12:47:45,705 INFO server Imports value: from mrcnn_tf2.runtime.learning_rate import PiecewiseConstantWithWarmupSchedule;from mrcnn_tf2.runtime.evaluation import evaluate;import tensorflow as tf;from mrcnn_tf2.runtime.weights_mapping import WEIGHTS_MAPPING;from mrcnn_tf2.model.mask_rcnn import MaskRCNN;from mrcnn_tf2.runtime.callbacks import DLLoggerMetricsCallback, DLLoggerPerfCallback, PretrainedWeightsLoadingCallback;import logging;import os;import dllogger
+2023-02-23 12:47:45,824 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 12:47:45,824 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 12:47:45] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 12:47:46,075 INFO server Auth successful
+2023-02-23 12:47:46,076 INFO server Imports value: from mrcnn_tf2.runtime.learning_rate import PiecewiseConstantWithWarmupSchedule;from mrcnn_tf2.runtime.evaluation import evaluate;import tensorflow as tf;from mrcnn_tf2.runtime.weights_mapping import WEIGHTS_MAPPING;from mrcnn_tf2.model.mask_rcnn import MaskRCNN;from mrcnn_tf2.runtime.callbacks import DLLoggerMetricsCallback, DLLoggerPerfCallback, PretrainedWeightsLoadingCallback;import logging;import os;import dllogger
+2023-02-23 12:47:46,080 INFO tensorflow Using MirroredStrategy with devices ('/job:localhost/replica:0/task:0/device:GPU:0',)
+2023-02-23 12:47:46,196 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 12:47:46,196 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 12:47:46] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 12:47:46,423 INFO server Auth successful
+2023-02-23 12:47:46,423 INFO server Imports value: from mrcnn_tf2.runtime.learning_rate import PiecewiseConstantWithWarmupSchedule;from mrcnn_tf2.runtime.evaluation import evaluate;import tensorflow as tf;from mrcnn_tf2.runtime.weights_mapping import WEIGHTS_MAPPING;from mrcnn_tf2.model.mask_rcnn import MaskRCNN;from mrcnn_tf2.runtime.callbacks import DLLoggerMetricsCallback, DLLoggerPerfCallback, PretrainedWeightsLoadingCallback;import logging;import os;import dllogger
+2023-02-23 12:47:46,521 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 12:47:46,521 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 12:47:46] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 12:47:46,735 INFO server Auth successful
+2023-02-23 12:47:46,735 INFO server Imports value: from mrcnn_tf2.runtime.learning_rate import PiecewiseConstantWithWarmupSchedule;from mrcnn_tf2.runtime.evaluation import evaluate;import tensorflow as tf;from mrcnn_tf2.runtime.weights_mapping import WEIGHTS_MAPPING;from mrcnn_tf2.model.mask_rcnn import MaskRCNN;from mrcnn_tf2.runtime.callbacks import DLLoggerMetricsCallback, DLLoggerPerfCallback, PretrainedWeightsLoadingCallback;import logging;import os;import dllogger
+2023-02-23 12:47:46,835 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 12:47:46,835 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 12:47:46] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 12:47:47,064 INFO server Auth successful
+2023-02-23 12:47:47,066 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 12:47:47] "[35m[1mPOST /api/run_experiment HTTP/1.1[0m" 500 -
+2023-02-23 14:49:39,140 INFO server Auth successful
+2023-02-23 14:49:39,141 INFO server Imports value: from mrcnn_tf2.runtime.learning_rate import PiecewiseConstantWithWarmupSchedule;from mrcnn_tf2.runtime.evaluation import evaluate;import tensorflow as tf;from mrcnn_tf2.runtime.weights_mapping import WEIGHTS_MAPPING;from mrcnn_tf2.model.mask_rcnn import MaskRCNN;from mrcnn_tf2.runtime.callbacks import DLLoggerMetricsCallback, DLLoggerPerfCallback, PretrainedWeightsLoadingCallback;import logging;import os;import dllogger
+2023-02-23 14:49:39,264 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 14:49:39,264 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 14:49:39] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 14:49:39,537 INFO server Auth successful
+2023-02-23 14:49:39,539 INFO server Imports value: from mrcnn_tf2.runtime.learning_rate import PiecewiseConstantWithWarmupSchedule;from mrcnn_tf2.runtime.evaluation import evaluate;import tensorflow as tf;from mrcnn_tf2.runtime.weights_mapping import WEIGHTS_MAPPING;from mrcnn_tf2.model.mask_rcnn import MaskRCNN;from mrcnn_tf2.runtime.callbacks import DLLoggerMetricsCallback, DLLoggerPerfCallback, PretrainedWeightsLoadingCallback;import logging;import os;import dllogger
+2023-02-23 14:49:39,665 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 14:49:39,665 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 14:49:39] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 14:49:40,011 INFO server Auth successful
+2023-02-23 14:49:40,012 INFO server Imports value: from mrcnn_tf2.runtime.learning_rate import PiecewiseConstantWithWarmupSchedule;from mrcnn_tf2.runtime.evaluation import evaluate;import tensorflow as tf;from mrcnn_tf2.runtime.weights_mapping import WEIGHTS_MAPPING;from mrcnn_tf2.model.mask_rcnn import MaskRCNN;from mrcnn_tf2.runtime.callbacks import DLLoggerMetricsCallback, DLLoggerPerfCallback, PretrainedWeightsLoadingCallback;import logging;import os;import dllogger
+2023-02-23 14:49:40,016 INFO tensorflow Using MirroredStrategy with devices ('/job:localhost/replica:0/task:0/device:GPU:0',)
+2023-02-23 14:49:40,219 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 14:49:40,219 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 14:49:40] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 14:49:40,540 INFO server Auth successful
+2023-02-23 14:49:40,540 INFO server Imports value: from mrcnn_tf2.runtime.learning_rate import PiecewiseConstantWithWarmupSchedule;from mrcnn_tf2.runtime.evaluation import evaluate;import tensorflow as tf;from mrcnn_tf2.runtime.weights_mapping import WEIGHTS_MAPPING;from mrcnn_tf2.model.mask_rcnn import MaskRCNN;from mrcnn_tf2.runtime.callbacks import DLLoggerMetricsCallback, DLLoggerPerfCallback, PretrainedWeightsLoadingCallback;import logging;import os;import dllogger
+2023-02-23 14:49:40,659 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 14:49:40,659 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 14:49:40] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 14:49:40,959 INFO server Auth successful
+2023-02-23 14:49:40,959 INFO server Imports value: from mrcnn_tf2.runtime.learning_rate import PiecewiseConstantWithWarmupSchedule;from mrcnn_tf2.runtime.evaluation import evaluate;import tensorflow as tf;from mrcnn_tf2.runtime.weights_mapping import WEIGHTS_MAPPING;from mrcnn_tf2.model.mask_rcnn import MaskRCNN;from mrcnn_tf2.runtime.callbacks import DLLoggerMetricsCallback, DLLoggerPerfCallback, PretrainedWeightsLoadingCallback;import logging;import os;import dllogger
+2023-02-23 14:49:41,078 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 14:49:41,078 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 14:49:41] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 14:49:41,451 INFO server Auth successful
+2023-02-23 14:49:41,455 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 14:49:41] "[35m[1mPOST /api/run_experiment HTTP/1.1[0m" 500 -
+2023-02-23 14:57:21,056 INFO werkzeug [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on https://129.173.67.60:8080
+2023-02-23 14:57:21,056 INFO werkzeug [33mPress CTRL+C to quit[0m
+2023-02-23 14:57:21,057 INFO werkzeug  * Restarting with stat
+2023-02-23 14:57:21,755 WARNING werkzeug  * Debugger is active!
+2023-02-23 14:57:21,755 INFO werkzeug  * Debugger PIN: 666-760-317
+2023-02-23 14:57:30,290 INFO server Auth successful
+2023-02-23 14:57:30,947 DEBUG tensorflow Falling back to TensorFlow client; we recommended you install the Cloud TPU client directly with pip install cloud-tpu-client.
+2023-02-23 14:57:31,560 INFO server Imports value: from mrcnn_tf2.runtime.learning_rate import PiecewiseConstantWithWarmupSchedule;from mrcnn_tf2.runtime.evaluation import evaluate;import tensorflow as tf;from mrcnn_tf2.runtime.weights_mapping import WEIGHTS_MAPPING;from mrcnn_tf2.model.mask_rcnn import MaskRCNN;from mrcnn_tf2.runtime.callbacks import DLLoggerMetricsCallback, DLLoggerPerfCallback, PretrainedWeightsLoadingCallback;import logging;import os;import dllogger
+2023-02-23 14:57:31,594 INFO tensorflow Mixed precision compatibility check (mixed_float16): OK
+Your GPU will likely run quickly with dtype policy mixed_float16 as it has compute capability of at least 7.0. Your GPU: NVIDIA GeForce RTX 3070 Ti, compute capability 8.6
+2023-02-23 14:57:31,594 WARNING tensorflow From /usr/local/lib/python3.8/dist-packages/tensorflow/python/keras/mixed_precision/loss_scale.py:56: DynamicLossScale.__init__ (from tensorflow.python.training.experimental.loss_scale) is deprecated and will be removed in a future version.
+Instructions for updating:
+Use tf.keras.mixed_precision.LossScaleOptimizer instead. LossScaleOptimizer now has all the functionality of DynamicLossScale
+2023-02-23 14:57:32,195 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 14:57:32,196 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 14:57:32] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 14:57:32,487 INFO server Auth successful
+2023-02-23 14:57:32,489 INFO server Imports value: from mrcnn_tf2.runtime.learning_rate import PiecewiseConstantWithWarmupSchedule;from mrcnn_tf2.runtime.evaluation import evaluate;import tensorflow as tf;from mrcnn_tf2.runtime.weights_mapping import WEIGHTS_MAPPING;from mrcnn_tf2.model.mask_rcnn import MaskRCNN;from mrcnn_tf2.runtime.callbacks import DLLoggerMetricsCallback, DLLoggerPerfCallback, PretrainedWeightsLoadingCallback;import logging;import os;import dllogger
+2023-02-23 14:57:32,611 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 14:57:32,611 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 14:57:32] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 14:57:32,940 INFO server Auth successful
+2023-02-23 14:57:32,940 INFO server Imports value: from mrcnn_tf2.runtime.learning_rate import PiecewiseConstantWithWarmupSchedule;from mrcnn_tf2.runtime.evaluation import evaluate;import tensorflow as tf;from mrcnn_tf2.runtime.weights_mapping import WEIGHTS_MAPPING;from mrcnn_tf2.model.mask_rcnn import MaskRCNN;from mrcnn_tf2.runtime.callbacks import DLLoggerMetricsCallback, DLLoggerPerfCallback, PretrainedWeightsLoadingCallback;import logging;import os;import dllogger
+2023-02-23 14:57:32,944 INFO tensorflow Using MirroredStrategy with devices ('/job:localhost/replica:0/task:0/device:GPU:0',)
+2023-02-23 14:57:33,103 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 14:57:33,104 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 14:57:33] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 14:57:33,408 INFO server Auth successful
+2023-02-23 14:57:33,408 INFO server Imports value: from mrcnn_tf2.runtime.learning_rate import PiecewiseConstantWithWarmupSchedule;from mrcnn_tf2.runtime.evaluation import evaluate;import tensorflow as tf;from mrcnn_tf2.runtime.weights_mapping import WEIGHTS_MAPPING;from mrcnn_tf2.model.mask_rcnn import MaskRCNN;from mrcnn_tf2.runtime.callbacks import DLLoggerMetricsCallback, DLLoggerPerfCallback, PretrainedWeightsLoadingCallback;import logging;import os;import dllogger
+2023-02-23 14:57:33,509 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 14:57:33,510 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 14:57:33] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 14:57:33,827 INFO server Auth successful
+2023-02-23 14:57:33,827 INFO server Imports value: from mrcnn_tf2.runtime.learning_rate import PiecewiseConstantWithWarmupSchedule;from mrcnn_tf2.runtime.evaluation import evaluate;import tensorflow as tf;from mrcnn_tf2.runtime.weights_mapping import WEIGHTS_MAPPING;from mrcnn_tf2.model.mask_rcnn import MaskRCNN;from mrcnn_tf2.runtime.callbacks import DLLoggerMetricsCallback, DLLoggerPerfCallback, PretrainedWeightsLoadingCallback;import logging;import os;import dllogger
+2023-02-23 14:57:33,946 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 14:57:33,947 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 14:57:33] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 14:57:34,361 INFO server Auth successful
+2023-02-23 14:57:34,361 INFO server Imports value: import tensorflow as tf
+2023-02-23 14:57:34,465 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 14:57:34,465 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 14:57:34] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 14:57:34,783 INFO server Auth successful
+2023-02-23 14:57:34,783 INFO server Imports value: import tensorflow as tf
+2023-02-23 14:57:34,905 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 14:57:34,905 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 14:57:34] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 14:57:35,249 INFO server Auth successful
+2023-02-23 14:57:35,249 INFO server Imports value: import tensorflow as tf
+2023-02-23 14:57:35,369 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 14:57:35,369 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 14:57:35] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 14:57:35,780 INFO server Auth successful
+2023-02-23 14:57:35,785 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 14:57:35] "[35m[1mPOST /api/run_experiment HTTP/1.1[0m" 500 -
+2023-02-23 14:59:25,056 INFO werkzeug [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on https://129.173.67.60:8080
+2023-02-23 14:59:25,056 INFO werkzeug [33mPress CTRL+C to quit[0m
+2023-02-23 14:59:25,057 INFO werkzeug  * Restarting with stat
+2023-02-23 14:59:25,744 WARNING werkzeug  * Debugger is active!
+2023-02-23 14:59:25,744 INFO werkzeug  * Debugger PIN: 666-760-317
+2023-02-23 14:59:33,677 INFO server Auth successful
+2023-02-23 14:59:34,362 DEBUG tensorflow Falling back to TensorFlow client; we recommended you install the Cloud TPU client directly with pip install cloud-tpu-client.
+2023-02-23 14:59:34,933 INFO server Imports value: from mrcnn_tf2.runtime.learning_rate import PiecewiseConstantWithWarmupSchedule;from mrcnn_tf2.runtime.evaluation import evaluate;import tensorflow as tf;from mrcnn_tf2.runtime.weights_mapping import WEIGHTS_MAPPING;from mrcnn_tf2.model.mask_rcnn import MaskRCNN;from mrcnn_tf2.runtime.callbacks import DLLoggerMetricsCallback, DLLoggerPerfCallback, PretrainedWeightsLoadingCallback;import logging;import os;import dllogger
+2023-02-23 14:59:34,970 INFO tensorflow Mixed precision compatibility check (mixed_float16): OK
+Your GPU will likely run quickly with dtype policy mixed_float16 as it has compute capability of at least 7.0. Your GPU: NVIDIA GeForce RTX 3070 Ti, compute capability 8.6
+2023-02-23 14:59:34,970 WARNING tensorflow From /usr/local/lib/python3.8/dist-packages/tensorflow/python/keras/mixed_precision/loss_scale.py:56: DynamicLossScale.__init__ (from tensorflow.python.training.experimental.loss_scale) is deprecated and will be removed in a future version.
+Instructions for updating:
+Use tf.keras.mixed_precision.LossScaleOptimizer instead. LossScaleOptimizer now has all the functionality of DynamicLossScale
+2023-02-23 14:59:35,561 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 14:59:35,562 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 14:59:35] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 14:59:35,847 INFO server Auth successful
+2023-02-23 14:59:35,849 INFO server Imports value: from mrcnn_tf2.runtime.learning_rate import PiecewiseConstantWithWarmupSchedule;from mrcnn_tf2.runtime.evaluation import evaluate;import tensorflow as tf;from mrcnn_tf2.runtime.weights_mapping import WEIGHTS_MAPPING;from mrcnn_tf2.model.mask_rcnn import MaskRCNN;from mrcnn_tf2.runtime.callbacks import DLLoggerMetricsCallback, DLLoggerPerfCallback, PretrainedWeightsLoadingCallback;import logging;import os;import dllogger
+2023-02-23 14:59:35,967 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 14:59:35,968 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 14:59:35] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 14:59:36,319 INFO server Auth successful
+2023-02-23 14:59:36,320 INFO server Imports value: from mrcnn_tf2.runtime.learning_rate import PiecewiseConstantWithWarmupSchedule;from mrcnn_tf2.runtime.evaluation import evaluate;import tensorflow as tf;from mrcnn_tf2.runtime.weights_mapping import WEIGHTS_MAPPING;from mrcnn_tf2.model.mask_rcnn import MaskRCNN;from mrcnn_tf2.runtime.callbacks import DLLoggerMetricsCallback, DLLoggerPerfCallback, PretrainedWeightsLoadingCallback;import logging;import os;import dllogger
+2023-02-23 14:59:36,324 INFO tensorflow Using MirroredStrategy with devices ('/job:localhost/replica:0/task:0/device:GPU:0',)
+2023-02-23 14:59:36,527 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 14:59:36,527 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 14:59:36] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 14:59:36,879 INFO server Auth successful
+2023-02-23 14:59:36,880 INFO server Imports value: from mrcnn_tf2.runtime.learning_rate import PiecewiseConstantWithWarmupSchedule;from mrcnn_tf2.runtime.evaluation import evaluate;import tensorflow as tf;from mrcnn_tf2.runtime.weights_mapping import WEIGHTS_MAPPING;from mrcnn_tf2.model.mask_rcnn import MaskRCNN;from mrcnn_tf2.runtime.callbacks import DLLoggerMetricsCallback, DLLoggerPerfCallback, PretrainedWeightsLoadingCallback;import logging;import os;import dllogger
+2023-02-23 14:59:37,002 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 14:59:37,002 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 14:59:37] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 14:59:37,388 INFO server Auth successful
+2023-02-23 14:59:37,388 INFO server Imports value: from mrcnn_tf2.runtime.learning_rate import PiecewiseConstantWithWarmupSchedule;from mrcnn_tf2.runtime.evaluation import evaluate;import tensorflow as tf;from mrcnn_tf2.runtime.weights_mapping import WEIGHTS_MAPPING;from mrcnn_tf2.model.mask_rcnn import MaskRCNN;from mrcnn_tf2.runtime.callbacks import DLLoggerMetricsCallback, DLLoggerPerfCallback, PretrainedWeightsLoadingCallback;import logging;import os;import dllogger
+2023-02-23 14:59:37,509 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 14:59:37,509 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 14:59:37] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 14:59:37,974 INFO server Auth successful
+2023-02-23 14:59:37,975 INFO server Imports value: import tensorflow as tf
+2023-02-23 14:59:38,100 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 14:59:38,101 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 14:59:38] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 14:59:38,484 INFO server Auth successful
+2023-02-23 14:59:38,485 INFO server Imports value: import tensorflow as tf
+2023-02-23 14:59:38,607 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 14:59:38,608 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 14:59:38] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 14:59:39,035 INFO server Auth successful
+2023-02-23 14:59:39,036 INFO server Imports value: import tensorflow as tf
+2023-02-23 14:59:39,157 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 14:59:39,157 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 14:59:39] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 14:59:39,603 INFO server Auth successful
+2023-02-23 14:59:39,603 INFO server Imports value: import tensorflow as tf;from mrcnn_tf2.model.models.resnet50 import BottleneckGroup, Conv2DBlock
+2023-02-23 14:59:39,797 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 14:59:39,797 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 14:59:39] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 14:59:40,227 INFO server Auth successful
+2023-02-23 14:59:40,227 INFO server Imports value: import tensorflow as tf
+2023-02-23 14:59:40,352 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 14:59:40,353 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 14:59:40] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 14:59:40,820 INFO server Auth successful
+2023-02-23 14:59:40,820 INFO server Imports value: import tensorflow as tf
+2023-02-23 14:59:40,944 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 14:59:40,944 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 14:59:40] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 14:59:41,420 INFO server Auth successful
+2023-02-23 14:59:41,421 INFO server Imports value: import tensorflow as tf
+2023-02-23 14:59:41,546 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 14:59:41,546 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 14:59:41] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 14:59:41,995 INFO server Auth successful
+2023-02-23 14:59:41,996 INFO server Imports value: import tensorflow as tf
+2023-02-23 14:59:42,120 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 14:59:42,121 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 14:59:42] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 14:59:42,612 INFO server Auth successful
+2023-02-23 14:59:42,613 INFO server Imports value: import tensorflow as tf
+2023-02-23 14:59:42,734 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 14:59:42,735 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 14:59:42] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 14:59:43,228 INFO server Auth successful
+2023-02-23 14:59:43,228 INFO server Imports value: import tensorflow as tf
+2023-02-23 14:59:43,351 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 14:59:43,352 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 14:59:43] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 14:59:43,876 INFO server Auth successful
+2023-02-23 14:59:43,876 INFO server Imports value: import tensorflow as tf
+2023-02-23 14:59:44,079 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 14:59:44,080 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 14:59:44] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 14:59:44,583 INFO server Auth successful
+2023-02-23 14:59:44,583 INFO server Imports value: import tensorflow as tf
+2023-02-23 14:59:44,703 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 14:59:44,704 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 14:59:44] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 14:59:45,219 INFO server Auth successful
+2023-02-23 14:59:45,219 INFO server Imports value: import tensorflow as tf
+2023-02-23 14:59:45,343 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 14:59:45,344 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 14:59:45] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 14:59:45,867 INFO server Auth successful
+2023-02-23 14:59:45,868 INFO server Imports value: import tensorflow as tf
+2023-02-23 14:59:45,989 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 14:59:45,990 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 14:59:45] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 14:59:46,479 INFO server Auth successful
+2023-02-23 14:59:46,484 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 14:59:46] "[35m[1mPOST /api/run_experiment HTTP/1.1[0m" 500 -
+2023-02-23 15:00:43,959 INFO werkzeug [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on https://129.173.67.60:8080
+2023-02-23 15:00:43,959 INFO werkzeug [33mPress CTRL+C to quit[0m
+2023-02-23 15:00:43,960 INFO werkzeug  * Restarting with stat
+2023-02-23 15:00:44,652 WARNING werkzeug  * Debugger is active!
+2023-02-23 15:00:44,653 INFO werkzeug  * Debugger PIN: 666-760-317
+2023-02-23 15:00:55,960 INFO server Auth successful
+2023-02-23 15:00:56,588 DEBUG tensorflow Falling back to TensorFlow client; we recommended you install the Cloud TPU client directly with pip install cloud-tpu-client.
+2023-02-23 15:00:57,209 INFO server Imports value: from mrcnn_tf2.runtime.learning_rate import PiecewiseConstantWithWarmupSchedule;from mrcnn_tf2.runtime.evaluation import evaluate;import tensorflow as tf;from mrcnn_tf2.runtime.weights_mapping import WEIGHTS_MAPPING;from mrcnn_tf2.model.mask_rcnn import MaskRCNN;from mrcnn_tf2.runtime.callbacks import DLLoggerMetricsCallback, DLLoggerPerfCallback, PretrainedWeightsLoadingCallback;import logging;import os;import dllogger
+2023-02-23 15:00:57,246 INFO tensorflow Mixed precision compatibility check (mixed_float16): OK
+Your GPU will likely run quickly with dtype policy mixed_float16 as it has compute capability of at least 7.0. Your GPU: NVIDIA GeForce RTX 3070 Ti, compute capability 8.6
+2023-02-23 15:00:57,246 WARNING tensorflow From /usr/local/lib/python3.8/dist-packages/tensorflow/python/keras/mixed_precision/loss_scale.py:56: DynamicLossScale.__init__ (from tensorflow.python.training.experimental.loss_scale) is deprecated and will be removed in a future version.
+Instructions for updating:
+Use tf.keras.mixed_precision.LossScaleOptimizer instead. LossScaleOptimizer now has all the functionality of DynamicLossScale
+2023-02-23 15:00:57,800 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 15:00:57,801 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 15:00:57] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 15:00:58,235 INFO server Auth successful
+2023-02-23 15:00:58,238 INFO server Imports value: from mrcnn_tf2.runtime.learning_rate import PiecewiseConstantWithWarmupSchedule;from mrcnn_tf2.runtime.evaluation import evaluate;import tensorflow as tf;from mrcnn_tf2.runtime.weights_mapping import WEIGHTS_MAPPING;from mrcnn_tf2.model.mask_rcnn import MaskRCNN;from mrcnn_tf2.runtime.callbacks import DLLoggerMetricsCallback, DLLoggerPerfCallback, PretrainedWeightsLoadingCallback;import logging;import os;import dllogger
+2023-02-23 15:00:58,362 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 15:00:58,363 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 15:00:58] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 15:00:58,884 INFO server Auth successful
+2023-02-23 15:00:58,885 INFO server Imports value: from mrcnn_tf2.runtime.learning_rate import PiecewiseConstantWithWarmupSchedule;from mrcnn_tf2.runtime.evaluation import evaluate;import tensorflow as tf;from mrcnn_tf2.runtime.weights_mapping import WEIGHTS_MAPPING;from mrcnn_tf2.model.mask_rcnn import MaskRCNN;from mrcnn_tf2.runtime.callbacks import DLLoggerMetricsCallback, DLLoggerPerfCallback, PretrainedWeightsLoadingCallback;import logging;import os;import dllogger
+2023-02-23 15:00:58,888 INFO tensorflow Using MirroredStrategy with devices ('/job:localhost/replica:0/task:0/device:GPU:0',)
+2023-02-23 15:00:59,048 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 15:00:59,048 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 15:00:59] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 15:00:59,623 INFO server Auth successful
+2023-02-23 15:00:59,624 INFO server Imports value: from mrcnn_tf2.runtime.learning_rate import PiecewiseConstantWithWarmupSchedule;from mrcnn_tf2.runtime.evaluation import evaluate;import tensorflow as tf;from mrcnn_tf2.runtime.weights_mapping import WEIGHTS_MAPPING;from mrcnn_tf2.model.mask_rcnn import MaskRCNN;from mrcnn_tf2.runtime.callbacks import DLLoggerMetricsCallback, DLLoggerPerfCallback, PretrainedWeightsLoadingCallback;import logging;import os;import dllogger
+2023-02-23 15:00:59,744 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 15:00:59,745 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 15:00:59] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 15:01:00,283 INFO server Auth successful
+2023-02-23 15:01:00,284 INFO server Imports value: from mrcnn_tf2.runtime.learning_rate import PiecewiseConstantWithWarmupSchedule;from mrcnn_tf2.runtime.evaluation import evaluate;import tensorflow as tf;from mrcnn_tf2.runtime.weights_mapping import WEIGHTS_MAPPING;from mrcnn_tf2.model.mask_rcnn import MaskRCNN;from mrcnn_tf2.runtime.callbacks import DLLoggerMetricsCallback, DLLoggerPerfCallback, PretrainedWeightsLoadingCallback;import logging;import os;import dllogger
+2023-02-23 15:01:00,404 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 15:01:00,405 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 15:01:00] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 15:01:00,999 INFO server Auth successful
+2023-02-23 15:01:00,999 INFO server Imports value: import tensorflow as tf
+2023-02-23 15:01:01,126 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 15:01:01,126 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 15:01:01] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 15:01:01,696 INFO server Auth successful
+2023-02-23 15:01:01,696 INFO server Imports value: import tensorflow as tf
+2023-02-23 15:01:01,819 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 15:01:01,819 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 15:01:01] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 15:01:02,386 INFO server Auth successful
+2023-02-23 15:01:02,387 INFO server Imports value: import tensorflow as tf
+2023-02-23 15:01:02,509 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 15:01:02,509 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 15:01:02] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 15:01:03,092 INFO server Auth successful
+2023-02-23 15:01:03,093 INFO server Imports value: import tensorflow as tf;from mrcnn_tf2.model.models.resnet50 import BottleneckGroup, Conv2DBlock
+2023-02-23 15:01:03,307 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 15:01:03,307 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 15:01:03] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 15:01:03,859 INFO server Auth successful
+2023-02-23 15:01:03,859 INFO server Imports value: import tensorflow as tf
+2023-02-23 15:01:03,982 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 15:01:03,982 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 15:01:03] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 15:01:04,654 INFO server Auth successful
+2023-02-23 15:01:04,654 INFO server Imports value: import tensorflow as tf
+2023-02-23 15:01:04,776 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 15:01:04,777 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 15:01:04] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 15:01:05,399 INFO server Auth successful
+2023-02-23 15:01:05,400 INFO server Imports value: import tensorflow as tf
+2023-02-23 15:01:05,524 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 15:01:05,524 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 15:01:05] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 15:01:06,171 INFO server Auth successful
+2023-02-23 15:01:06,171 INFO server Imports value: import tensorflow as tf
+2023-02-23 15:01:06,294 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 15:01:06,294 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 15:01:06] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 15:01:06,931 INFO server Auth successful
+2023-02-23 15:01:06,932 INFO server Imports value: import tensorflow as tf
+2023-02-23 15:01:07,054 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 15:01:07,054 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 15:01:07] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 15:01:07,703 INFO server Auth successful
+2023-02-23 15:01:07,703 INFO server Imports value: import tensorflow as tf
+2023-02-23 15:01:07,827 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 15:01:07,827 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 15:01:07] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 15:01:08,487 INFO server Auth successful
+2023-02-23 15:01:08,488 INFO server Imports value: import tensorflow as tf
+2023-02-23 15:01:08,695 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 15:01:08,696 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 15:01:08] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 15:01:09,311 INFO server Auth successful
+2023-02-23 15:01:09,312 INFO server Imports value: import tensorflow as tf
+2023-02-23 15:01:09,436 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 15:01:09,436 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 15:01:09] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 15:01:10,136 INFO server Auth successful
+2023-02-23 15:01:10,136 INFO server Imports value: import tensorflow as tf
+2023-02-23 15:01:10,260 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 15:01:10,260 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 15:01:10] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 15:01:10,915 INFO server Auth successful
+2023-02-23 15:01:10,916 INFO server Imports value: import tensorflow as tf
+2023-02-23 15:01:11,039 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 15:01:11,039 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 15:01:11] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 15:01:11,709 INFO server Auth successful
+2023-02-23 15:01:11,709 INFO server Imports value: import tensorflow as tf;from mrcnn_tf2.model.models.resnet50 import Conv2DBlock
+2023-02-23 15:01:11,831 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 15:01:11,832 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 15:01:11] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 15:01:12,535 INFO server Auth successful
+2023-02-23 15:01:12,535 INFO server Imports value: import tensorflow as tf;from mrcnn_tf2.model.models.resnet50 import Conv2DBlock
+2023-02-23 15:01:12,738 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 15:01:12,739 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 15:01:12] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 15:01:13,444 INFO server Auth successful
+2023-02-23 15:01:13,444 INFO server Imports value: import tensorflow as tf;from mrcnn_tf2.model.models.resnet50 import Conv2DBlock
+2023-02-23 15:01:13,565 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 15:01:13,566 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 15:01:13] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 15:01:14,283 INFO server Auth successful
+2023-02-23 15:01:14,284 INFO server Imports value: import tensorflow as tf
+2023-02-23 15:01:14,405 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 15:01:14,405 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 15:01:14] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 15:01:15,130 INFO server Auth successful
+2023-02-23 15:01:15,130 INFO server Imports value: import tensorflow as tf
+2023-02-23 15:01:15,254 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 15:01:15,254 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 15:01:15] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 15:01:15,997 INFO server Auth successful
+2023-02-23 15:01:15,997 INFO server Imports value: import tensorflow as tf
+2023-02-23 15:01:16,123 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 15:01:16,123 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 15:01:16] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 15:01:16,874 INFO server Auth successful
+2023-02-23 15:01:16,875 INFO server Imports value: import tensorflow as tf
+2023-02-23 15:01:16,997 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 15:01:16,998 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 15:01:16] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 15:01:17,760 INFO server Auth successful
+2023-02-23 15:01:17,760 INFO server Imports value: import tensorflow as tf
+2023-02-23 15:01:17,880 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 15:01:17,881 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 15:01:17] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 15:01:18,640 INFO server Auth successful
+2023-02-23 15:01:18,641 INFO server Imports value: import tensorflow as tf
+2023-02-23 15:01:18,847 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 15:01:18,848 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 15:01:18] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 15:01:19,565 INFO server Auth successful
+2023-02-23 15:01:19,566 INFO server Imports value: import tensorflow as tf
+2023-02-23 15:01:19,690 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 15:01:19,690 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 15:01:19] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 15:01:20,443 INFO server Auth successful
+2023-02-23 15:01:20,443 INFO server Imports value: import tensorflow as tf
+2023-02-23 15:01:20,567 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 15:01:20,568 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 15:01:20] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 15:01:21,339 INFO server Auth successful
+2023-02-23 15:01:21,339 INFO server Imports value: import tensorflow as tf;from mrcnn_tf2.model.models.resnet50 import Conv2DBlock
+2023-02-23 15:01:21,464 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 15:01:21,464 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 15:01:21] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 15:01:22,224 INFO server Auth successful
+2023-02-23 15:01:22,224 INFO server Imports value: import tensorflow as tf;from mrcnn_tf2.model.models.resnet50 import Conv2DBlock
+2023-02-23 15:01:22,353 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 15:01:22,353 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 15:01:22] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 15:01:23,100 INFO server Auth successful
+2023-02-23 15:01:23,101 INFO server Imports value: import tensorflow as tf;from mrcnn_tf2.model.models.resnet50 import Conv2DBlock
+2023-02-23 15:01:23,313 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 15:01:23,313 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 15:01:23] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 15:01:24,080 INFO server Auth successful
+2023-02-23 15:01:24,081 INFO server Imports value: import tensorflow as tf
+2023-02-23 15:01:24,202 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 15:01:24,202 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 15:01:24] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 15:01:24,980 INFO server Auth successful
+2023-02-23 15:01:24,981 INFO server Imports value: import tensorflow as tf
+2023-02-23 15:01:25,102 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 15:01:25,103 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 15:01:25] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 15:01:25,911 INFO server Auth successful
+2023-02-23 15:01:25,911 INFO server Imports value: import tensorflow as tf
+2023-02-23 15:01:26,032 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 15:01:26,032 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 15:01:26] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 15:01:26,811 INFO server Auth successful
+2023-02-23 15:01:26,812 INFO server Imports value: import tensorflow as tf
+2023-02-23 15:01:26,933 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 15:01:26,933 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 15:01:26] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 15:01:27,802 INFO server Auth successful
+2023-02-23 15:01:27,803 INFO server Imports value: import tensorflow as tf
+2023-02-23 15:01:27,923 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 15:01:27,923 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 15:01:27] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 15:01:28,754 INFO server Auth successful
+2023-02-23 15:01:28,755 INFO server Imports value: import tensorflow as tf
+2023-02-23 15:01:28,876 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 15:01:28,876 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 15:01:28] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 15:01:29,631 INFO server Auth successful
+2023-02-23 15:01:29,632 INFO server Imports value: import tensorflow as tf
+2023-02-23 15:01:29,837 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 15:01:29,837 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 15:01:29] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 15:01:30,673 INFO server Auth successful
+2023-02-23 15:01:30,673 INFO server Imports value: import tensorflow as tf
+2023-02-23 15:01:30,795 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 15:01:30,795 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 15:01:30] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 15:01:31,692 INFO server Auth successful
+2023-02-23 15:01:31,693 INFO server Imports value: import tensorflow as tf;from mrcnn_tf2.model.models.resnet50 import Conv2DBlock
+2023-02-23 15:01:31,814 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 15:01:31,815 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 15:01:31] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 15:01:32,655 INFO server Auth successful
+2023-02-23 15:01:32,656 INFO server Imports value: import tensorflow as tf;from mrcnn_tf2.model.models.resnet50 import Conv2DBlock
+2023-02-23 15:01:32,778 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 15:01:32,779 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 15:01:32] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 15:01:33,667 INFO server Auth successful
+2023-02-23 15:01:33,667 INFO server Imports value: import tensorflow as tf
+2023-02-23 15:01:33,788 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 15:01:33,789 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 15:01:33] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 15:01:34,604 INFO server Auth successful
+2023-02-23 15:01:34,604 INFO server Imports value: import tensorflow as tf
+2023-02-23 15:01:34,809 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 15:01:34,809 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 15:01:34] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 15:01:35,672 INFO server Auth successful
+2023-02-23 15:01:35,672 INFO server Imports value: import tensorflow as tf
+2023-02-23 15:01:35,795 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 15:01:35,795 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 15:01:35] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 15:01:36,705 INFO server Auth successful
+2023-02-23 15:01:36,705 INFO server Imports value: import tensorflow as tf
+2023-02-23 15:01:36,829 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 15:01:36,830 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 15:01:36] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 15:01:37,712 INFO server Auth successful
+2023-02-23 15:01:37,712 INFO server Imports value: import tensorflow as tf
+2023-02-23 15:01:37,834 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 15:01:37,834 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 15:01:37] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 15:01:38,736 INFO server Auth successful
+2023-02-23 15:01:38,736 INFO server Imports value: import tensorflow as tf
+2023-02-23 15:01:38,861 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 15:01:38,861 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 15:01:38] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 15:01:39,718 INFO server Auth successful
+2023-02-23 15:01:39,718 INFO server Imports value: import tensorflow as tf
+2023-02-23 15:01:39,842 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 15:01:39,842 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 15:01:39] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 15:01:40,788 INFO server Auth successful
+2023-02-23 15:01:40,788 INFO server Imports value: import tensorflow as tf
+2023-02-23 15:01:40,990 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 15:01:40,990 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 15:01:40] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 15:01:41,912 INFO server Auth successful
+2023-02-23 15:01:41,912 INFO server Imports value: import tensorflow as tf
+2023-02-23 15:01:42,032 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 15:01:42,033 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 15:01:42] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 15:01:42,972 INFO server Auth successful
+2023-02-23 15:01:42,973 INFO server Imports value: import tensorflow as tf
+2023-02-23 15:01:43,095 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 15:01:43,096 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 15:01:43] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 15:01:44,016 INFO server Auth successful
+2023-02-23 15:01:44,017 INFO server Imports value: import tensorflow as tf;from mrcnn_tf2.model.models.resnet50 import Conv2DBlock
+2023-02-23 15:01:44,139 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 15:01:44,139 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 15:01:44] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 15:01:45,092 INFO server Auth successful
+2023-02-23 15:01:45,092 INFO server Imports value: import tensorflow as tf;from mrcnn_tf2.model.models.resnet50 import Conv2DBlock
+2023-02-23 15:01:45,214 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 15:01:45,215 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 15:01:45] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 15:01:46,120 INFO server Auth successful
+2023-02-23 15:01:46,121 INFO server Imports value: import tensorflow as tf;from mrcnn_tf2.model.models.resnet50 import Conv2DBlock
+2023-02-23 15:01:46,242 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 15:01:46,243 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 15:01:46] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 15:01:47,234 INFO server Auth successful
+2023-02-23 15:01:47,234 INFO server Imports value: import tensorflow as tf
+2023-02-23 15:01:47,357 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 15:01:47,358 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 15:01:47] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 15:01:48,316 INFO server Auth successful
+2023-02-23 15:01:48,316 INFO server Imports value: import tensorflow as tf
+2023-02-23 15:01:48,517 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 15:01:48,518 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 15:01:48] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 15:01:49,535 INFO server Auth successful
+2023-02-23 15:01:49,536 INFO server Imports value: import tensorflow as tf
+2023-02-23 15:01:49,657 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 15:01:49,658 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 15:01:49] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 15:01:50,641 INFO server Auth successful
+2023-02-23 15:01:50,641 INFO server Imports value: import tensorflow as tf
+2023-02-23 15:01:50,768 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 15:01:50,768 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 15:01:50] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 15:01:51,747 INFO server Auth successful
+2023-02-23 15:01:51,747 INFO server Imports value: import tensorflow as tf
+2023-02-23 15:01:51,868 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 15:01:51,868 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 15:01:51] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 15:01:52,832 INFO server Auth successful
+2023-02-23 15:01:52,833 INFO server Imports value: import tensorflow as tf
+2023-02-23 15:01:52,954 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 15:01:52,955 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 15:01:52] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 15:01:53,976 INFO server Auth successful
+2023-02-23 15:01:53,976 INFO server Imports value: import tensorflow as tf
+2023-02-23 15:01:54,178 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 15:01:54,179 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 15:01:54] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 15:01:55,161 INFO server Auth successful
+2023-02-23 15:01:55,161 INFO server Imports value: import tensorflow as tf
+2023-02-23 15:01:55,282 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 15:01:55,283 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 15:01:55] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 15:01:56,319 INFO server Auth successful
+2023-02-23 15:01:56,320 INFO server Imports value: import tensorflow as tf;from mrcnn_tf2.model.models.resnet50 import Conv2DBlock
+2023-02-23 15:01:56,440 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 15:01:56,441 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 15:01:56] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 15:01:57,530 INFO server Auth successful
+2023-02-23 15:01:57,530 INFO server Imports value: import tensorflow as tf;from mrcnn_tf2.model.models.resnet50 import Conv2DBlock
+2023-02-23 15:01:57,651 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 15:01:57,652 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 15:01:57] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 15:01:58,649 INFO server Auth successful
+2023-02-23 15:01:58,649 INFO server Imports value: import tensorflow as tf;from mrcnn_tf2.model.models.resnet50 import Conv2DBlock
+2023-02-23 15:01:58,771 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 15:01:58,772 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 15:01:58] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 15:01:59,860 INFO server Auth successful
+2023-02-23 15:01:59,861 INFO server Imports value: import tensorflow as tf
+2023-02-23 15:01:59,982 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 15:01:59,983 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 15:01:59] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 15:02:01,025 INFO server Auth successful
+2023-02-23 15:02:01,025 INFO server Imports value: import tensorflow as tf
+2023-02-23 15:02:01,150 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 15:02:01,151 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 15:02:01] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 15:02:02,212 INFO server Auth successful
+2023-02-23 15:02:02,212 INFO server Imports value: import tensorflow as tf
+2023-02-23 15:02:02,416 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 15:02:02,416 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 15:02:02] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 15:02:03,500 INFO server Auth successful
+2023-02-23 15:02:03,501 INFO server Imports value: import tensorflow as tf
+2023-02-23 15:02:03,626 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 15:02:03,627 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 15:02:03] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 15:02:04,707 INFO server Auth successful
+2023-02-23 15:02:04,708 INFO server Imports value: import tensorflow as tf
+2023-02-23 15:02:04,829 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 15:02:04,829 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 15:02:04] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 15:02:05,903 INFO server Auth successful
+2023-02-23 15:02:05,904 INFO server Imports value: import tensorflow as tf
+2023-02-23 15:02:06,028 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 15:02:06,029 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 15:02:06] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 15:02:07,137 INFO server Auth successful
+2023-02-23 15:02:07,137 INFO server Imports value: import tensorflow as tf
+2023-02-23 15:02:07,259 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 15:02:07,260 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 15:02:07] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 15:02:08,347 INFO server Auth successful
+2023-02-23 15:02:08,348 INFO server Imports value: import tensorflow as tf
+2023-02-23 15:02:08,553 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 15:02:08,554 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 15:02:08] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 15:02:09,647 INFO server Auth successful
+2023-02-23 15:02:09,647 INFO server Imports value: import tensorflow as tf;from mrcnn_tf2.model.models.resnet50 import Conv2DBlock
+2023-02-23 15:02:09,768 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 15:02:09,768 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 15:02:09] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 15:02:10,876 INFO server Auth successful
+2023-02-23 15:02:10,877 INFO server Imports value: import tensorflow as tf;from mrcnn_tf2.model.models.resnet50 import Conv2DBlock
+2023-02-23 15:02:11,001 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 15:02:11,001 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 15:02:11] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 15:02:12,127 INFO server Auth successful
+2023-02-23 15:02:12,127 INFO server Imports value: import tensorflow as tf;from mrcnn_tf2.model.models.resnet50 import Conv2DBlock
+2023-02-23 15:02:12,249 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 15:02:12,249 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 15:02:12] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 15:02:13,396 INFO server Auth successful
+2023-02-23 15:02:13,396 INFO server Imports value: import tensorflow as tf
+2023-02-23 15:02:13,517 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 15:02:13,518 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 15:02:13] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 15:02:14,399 INFO server Auth successful
+2023-02-23 15:02:14,399 INFO server Imports value: import tensorflow as tf
+2023-02-23 15:02:14,521 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 15:02:14,522 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 15:02:14] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 15:02:15,644 INFO server Auth successful
+2023-02-23 15:02:15,645 INFO server Imports value: import tensorflow as tf
+2023-02-23 15:02:15,769 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 15:02:15,769 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 15:02:15] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 15:02:16,911 INFO server Auth successful
+2023-02-23 15:02:16,911 INFO server Imports value: import tensorflow as tf
+2023-02-23 15:02:17,116 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 15:02:17,117 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 15:02:17] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 15:02:18,241 INFO server Auth successful
+2023-02-23 15:02:18,241 INFO server Imports value: import tensorflow as tf
+2023-02-23 15:02:18,364 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 15:02:18,365 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 15:02:18] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 15:02:19,519 INFO server Auth successful
+2023-02-23 15:02:19,520 INFO server Imports value: import tensorflow as tf
+2023-02-23 15:02:19,642 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 15:02:19,642 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 15:02:19] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 15:02:20,783 INFO server Auth successful
+2023-02-23 15:02:20,784 INFO server Imports value: import tensorflow as tf
+2023-02-23 15:02:20,907 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 15:02:20,907 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 15:02:20] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 15:02:22,060 INFO server Auth successful
+2023-02-23 15:02:22,061 INFO server Imports value: import tensorflow as tf
+2023-02-23 15:02:22,187 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 15:02:22,187 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 15:02:22] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 15:02:23,343 INFO server Auth successful
+2023-02-23 15:02:23,343 INFO server Imports value: import tensorflow as tf;from mrcnn_tf2.model.models.resnet50 import Conv2DBlock
+2023-02-23 15:02:23,564 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 15:02:23,564 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 15:02:23] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 15:02:24,727 INFO server Auth successful
+2023-02-23 15:02:24,727 INFO server Imports value: import tensorflow as tf;from mrcnn_tf2.model.models.resnet50 import Conv2DBlock
+2023-02-23 15:02:24,848 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 15:02:24,848 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 15:02:24] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 15:02:25,999 INFO server Auth successful
+2023-02-23 15:02:25,999 INFO server Imports value: import tensorflow as tf
+2023-02-23 15:02:26,123 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 15:02:26,124 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 15:02:26] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 15:02:27,343 INFO server Auth successful
+2023-02-23 15:02:27,344 INFO server Imports value: import tensorflow as tf
+2023-02-23 15:02:27,465 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 15:02:27,465 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 15:02:27] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 15:02:28,662 INFO server Auth successful
+2023-02-23 15:02:28,663 INFO server Imports value: import tensorflow as tf
+2023-02-23 15:02:28,788 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 15:02:28,789 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 15:02:28] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 15:02:30,011 INFO server Auth successful
+2023-02-23 15:02:30,011 INFO server Imports value: import tensorflow as tf
+2023-02-23 15:02:30,135 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 15:02:30,135 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 15:02:30] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 15:02:31,354 INFO server Auth successful
+2023-02-23 15:02:31,355 INFO server Imports value: import tensorflow as tf
+2023-02-23 15:02:31,577 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 15:02:31,577 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 15:02:31] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 15:02:32,775 INFO server Auth successful
+2023-02-23 15:02:32,776 INFO server Imports value: import tensorflow as tf
+2023-02-23 15:02:32,899 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 15:02:32,900 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 15:02:32] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 15:02:34,148 INFO server Auth successful
+2023-02-23 15:02:34,148 INFO server Imports value: import tensorflow as tf
+2023-02-23 15:02:34,272 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 15:02:34,273 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 15:02:34] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 15:02:35,477 INFO server Auth successful
+2023-02-23 15:02:35,477 INFO server Imports value: import tensorflow as tf
+2023-02-23 15:02:35,599 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 15:02:35,599 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 15:02:35] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 15:02:36,855 INFO server Auth successful
+2023-02-23 15:02:36,855 INFO server Imports value: import tensorflow as tf
+2023-02-23 15:02:36,981 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 15:02:36,982 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 15:02:36] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 15:02:38,339 INFO server Auth successful
+2023-02-23 15:02:38,339 INFO server Imports value: import tensorflow as tf
+2023-02-23 15:02:38,461 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 15:02:38,462 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 15:02:38] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 15:02:39,756 INFO server Auth successful
+2023-02-23 15:02:39,756 INFO server Imports value: import tensorflow as tf;from mrcnn_tf2.model.models.resnet50 import Conv2DBlock
+2023-02-23 15:02:39,880 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 15:02:39,880 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 15:02:39] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 15:02:41,263 INFO server Auth successful
+2023-02-23 15:02:41,264 INFO server Imports value: import tensorflow as tf;from mrcnn_tf2.model.models.resnet50 import Conv2DBlock
+2023-02-23 15:02:41,469 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 15:02:41,469 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 15:02:41] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 15:02:42,688 INFO server Auth successful
+2023-02-23 15:02:42,688 INFO server Imports value: import tensorflow as tf;from mrcnn_tf2.model.models.resnet50 import Conv2DBlock
+2023-02-23 15:02:42,814 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 15:02:42,815 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 15:02:42] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 15:02:44,113 INFO server Auth successful
+2023-02-23 15:02:44,113 INFO server Imports value: import tensorflow as tf
+2023-02-23 15:02:44,240 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 15:02:44,240 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 15:02:44] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 15:02:45,585 INFO server Auth successful
+2023-02-23 15:02:45,586 INFO server Imports value: import tensorflow as tf
+2023-02-23 15:02:45,712 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 15:02:45,713 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 15:02:45] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 15:02:47,034 INFO server Auth successful
+2023-02-23 15:02:47,035 INFO server Imports value: import tensorflow as tf
+2023-02-23 15:02:47,158 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 15:02:47,159 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 15:02:47] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 15:02:48,461 INFO server Auth successful
+2023-02-23 15:02:48,462 INFO server Imports value: import tensorflow as tf
+2023-02-23 15:02:48,667 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 15:02:48,667 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 15:02:48] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 15:02:49,990 INFO server Auth successful
+2023-02-23 15:02:49,991 INFO server Imports value: import tensorflow as tf
+2023-02-23 15:02:50,115 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 15:02:50,115 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 15:02:50] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 15:02:51,470 INFO server Auth successful
+2023-02-23 15:02:51,470 INFO server Imports value: import tensorflow as tf
+2023-02-23 15:02:51,591 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 15:02:51,592 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 15:02:51] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 15:02:52,905 INFO server Auth successful
+2023-02-23 15:02:52,905 INFO server Imports value: import tensorflow as tf
+2023-02-23 15:02:53,031 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 15:02:53,031 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 15:02:53] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 15:02:54,398 INFO server Auth successful
+2023-02-23 15:02:54,399 INFO server Imports value: import tensorflow as tf
+2023-02-23 15:02:54,521 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 15:02:54,521 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 15:02:54] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 15:02:55,879 INFO server Auth successful
+2023-02-23 15:02:55,879 INFO server Imports value: import tensorflow as tf;from mrcnn_tf2.model.models.resnet50 import Conv2DBlock
+2023-02-23 15:02:56,002 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 15:02:56,002 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 15:02:56] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 15:02:57,376 INFO server Auth successful
+2023-02-23 15:02:57,376 INFO server Imports value: import tensorflow as tf;from mrcnn_tf2.model.models.resnet50 import Conv2DBlock
+2023-02-23 15:02:57,497 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 15:02:57,498 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 15:02:57] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 15:02:58,844 INFO server Auth successful
+2023-02-23 15:02:58,844 INFO server Imports value: import tensorflow as tf;from mrcnn_tf2.model.models.resnet50 import Conv2DBlock
+2023-02-23 15:02:59,048 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 15:02:59,049 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 15:02:59] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 15:03:00,413 INFO server Auth successful
+2023-02-23 15:03:00,414 INFO server Imports value: import tensorflow as tf
+2023-02-23 15:03:00,537 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 15:03:00,537 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 15:03:00] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 15:03:01,950 INFO server Auth successful
+2023-02-23 15:03:01,951 INFO server Imports value: import tensorflow as tf
+2023-02-23 15:03:02,072 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 15:03:02,072 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 15:03:02] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 15:03:03,446 INFO server Auth successful
+2023-02-23 15:03:03,446 INFO server Imports value: import tensorflow as tf
+2023-02-23 15:03:03,569 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 15:03:03,570 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 15:03:03] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 15:03:04,952 INFO server Auth successful
+2023-02-23 15:03:04,953 INFO server Imports value: import tensorflow as tf
+2023-02-23 15:03:05,075 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 15:03:05,076 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 15:03:05] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 15:03:06,540 INFO server Auth successful
+2023-02-23 15:03:06,540 INFO server Imports value: import tensorflow as tf
+2023-02-23 15:03:06,776 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 15:03:06,777 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 15:03:06] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 15:03:08,194 INFO server Auth successful
+2023-02-23 15:03:08,194 INFO server Imports value: import tensorflow as tf
+2023-02-23 15:03:08,315 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 15:03:08,315 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 15:03:08] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 15:03:09,767 INFO server Auth successful
+2023-02-23 15:03:09,768 INFO server Imports value: import tensorflow as tf
+2023-02-23 15:03:09,890 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 15:03:09,890 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 15:03:09] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 15:03:11,352 INFO server Auth successful
+2023-02-23 15:03:11,352 INFO server Imports value: import tensorflow as tf
+2023-02-23 15:03:11,474 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 15:03:11,475 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 15:03:11] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 15:03:12,895 INFO server Auth successful
+2023-02-23 15:03:12,895 INFO server Imports value: import tensorflow as tf;from mrcnn_tf2.model.models.resnet50 import Conv2DBlock
+2023-02-23 15:03:13,017 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 15:03:13,017 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 15:03:13] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 15:03:14,542 INFO server Auth successful
+2023-02-23 15:03:14,543 INFO server Imports value: import tensorflow as tf;from mrcnn_tf2.model.models.resnet50 import Conv2DBlock
+2023-02-23 15:03:14,663 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 15:03:14,664 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 15:03:14] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 15:03:16,112 INFO server Auth successful
+2023-02-23 15:03:16,112 INFO server Imports value: import tensorflow as tf;from mrcnn_tf2.model.models.resnet50 import Conv2DBlock
+2023-02-23 15:03:16,237 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 15:03:16,237 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 15:03:16] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 15:03:17,675 INFO server Auth successful
+2023-02-23 15:03:17,675 INFO server Imports value: import tensorflow as tf
+2023-02-23 15:03:17,881 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 15:03:17,882 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 15:03:17] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 15:03:19,364 INFO server Auth successful
+2023-02-23 15:03:19,365 INFO server Imports value: import tensorflow as tf
+2023-02-23 15:03:19,489 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 15:03:19,489 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 15:03:19] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 15:03:20,928 INFO server Auth successful
+2023-02-23 15:03:20,928 INFO server Imports value: import tensorflow as tf
+2023-02-23 15:03:21,053 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 15:03:21,053 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 15:03:21] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 15:03:22,558 INFO server Auth successful
+2023-02-23 15:03:22,559 INFO server Imports value: import tensorflow as tf
+2023-02-23 15:03:22,684 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 15:03:22,684 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 15:03:22] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 15:03:24,183 INFO server Auth successful
+2023-02-23 15:03:24,184 INFO server Imports value: import tensorflow as tf
+2023-02-23 15:03:24,306 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 15:03:24,306 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 15:03:24] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 15:03:25,815 INFO server Auth successful
+2023-02-23 15:03:25,816 INFO server Imports value: import tensorflow as tf
+2023-02-23 15:03:25,939 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 15:03:25,940 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 15:03:25] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 15:03:27,491 INFO server Auth successful
+2023-02-23 15:03:27,491 INFO server Imports value: import tensorflow as tf
+2023-02-23 15:03:27,694 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 15:03:27,694 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 15:03:27] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 15:03:29,191 INFO server Auth successful
+2023-02-23 15:03:29,191 INFO server Imports value: import tensorflow as tf
+2023-02-23 15:03:29,316 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 15:03:29,317 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 15:03:29] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 15:03:30,820 INFO server Auth successful
+2023-02-23 15:03:30,820 INFO server Imports value: import tensorflow as tf;from mrcnn_tf2.model.models.resnet50 import Conv2DBlock
+2023-02-23 15:03:30,941 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 15:03:30,942 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 15:03:30] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 15:03:32,439 INFO server Auth successful
+2023-02-23 15:03:32,439 INFO server Imports value: import tensorflow as tf;from mrcnn_tf2.model.models.resnet50 import Conv2DBlock
+2023-02-23 15:03:32,561 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 15:03:32,561 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 15:03:32] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 15:03:34,083 INFO server Auth successful
+2023-02-23 15:03:34,083 INFO server Imports value: import tensorflow as tf;from mrcnn_tf2.model.models.resnet50 import Conv2DBlock
+2023-02-23 15:03:34,205 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 15:03:34,205 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 15:03:34] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 15:03:35,551 INFO server Auth successful
+2023-02-23 15:03:35,552 INFO server Imports value: import tensorflow as tf
+2023-02-23 15:03:35,754 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 15:03:35,754 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 15:03:35] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 15:03:37,228 INFO server Auth successful
+2023-02-23 15:03:37,229 INFO server Imports value: import tensorflow as tf
+2023-02-23 15:03:37,350 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 15:03:37,351 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 15:03:37] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 15:03:38,895 INFO server Auth successful
+2023-02-23 15:03:38,896 INFO server Imports value: import tensorflow as tf
+2023-02-23 15:03:39,018 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 15:03:39,019 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 15:03:39] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 15:03:40,558 INFO server Auth successful
+2023-02-23 15:03:40,559 INFO server Imports value: import tensorflow as tf
+2023-02-23 15:03:40,682 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 15:03:40,682 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 15:03:40] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 15:03:42,224 INFO server Auth successful
+2023-02-23 15:03:42,224 INFO server Imports value: import tensorflow as tf
+2023-02-23 15:03:42,345 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 15:03:42,346 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 15:03:42] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 15:03:43,883 INFO server Auth successful
+2023-02-23 15:03:43,884 INFO server Imports value: import tensorflow as tf
+2023-02-23 15:03:44,006 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 15:03:44,006 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 15:03:44] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 15:03:45,560 INFO server Auth successful
+2023-02-23 15:03:45,561 INFO server Imports value: import tensorflow as tf
+2023-02-23 15:03:45,765 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 15:03:45,766 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 15:03:45] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 15:03:47,307 INFO server Auth successful
+2023-02-23 15:03:47,307 INFO server Imports value: import tensorflow as tf
+2023-02-23 15:03:47,428 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 15:03:47,429 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 15:03:47] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 15:03:49,023 INFO server Auth successful
+2023-02-23 15:03:49,023 INFO server Imports value: import tensorflow as tf;from mrcnn_tf2.model.models.resnet50 import Conv2DBlock
+2023-02-23 15:03:49,148 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 15:03:49,148 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 15:03:49] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 15:03:50,807 INFO server Auth successful
+2023-02-23 15:03:50,807 INFO server Imports value: import tensorflow as tf;from mrcnn_tf2.model.models.resnet50 import Conv2DBlock
+2023-02-23 15:03:50,933 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 15:03:50,934 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 15:03:50] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 15:03:52,517 INFO server Auth successful
+2023-02-23 15:03:52,517 INFO server Imports value: import tensorflow as tf;from mrcnn_tf2.model.models.resnet50 import Conv2DBlock
+2023-02-23 15:03:52,638 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 15:03:52,638 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 15:03:52] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 15:03:54,307 INFO server Auth successful
+2023-02-23 15:03:54,307 INFO server Imports value: import tensorflow as tf
+2023-02-23 15:03:54,525 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 15:03:54,525 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 15:03:54] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 15:03:56,139 INFO server Auth successful
+2023-02-23 15:03:56,140 INFO server Imports value: import tensorflow as tf
+2023-02-23 15:03:56,262 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 15:03:56,263 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 15:03:56] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 15:03:57,868 INFO server Auth successful
+2023-02-23 15:03:57,868 INFO server Imports value: import tensorflow as tf
+2023-02-23 15:03:57,989 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 15:03:57,989 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 15:03:57] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 15:03:59,622 INFO server Auth successful
+2023-02-23 15:03:59,623 INFO server Imports value: import tensorflow as tf
+2023-02-23 15:03:59,743 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 15:03:59,744 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 15:03:59] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 15:04:01,363 INFO server Auth successful
+2023-02-23 15:04:01,363 INFO server Imports value: import tensorflow as tf
+2023-02-23 15:04:01,485 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 15:04:01,485 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 15:04:01] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 15:04:03,100 INFO server Auth successful
+2023-02-23 15:04:03,100 INFO server Imports value: import tensorflow as tf
+2023-02-23 15:04:03,223 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 15:04:03,224 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 15:04:03] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 15:04:04,776 INFO server Auth successful
+2023-02-23 15:04:04,776 INFO server Imports value: import tensorflow as tf
+2023-02-23 15:04:04,902 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 15:04:04,903 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 15:04:04] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 15:04:06,563 INFO server Auth successful
+2023-02-23 15:04:06,563 INFO server Imports value: import tensorflow as tf
+2023-02-23 15:04:06,769 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 15:04:06,769 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 15:04:06] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 15:04:08,440 INFO server Auth successful
+2023-02-23 15:04:08,440 INFO server Imports value: import tensorflow as tf;from mrcnn_tf2.model.models.resnet50 import Conv2DBlock
+2023-02-23 15:04:08,562 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 15:04:08,563 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 15:04:08] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 15:04:10,274 INFO server Auth successful
+2023-02-23 15:04:10,274 INFO server Imports value: import tensorflow as tf;from mrcnn_tf2.model.models.resnet50 import Conv2DBlock
+2023-02-23 15:04:10,399 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 15:04:10,400 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 15:04:10] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 15:04:12,063 INFO server Auth successful
+2023-02-23 15:04:12,064 INFO server Imports value: import tensorflow as tf
+2023-02-23 15:04:12,187 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 15:04:12,188 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 15:04:12] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 15:04:13,893 INFO server Auth successful
+2023-02-23 15:04:13,893 INFO server Imports value: import tensorflow as tf
+2023-02-23 15:04:14,016 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 15:04:14,017 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 15:04:14] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 15:04:15,708 INFO server Auth successful
+2023-02-23 15:04:15,708 INFO server Imports value: import tensorflow as tf
+2023-02-23 15:04:15,913 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 15:04:15,913 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 15:04:15] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 15:04:17,627 INFO server Auth successful
+2023-02-23 15:04:17,627 INFO server Imports value: import tensorflow as tf
+2023-02-23 15:04:17,752 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 15:04:17,752 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 15:04:17] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 15:04:19,451 INFO server Auth successful
+2023-02-23 15:04:19,452 INFO server Imports value: import tensorflow as tf
+2023-02-23 15:04:19,574 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 15:04:19,574 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 15:04:19] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 15:04:21,260 INFO server Auth successful
+2023-02-23 15:04:21,260 INFO server Imports value: import tensorflow as tf
+2023-02-23 15:04:21,382 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 15:04:21,383 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 15:04:21] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 15:04:23,145 INFO server Auth successful
+2023-02-23 15:04:23,145 INFO server Imports value: import tensorflow as tf
+2023-02-23 15:04:23,270 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 15:04:23,271 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 15:04:23] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 15:04:25,036 INFO server Auth successful
+2023-02-23 15:04:25,037 INFO server Imports value: import tensorflow as tf
+2023-02-23 15:04:25,157 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 15:04:25,158 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 15:04:25] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 15:04:27,011 INFO server Auth successful
+2023-02-23 15:04:27,012 INFO server Imports value: import tensorflow as tf
+2023-02-23 15:04:27,132 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 15:04:27,133 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 15:04:27] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 15:04:28,879 INFO server Auth successful
+2023-02-23 15:04:28,880 INFO server Imports value: import tensorflow as tf
+2023-02-23 15:04:29,084 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 15:04:29,085 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 15:04:29] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 15:04:30,512 INFO server Auth successful
+2023-02-23 15:04:30,512 INFO server Imports value: import tensorflow as tf;from mrcnn_tf2.model.models.resnet50 import Conv2DBlock
+2023-02-23 15:04:30,634 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 15:04:30,634 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 15:04:30] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 15:04:32,428 INFO server Auth successful
+2023-02-23 15:04:32,429 INFO server Imports value: import tensorflow as tf;from mrcnn_tf2.model.models.resnet50 import Conv2DBlock
+2023-02-23 15:04:32,550 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 15:04:32,550 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 15:04:32] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 15:04:34,301 INFO server Auth successful
+2023-02-23 15:04:34,301 INFO server Imports value: import tensorflow as tf;from mrcnn_tf2.model.models.resnet50 import Conv2DBlock
+2023-02-23 15:04:34,422 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 15:04:34,422 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 15:04:34] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 15:04:36,155 INFO server Auth successful
+2023-02-23 15:04:36,155 INFO server Imports value: import tensorflow as tf
+2023-02-23 15:04:36,278 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 15:04:36,278 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 15:04:36] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 15:04:37,931 INFO server Auth successful
+2023-02-23 15:04:37,932 INFO server Imports value: import tensorflow as tf
+2023-02-23 15:04:38,052 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 15:04:38,053 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 15:04:38] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 15:04:39,812 INFO server Auth successful
+2023-02-23 15:04:39,812 INFO server Imports value: import tensorflow as tf
+2023-02-23 15:04:40,012 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 15:04:40,013 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 15:04:40] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 15:04:41,834 INFO server Auth successful
+2023-02-23 15:04:41,835 INFO server Imports value: import tensorflow as tf
+2023-02-23 15:04:41,957 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 15:04:41,958 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 15:04:41] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 15:04:43,772 INFO server Auth successful
+2023-02-23 15:04:43,773 INFO server Imports value: import tensorflow as tf
+2023-02-23 15:04:43,898 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 15:04:43,899 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 15:04:43] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 15:04:45,699 INFO server Auth successful
+2023-02-23 15:04:45,699 INFO server Imports value: import tensorflow as tf
+2023-02-23 15:04:45,821 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 15:04:45,821 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 15:04:45] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 15:04:47,646 INFO server Auth successful
+2023-02-23 15:04:47,647 INFO server Imports value: import tensorflow as tf
+2023-02-23 15:04:47,769 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 15:04:47,769 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 15:04:47] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 15:04:49,538 INFO server Auth successful
+2023-02-23 15:04:49,539 INFO server Imports value: import tensorflow as tf
+2023-02-23 15:04:49,743 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 15:04:49,744 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 15:04:49] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 15:04:51,582 INFO server Auth successful
+2023-02-23 15:04:51,582 INFO server Imports value: import tensorflow as tf;from mrcnn_tf2.model.models.resnet50 import Conv2DBlock
+2023-02-23 15:04:51,703 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 15:04:51,703 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 15:04:51] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 15:04:53,577 INFO server Auth successful
+2023-02-23 15:04:53,578 INFO server Imports value: import tensorflow as tf;from mrcnn_tf2.model.models.resnet50 import Conv2DBlock
+2023-02-23 15:04:53,699 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 15:04:53,699 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 15:04:53] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 15:04:55,552 INFO server Auth successful
+2023-02-23 15:04:55,552 INFO server Imports value: import tensorflow as tf;from mrcnn_tf2.model.models.resnet50 import Conv2DBlock
+2023-02-23 15:04:55,673 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 15:04:55,674 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 15:04:55] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 15:04:57,607 INFO server Auth successful
+2023-02-23 15:04:57,607 INFO server Imports value: import tensorflow as tf
+2023-02-23 15:04:57,730 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 15:04:57,730 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 15:04:57] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 15:04:59,652 INFO server Auth successful
+2023-02-23 15:04:59,652 INFO server Imports value: import tensorflow as tf
+2023-02-23 15:04:59,774 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 15:04:59,775 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 15:04:59] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 15:05:01,703 INFO server Auth successful
+2023-02-23 15:05:01,704 INFO server Imports value: import tensorflow as tf
+2023-02-23 15:05:01,825 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 15:05:01,825 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 15:05:01] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 15:05:03,687 INFO server Auth successful
+2023-02-23 15:05:03,687 INFO server Imports value: import tensorflow as tf
+2023-02-23 15:05:03,902 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 15:05:03,902 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 15:05:03] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 15:05:05,594 INFO server Auth successful
+2023-02-23 15:05:05,594 INFO server Imports value: import tensorflow as tf
+2023-02-23 15:05:05,716 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 15:05:05,717 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 15:05:05] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 15:05:07,403 INFO server Auth successful
+2023-02-23 15:05:07,403 INFO server Imports value: import tensorflow as tf
+2023-02-23 15:05:07,523 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 15:05:07,523 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 15:05:07] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 15:05:09,263 INFO server Auth successful
+2023-02-23 15:05:09,264 INFO server Imports value: import tensorflow as tf
+2023-02-23 15:05:09,387 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 15:05:09,387 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 15:05:09] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 15:05:11,284 INFO server Auth successful
+2023-02-23 15:05:11,284 INFO server Imports value: import tensorflow as tf
+2023-02-23 15:05:11,405 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 15:05:11,406 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 15:05:11] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 15:05:13,311 INFO server Auth successful
+2023-02-23 15:05:13,312 INFO server Imports value: import tensorflow as tf;from mrcnn_tf2.model.models.resnet50 import Conv2DBlock
+2023-02-23 15:05:13,518 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 15:05:13,518 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 15:05:13] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 15:05:15,419 INFO server Auth successful
+2023-02-23 15:05:15,419 INFO server Imports value: import tensorflow as tf;from mrcnn_tf2.model.models.resnet50 import Conv2DBlock
+2023-02-23 15:05:15,541 INFO server response-value: <Response 709262 bytes [200 OK]>
+2023-02-23 15:05:15,541 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 15:05:15] "POST /api/run_experiment HTTP/1.1" 200 -
+2023-02-23 15:05:17,468 INFO server Auth successful
+2023-02-23 15:05:17,472 INFO werkzeug 129.173.67.60 - - [23/Feb/2023 15:05:17] "[35m[1mPOST /api/run_experiment HTTP/1.1[0m" 500 -
+2023-02-23 18:52:29,749 INFO werkzeug  * Detected change in '/app/client_agent/custom_method.py', reloading
+2023-02-23 18:52:30,314 INFO werkzeug  * Restarting with stat
+2023-02-23 18:52:31,140 WARNING werkzeug  * Debugger is active!
+2023-02-23 18:52:31,141 INFO werkzeug  * Debugger PIN: 666-760-317
+2023-02-23 18:55:18,676 INFO werkzeug  * Detected change in '/app/server/dummy_send_request.py', reloading
+2023-02-23 18:55:18,842 INFO werkzeug  * Restarting with stat
+2023-02-23 18:55:19,545 WARNING werkzeug  * Debugger is active!
+2023-02-23 18:55:19,545 INFO werkzeug  * Debugger PIN: 666-760-317

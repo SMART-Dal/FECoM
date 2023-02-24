@@ -1,4 +1,4 @@
-# import pickle
+# import dill as pickle
 # import requests
 # import sys
 
@@ -16,9 +16,10 @@
 
 # sys.path.append(rel_path)
 from send_request import send_single_thread_request
+from function_details import FunctionDetails
 
 # --------------------------------------------
-# import pickle
+# import dill as pickle
 # import requests
 # import json
 
