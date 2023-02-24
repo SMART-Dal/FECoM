@@ -90,7 +90,7 @@ def server_is_stable(max_wait_secs: int) -> bool:
 
     # relative tolerance for difference between stable stdev/mean ratio and current ratio
     # e.g. 0.1 would mean allowing a ratio that's 10% higher than the stable stdev/mean ratio
-    tolerance = 0.1
+    tolerance = 1
 
     # in each loop iteration, load new data, calculate statistics and check if the energy is stable.
     # try this for the specified number of seconds
@@ -103,12 +103,13 @@ def server_is_stable(max_wait_secs: int) -> bool:
         ram_stable = data_is_stable(ram_energies, tolerance, RAM_STD_TO_MEAN)
         gpu_stable = data_is_stable(gpu_energies, tolerance, GPU_STD_TO_MEAN)
 
-        if DEBUG:
-            print(f"CPU \n stable: {cpu_stable} \n stdv: {stats.stdev(cpu_energies)} \n mean: {stats.mean(cpu_energies)}")
-            print()
-            print(f"RAM \n stable: {ram_stable} \nstdv: {stats.stdev(ram_energies)} \n mean: {stats.mean(ram_energies)}")
-            print()
-            print(f"GPU \n stable: {gpu_stable} \nstdv: {stats.stdev(gpu_energies)} \n mean: {stats.mean(gpu_energies)}")
+        ## commented since it introduces further noise into the server which hinders it from reaching stable state
+        # if DEBUG:
+        #     print(f"CPU \n stable: {cpu_stable} \n stdv: {stats.stdev(cpu_energies)} \n mean: {stats.mean(cpu_energies)}")
+        #     print()
+        #     print(f"RAM \n stable: {ram_stable} \nstdv: {stats.stdev(ram_energies)} \n mean: {stats.mean(ram_energies)}")
+        #     print()
+        #     print(f"GPU \n stable: {gpu_stable} \nstdv: {stats.stdev(gpu_energies)} \n mean: {stats.mean(gpu_energies)}")
 
         if cpu_stable and ram_stable and gpu_stable:
             return True
@@ -140,6 +141,18 @@ def write_start_or_end_symbol(perf_file: Path, nvidia_smi_file: Path, start: boo
         f.write(symbol)
     with open(nvidia_smi_file, 'a') as f:
         f.write(symbol)
+
+def get_energy_data():
+    df_cpu, df_ram = parse_perf(PERF_FILE)
+    df_gpu = parse_nvidia_smi(NVIDIA_SMI_FILE)
+
+    energy_data = {
+        "cpu": df_cpu.to_json(orient="split"),
+        "ram": df_ram.to_json(orient="split"),
+        "gpu": df_gpu.to_json(orient="split") 
+    }
+
+    return energy_data, df_gpu
 
 def run_function(imports: str, function_to_run: str, obj: object, args: list, kwargs: dict, max_wait_secs: int, wait_after_run_secs: int, return_result: bool):
     """
@@ -174,19 +187,13 @@ def run_function(imports: str, function_to_run: str, obj: object, args: list, kw
     if wait_after_run_secs > 0:
         time.sleep(wait_after_run_secs)
 
-    # (5) get the energy data since run_function has been invoked and clear the files
-    # TODO implement this
-    df_cpu, df_ram = parse_perf(PERF_FILE)
-    df_gpu = parse_nvidia_smi(NVIDIA_SMI_FILE)
+    # (5) get the energy data & gather all start and end times
+    # TODO only send energy data from the time when run_function is invoked
+    # TODO clear the files after
+    energy_data, df_gpu = get_energy_data()
 
-    start_time_nvidia_normalised = start_time_nvidia - df_gpu["timestamp"][0]
-    end_time_nvidia_normalised = end_time_nvidia - df_gpu["timestamp"][0]
-
-    energy_data = {
-        "cpu": df_cpu.to_json(orient="split"),
-        "ram": df_ram.to_json(orient="split"),
-        "gpu": df_gpu.to_json(orient="split") 
-    }
+    start_time_nvidia_normalised = start_time_nvidia - df_gpu["timestamp"].iloc[0]
+    end_time_nvidia_normalised = end_time_nvidia - df_gpu["timestamp"].iloc[0]
 
     times = {
         "start_time_server": start_time_server,
@@ -250,22 +257,24 @@ def run_function_and_return_result():
         status = 200
     # TODO format the output dict the same way as in run_function
     except TimeoutError as e:
-        results = e
+        results = {
+            "energy_data": get_energy_data(),
+            "error": e
+        }
         status = 500
     
     # (4) The function has executed successfully. Now add size data and format the return dictionary
-    results["input_sizes"] = {
-        "args_size": len(pickle.dumps(function_details.args)) if function_details.args is not None else None,
-        "kwargs_size": len(pickle.dumps(function_details.kwargs)) if function_details.kwargs is not None else None,
-        "object_size": len(pickle.dumps(function_details.method_object)) if function_details.method_object is not None else None
-    }
+    if status == 200:
+        results["input_sizes"] = {
+            "args_size": len(pickle.dumps(function_details.args)) if function_details.args is not None else None,
+            "kwargs_size": len(pickle.dumps(function_details.kwargs)) if function_details.kwargs is not None else None,
+            "object_size": len(pickle.dumps(function_details.method_object)) if function_details.method_object is not None else None
+        }
 
-    results = {
-        function_details.function_to_run: results
-    }
+        results = {function_details.function_to_run: results}
 
     # (5) form the response to send to the client, stored in the response variable
-    if function_details.return_result:
+    if function_details.return_result or status != 200:
         if DEBUG:
             print("Pickling response to return result")
         response = Response(
