@@ -41,4 +41,11 @@ SSD: Asked Saurabh to try if he has time. Original repository uses tensorflow:20
 
 NCF: Original repository uses tensorflow:20.07-tf1-py3, not sure if it works with our GPU? (VERIFY)
 
+## New Repo/Project Search Tasks
+
+| Repo Name | Repo Link | Forks | Stars | Issues | Status |
+|-----------|-----------|-------|-------|--------|--------|
+|           |           |       |       |        |        |
+|           |           |       |       |        |        |
+
 
