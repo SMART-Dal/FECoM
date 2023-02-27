@@ -2,6 +2,7 @@
 Server demo for the meeting on 3rd February 2023
 """
 import json
+from pathlib import Path
 
 import tensorflow as tf
 import pandas as pd
@@ -10,11 +11,12 @@ import matplotlib.pyplot as plt
 import sys
 sys.path.insert(0,'..')
 from send_request import send_single_thread_request as send_request
+from config import START_TIMES_FILE
 sys.path.insert(0,'../energy_measurement')
 from plot_energy import combined_plot, plot_energy_from_dfs
 
 """
-HELPER METHODS to setup a simple model training task
+HELPER METHODS to setup a simple model training task for the demos
 """
 # set this here so it can be accessed by other methods than just run_mnist_model_train
 FUNCTION_TO_RUN = "obj.fit(*args,**kwargs)"
@@ -93,8 +95,8 @@ def demo_timeout():
     figure.set_size_inches(20, 6)
     plt.savefig('timout_energy_plot.png', dpi=200)
 
-def demo_start_end_time_graphing():
-    results = run_mnist_model_train(max_wait_secs=30, wait_after_run_secs=20)
+def demo_start_end_time_graphing(max_wait_secs, wait_after_run_secs):
+    results = run_mnist_model_train(max_wait_secs, wait_after_run_secs)
     # save json response to file
     with open('methodcall_energy.json', 'w') as f:
         json.dump(results, f)
@@ -107,13 +109,46 @@ def demo_start_end_time_graphing():
     end_time_perf = results["times"]["end_time_perf"]
     start_time_nvidia = results["times"]["start_time_nvidia"]
     end_time_nvidia = results["times"]["end_time_nvidia"]
+
+    # normalised other times
+    with open(Path(".."/START_TIMES_FILE), 'r') as f:
+        raw_times = f.readlines()
+    
+    # START_TIMES_FILE has format PERF_START <time_perf>\nNVIDIA_SMI_START <time_nvidia>
+    sys_start_time_perf, sys_start_time_nvidia = [int(line.strip(' \n').split(" ")[1]) for line in raw_times]
+
     print("###INPUT SIZES###")
     print(results["input_sizes"])
     print("###DATA FRAMES###")
     print(gpu_df)
     print(cpu_df)
 
-    plot_energy_from_dfs(cpu_df, ram_df, gpu_df, start_time_perf, end_time_perf, start_time_nvidia, end_time_nvidia)
+    ns_conversion = 1000000000
+    pickle_load_time_perf = (results["times"]["pickle_load_time"] - sys_start_time_perf) / ns_conversion
+    import_time_perf = (results["times"]["import_time"] - sys_start_time_perf) / ns_conversion
+    begin_stable_check_time_perf = (results["times"]["begin_stable_check_time"] - sys_start_time_perf) / ns_conversion
+    
+    # time, label, color
+    perf_times = [
+        (start_time_perf, "method_start", 'r'),
+        (end_time_perf, "method_end", 'r'),
+        (pickle_load_time_perf, "pickle_load", 'b'),
+        (import_time_perf, "import", 'g'),
+        (begin_stable_check_time_perf, "stable_check", 'y')
+    ]
+
+    pickle_load_time_nvidia = (results["times"]["pickle_load_time"] - sys_start_time_nvidia) / ns_conversion
+    import_time_nvidia = (results["times"]["import_time"] - sys_start_time_nvidia) / ns_conversion
+    begin_stable_check_time_nvidia = (results["times"]["begin_stable_check_time"] - sys_start_time_nvidia) / ns_conversion
+    nvidia_times = [
+        (start_time_nvidia, "method_start", 'r'),
+        (end_time_nvidia, "method_end", 'r'),
+        (pickle_load_time_nvidia, "pickle_load", 'b'),
+        (import_time_nvidia, "import", 'g'),
+        (begin_stable_check_time_nvidia, "stable_check", 'y')
+    ]
+
+    plot_energy_from_dfs(cpu_df, ram_df, gpu_df, perf_times, nvidia_times)
 
     ## uncomment for a different plot that shows all 3 time series on the same graph (does not show start/end times)
     # df = combined_plot(cpu_df, ram_df, gpu_df)
@@ -126,4 +161,4 @@ def demo_start_end_time_graphing():
     plt.savefig('energy_plot.png', dpi=200)
 
 if __name__ == "__main__":
-    demo_start_end_time_graphing()
+    demo_start_end_time_graphing(max_wait_secs=30, wait_after_run_secs=20)

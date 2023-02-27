@@ -45,11 +45,14 @@ CPU_STD_TO_MEAN = 0.05 # 0.0454744
 RAM_STD_TO_MEAN = 0.03 # 0.0303726
 GPU_STD_TO_MEAN = 0.01 # 0.0090459
 
-# path to find energy data (this is currently also manually written into the energy_measurement.sh script)
-# TODO make this the single source of truth and somehow pass these variables into the script (e.g. by running it from within python)
+# path to find energy data (this is also manually written into the energy_measurement.sh script,
+# but imported into the recommended way to start the program: start_measurement.py)
 energy_data_dir = Path("energy_measurement/out")
 PERF_FILE = energy_data_dir/"perf.txt"
 NVIDIA_SMI_FILE = energy_data_dir/"nvidia_smi.txt"
+# store start times here
+START_TIMES_FILE = energy_data_dir/"start_times.txt"
+SERVER_MODULE = "server.py"
 
 START_EXECUTION = "$$START_EXECUTION$$"
 END_EXECUTION = "$$END_EXECUTION$$"

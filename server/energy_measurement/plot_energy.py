@@ -79,29 +79,36 @@ def combined_plot(cpu_energy=None, ram_energy=None, gpu_power=None, directory=No
     print(df.mean())
     return df
 
-def plot_energy_from_dfs(cpu_df, ram_df, gpu_df, start_time_perf, end_time_perf, start_time_nvidia, end_time_nvidia):
+def plot_energy_from_dfs(cpu_df, ram_df, gpu_df, perf_times: list, nvidia_times: list):
     """
     Given the dataframes returned by parse_perf and parse_nvidia_smi, and the start and end times for each file,
     create a plot with 3 graphs showing the energy consumption over time for CPU, RAM and GPU with start/end
-    times indicated by red lines.
+    times indicated by lines.
+
+    perf_times and nvidia_times are lists of tuples in the format (time, label, color), where
+    - time (float, seconds) is the time relative to the start of perf/nvidia (exact times can be found in START_TIMES_FILE)
+    - label (str) is a description of this time
+    - color (str) is a matplotlib color, e.g. 'r','b','g'
     """
     fig, [ax1, ax2, ax3] = plt.subplots(nrows=1, ncols=3)
 
     ax1.set_title("CPU Energy over time")
     ax1.plot(cpu_df["time_elapsed"], cpu_df["energy (J)"])
-    ax1.axvline(x=start_time_perf, color='r',linewidth=1)
-    ax1.axvline(x=end_time_perf, color='r',linewidth=1)
+    for time, label, color in perf_times:
+        ax1.axvline(x=time, color=color,linewidth=1)
+        ax1.text(time, 0, label, rotation=90)
 
     ax2.set_title("RAM Energy over time")
     ax2.plot(ram_df["time_elapsed"], ram_df["energy (J)"])
-    ax2.axvline(x=start_time_perf, color='r',linewidth=1)
-    ax2.axvline(x=end_time_perf, color='r',linewidth=1)
+    for time, label, color in perf_times:
+        ax2.axvline(x=time, color=color,linewidth=1)
+        ax2.text(time, 0, label, rotation=90)
 
     ax3.set_title("GPU Power over time")
     ax3.plot(gpu_df["time_elapsed"], gpu_df["power_draw (W)"])
-    ax3.axvline(x=start_time_nvidia, color='r',linewidth=1)
-    ax3.axvline(x=end_time_nvidia, color='r',linewidth=1)
-
+    for time, label, color in nvidia_times:
+        ax3.axvline(x=time, color=color,linewidth=1)
+        ax3.text(time, 0, label, rotation=90)
 
 def split_df_into_n(df: pd.DataFrame, n) -> list:
     """

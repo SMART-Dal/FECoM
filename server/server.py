@@ -90,7 +90,7 @@ def server_is_stable(max_wait_secs: int) -> bool:
 
     # relative tolerance for difference between stable stdev/mean ratio and current ratio
     # e.g. 0.1 would mean allowing a ratio that's 10% higher than the stable stdev/mean ratio
-    tolerance = 1
+    tolerance = 0.1
 
     # in each loop iteration, load new data, calculate statistics and check if the energy is stable.
     # try this for the specified number of seconds
@@ -164,10 +164,12 @@ def run_function(imports: str, function_to_run: str, obj: object, args: list, kw
     # WARNING: potential security risk from exec and eval statements
 
     # (1) import relevant modules
+    import_time = time.time_ns()
     app.logger.info("Imports value: %s", imports)
     exec(imports)
 
     # (2) continue only when the system has reached a stable state of energy consumption
+    begin_stable_check_time = time.time_ns()
     if not server_is_stable(max_wait_secs):
         raise TimeoutError(f"System could not reach a stable state within {max_wait_secs} seconds")
 
@@ -201,7 +203,9 @@ def run_function(imports: str, function_to_run: str, obj: object, args: list, kw
         "start_time_perf": start_time_perf, 
         "end_time_perf": end_time_perf,
         "start_time_nvidia": start_time_nvidia_normalised,
-        "end_time_nvidia": end_time_nvidia_normalised
+        "end_time_nvidia": end_time_nvidia_normalised,
+        "import_time": import_time,
+        "begin_stable_check_time": begin_stable_check_time
     }
 
     # (6) return the energy data, times and status
@@ -226,6 +230,7 @@ def run_function(imports: str, function_to_run: str, obj: object, args: list, kw
 @auth.login_required
 def run_function_and_return_result():
     # (1) deserialise request data
+    pickle_load_time = time.time_ns()
     function_details = pickle.loads(request.data)
     
     if DEBUG:
@@ -270,6 +275,8 @@ def run_function_and_return_result():
             "kwargs_size": len(pickle.dumps(function_details.kwargs)) if function_details.kwargs is not None else None,
             "object_size": len(pickle.dumps(function_details.method_object)) if function_details.method_object is not None else None
         }
+
+        results["times"]["pickle_load_time"] = pickle_load_time
 
         results = {function_details.function_to_run: results}
 
