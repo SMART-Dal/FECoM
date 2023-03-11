@@ -141,8 +141,8 @@ def send_single_thread_request(imports: str, function_to_run: str, function_args
         deserialised_response = pickle.loads(run_resp.content)
         error_file = "timeout_energy_data.json"
         with open(error_file, 'w') as f:
-            json.dump(deserialised_response, f)
-        raise TimeoutError(deserialised_response["error"] + "\nYou can find the energy data in ./" + error_file)
+            json.dump(deserialised_response["energy_data"], f)
+        raise TimeoutError(str(deserialised_response["error"]) + "\nYou can find the energy data in ./" + error_file)
     # catch internal server errors
     elif run_resp.status_code == 401:
         raise RuntimeError(run_resp.content)

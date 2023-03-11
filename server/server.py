@@ -6,7 +6,7 @@ import time
 from datetime import datetime
 import os
 import logging
-import pickle
+import dill as pickle
 import statistics as stats
 from pathlib import Path
 import json
@@ -263,7 +263,7 @@ def run_function_and_return_result():
     # TODO format the output dict the same way as in run_function
     except TimeoutError as e:
         results = {
-            "energy_data": get_energy_data(),
+            "energy_data": get_energy_data()[0],
             "error": e
         }
         status = 500
