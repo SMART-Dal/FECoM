@@ -4,16 +4,12 @@ This project calculates the energy consumed by a given piece of code snippet or 
 
 ## Installation
 
-Use the package manager [pip](https://pip.pypa.io/en/stable/) to install flask. Follow this to set up a virtual environment and install flask in it. [Install Flask in a Virtual Env.](https://phoenixnap.com/kb/install-flask)
-
-```bash
-pip install Flask
-```
-
 First verify if perf is already available in you Linux system, if not then install separately:
 ```bash
 sudo apt install linux-tools-`uname -r`
 ```
+
+Please follow the instructions in the `server/README.md` file to set up your environment.
 
 ## Usage
 
