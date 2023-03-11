@@ -5,8 +5,6 @@ import matplotlib
 import matplotlib.pyplot as plt
 import numpy as np
 
-from config import START_EXECUTION, END_EXECUTION
-
 def parse_nvidia_smi(filename) -> pd.DataFrame:
     """
     Given a filename returns a 3-tuple with
@@ -18,7 +16,6 @@ def parse_nvidia_smi(filename) -> pd.DataFrame:
     """
     data_list = []
     with open(filename, 'r') as f:
-        # in_execution = False
         time_zero = None
         for i, line in enumerate(f):
             line = line.strip('\n')
@@ -56,25 +53,19 @@ def parse_perf(filename) -> tuple((pd.DataFrame, pd.DataFrame)):
     """
     data_list = []
     with open(filename, 'r') as f:
-        in_execution = False
-
         for i, line in enumerate(f):
             # skip over the first two lines
             if i < 2:
                 continue
 
-            line = line.strip(' \n')
             # the last two values in each line are always empty because the line ends with ;;
-            data = line.split(';')[:-2]
-            # add boolean in_execution column to data to indicate when the method is executing
-            data.append(in_execution)
-            data_list.append(data)
+            data_list.append(line.strip(' \n').split(';')[:-2])
 
 
     # create dataframe, and ignore the last two lines because they are always unrealistically low 
     df = pd.DataFrame(data_list[:-2],
                       columns=['time_elapsed', 'energy (J)', 'unit', 'event_name',
-                               'counter_runtime', 'percent_measure_time', 'in_execution'])
+                               'counter_runtime', 'percent_measure_time'])
 
     # drop 'counter_runtime' and 'percent_measure_time'
     df.drop(['counter_runtime', 'percent_measure_time', 'unit'], axis=1, inplace=True)

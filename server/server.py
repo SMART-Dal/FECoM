@@ -6,7 +6,7 @@ import time
 from datetime import datetime
 import os
 import logging
-import pickle
+import dill as pickle
 import statistics as stats
 from pathlib import Path
 import json
@@ -16,7 +16,7 @@ from flask import Flask, Response, request, jsonify
 from flask_httpauth import HTTPBasicAuth
 from werkzeug.security import check_password_hash
 
-from config import API_PATH, DEBUG, SERVER_HOST, SERVER_PORT, CPU_STD_TO_MEAN, RAM_STD_TO_MEAN, GPU_STD_TO_MEAN, USERS, CA_CERT_PATH, CA_KEY_PATH, PERF_FILE, NVIDIA_SMI_FILE, START_EXECUTION, END_EXECUTION
+from config import API_PATH, DEBUG, SERVER_HOST, SERVER_PORT, CPU_STD_TO_MEAN, RAM_STD_TO_MEAN, GPU_STD_TO_MEAN, USERS, CA_CERT_PATH, CA_KEY_PATH, PERF_FILE, NVIDIA_SMI_FILE, EXECUTION_LOG_FILE
 from function_details import FunctionDetails # shown unused but still required since this is the class used for sending function details to the server
 from measurement_parse import parse_nvidia_smi, parse_perf
 
@@ -103,12 +103,13 @@ def server_is_stable(max_wait_secs: int) -> bool:
         ram_stable = data_is_stable(ram_energies, tolerance, RAM_STD_TO_MEAN)
         gpu_stable = data_is_stable(gpu_energies, tolerance, GPU_STD_TO_MEAN)
 
-        if DEBUG:
-            print(f"CPU \n stable: {cpu_stable} \n stdv: {stats.stdev(cpu_energies)} \n mean: {stats.mean(cpu_energies)}")
-            print()
-            print(f"RAM \n stable: {ram_stable} \nstdv: {stats.stdev(ram_energies)} \n mean: {stats.mean(ram_energies)}")
-            print()
-            print(f"GPU \n stable: {gpu_stable} \nstdv: {stats.stdev(gpu_energies)} \n mean: {stats.mean(gpu_energies)}")
+        ## commented since it introduces further noise into the server which hinders it from reaching stable state
+        # if DEBUG:
+        #     print(f"CPU \n stable: {cpu_stable} \n stdv: {stats.stdev(cpu_energies)} \n mean: {stats.mean(cpu_energies)}")
+        #     print()
+        #     print(f"RAM \n stable: {ram_stable} \nstdv: {stats.stdev(ram_energies)} \n mean: {stats.mean(ram_energies)}")
+        #     print()
+        #     print(f"GPU \n stable: {gpu_stable} \nstdv: {stats.stdev(gpu_energies)} \n mean: {stats.mean(gpu_energies)}")
 
         if cpu_stable and ram_stable and gpu_stable:
             return True
@@ -141,6 +142,18 @@ def write_start_or_end_symbol(perf_file: Path, nvidia_smi_file: Path, start: boo
     with open(nvidia_smi_file, 'a') as f:
         f.write(symbol)
 
+def get_energy_data():
+    df_cpu, df_ram = parse_perf(PERF_FILE)
+    df_gpu = parse_nvidia_smi(NVIDIA_SMI_FILE)
+
+    energy_data = {
+        "cpu": df_cpu.to_json(orient="split"),
+        "ram": df_ram.to_json(orient="split"),
+        "gpu": df_gpu.to_json(orient="split") 
+    }
+
+    return energy_data, df_gpu
+
 def run_function(imports: str, function_to_run: str, obj: object, args: list, kwargs: dict, max_wait_secs: int, wait_after_run_secs: int, return_result: bool):
     """
     Run the method given by function_to_run with the given arguments (args) and keyword arguments (kwargs).
@@ -151,10 +164,12 @@ def run_function(imports: str, function_to_run: str, obj: object, args: list, kw
     # WARNING: potential security risk from exec and eval statements
 
     # (1) import relevant modules
+    import_time = time.time_ns()
     app.logger.info("Imports value: %s", imports)
     exec(imports)
 
     # (2) continue only when the system has reached a stable state of energy consumption
+    begin_stable_check_time = time.time_ns()
     if not server_is_stable(max_wait_secs):
         raise TimeoutError(f"System could not reach a stable state within {max_wait_secs} seconds")
 
@@ -174,19 +189,13 @@ def run_function(imports: str, function_to_run: str, obj: object, args: list, kw
     if wait_after_run_secs > 0:
         time.sleep(wait_after_run_secs)
 
-    # (5) get the energy data since run_function has been invoked and clear the files
-    # TODO implement this
-    df_cpu, df_ram = parse_perf(PERF_FILE)
-    df_gpu = parse_nvidia_smi(NVIDIA_SMI_FILE)
+    # (5) get the energy data & gather all start and end times
+    # TODO only send energy data from the time when run_function is invoked
+    # TODO clear the files after
+    energy_data, df_gpu = get_energy_data()
 
-    start_time_nvidia_normalised = start_time_nvidia - df_gpu["timestamp"][0]
-    end_time_nvidia_normalised = end_time_nvidia - df_gpu["timestamp"][0]
-
-    energy_data = {
-        "cpu": df_cpu.to_json(orient="split"),
-        "ram": df_ram.to_json(orient="split"),
-        "gpu": df_gpu.to_json(orient="split") 
-    }
+    start_time_nvidia_normalised = start_time_nvidia - df_gpu["timestamp"].iloc[0]
+    end_time_nvidia_normalised = end_time_nvidia - df_gpu["timestamp"].iloc[0]
 
     times = {
         "start_time_server": start_time_server,
@@ -194,7 +203,9 @@ def run_function(imports: str, function_to_run: str, obj: object, args: list, kw
         "start_time_perf": start_time_perf, 
         "end_time_perf": end_time_perf,
         "start_time_nvidia": start_time_nvidia_normalised,
-        "end_time_nvidia": end_time_nvidia_normalised
+        "end_time_nvidia": end_time_nvidia_normalised,
+        "import_time": import_time,
+        "begin_stable_check_time": begin_stable_check_time
     }
 
     # (6) return the energy data, times and status
@@ -219,6 +230,7 @@ def run_function(imports: str, function_to_run: str, obj: object, args: list, kw
 @auth.login_required
 def run_function_and_return_result():
     # (1) deserialise request data
+    pickle_load_time = time.time_ns()
     function_details = pickle.loads(request.data)
     
     if DEBUG:
@@ -250,22 +262,29 @@ def run_function_and_return_result():
         status = 200
     # TODO format the output dict the same way as in run_function
     except TimeoutError as e:
-        results = e
+        results = {
+            "energy_data": get_energy_data()[0],
+            "error": e
+        }
         status = 500
     
-    # (4) The function has executed successfully. Now add size data and format the return dictionary
-    results["input_sizes"] = {
-        "args_size": len(pickle.dumps(function_details.args)) if function_details.args is not None else None,
-        "kwargs_size": len(pickle.dumps(function_details.kwargs)) if function_details.kwargs is not None else None,
-        "object_size": len(pickle.dumps(function_details.method_object)) if function_details.method_object is not None else None
-    }
+    # (4) The function has executed successfully. Now add size data, pickle load time and format the return dictionary
+    # to be in the format {function_signature: results}
+    if status == 200:
+        results["input_sizes"] = {
+            "args_size": len(pickle.dumps(function_details.args)) if function_details.args is not None else None,
+            "kwargs_size": len(pickle.dumps(function_details.kwargs)) if function_details.kwargs is not None else None,
+            "object_size": len(pickle.dumps(function_details.method_object)) if function_details.method_object is not None else None
+        }
 
-    results = {
-        function_details.function_to_run: results
-    }
+        results["times"]["pickle_load_time"] = pickle_load_time
+
+        results = {function_details.function_to_run: results}
 
     # (5) form the response to send to the client, stored in the response variable
-    if function_details.return_result:
+    # if return_result is True, we need to serialise the response since we will return an object that is potentially not json-serialisable.
+    # if status is not 200, there was an error which also needs to be serialised.
+    if function_details.return_result or status != 200:
         if DEBUG:
             print("Pickling response to return result")
         response = Response(
@@ -278,13 +297,20 @@ def run_function_and_return_result():
             response=json.dumps(results),
             status=status
         )
+        
+    # (6) Write the method details to the execution log file with a time stamp (to keep entries unique) and status
+    # This triggers the reload of perf & nvidia-smi, clearing the energy data from the execution of this function
+    # (see start_measurement.py for implementation of this process) 
+    with open(EXECUTION_LOG_FILE, 'a') as f:
+        f.write(f"{function_details.function_to_run};{time.time_ns()};{status}\n")
 
-    # (6) if needed, delete the module created for the custom class definition
+    # (7) if needed, delete the module created for the custom class definition
     if custom_class_file is not None:
         if os.path.isfile(custom_class_file):
             os.remove(custom_class_file)
         else:
            raise OSError("Could not remove custom class file")
+    
     app.logger.info("response-value: %s", response)
 
     return response

@@ -17,6 +17,7 @@ dependencies:
     - matplotlib==3.6.3
     - scikit-learn==1.2.1
     - pytest==7.2.1
+    - dill==0.3.6
 
 prefix: /home/tim/miniconda3/envs/tf2 # replace with your conda environment path
 variables:
