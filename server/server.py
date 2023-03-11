@@ -16,7 +16,7 @@ from flask import Flask, Response, request, jsonify
 from flask_httpauth import HTTPBasicAuth
 from werkzeug.security import check_password_hash
 
-from config import API_PATH, DEBUG, SERVER_HOST, SERVER_PORT, CPU_STD_TO_MEAN, RAM_STD_TO_MEAN, GPU_STD_TO_MEAN, USERS, CA_CERT_PATH, CA_KEY_PATH, PERF_FILE, NVIDIA_SMI_FILE, START_EXECUTION, END_EXECUTION
+from config import API_PATH, DEBUG, SERVER_HOST, SERVER_PORT, CPU_STD_TO_MEAN, RAM_STD_TO_MEAN, GPU_STD_TO_MEAN, USERS, CA_CERT_PATH, CA_KEY_PATH, PERF_FILE, NVIDIA_SMI_FILE, EXECUTION_LOG_FILE
 from function_details import FunctionDetails # shown unused but still required since this is the class used for sending function details to the server
 from measurement_parse import parse_nvidia_smi, parse_perf
 
@@ -268,7 +268,8 @@ def run_function_and_return_result():
         }
         status = 500
     
-    # (4) The function has executed successfully. Now add size data and format the return dictionary
+    # (4) The function has executed successfully. Now add size data, pickle load time and format the return dictionary
+    # to be in the format {function_signature: results}
     if status == 200:
         results["input_sizes"] = {
             "args_size": len(pickle.dumps(function_details.args)) if function_details.args is not None else None,
@@ -281,6 +282,8 @@ def run_function_and_return_result():
         results = {function_details.function_to_run: results}
 
     # (5) form the response to send to the client, stored in the response variable
+    # if return_result is True, we need to serialise the response since we will return an object that is potentially not json-serialisable.
+    # if status is not 200, there was an error which also needs to be serialised.
     if function_details.return_result or status != 200:
         if DEBUG:
             print("Pickling response to return result")
@@ -294,13 +297,20 @@ def run_function_and_return_result():
             response=json.dumps(results),
             status=status
         )
+        
+    # (6) Write the method details to the execution log file with a time stamp (to keep entries unique) and status
+    # This triggers the reload of perf & nvidia-smi, clearing the energy data from the execution of this function
+    # (see start_measurement.py for implementation of this process) 
+    with open(EXECUTION_LOG_FILE, 'a') as f:
+        f.write(f"{function_details.function_to_run};{time.time_ns()};{status}\n")
 
-    # (6) if needed, delete the module created for the custom class definition
+    # (7) if needed, delete the module created for the custom class definition
     if custom_class_file is not None:
         if os.path.isfile(custom_class_file):
             os.remove(custom_class_file)
         else:
            raise OSError("Could not remove custom class file")
+    
     app.logger.info("response-value: %s", response)
 
     return response

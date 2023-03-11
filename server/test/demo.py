@@ -40,14 +40,14 @@ def mnist():
     x_train, x_test = x_train / 255.0, x_test / 255.0
     return x_train, y_train, x_test, y_test
 
-def run_mnist_model_train(max_wait_secs, wait_after_run_secs):
+def run_mnist_model_train(max_wait_secs, wait_after_run_secs, epochs):
     x_train, y_train, _, _ = mnist()
     compiled_model = compile_model()
 
     # training
     imports = "import tensorflow as tf"
     function_args = x_train, y_train
-    function_kwargs = {"epochs": 5}
+    function_kwargs = {"epochs": epochs}
     method_object = compiled_model
     
     results = send_request(imports, FUNCTION_TO_RUN, function_args, function_kwargs, method_object=method_object, max_wait_secs=max_wait_secs, return_result=False, wait_after_run_secs=wait_after_run_secs)
@@ -95,8 +95,8 @@ def demo_timeout():
     figure.set_size_inches(20, 6)
     plt.savefig('timout_energy_plot.png', dpi=200)
 
-def demo_start_end_time_graphing(max_wait_secs, wait_after_run_secs):
-    results = run_mnist_model_train(max_wait_secs, wait_after_run_secs)
+def demo_start_end_time_graphing(max_wait_secs, wait_after_run_secs, epochs):
+    results = run_mnist_model_train(max_wait_secs, wait_after_run_secs, epochs)
     # save json response to file
     with open('methodcall_energy.json', 'w') as f:
         json.dump(results, f)
@@ -161,4 +161,4 @@ def demo_start_end_time_graphing(max_wait_secs, wait_after_run_secs):
     plt.savefig('energy_plot.png', dpi=200)
 
 if __name__ == "__main__":
-    demo_start_end_time_graphing(max_wait_secs=30, wait_after_run_secs=20)
+    demo_start_end_time_graphing(max_wait_secs=0, wait_after_run_secs=0, epochs=1)
