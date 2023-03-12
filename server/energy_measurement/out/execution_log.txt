@@ -1,4 +1,2 @@
 function_executed;time_stamp;server_status_code
-START_SERVER;1678538377098580327;Functions executed on the server are logged in this file
-obj.fit(*args,**kwargs);1678538395673647087;200
-obj.fit(*args,**kwargs);1678538421698748900;200
+START_SERVER;1678650393963606259;Functions executed on the server are logged in this file

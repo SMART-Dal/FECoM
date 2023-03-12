@@ -17,6 +17,7 @@
 # sys.path.append(rel_path)
 from send_request import send_single_thread_request
 from function_details import FunctionDetails
+import dill as pickle
 
 # --------------------------------------------
 # import dill as pickle

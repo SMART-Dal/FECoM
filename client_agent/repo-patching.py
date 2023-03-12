@@ -5,7 +5,7 @@ from pprint import pprint
 import sys
 import shutil
 from clientconfig import *
-# import nbformat
+import nbformat
 import importlib
 
 sys.path.append("../server")
@@ -17,28 +17,28 @@ def copy_directory_contents(src, dst):
         shutil.rmtree(dst)
     shutil.copytree(src, dst)
     
+def ipynb_to_py(ipynb_file):
+    ipynb_file = os.path.abspath(ipynb_file)
+    try:
+        with open(ipynb_file) as f:
+            nb = nbformat.read(f, as_version=4)
+    except Exception as e:
+        print(f"Error reading file {ipynb_file}: {e}")
+        return None
 
+    py_file = os.path.splitext(ipynb_file)[0] + '.py'
+    try:
+        with open(py_file, 'w') as f:
+            for cell in nb['cells']:
+                if cell['cell_type'] == 'code':
+                    f.write(''.join(cell['source']))
+                    f.write('\n')  # Add newline to separate code cells
+    except Exception as e:
+        print(f"Error writing file {py_file}: {e}")
+        return None
 
-# def ipynb_to_py(ipynb_file):
-#     ipynb_file = os.path.abspath(ipynb_file)
-#     try:
-#         with open(ipynb_file) as f:
-#             nb = nbformat.read(f, as_version=4)
-#     except Exception as e:
-#         print(f"Error reading file {ipynb_file}: {e}")
-#         return None
+    return py_file
 
-#     py_file = os.path.splitext(ipynb_file)[0] + '.py'
-#     try:
-#         with open(py_file, 'w') as f:
-#             for cell in nb['cells']:
-#                 if cell['cell_type'] == 'code':
-#                     f.write(''.join(cell['source']))
-#     except Exception as e:
-#         print(f"Error writing file {py_file}: {e}")
-#         return None
-
-#     return py_file
 
 def get_python_scripts_path(directory):
     python_scripts_path = []
@@ -46,16 +46,19 @@ def get_python_scripts_path(directory):
         for file in files:
             if file.endswith('.py'):
                 python_scripts_path.append(os.path.join(root, file))
-            # if file.endswith('.ipynb'):
-                # ipynb_to_py(os.path.join(root, file))
-                # py_file = os.path.splitext(os.path.join(root, file))[0] + '.py'
-                # py_file = os.path.join(os.path.dirname(os.path.join(root, file)), py_file)
-                # python_scripts_path.append(py_file)
+            elif file.endswith('.ipynb'):
+                py_file = ipynb_to_py(os.path.join(root, file))
+                if py_file is not None:
+                    python_scripts_path.append(py_file)
+            else:
+                continue
+
     return python_scripts_path
 
+
 # delete all the files in the output directory before running the script
-for filename in os.listdir(SOURCE_REPO_DIR):
-    file_path = os.path.join(SOURCE_REPO_DIR, filename)
+for filename in os.listdir(PATCHED_REPO_DIR):
+    file_path = os.path.join(PATCHED_REPO_DIR, filename)
     try:
         if os.path.isfile(file_path) or os.path.islink(file_path):
             os.unlink(file_path)
