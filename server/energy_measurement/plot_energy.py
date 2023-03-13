@@ -160,7 +160,9 @@ def load_and_plot_temperature(temperature_file=Path("../")/CPU_TEMPERATURE_FILE)
         "timestamp": float
     })
 
-    temperature_df.plot()
+    print(temperature_df["temperature"].mean())
+    print(temperature_df["temperature"].std())
+    temperature_df["temperature"].plot()
     plt.show()
 
 
