@@ -11,7 +11,12 @@ Step 1 is to move or clone your target project into the "Repositories" directory
 ```bash
 git clone git_repo_link
 ```
-Once we have the target repo, we can run the patching script. The final patched scripts will be stored in the "Patched-Repositories" directory. You can modify the paths for these directories from "clientconfig.py".
+Once we have the target repo, we can run the patching script. 
+```bash
+python repo-patching.py
+```
+
+The final patched code will be stored in the "Patched-Repositories" directory. You can modify the paths for these directories from "clientconfig.py".
 
 Once we have the patched repo ready, we can simply run python files from these projects as a normal script. On execution these files will send method requests to the server, get the energy consumption data and store it in "methodcall-energy-dataset.json" file.
 
