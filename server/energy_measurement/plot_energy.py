@@ -2,10 +2,13 @@ import matplotlib.pyplot as plt
 import pandas as pd
 from sklearn.preprocessing import MinMaxScaler
 import numpy as np
+from pathlib import Path
 
 import sys
 sys.path.insert(0,'..')
 from measurement_parse import parse_nvidia_smi, parse_perf
+
+from config import CPU_TEMPERATURE_FILE
 
 def normalised(lst, normalise=True):
     """
@@ -150,6 +153,17 @@ def calc_stats_for_split_data(combined_df: pd.DataFrame, n=20):
     
     return total.mean()
 
+def load_and_plot_temperature(temperature_file=Path("../")/CPU_TEMPERATURE_FILE):
+    temperature_df = pd.read_csv(temperature_file, sep=';', names=["time_elapsed","temperature","timestamp"], dtype={
+        "time_elapsed": float,
+        "temperature": int,
+        "timestamp": float
+    })
+
+    temperature_df.plot()
+    plt.show()
+
+
 
 # def plot_energy(time, energy, start_time, end_time, title=None):
 #     fig, ax = plt.subplots()
@@ -168,5 +182,6 @@ if __name__ == "__main__":
     # print(parse_nvidia_smi(f"{directory}nvidia_smi.txt"))
     # print(parse_perf(f"{directory}perf.txt"))
     # combined_plot(directory=directory)#.plot()
-    print(calc_stats_for_split_data(combined_plot(directory=directory)))
+    # print(calc_stats_for_split_data(combined_plot(directory=directory)))
     # plt.show()
+    load_and_plot_temperature()
