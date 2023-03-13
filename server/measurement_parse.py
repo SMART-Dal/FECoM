@@ -7,35 +7,33 @@ import numpy as np
 
 def parse_nvidia_smi(filename) -> pd.DataFrame:
     """
-    Given a filename returns a 3-tuple with
-    - a dataframe with columns 
+    Given a filename returns a dataframe with columns 
         - timestamp (datetime)
         - power_draw (W) (float)
-    - start_time
-    - end_time
+        - time_elapsed (seconds) (float)
+        - temperature (Core GPU temperature in degrees Celsius) (int)   
     """
     data_list = []
     with open(filename, 'r') as f:
         time_zero = None
         for i, line in enumerate(f):
-            line = line.strip('\n')
-
-            # 2023/02/06 11:23:08.654, 20.28 W
-            raw_data = line.split(',')
+            # file format is timestamp, power_draw, temperature: 2023/02/06 11:23:08.654, 20.28 W, 32
+            raw_data = line.strip('\n').split(',')
             current_time = datetime.strptime(raw_data[0], '%Y/%m/%d %H:%M:%S.%f').timestamp()
             # get the time of the first measurement for the time_elapsed column
             if i==0:
                 time_zero = current_time
             data = [
-                current_time,
-                float(raw_data[1].split()[0]),
-                current_time - time_zero # add time elapsed column to data for graphing
+                current_time, # timestamp
+                float(raw_data[1].split()[0]), # power_draw
+                current_time - time_zero, # add time elapsed column to data for graphing
+                int(raw_data[2]) # temperature
                 ]
 
             data_list.append(data)
     
     df = pd.DataFrame(data_list,
-                      columns=['timestamp', 'power_draw (W)', 'time_elapsed'])
+                      columns=['timestamp', 'power_draw (W)', 'time_elapsed', 'temperature'])
 
     return df
 

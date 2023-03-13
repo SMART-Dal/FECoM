@@ -12,7 +12,7 @@ from pathlib import Path
 import json
 from typing import List
 
-from flask import Flask, Response, request, jsonify
+from flask import Flask, Response, request
 from flask_httpauth import HTTPBasicAuth
 from werkzeug.security import check_password_hash
 

@@ -59,6 +59,9 @@ ENERGY MEASUREMENT CONFIG
 """
 # set count interval for perf & nvidia-smi in milliseconds
 COUNT_INTERVAL_MS = 500
+# set cpu temperature measurement interval for sensors in seconds
+# the actual interval will be a few milliseconds greater, due to processing time
+CPU_TEMPERATURE_INTERVAL_S = 1
 
 # path to find energy data (this is also manually written into the energy_measurement.sh script,
 # but imported into the recommended way to start the program: start_measurement.py)
@@ -69,6 +72,9 @@ NVIDIA_SMI_FILE = energy_data_dir/"nvidia_smi.txt"
 START_TIMES_FILE = energy_data_dir/"start_times.txt"
 # keep track of the functions executed by the server in this file
 EXECUTION_LOG_FILE = energy_data_dir/"execution_log.txt"
+# store CPU temperatures in this file, populated by cpu_temperature.py
+CPU_TEMPERATURE_FILE = energy_data_dir/"cpu_temperature.txt"
+CPU_TEMPERATURE_MODULE = "cpu_temperature.py"
 
 
 """

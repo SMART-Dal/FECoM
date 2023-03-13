@@ -14,12 +14,11 @@ import atexit
 import time
 import os
 
-from config import NVIDIA_SMI_FILE, PERF_FILE, SERVER_MODULE, START_TIMES_FILE, EXECUTION_LOG_FILE, COUNT_INTERVAL_MS
+from config import NVIDIA_SMI_FILE, PERF_FILE, SERVER_MODULE, START_TIMES_FILE, EXECUTION_LOG_FILE, COUNT_INTERVAL_MS, CPU_TEMPERATURE_MODULE
 
 
 # function registered atexit by start_measurements to terminate nvidia-smi and perf
 def cleanup(perf_stat, nvidia_smi):
-    print("Terminating the server application")
     nvidia_smi.terminate()
     print("Terminated nvidia smi")
     perf_stat.terminate()
@@ -43,7 +42,7 @@ def start_server():
 # start nvidia-smi and return the process such that it can be registered by cleanup
 def start_nvidia():
     # split bash command into a list, which is the required format for subprocess.Popen
-    start_nvidia = shlex.split(f"nvidia-smi -i 0 --loop-ms={COUNT_INTERVAL_MS} --format=csv,noheader --query-gpu=timestamp,power.draw")
+    start_nvidia = shlex.split(f"nvidia-smi -i 0 --loop-ms={COUNT_INTERVAL_MS} --format=csv,noheader --query-gpu=timestamp,power.draw,temperature.gpu")
 
     # open the file for nvidia-smi output
     with open(NVIDIA_SMI_FILE, "w", encoding="utf-8") as nvidia_smi_file:
@@ -67,6 +66,18 @@ def start_perf():
     print(f"Perf started at {perf_start_time}")
 
     return perf_stat, perf_start_time
+
+
+# start sensors to track CPU temperature over time
+def start_sensors():
+    start_sensors = shlex.split(f"python3 {CPU_TEMPERATURE_MODULE}")
+
+    sensors = Popen(start_sensors)
+
+    sensors_start_time = time.time_ns()
+    atexit.register(print, "Terminated sensors")
+    atexit.register(sensors.terminate)
+    print(f"Sensors started at {sensors_start_time}")
 
 
 # write start times to a file for further processing
@@ -118,6 +129,7 @@ if __name__ == "__main__":
     # Keep a reference to perf stat & nvidia-smi such that they can be terminated by the program.
     server_start_time = start_server()
     perf_stat, nvidia_smi = start_measurements()
+    start_sensors()
 
     # (2) Create the server execution log file which keeps track of the functions executed.
     # Initialise previous_execution with the initial contents of the file.
@@ -143,6 +155,6 @@ if __name__ == "__main__":
             time.sleep(5)
             continue
     except KeyboardInterrupt:
-        print("\n\nKeyboardInterrupt: User quit server application\n")
+        print("\n\nKeyboardInterrupt by User. Shutting down the server application.\n")
 
     
