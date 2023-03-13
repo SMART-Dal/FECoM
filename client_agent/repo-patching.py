@@ -31,13 +31,16 @@ def ipynb_to_py(ipynb_file):
         with open(py_file, 'w') as f:
             for cell in nb['cells']:
                 if cell['cell_type'] == 'code':
-                    f.write(''.join(cell['source']))
-                    f.write('\n')  # Add newline to separate code cells
+                    source_lines = cell['source'].split('\n')
+                    for line in source_lines:
+                        if not line.startswith('!'):
+                            f.write(line + '\n')
     except Exception as e:
         print(f"Error writing file {py_file}: {e}")
         return None
 
     return py_file
+
 
 
 def get_python_scripts_path(directory):
