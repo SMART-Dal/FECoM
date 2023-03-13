@@ -14,11 +14,13 @@ import atexit
 import time
 import os
 
-from config import NVIDIA_SMI_FILE, PERF_FILE, SERVER_MODULE, START_TIMES_FILE, EXECUTION_LOG_FILE, COUNT_INTERVAL_MS, CPU_TEMPERATURE_MODULE
+from config import NVIDIA_SMI_FILE, PERF_FILE, SERVER_MODULE, START_TIMES_FILE, EXECUTION_LOG_FILE, COUNT_INTERVAL_MS, CPU_TEMPERATURE_MODULE, CPU_TEMPERATURE_FILE
 
 
-# function registered atexit by start_measurements to terminate nvidia-smi and perf
-def cleanup(perf_stat, nvidia_smi):
+# function registered atexit by start_measurements to terminate the measurement programs
+def cleanup(perf_stat, nvidia_smi, sensors):
+    sensors.terminate()
+    print("Terminated sensors")
     nvidia_smi.terminate()
     print("Terminated nvidia smi")
     perf_stat.terminate()
@@ -75,9 +77,9 @@ def start_sensors():
     sensors = Popen(start_sensors)
 
     sensors_start_time = time.time_ns()
-    atexit.register(print, "Terminated sensors")
-    atexit.register(sensors.terminate)
     print(f"Sensors started at {sensors_start_time}")
+
+    return sensors
 
 
 # write start times to a file for further processing
@@ -93,33 +95,37 @@ def write_start_times(perf_start_time, nvidia_smi_start_time):
 def start_measurements():
     perf_stat, perf_start_time = start_perf()
     nvidia_smi, nvidia_smi_start_time = start_nvidia()
-    atexit.register(cleanup, perf_stat=perf_stat, nvidia_smi=nvidia_smi)
+    sensors = start_sensors()
+    atexit.register(cleanup, perf_stat=perf_stat, nvidia_smi=nvidia_smi, sensors=sensors)
 
     write_start_times(perf_start_time, nvidia_smi_start_time)
-    return perf_stat, nvidia_smi
+    return perf_stat, nvidia_smi, sensors
 
 
-# quit, cleanup and restart perf & nvidia-smi in a way that avoids any file corruptions to the energy_measurement/out files
-def restart_measurements(previous_perf_stat, previous_nvidia_smi, latest_execution):
+# quit, cleanup and restart all measurement programs in a way that avoids any file corruptions to the energy_measurement/out files
+def restart_measurements(previous_perf_stat, previous_nvidia_smi, previous_sensors, latest_execution):
     # unregister the previous cleanup function
     atexit.unregister(cleanup)
-    # terminate the previous perf & nvidia-smi processes
+    # terminate the previous processes
+    previous_sensors.terminate()
+    print(f"Quite sensors after executing {latest_execution}")
     previous_nvidia_smi.terminate()
     print(f"Quit nvidia-smi after executing {latest_execution}")
     previous_perf_stat.terminate()
     print(f"Quit perf stat after executing {latest_execution}")
 
     # delete the perf & nvidia-smi files
-    if os.path.isfile(PERF_FILE) and os.path.isfile(NVIDIA_SMI_FILE):
+    if os.path.isfile(PERF_FILE) and os.path.isfile(NVIDIA_SMI_FILE) and os.path.isfile(CPU_TEMPERATURE_FILE):
             os.remove(PERF_FILE)
             os.remove(NVIDIA_SMI_FILE)
+            os.remove(CPU_TEMPERATURE_FILE)
     else:
-        raise OSError("Could not find and remove perf & nvidia files")
+        raise OSError("Could not find and remove perf, nvidia & cpu temperature files")
 
     # restart the measurement programs
-    perf_stat, nvidia_smi = start_measurements()
+    perf_stat, nvidia_smi, sensors = start_measurements()
 
-    return perf_stat, nvidia_smi
+    return perf_stat, nvidia_smi, sensors
 
 
 if __name__ == "__main__":
@@ -128,8 +134,7 @@ if __name__ == "__main__":
     # (1) Start the server & energy measurement programs (perf stat & nvidia-smi).
     # Keep a reference to perf stat & nvidia-smi such that they can be terminated by the program.
     server_start_time = start_server()
-    perf_stat, nvidia_smi = start_measurements()
-    start_sensors()
+    perf_stat, nvidia_smi, sensors = start_measurements()
 
     # (2) Create the server execution log file which keeps track of the functions executed.
     # Initialise previous_execution with the initial contents of the file.
@@ -147,8 +152,8 @@ if __name__ == "__main__":
             
             # When the server adds a new execution to the log file, we want to to restart perf & nvidia-smi to clear the energy measurement files
             if latest_execution != previous_execution:
-                # restart perf & nvidia-smi, then update the references perf_stat, nvidia_smi to point at the new processes
-                perf_stat, nvidia_smi = restart_measurements(perf_stat, nvidia_smi, latest_execution.split(";")[0])
+                # restart all programs, and update the references to point at the new processes
+                perf_stat, nvidia_smi, sensors = restart_measurements(perf_stat, nvidia_smi, sensors, latest_execution.split(";")[0])
                 previous_execution = latest_execution
             
             # TODO this is an arbitary number, does it work well?
