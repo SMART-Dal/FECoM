@@ -10,7 +10,7 @@ import matplotlib.pyplot as plt
 
 import sys
 sys.path.insert(0,'..')
-from send_request import send_single_thread_request as send_request
+from send_request import send_request
 from config import START_TIMES_FILE
 sys.path.insert(0,'../energy_measurement')
 from plot_energy import combined_plot, plot_energy_from_dfs

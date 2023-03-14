@@ -3,7 +3,7 @@ import tensorflow as tf
 # add parent directory to path
 import sys
 sys.path.insert(0,'..')
-from send_request import send_single_thread_request as send_request
+from send_request import send_request
 
 def test_matmul_request():
     arr1 = np.random.rand(100,100)

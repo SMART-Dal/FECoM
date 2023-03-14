@@ -4,7 +4,7 @@ import numpy as np
 # add parent directory to path
 import sys
 sys.path.insert(0,'..')
-from send_request import send_single_thread_request as send_request
+from send_request import send_request
 
 # TODO refactor the server such that it can take a dict of allowed usernames/passwords for better testing
 def test_wrongUsernameDeniesAccess_and_raisesError():

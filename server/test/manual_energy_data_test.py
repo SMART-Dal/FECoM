@@ -3,7 +3,7 @@ import numpy as np
 import pandas as pd
 sys.path.insert(0,'..')
 from config import DEBUG
-from send_request import send_single_thread_request
+from send_request import send_request
 
 
 
@@ -16,7 +16,7 @@ def test_matmul_request():
     function_args = [arr1, arr2]
     function_kwargs = None
 
-    result = send_single_thread_request(imports, function_to_run, function_args, function_kwargs, return_result=True)
+    result = send_request(imports, function_to_run, function_args, function_kwargs, return_result=True)
     
     assert(type(result["return"])==np.ndarray)
     assert(result["return"].shape==(100,100))

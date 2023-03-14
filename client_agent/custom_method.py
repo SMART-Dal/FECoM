@@ -15,7 +15,7 @@
 # rel_path = os.path.relpath(subdir_path, cwd)
 
 # sys.path.append(rel_path)
-from send_request import send_single_thread_request
+from send_request import send_request
 from function_details import FunctionDetails
 import dill as pickle
 
@@ -146,5 +146,5 @@ import dill as pickle
 # --------------------------------------------
 
 def custom_method(func,imports: str, function_to_run: str, method_object=None, function_args: list = None, function_kwargs: dict = None,max_wait_secs=0, custom_class=None):
-   result = send_single_thread_request(imports=imports, function_to_run=function_to_run, function_args=function_args, function_kwargs=function_kwargs, max_wait_secs=max_wait_secs, method_object=method_object, custom_class=custom_class)
+   result = send_request(imports=imports, function_to_run=function_to_run, function_args=function_args, function_kwargs=function_kwargs, max_wait_secs=max_wait_secs, method_object=method_object, custom_class=custom_class)
    return func

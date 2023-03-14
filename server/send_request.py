@@ -57,7 +57,7 @@ def store_response(response):
 
 # for testing purposes
 # TODO how can we best pass the username and password to this function? Write a wrapper?
-def send_single_thread_request(imports: str, function_to_run: str, function_args: list = None, function_kwargs: dict = None, max_wait_secs: int = 0, wait_after_run_secs: int = 0, return_result: bool = False, method_object = None, custom_class: str = None, username: str = "tim9220", password: str = "qQ32XALjF9JqFh!vF3xY"):
+def send_request(imports: str, function_to_run: str, function_args: list = None, function_kwargs: dict = None, max_wait_secs: int = 0, wait_after_run_secs: int = 0, return_result: bool = False, method_object = None, custom_class: str = None, username: str = "tim9220", password: str = "qQ32XALjF9JqFh!vF3xY"):
     """
         Send a request to execute any function to the server and return specified data.
         If return_result=False, the returned object is JSON of the following format:
@@ -147,6 +147,6 @@ def send_single_thread_request(imports: str, function_to_run: str, function_args
             store_response(run_resp.content)
             return run_resp.json()
     except Exception as e:
-        print(f"Error in send_single_thread_request: {e}")
+        print(f"Error in send_request: {e}")
         print(traceback.format_exc())
         return None
