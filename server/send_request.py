@@ -129,7 +129,7 @@ def send_request(imports: str, function_to_run: str, function_args: list = None,
                 time.sleep(30)
                 continue  # retry the request
                 # raise TimeoutError(str(deserialised_response["error"]) + "\nYou can find the energy data in ./" + error_file)
-            # catch internal server errors
+            # catch unauthorized error if authentication fails
             elif run_resp.status_code == 401:
                 raise RuntimeError(run_resp.content)
             else:
