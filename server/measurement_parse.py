@@ -4,8 +4,10 @@ import pandas as pd
 import matplotlib
 import matplotlib.pyplot as plt
 import numpy as np
+from pathlib import Path
+from config import CPU_FILE_SEPARATOR
 
-def parse_nvidia_smi(filename) -> pd.DataFrame:
+def parse_nvidia_smi(filepath: Path) -> pd.DataFrame:
     """
     Given a filename returns a dataframe with columns 
         - timestamp (datetime)
@@ -14,7 +16,7 @@ def parse_nvidia_smi(filename) -> pd.DataFrame:
         - temperature (Core GPU temperature in degrees Celsius) (int)   
     """
     data_list = []
-    with open(filename, 'r') as f:
+    with open(filepath, 'r') as f:
         time_zero = None
         for i, line in enumerate(f):
             # file format is timestamp, power_draw, temperature: 2023/02/06 11:23:08.654, 20.28 W, 32
@@ -38,19 +40,14 @@ def parse_nvidia_smi(filename) -> pd.DataFrame:
     return df
 
 
-def parse_perf(filename) -> tuple((pd.DataFrame, pd.DataFrame)):
+def parse_perf(filepath: Path) -> tuple((pd.DataFrame, pd.DataFrame)):
     """
-    Given a filename returns a 4-tuple with
-    - 2 dataframes (cpu_energy, ram_energy) with columns 
+    Given a filename returns a tuple with 2 dataframes (cpu_energy, ram_energy) with columns 
         - time_elapsed (float)
         - energy (J) (float)
-    - start_time
-    - end_time
-    The times are determined by parsing the special execution markers START_EXECUTION, END_EXECUTION inserted into the perf file by the server.
-    If no markers are found, start_time and end_time are None.
     """
     data_list = []
-    with open(filename, 'r') as f:
+    with open(filepath, 'r') as f:
         for i, line in enumerate(f):
             # skip over the first two lines
             if i < 2:
@@ -73,6 +70,15 @@ def parse_perf(filename) -> tuple((pd.DataFrame, pd.DataFrame)):
     df_pkg = df[df['event_name'] == 'power/energy-pkg/'].reset_index(drop=True).drop(columns='event_name')
     df_ram = df[df['event_name'] == 'power/energy-ram/'].reset_index(drop=True).drop(columns='event_name')
     return df_pkg, df_ram
+
+def parse_cpu_temperature(filepath: Path) -> pd.DataFrame:
+    temperature_df = pd.read_csv(filepath, sep=CPU_FILE_SEPARATOR, names=["time_elapsed","temperature","timestamp"], dtype={
+        "time_elapsed": float,
+        "temperature": int,
+        "timestamp": float
+    })
+    return temperature_df
+
 
 
 if __name__ == "__main__":

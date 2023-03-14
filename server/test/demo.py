@@ -161,4 +161,4 @@ def demo_start_end_time_graphing(max_wait_secs, wait_after_run_secs, epochs):
     plt.savefig('energy_plot.png', dpi=200)
 
 if __name__ == "__main__":
-    demo_start_end_time_graphing(max_wait_secs=0, wait_after_run_secs=0, epochs=1)
+    demo_start_end_time_graphing(max_wait_secs=60, wait_after_run_secs=20, epochs=5)

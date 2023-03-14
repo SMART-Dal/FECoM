@@ -2,12 +2,12 @@
 Server to receive client requests to run ML methods and measure energy.
 """
 
-import time
+from time import sleep, time_ns
 from datetime import datetime
 import os
 import logging
 import dill as pickle
-import statistics as stats
+from statistics import mean, stdev
 from pathlib import Path
 import json
 from typing import List
@@ -16,9 +16,16 @@ from flask import Flask, Response, request
 from flask_httpauth import HTTPBasicAuth
 from werkzeug.security import check_password_hash
 
-from config import API_PATH, DEBUG, SERVER_HOST, SERVER_PORT, CPU_STD_TO_MEAN, RAM_STD_TO_MEAN, GPU_STD_TO_MEAN, USERS, CA_CERT_PATH, CA_KEY_PATH, PERF_FILE, NVIDIA_SMI_FILE, EXECUTION_LOG_FILE
+# server settings
+from config import API_PATH, DEBUG, SERVER_HOST, SERVER_PORT, USERS, CA_CERT_PATH, CA_KEY_PATH
+# file paths and separators
+from config import PERF_FILE, NVIDIA_SMI_FILE, EXECUTION_LOG_FILE, CPU_TEMPERATURE_FILE, CPU_FILE_SEPARATOR
+# stable state constants
+from config import CPU_STD_TO_MEAN, RAM_STD_TO_MEAN, GPU_STD_TO_MEAN, CPU_MAXIMUM_TEMPERATURE, GPU_MAXIMUM_TEMPERATURE
+# stable state settings
+from config import WAIT_PER_STABLE_CHECK_LOOP_S, CHECK_LAST_N_POINTS, STABLE_CHECK_TOLERANCE
 from function_details import FunctionDetails # shown unused but still required since this is the class used for sending function details to the server
-from measurement_parse import parse_nvidia_smi, parse_perf
+from measurement_parse import parse_nvidia_smi, parse_perf, parse_cpu_temperature
 
 
 
@@ -28,6 +35,7 @@ auth = HTTPBasicAuth()
 logging.basicConfig(filename='flask.log', level=logging.DEBUG,
                     format='%(asctime)s %(levelname)s %(name)s %(message)s')
 
+
 @auth.verify_password
 def verify_password(username, password):
     if username in USERS.keys() and check_password_hash(USERS[username], password):
@@ -36,6 +44,7 @@ def verify_password(username, password):
         return True
     else:
         return False
+
 
 @auth.error_handler
 def auth_error(status_code):
@@ -48,76 +57,95 @@ def auth_error(status_code):
     )
     return response
 
-def load_last_n_cpu_ram_gpu(n: int, perf_file: Path, nvidia_smi_file: Path) -> tuple:
+
+def load_last_n_cpu_ram_gpu(n: int, perf_file: Path, nvidia_smi_file: Path, cpu_temperature_file: Path) -> tuple:
     """
     Helper method for is_stable_state to load the last n energy data points
     for CPU, RAM and GPU (in this order)
     """
+
     # load CPU & RAM data
     cpu_ram = []
     with open(perf_file, 'r') as f:
+        # get all lines initially, since otherwise we cannot be sure which values are RAM and which are CPU
         cpu_ram = f.read().splitlines(True)
-    
+
     # load GPU data
     gpu = []
     with open(nvidia_smi_file, 'r') as f:
-        gpu = f.read().splitlines(True)
+        gpu = f.read().splitlines(True)[-n:]
+    
+    # load CPU temperature data
+    cpu_temperature = []
+    with open(cpu_temperature_file, 'r') as f:
+        cpu_temperature = f.read().splitlines(True)[-n:]
 
     # generate lists of data
-    last_n_cpu_energies = [float(line.strip(' ').split(';')[1]) for line in cpu_ram[2::2][-n:]]
-    last_n_ram_energies = [float(line.strip(' ').split(';')[1]) for line in cpu_ram[3::2][-n:]]
-    last_n_gpu_energies = [float(line.split(' ')[2]) for line in gpu[-n:]]
+    last_n_cpu_energies = [float(line.strip(' ').split(CPU_FILE_SEPARATOR)[1]) for line in cpu_ram[2::2][-n:]]
+    last_n_ram_energies = [float(line.strip(' ').split(CPU_FILE_SEPARATOR)[1]) for line in cpu_ram[3::2][-n:]]
+    # create two lists from the nvidia-smi file, one with energy readings and one with temperatures
+    last_n_gpu_energies = []
+    last_n_gpu_temperatures = []
+    for line in gpu:
+        split_line = line.split(' ')
+        last_n_gpu_energies.append(float(split_line[2]))
+        last_n_gpu_temperatures.append(int(split_line[4]))
 
-    return last_n_cpu_energies, last_n_ram_energies, last_n_gpu_energies
+    # Note: CPU temperature reading frequency is lower/different to that of perf & nvidia-smi. Check config.py for the value.
+    last_n_cpu_temperatures = [float(line.strip(' ').split(CPU_FILE_SEPARATOR)[1]) for line in cpu_temperature]
 
-def data_is_stable(data: List[float], tolerance: float, stable_std_mean_ratio: float) -> bool:
-    return (stats.stdev(data) / stats.mean(data)) <= ((1 + tolerance)*stable_std_mean_ratio)
+    return last_n_cpu_energies, last_n_ram_energies, last_n_gpu_energies, last_n_cpu_temperatures, last_n_gpu_temperatures
+
+
+# compare the energy data's standard deviation/mean ratio to that found in a stable state and allow for a tolerance
+def energy_is_stable(data: List[float], tolerance: float, stable_std_mean_ratio: float) -> bool:
+    std_mean = stdev(data) / mean(data)
+    tolerated = (1 + tolerance)*stable_std_mean_ratio
+    is_stable = std_mean <= tolerated
+    if DEBUG and not is_stable:
+        print(f"Not stable: stdev/mean is {std_mean}, which is greater than {tolerated}")
+    return is_stable
+
+
+# compare the mean temperature to the maximum temperature we allow
+def temperature_is_low(data: List[int], maximum_temperature: int):
+    mean_temperature = mean(data)
+    is_low = mean_temperature <= maximum_temperature
+    if DEBUG and not is_low:
+        print(f"Temperature too high: mean is {mean_temperature}, which is greater than {maximum_temperature}")
+    return is_low
+
 
 def server_is_stable(max_wait_secs: int) -> bool:
     """
     Return True only when the system's energy consumption is stable.
+    Settings that determine what "stable" means can be found in config.py.
     """
     # For testing purposes
     if max_wait_secs == 0:
         return True
-    
-    # re-calculate statistics every wait_per_loop_secs seconds
-    # TODO play around with different values to see impact on energy data
-    wait_per_loop_secs = 5
-
-    # only consider the last n points, with perf stat/nvidia-smi interval of 0.5secs this corresponds to the last 10 seconds
-    n = 20
-
-    # relative tolerance for difference between stable stdev/mean ratio and current ratio
-    # e.g. 0.1 would mean allowing a ratio that's 10% higher than the stable stdev/mean ratio
-    tolerance = 0.1
 
     # in each loop iteration, load new data, calculate statistics and check if the energy is stable.
     # try this for the specified number of seconds
-    for _ in range(int(max_wait_secs/wait_per_loop_secs)):
-        cpu_energies, ram_energies, gpu_energies = load_last_n_cpu_ram_gpu(n, PERF_FILE, NVIDIA_SMI_FILE)
+    for _ in range(int(max_wait_secs/WAIT_PER_STABLE_CHECK_LOOP_S)):
+        print(f"Waiting {WAIT_PER_STABLE_CHECK_LOOP_S} seconds to reach stable state.\n")
+        sleep(WAIT_PER_STABLE_CHECK_LOOP_S)
 
-        # stable means that stdv/mean ratios are smaller or equal to the stable ratios determined experimentally
-        # the tolerance value set above specifies how much relative deviation we want to allow
-        cpu_stable = data_is_stable(cpu_energies, tolerance, CPU_STD_TO_MEAN)
-        ram_stable = data_is_stable(ram_energies, tolerance, RAM_STD_TO_MEAN)
-        gpu_stable = data_is_stable(gpu_energies, tolerance, GPU_STD_TO_MEAN)
-
-        ## commented since it introduces further noise into the server which hinders it from reaching stable state
-        # if DEBUG:
-        #     print(f"CPU \n stable: {cpu_stable} \n stdv: {stats.stdev(cpu_energies)} \n mean: {stats.mean(cpu_energies)}")
-        #     print()
-        #     print(f"RAM \n stable: {ram_stable} \nstdv: {stats.stdev(ram_energies)} \n mean: {stats.mean(ram_energies)}")
-        #     print()
-        #     print(f"GPU \n stable: {gpu_stable} \nstdv: {stats.stdev(gpu_energies)} \n mean: {stats.mean(gpu_energies)}")
-
-        if cpu_stable and ram_stable and gpu_stable:
+        cpu_energies, ram_energies, gpu_energies, cpu_temperatures, gpu_temperatures = load_last_n_cpu_ram_gpu(CHECK_LAST_N_POINTS, PERF_FILE, NVIDIA_SMI_FILE, CPU_TEMPERATURE_FILE)
+        if (
+            temperature_is_low(gpu_temperatures, GPU_MAXIMUM_TEMPERATURE) and
+            energy_is_stable(gpu_energies, STABLE_CHECK_TOLERANCE, GPU_STD_TO_MEAN) and
+            energy_is_stable(cpu_energies, STABLE_CHECK_TOLERANCE, CPU_STD_TO_MEAN) and
+            energy_is_stable(ram_energies, STABLE_CHECK_TOLERANCE, RAM_STD_TO_MEAN) and
+            temperature_is_low(cpu_temperatures, CPU_MAXIMUM_TEMPERATURE)
+        ):
+            print("Server is stable.")
             return True
         else:
-            time.sleep(wait_per_loop_secs)
-        
-
+            print("Server is not stable yet.")
+            continue
     return False
+
 
 def get_current_times(perf_file: Path, nvidia_smi_file: Path):
     with open(perf_file, 'r') as f:
@@ -130,17 +158,6 @@ def get_current_times(perf_file: Path, nvidia_smi_file: Path):
 
     return time_perf, time_nvidia
 
-def write_start_or_end_symbol(perf_file: Path, nvidia_smi_file: Path, start: bool):
-    raise DeprecationWarning("This method doesn't work as expected and should not be used")
-    if start:
-        symbol = START_EXECUTION + "\n"
-    else:
-        symbol = END_EXECUTION + "\n"
-    print(symbol)
-    with open(perf_file, 'a') as f:
-        f.write(symbol)
-    with open(nvidia_smi_file, 'a') as f:
-        f.write(symbol)
 
 def get_energy_data():
     df_cpu, df_ram = parse_perf(PERF_FILE)
@@ -154,6 +171,13 @@ def get_energy_data():
 
     return energy_data, df_gpu
 
+
+# get a dataframe with all the cpu temperature data and convert it to json
+def get_cpu_temperature_data():
+    df_cpu_temperature = parse_cpu_temperature(CPU_TEMPERATURE_FILE)
+    return df_cpu_temperature.to_json(orient="split")
+
+
 def run_function(imports: str, function_to_run: str, obj: object, args: list, kwargs: dict, max_wait_secs: int, wait_after_run_secs: int, return_result: bool):
     """
     Run the method given by function_to_run with the given arguments (args) and keyword arguments (kwargs).
@@ -164,12 +188,12 @@ def run_function(imports: str, function_to_run: str, obj: object, args: list, kw
     # WARNING: potential security risk from exec and eval statements
 
     # (1) import relevant modules
-    import_time = time.time_ns()
+    import_time = time_ns()
     app.logger.info("Imports value: %s", imports)
     exec(imports)
 
     # (2) continue only when the system has reached a stable state of energy consumption
-    begin_stable_check_time = time.time_ns()
+    begin_stable_check_time = time_ns()
     if not server_is_stable(max_wait_secs):
         raise TimeoutError(f"System could not reach a stable state within {max_wait_secs} seconds")
 
@@ -177,9 +201,9 @@ def run_function(imports: str, function_to_run: str, obj: object, args: list, kw
     # TODO potentially correct here for the small time offset created by fetching the times for the files. We can use the server times for this.
     # (old) write_start_or_end_symbol(PERF_FILE, NVIDIA_SMI_FILE, start=True)
     start_time_perf, start_time_nvidia = get_current_times(PERF_FILE, NVIDIA_SMI_FILE)
-    start_time_server = time.time_ns()
+    start_time_server = time_ns()
     func_return = eval(function_to_run)
-    end_time_server = time.time_ns()
+    end_time_server = time_ns()
     end_time_perf, end_time_nvidia = get_current_times(PERF_FILE, NVIDIA_SMI_FILE)
     # (old) write_start_or_end_symbol(PERF_FILE, NVIDIA_SMI_FILE, start=False)
 
@@ -187,12 +211,11 @@ def run_function(imports: str, function_to_run: str, obj: object, args: list, kw
     if DEBUG:
         print(f"waiting idle for {wait_after_run_secs} seconds")
     if wait_after_run_secs > 0:
-        time.sleep(wait_after_run_secs)
+        sleep(wait_after_run_secs)
 
     # (5) get the energy data & gather all start and end times
-    # TODO only send energy data from the time when run_function is invoked
-    # TODO clear the files after
     energy_data, df_gpu = get_energy_data()
+    cpu_temperatures = get_cpu_temperature_data()
 
     start_time_nvidia_normalised = start_time_nvidia - df_gpu["timestamp"].iloc[0]
     end_time_nvidia_normalised = end_time_nvidia - df_gpu["timestamp"].iloc[0]
@@ -211,7 +234,8 @@ def run_function(imports: str, function_to_run: str, obj: object, args: list, kw
     # (6) return the energy data, times and status
     return_dict = {
         "energy_data": energy_data,
-        "times": times
+        "times": times,
+        "cpu_temperatures": cpu_temperatures
     }
     # TODO From the meeting: add Total Consumption (still needed?)
 
@@ -230,7 +254,7 @@ def run_function(imports: str, function_to_run: str, obj: object, args: list, kw
 @auth.login_required
 def run_function_and_return_result():
     # (1) deserialise request data
-    pickle_load_time = time.time_ns()
+    pickle_load_time = time_ns()
     function_details = pickle.loads(request.data)
     
     if DEBUG:
@@ -302,7 +326,7 @@ def run_function_and_return_result():
     # This triggers the reload of perf & nvidia-smi, clearing the energy data from the execution of this function
     # (see start_measurement.py for implementation of this process) 
     with open(EXECUTION_LOG_FILE, 'a') as f:
-        f.write(f"{function_details.function_to_run};{time.time_ns()};{status}\n")
+        f.write(f"{function_details.function_to_run};{time_ns()};{status}\n")
 
     # (7) if needed, delete the module created for the custom class definition
     if custom_class_file is not None:
@@ -315,6 +339,8 @@ def run_function_and_return_result():
 
     return response
 
+
+# for debugging purposes: allows quickly checking if the server was deployed correctly
 @app.route("/")
 def index():
     return '<h1>Application Deployed!</h1>'
@@ -322,4 +348,4 @@ def index():
 
 # start flask app
 if __name__ == "__main__":
-    app.run(host=SERVER_HOST, port=SERVER_PORT, debug=True, ssl_context=(CA_CERT_PATH, CA_KEY_PATH))
+    app.run(host=SERVER_HOST, port=SERVER_PORT, debug=False, ssl_context=(CA_CERT_PATH, CA_KEY_PATH))

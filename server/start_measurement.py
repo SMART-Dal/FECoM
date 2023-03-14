@@ -14,7 +14,7 @@ import atexit
 import time
 import os
 
-from config import NVIDIA_SMI_FILE, PERF_FILE, SERVER_MODULE, START_TIMES_FILE, EXECUTION_LOG_FILE, COUNT_INTERVAL_MS, CPU_TEMPERATURE_MODULE, CPU_TEMPERATURE_FILE
+from config import NVIDIA_SMI_FILE, PERF_FILE, SERVER_MODULE, START_TIMES_FILE, EXECUTION_LOG_FILE, COUNT_INTERVAL_MS, CPU_TEMPERATURE_MODULE, CPU_TEMPERATURE_FILE, CPU_FILE_SEPARATOR
 
 
 # function registered atexit by start_measurements to terminate the measurement programs
@@ -60,7 +60,7 @@ def start_nvidia():
 # start perf stat and return the process such that it can be registered by cleanup (similar to start_nvidia)
 def start_perf():
     # equivalent procedure as with nvidia-smi for perf but perf writes to a file on its own
-    start_perf = shlex.split(f"perf stat -I {COUNT_INTERVAL_MS} -e power/energy-pkg/,power/energy-ram/ -o {str(PERF_FILE)} -x \;")
+    start_perf = shlex.split(f"perf stat -I {COUNT_INTERVAL_MS} -e power/energy-pkg/,power/energy-ram/ -o {str(PERF_FILE)} -x \{CPU_FILE_SEPARATOR}")
 
     perf_stat = Popen(start_perf)
 
@@ -108,7 +108,7 @@ def restart_measurements(previous_perf_stat, previous_nvidia_smi, previous_senso
     atexit.unregister(cleanup)
     # terminate the previous processes
     previous_sensors.terminate()
-    print(f"Quite sensors after executing {latest_execution}")
+    print(f"Quit sensors after executing {latest_execution}")
     previous_nvidia_smi.terminate()
     print(f"Quit nvidia-smi after executing {latest_execution}")
     previous_perf_stat.terminate()

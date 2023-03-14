@@ -28,19 +28,15 @@ DEBUG = True
 """
 STABLE STATE CONFIG
 """
-# standard deviations and means for stable energy data, generated with plot_energy.combined_plot() for 2022-12-10 data
-gpu_std = 0.211421
-cpu_std = 0.507051
-ram_std = 0.085571
+# re-calculate statistics every x seconds when checking stable state
+WAIT_PER_STABLE_CHECK_LOOP_S = 15
 
-gpu_mean = 21.061808
-cpu_mean = 17.326540
-ram_mean = 3.490937
+# only consider the last n points, with perf stat/nvidia-smi interval of 0.5secs this corresponds to the last 10 seconds
+CHECK_LAST_N_POINTS = 20
 
-# TODO remove old values
-# CPU_STD_TO_MEAN = 0.0292644 # ~0.03
-# RAM_STD_TO_MEAN = 0.0245123 # ~0.025
-# GPU_STD_TO_MEAN = 0.0100381 # ~0.01
+# relative tolerance for difference between stable stdev/mean ratio and current ratios as measured by the server
+# e.g. 0.1 would mean allowing a ratio that's 10% higher than the stable stdev/mean ratio
+STABLE_CHECK_TOLERANCE = 0.5
 
 # average (mean) standard deviations and means for stable energy data for 20 values in a row from 2022-12-10 data, generated with plot_energy.calc_stats_for_split_data()
 cpu_energy_stdv = 0.791626
@@ -57,12 +53,10 @@ GPU_STD_TO_MEAN = 0.01 # 0.0090459
 """
 ENERGY MEASUREMENT CONFIG
 """
+# this is also used for the cpu temperature file
+CPU_FILE_SEPARATOR = ';'
 # set count interval for perf & nvidia-smi in milliseconds
 COUNT_INTERVAL_MS = 500
-# set cpu temperature measurement interval for sensors in seconds
-# the actual interval will be a few milliseconds greater, due to processing time
-CPU_TEMPERATURE_INTERVAL_S = 1
-
 # path to find energy data (this is also manually written into the energy_measurement.sh script,
 # but imported into the recommended way to start the program: start_measurement.py)
 energy_data_dir = Path("energy_measurement/out")
@@ -72,9 +66,20 @@ NVIDIA_SMI_FILE = energy_data_dir/"nvidia_smi.txt"
 START_TIMES_FILE = energy_data_dir/"start_times.txt"
 # keep track of the functions executed by the server in this file
 EXECUTION_LOG_FILE = energy_data_dir/"execution_log.txt"
+
+
+"""
+TEMPERATURE MEASUREMENT CONFIG
+"""
+CPU_TEMPERATURE_MODULE = "cpu_temperature.py"
+# set cpu temperature measurement interval for sensors in seconds
+# the actual interval will be a few milliseconds greater, due to processing time
+CPU_TEMPERATURE_INTERVAL_S = 1
 # store CPU temperatures in this file, populated by cpu_temperature.py
 CPU_TEMPERATURE_FILE = energy_data_dir/"cpu_temperature.txt"
-CPU_TEMPERATURE_MODULE = "cpu_temperature.py"
+# the maximum average temperature in degrees Celsius that we allow the CPU & GPU to be before executing a method (to determine stable state)
+CPU_MAXIMUM_TEMPERATURE = 55
+GPU_MAXIMUM_TEMPERATURE = 40
 
 
 """

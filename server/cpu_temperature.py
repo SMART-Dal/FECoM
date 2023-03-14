@@ -1,6 +1,6 @@
 import time
 import os
-from config import CPU_TEMPERATURE_FILE, CPU_TEMPERATURE_INTERVAL_S
+from config import CPU_TEMPERATURE_FILE, CPU_TEMPERATURE_INTERVAL_S, CPU_FILE_SEPARATOR
 
 # the "sensors" command from lm_sensors gives statistics about the CPU temperature (https://wiki.archlinux.org/title/lm_sensors)
 def run_sensors_once(time_zero = None):
@@ -36,7 +36,7 @@ def run_sensors_once(time_zero = None):
     # open the file for sensor output
     with open(CPU_TEMPERATURE_FILE, "a", encoding="utf-8") as cpu_temperature_file:
         # write timestamp;package_temperature;time_elapsed
-        cpu_temperature_file.write(f"{time_elapsed};{package_temperature};{sensor_execution_time}\n")
+        cpu_temperature_file.write(f"{time_elapsed}{CPU_FILE_SEPARATOR}{package_temperature}{CPU_FILE_SEPARATOR}{sensor_execution_time}\n")
 
     return sensor_execution_time
 

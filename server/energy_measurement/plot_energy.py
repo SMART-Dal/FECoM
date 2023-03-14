@@ -6,7 +6,7 @@ from pathlib import Path
 
 import sys
 sys.path.insert(0,'..')
-from measurement_parse import parse_nvidia_smi, parse_perf
+from measurement_parse import parse_nvidia_smi, parse_perf, parse_cpu_temperature
 
 from config import CPU_TEMPERATURE_FILE
 
@@ -154,12 +154,8 @@ def calc_stats_for_split_data(combined_df: pd.DataFrame, n=20):
     return total.mean()
 
 def load_and_plot_temperature(temperature_file=Path("../")/CPU_TEMPERATURE_FILE):
-    temperature_df = pd.read_csv(temperature_file, sep=';', names=["time_elapsed","temperature","timestamp"], dtype={
-        "time_elapsed": float,
-        "temperature": int,
-        "timestamp": float
-    })
-
+    temperature_df = parse_cpu_temperature(temperature_file)
+    print(temperature_df)
     print(temperature_df["temperature"].mean())
     print(temperature_df["temperature"].std())
     temperature_df["temperature"].plot()
