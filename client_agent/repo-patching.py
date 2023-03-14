@@ -33,7 +33,7 @@ def ipynb_to_py(ipynb_file):
                 if cell['cell_type'] == 'code':
                     source_lines = cell['source'].split('\n')
                     for line in source_lines:
-                        if not line.startswith('!'):
+                        if not (line.startswith('%') or line.startswith('%%') or line.startswith('!')):
                             f.write(line + '\n')
     except Exception as e:
         print(f"Error writing file {py_file}: {e}")
