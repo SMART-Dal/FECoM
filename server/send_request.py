@@ -82,71 +82,65 @@ def send_request(imports: str, function_to_run: str, function_args: list = None,
             }
         }
     }
-    """
-    try:
+    """ 
+    # (1) Construct a FunctionDetails object containg all the function data & settings for the server
+    function_details = FunctionDetails(
+        imports,
+        function_to_run,
+        function_args,
+        function_kwargs,
+        max_wait_secs,
+        wait_after_run_secs,
+        return_result,
+        method_object,
+        custom_class,
+        method_object.__module__ if custom_class is not None else None
+    )
+
+    if DEBUG:
+        print(f"Sending {function_to_run} request to {URL}")
+        print("######SIZES######")
+        print(f"Data size of function_args: {len(dill.dumps(function_args))}")
+        print(f"Data size of function_kwargs: {len(dill.dumps(function_kwargs))}")
+        print(f"Data size of method_object: {len(dill.dumps(method_object))}")
+
+    # (2) Serialise data with dill 
+    run_data = dill.dumps(function_details)
+
+    # (3) Send the request to the server and wait for the response
+    # verify = False because the server uses a self-signed certificate
+    # TODO this setting throws a warning, we need to set verify to the trusted certificate path instead.
+    # But this didn't work for a self-signed certificate, since a certificate authority (CA) bundle is required
+    while True:
+        run_resp = requests.post(URL, data=run_data, auth=(username, password), verify=False, headers={'Content-Type': 'application/octet-stream'})
         
-        # (1) Construct a FunctionDetails object containg all the function data & settings for the server
-        function_details = FunctionDetails(
-            imports,
-            function_to_run,
-            function_args,
-            function_kwargs,
-            max_wait_secs,
-            wait_after_run_secs,
-            return_result,
-            method_object,
-            custom_class,
-            method_object.__module__ if custom_class is not None else None
-        )
-
         if DEBUG:
-            print(f"Sending {function_to_run} request to {URL}")
-            print("######SIZES######")
-            print(f"Data size of function_args: {len(dill.dumps(function_args))}")
-            print(f"Data size of function_kwargs: {len(dill.dumps(function_kwargs))}")
-            print(f"Data size of method_object: {len(dill.dumps(method_object))}")
-
-        # (2) Serialise data with dill 
-        run_data = dill.dumps(function_details)
-
-        # (3) Send the request to the server and wait for the response
-        # verify = False because the server uses a self-signed certificate
-        # TODO this setting throws a warning, we need to set verify to the trusted certificate path instead.
-        # But this didn't work for a self-signed certificate, since a certificate authority (CA) bundle is required
-        while True:
-            run_resp = requests.post(URL, data=run_data, auth=(username, password), verify=False, headers={'Content-Type': 'application/octet-stream'})
-            
-            if DEBUG:
-                print("RECEIVED RESPONSE")
-            # (4) Check whether the server could execute the method successfully
-            # if the HTTP status code is 500, the server could not reach a stable state.
-            # TODO: now, we simply raise an error and save the energy data. Should we send a new request instead?
-            if run_resp.status_code == 500:
-                deserialised_response = dill.loads(run_resp.content)
-                error_file = "timeout_energy_data.json"
-                with open(error_file, 'w') as f:
-                    json.dump(deserialised_response["energy_data"], f)
-                time.sleep(30)
-                continue  # retry the request
-                # raise TimeoutError(str(deserialised_response["error"]) + "\nYou can find the energy data in ./" + error_file)
-            # catch unauthorized error if authentication fails
-            elif run_resp.status_code == 401:
-                raise RuntimeError(run_resp.content)
-            else:
-                print("Successful Server response: " + str(run_resp.status_code))
-                # Success, break out of the loop and continue with the rest of the code
-                break
-
-        # (5) Extract the relevant data from the response and return it
-        if return_result:
-            # when return_result is true, data is serialised (used for testing & debugging)
-            return dill.loads(run_resp.content)
+            print("RECEIVED RESPONSE")
+        # (4) Check whether the server could execute the method successfully
+        # if the HTTP status code is 500, the server could not reach a stable state.
+        # TODO: now, we simply raise an error and save the energy data. Should we send a new request instead?
+        if run_resp.status_code == 500:
+            deserialised_response = dill.loads(run_resp.content)
+            error_file = "timeout_energy_data.json"
+            with open(error_file, 'w') as f:
+                json.dump(deserialised_response["energy_data"], f)
+            time.sleep(30)
+            continue  # retry the request
+            # raise TimeoutError(str(deserialised_response["error"]) + "\nYou can find the energy data in ./" + error_file)
+        # catch unauthorized error if authentication fails
+        elif run_resp.status_code == 401:
+            raise RuntimeError(run_resp.content)
         else:
-            # typically we expect json data
-            type
-            store_response(run_resp.content)
-            return run_resp.json()
-    except Exception as e:
-        print(f"Error in send_request: {e}")
-        print(traceback.format_exc())
-        return None
+            print("Successful Server response: " + str(run_resp.status_code))
+            # Success, break out of the loop and continue with the rest of the code
+            break
+
+    # (5) Extract the relevant data from the response and return it
+    if return_result:
+        # when return_result is true, data is serialised (used for testing & debugging)
+        return dill.loads(run_resp.content)
+    else:
+        # typically we expect json data
+        type
+        store_response(run_resp.content)
+        return run_resp.json()
