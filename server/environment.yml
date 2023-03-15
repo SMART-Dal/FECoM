@@ -19,8 +19,8 @@ dependencies:
     - pytest==7.2.1
     - dill==0.3.6
 
-prefix: /home/tim/miniconda3/envs/tf2 # replace with your conda environment path
+prefix: ~/miniconda3/envs/tf2 # replace with your conda environment path
 variables:
-  LD_LIBRARY_PATH: /home/tim/miniconda3/envs/tf2/lib # replace /home/tim/miniconda3/envs/tf2 with your environment path
-  XLA_FLAGS: --xla_gpu_cuda_data_dir=/home/tim/miniconda3/envs/tf2/lib # replace /home/tim/miniconda3/envs/tf2 with your environment path
+  LD_LIBRARY_PATH: ~/miniconda3/envs/tf2/lib # replace /home/tim/miniconda3/envs/tf2 with your environment path
+  XLA_FLAGS: --xla_gpu_cuda_data_dir=~/miniconda3/envs/tf2/lib # replace /home/tim/miniconda3/envs/tf2 with your environment path
   TF_FORCE_GPU_ALLOW_GROWTH: 'true'
