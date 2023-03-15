@@ -1,1 +1,0 @@
-# create a pytest code to read python scripts and run test on them

@@ -6,7 +6,7 @@ SERVER URL, PORT & DEBUG CONFIG
 SERVER_MODULE = "server.py"
 
 ### SET TO FALSE FOR DEV SETTINGS ON YOUR LOCAL MACHINE ###
-PROD = False
+PROD = True
 
 # server settings for localhost environment
 DEV_HOST = "localhost"

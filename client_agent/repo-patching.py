@@ -7,6 +7,7 @@ import shutil
 from clientconfig import *
 import nbformat
 import importlib
+import re
 
 sys.path.append("../server")
 # from server.send_request import send_request, send_single_thread_request
@@ -33,7 +34,8 @@ def ipynb_to_py(ipynb_file):
                 if cell['cell_type'] == 'code':
                     source_lines = cell['source'].split('\n')
                     for line in source_lines:
-                        if not line.startswith('!'):
+                        # remove lines starting with any Jupyter magic command symbol
+                        if not re.match(r'^\s*(%|%%|!|#)', line):
                             f.write(line + '\n')
     except Exception as e:
         print(f"Error writing file {py_file}: {e}")

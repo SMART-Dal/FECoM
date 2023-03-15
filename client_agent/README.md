@@ -20,31 +20,7 @@ The final patched code will be stored in the "Patched-Repositories" directory. Y
 
 Once we have the patched repo ready, we can simply run python files from these projects as a normal script. On execution these files will send method requests to the server, get the energy consumption data and store it in "methodcall-energy-dataset.json" file.
 
-Once the execution is complete we will have a list of json objects for each method call.
-For a given method call, energy consumption response would look like:]
-```bash
-function_to_run: {
-            "energy_data": {
-                "cpu": df_cpu_json,
-                "ram": df_ram_json,
-                "gpu": df_gpu_json
-            },
-            "times": {
-                "start_time_server": start_time_server,
-                "end_time_server": end_time_server,
-                "start_time_perf": start_time_perf, 
-                "end_time_perf": end_time_perf,
-                "start_time_nvidia": start_time_nvidia_normalised,
-                "end_time_nvidia": end_time_nvidia_normalised,
-            },
-            "input_sizes" {
-                "args_size": args_size_bit,
-                "kwargs_size": kwargs_size_bit,
-                "object_size": object_size_bit
-            }
-        }
-    }
-```
+Once the execution is complete we will have a list of json objects for each method call. Please refer to `~/server/README.md` for more information on the format of these objects.
 
 
 ## Contributing
