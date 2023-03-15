@@ -95,11 +95,13 @@ def demo_timeout():
     figure.set_size_inches(20, 6)
     plt.savefig('timout_energy_plot.png', dpi=200)
 
-def demo_start_end_time_graphing(max_wait_secs, wait_after_run_secs, epochs):
-    results = run_mnist_model_train(max_wait_secs, wait_after_run_secs, epochs)
-    # save json response to file
-    with open('methodcall_energy.json', 'w') as f:
-        json.dump(results, f)
+def demo_start_end_time_graphing(max_wait_secs, wait_after_run_secs, epochs, results=None):
+    # allow passing results, for cases where only graphing of existing data is required
+    if results is None:
+        results = run_mnist_model_train(max_wait_secs, wait_after_run_secs, epochs)
+        # save json response to file
+        with open('methodcall_energy.json', 'w') as f:
+            json.dump(results, f)
     
     results = results[FUNCTION_TO_RUN]
 
@@ -110,13 +112,6 @@ def demo_start_end_time_graphing(max_wait_secs, wait_after_run_secs, epochs):
     start_time_nvidia = results["times"]["start_time_nvidia"]
     end_time_nvidia = results["times"]["end_time_nvidia"]
 
-    # normalised other times
-    with open(Path(".."/START_TIMES_FILE), 'r') as f:
-        raw_times = f.readlines()
-    
-    # START_TIMES_FILE has format PERF_START <time_perf>\nNVIDIA_SMI_START <time_nvidia>
-    sys_start_time_perf, sys_start_time_nvidia = [int(line.strip(' \n').split(" ")[1]) for line in raw_times]
-
     print("###INPUT SIZES###")
     print(results["input_sizes"])
     print("###DATA FRAMES###")
@@ -124,9 +119,9 @@ def demo_start_end_time_graphing(max_wait_secs, wait_after_run_secs, epochs):
     print(cpu_df)
 
     ns_conversion = 1000000000
-    pickle_load_time_perf = (results["times"]["pickle_load_time"] - sys_start_time_perf) / ns_conversion
-    import_time_perf = (results["times"]["import_time"] - sys_start_time_perf) / ns_conversion
-    begin_stable_check_time_perf = (results["times"]["begin_stable_check_time"] - sys_start_time_perf) / ns_conversion
+    pickle_load_time_perf = (results["times"]["pickle_load_time"] - results["times"]["sys_start_time_perf"]) / ns_conversion
+    import_time_perf = (results["times"]["import_time"] - results["times"]["sys_start_time_perf"]) / ns_conversion
+    begin_stable_check_time_perf = (results["times"]["begin_stable_check_time"] - results["times"]["sys_start_time_perf"]) / ns_conversion
     
     # time, label, color
     perf_times = [
@@ -137,9 +132,9 @@ def demo_start_end_time_graphing(max_wait_secs, wait_after_run_secs, epochs):
         (begin_stable_check_time_perf, "stable_check", 'y')
     ]
 
-    pickle_load_time_nvidia = (results["times"]["pickle_load_time"] - sys_start_time_nvidia) / ns_conversion
-    import_time_nvidia = (results["times"]["import_time"] - sys_start_time_nvidia) / ns_conversion
-    begin_stable_check_time_nvidia = (results["times"]["begin_stable_check_time"] - sys_start_time_nvidia) / ns_conversion
+    pickle_load_time_nvidia = (results["times"]["pickle_load_time"] - results["times"]["sys_start_time_nvidia"]) / ns_conversion
+    import_time_nvidia = (results["times"]["import_time"] - results["times"]["sys_start_time_nvidia"]) / ns_conversion
+    begin_stable_check_time_nvidia = (results["times"]["begin_stable_check_time"] - results["times"]["sys_start_time_nvidia"]) / ns_conversion
     nvidia_times = [
         (start_time_nvidia, "method_start", 'r'),
         (end_time_nvidia, "method_end", 'r'),
@@ -161,4 +156,6 @@ def demo_start_end_time_graphing(max_wait_secs, wait_after_run_secs, epochs):
     plt.savefig('energy_plot.png', dpi=200)
 
 if __name__ == "__main__":
-    demo_start_end_time_graphing(max_wait_secs=60, wait_after_run_secs=20, epochs=5)
+    with open('methodcall_energy.json', 'r') as f:
+        results = json.load(f)
+    demo_start_end_time_graphing(max_wait_secs=60, wait_after_run_secs=20, epochs=5, results=results)

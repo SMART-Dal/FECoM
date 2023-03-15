@@ -83,27 +83,28 @@ def start_sensors():
 
 
 # write start times to a file for further processing
-def write_start_times(perf_start_time, nvidia_smi_start_time):
+def write_start_times(perf_start_time, nvidia_smi_start_time, server_start_time):
     with open(START_TIMES_FILE, "w") as f:
         f.writelines([
             f"PERF_START {perf_start_time}\n",
-            f"NVIDIA_SMI_START {nvidia_smi_start_time}"
+            f"NVIDIA_SMI_START {nvidia_smi_start_time}\n",
+            f"SERVER_START {server_start_time}"
         ])
 
 
 # called by the main program at initial startup or when restarting the energy measurement script through restart_measurements
-def start_measurements():
+def start_measurements(server_start_time):
     perf_stat, perf_start_time = start_perf()
     nvidia_smi, nvidia_smi_start_time = start_nvidia()
     sensors = start_sensors()
     atexit.register(cleanup, perf_stat=perf_stat, nvidia_smi=nvidia_smi, sensors=sensors)
 
-    write_start_times(perf_start_time, nvidia_smi_start_time)
+    write_start_times(perf_start_time, nvidia_smi_start_time, server_start_time)
     return perf_stat, nvidia_smi, sensors
 
 
 # quit, cleanup and restart all measurement programs in a way that avoids any file corruptions to the energy_measurement/out files
-def restart_measurements(previous_perf_stat, previous_nvidia_smi, previous_sensors, latest_execution):
+def restart_measurements(previous_perf_stat, previous_nvidia_smi, previous_sensors, latest_execution, server_start_time):
     # unregister the previous cleanup function
     atexit.unregister(cleanup)
     # terminate the previous processes
@@ -123,7 +124,7 @@ def restart_measurements(previous_perf_stat, previous_nvidia_smi, previous_senso
         raise OSError("Could not find and remove perf, nvidia & cpu temperature files")
 
     # restart the measurement programs
-    perf_stat, nvidia_smi, sensors = start_measurements()
+    perf_stat, nvidia_smi, sensors = start_measurements(server_start_time)
 
     return perf_stat, nvidia_smi, sensors
 
@@ -134,7 +135,7 @@ if __name__ == "__main__":
     # (1) Start the server & energy measurement programs (perf stat & nvidia-smi).
     # Keep a reference to perf stat & nvidia-smi such that they can be terminated by the program.
     server_start_time = start_server()
-    perf_stat, nvidia_smi, sensors = start_measurements()
+    perf_stat, nvidia_smi, sensors = start_measurements(server_start_time)
 
     # (2) Create the server execution log file which keeps track of the functions executed.
     # Initialise previous_execution with the initial contents of the file.
@@ -153,7 +154,7 @@ if __name__ == "__main__":
             # When the server adds a new execution to the log file, we want to to restart perf & nvidia-smi to clear the energy measurement files
             if latest_execution != previous_execution:
                 # restart all programs, and update the references to point at the new processes
-                perf_stat, nvidia_smi, sensors = restart_measurements(perf_stat, nvidia_smi, sensors, latest_execution.split(";")[0])
+                perf_stat, nvidia_smi, sensors = restart_measurements(perf_stat, nvidia_smi, sensors, latest_execution.split(";")[0], server_start_time)
                 previous_execution = latest_execution
             
             # TODO this is an arbitary number, does it work well?
