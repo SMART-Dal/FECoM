@@ -141,6 +141,5 @@ def send_request(imports: str, function_to_run: str, function_args: list = None,
         return dill.loads(run_resp.content)
     else:
         # typically we expect json data
-        type
         store_response(run_resp.content)
         return run_resp.json()
