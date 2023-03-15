@@ -1,6 +1,7 @@
 import dill
 import requests
-from config import URL, DEBUG
+from config import URL, DEBUG, EXPERIMENT_FILE_PATH
+# from clientconfig import EXPERIMENT_FILE_PATH
 from function_details import FunctionDetails
 import sys
 sys.path.insert(0,'..')
@@ -17,8 +18,8 @@ def store_response(response):
         print(f"Result: {response}")
 
     try:
-        if os.path.exists('/home/saurabh/code-energy-consumption/client_agent/methodcall-energy-dataset.json'):
-            with open('/home/saurabh/code-energy-consumption/client_agent/methodcall-energy-dataset.json', 'r+') as f:
+        if os.path.exists(EXPERIMENT_FILE_PATH):
+            with open(EXPERIMENT_FILE_PATH, 'r+') as f:
                 file_content = f.read()
                 if file_content.strip():
                     existing_data = json.loads(file_content)
@@ -26,7 +27,7 @@ def store_response(response):
                     existing_data = []
         else:
             existing_data = []
-            with open('/home/saurabh/code-energy-consumption/client_agent/methodcall-energy-dataset.json', 'w+') as f:
+            with open(EXPERIMENT_FILE_PATH, 'w+') as f:
                 f.write(json.dumps(existing_data))
     except Exception as e:
         print(f"Error opening file: {e}")
@@ -37,7 +38,7 @@ def store_response(response):
             data = json.loads(response)
             existing_data.append(data)
             print("Data loaded from response")
-            with open('/home/saurabh/code-energy-consumption/client_agent/methodcall-energy-dataset.json', 'w+') as f:
+            with open(EXPERIMENT_FILE_PATH, 'w+') as f:
                 print("Type of existing data", type(existing_data))
                 json_data = json.dumps(existing_data) # Convert to JSON string
                 print("Type of json data", type(json_data))
