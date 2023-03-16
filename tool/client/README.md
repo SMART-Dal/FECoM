@@ -6,8 +6,13 @@ This is the client agent that takes a python program along with list of librarie
 
 <!-- Read a bit about measuring Software Energy Consumption and how it is done in Linux using the Profiling Tool known as [Perf](https://perf.wiki.kernel.org/index.php/Main_Page). -->
 
-The "code-dataset" directory contains the dataset for which we want to calculate the energy consumption for. It has two subdirectories: "Repositories" which contains the client projects and "Patched-Repositories" that contains patched version of the same client projects. During the patching process we parse the python code into an AST using 'ast' library, make changes in the scripts to identify the target method calls and create request packets for the same. Once the patching process is complete, we will have the final scripts ready, which on running will produce energy consumption data for the identified libraries for the client.
-Step 1 is to move or clone your target project into the "Repositories" directory.
+The `~/data/code-dataset` directory (`~/data` indicates that `data` is in the top-level directory of this repository) contains the dataset for which we want to calculate the energy consumption for. Make sure it has two subdirectories:
+- `Repositories`: this contains the client projects
+- `Patched-Repositories`: this will contain the patched version of the same client projects after running the patching script.  
+If needed, create these two subdirectories using `mkdir`.
+  
+During the patching process we parse the python code into an AST using the 'ast' library, make changes in the scripts to identify the target method calls and create request packets for the same. Once the patching process is complete, we will have the final scripts ready, which on running will produce energy consumption data for the identified libraries for the client.
+Step 1 is to move or clone your target project into the `~/data/code-dataset/Repositories` directory.
 ```bash
 git clone git_repo_link
 ```
@@ -16,11 +21,11 @@ Once we have the target repo, we can run the patching script.
 python repo-patching.py
 ```
 
-The final patched code will be stored in the "Patched-Repositories" directory. You can modify the paths for these directories from "clientconfig.py".
+The final patched code will be stored in the `~/data/code-dataset/Patched-Repositories` directory. You can modify the paths for these directories in "client_config.py".
 
 Once we have the patched repo ready, we can simply run python files from these projects as a normal script. On execution these files will send method requests to the server, get the energy consumption data and store it in "methodcall-energy-dataset.json" file.
 
-Once the execution is complete we will have a list of json objects for each method call. Please refer to `~/server/README.md` for more information on the format of these objects.
+Once the execution is complete we will have a list of json objects for each method call. Please refer to `~/tool/server/README.md` for more information on the format of these objects.
 
 
 ## Contributing
