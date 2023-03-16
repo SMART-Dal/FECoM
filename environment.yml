@@ -18,6 +18,7 @@ dependencies:
     - scikit-learn==1.2.1
     - pytest==7.2.1
     - dill==0.3.6
+    - dynaconf==3.1.12
 
 prefix: ~/miniconda3/envs/tf2 # replace with your conda environment path
 variables:

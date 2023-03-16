@@ -1,11 +1,5 @@
 """
-Run different demos of the server program. They are based on a simple training call.
-- demo_timeout(): 
-    - if run=True, will send a request and if it times out, will plot a graph of the energy data received from the timeout
-    - if run=False, will use the existing timeout_energy_data.json file to plot the graph
-- demo_start_end_time_graphing(): 
-    - if results=None, will send a request and plot the resulting energy data with start and end times
-    - if results=<json object like the one returned by the server>, it will simply plot it and not send a request.
+Run
 """
 import json
 from pathlib import Path
@@ -72,9 +66,8 @@ def convert_json_to_df(results):
 """
 DEMO METHODS
 """
-def demo_timeout(run=True):
-    if run:
-        resp = run_mnist_model_train(max_wait_secs=10, wait_after_run_secs=20)
+def demo_timeout():
+    results = run_mnist_model_train(max_wait_secs=30, wait_after_run_secs=20)
     with open('timeout_energy_data.json', 'r') as f:
         results = json.load(f)
     
@@ -159,6 +152,6 @@ def demo_start_end_time_graphing(max_wait_secs, wait_after_run_secs, epochs, res
     plt.savefig('energy_plot.png', dpi=200)
 
 if __name__ == "__main__":
-    with open('methodcall_energy.json', 'r') as f:
-        results = json.load(f)
-    demo_start_end_time_graphing(max_wait_secs=60, wait_after_run_secs=20, epochs=5, results=results)
+    # with open('methodcall_energy.json', 'r') as f:
+    #     results = json.load(f)
+    demo_start_end_time_graphing(max_wait_secs=60, wait_after_run_secs=20, epochs=5) # results=results

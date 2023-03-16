@@ -3,4 +3,6 @@ Before running the tests, make sure that `pytest` is installed in the venv and t
 ```
 pip install -U pytest
 ```
-Then, in the `test` directory, run the `pytest` command to execute all tests.
+Then, in the `test` directory, run the `pytest` command to execute all tests.  
+
+The `./sample_code` directory contains code examples used to generate some test cases and downloaded data will be stored in `./test_data`.

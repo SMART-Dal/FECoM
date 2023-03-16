@@ -4,11 +4,8 @@ from sklearn.preprocessing import MinMaxScaler
 import numpy as np
 from pathlib import Path
 
-import sys
-sys.path.insert(0,'..')
-from measurement_parse import parse_nvidia_smi, parse_perf, parse_cpu_temperature
-
-from config import CPU_TEMPERATURE_FILE
+from tool.server.measurement_parse import parse_nvidia_smi, parse_perf, parse_cpu_temperature
+from tool.server.server_config import CPU_TEMPERATURE_FILE
 
 def normalised(lst, normalise=True):
     """

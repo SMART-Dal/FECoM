@@ -1,11 +1,11 @@
 from datetime import datetime
-
 import pandas as pd
 import matplotlib
 import matplotlib.pyplot as plt
 import numpy as np
 from pathlib import Path
-from config import CPU_FILE_SEPARATOR
+
+from tool.server.server_config import CPU_FILE_SEPARATOR
 
 def parse_nvidia_smi(filepath: Path) -> pd.DataFrame:
     """

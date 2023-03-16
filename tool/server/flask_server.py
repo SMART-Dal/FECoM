@@ -2,7 +2,7 @@
 Server to receive client requests to run ML methods and measure energy.
 """
 
-from time import sleep, time_ns
+import time
 from datetime import datetime
 import os
 import logging
@@ -11,21 +11,20 @@ from statistics import mean, stdev
 from pathlib import Path
 import json
 from typing import List
-
 from flask import Flask, Response, request
 from flask_httpauth import HTTPBasicAuth
 from werkzeug.security import check_password_hash
 
 # server settings
-from config import API_PATH, DEBUG, SERVER_HOST, SERVER_PORT, USERS, CA_CERT_PATH, CA_KEY_PATH
+from tool.server.server_config import API_PATH, DEBUG, SERVER_HOST, SERVER_PORT, USERS, CA_CERT_PATH, CA_KEY_PATH
 # file paths and separators
-from config import PERF_FILE, NVIDIA_SMI_FILE, EXECUTION_LOG_FILE, START_TIMES_FILE, CPU_TEMPERATURE_FILE, CPU_FILE_SEPARATOR
+from tool.server.server_config import PERF_FILE, NVIDIA_SMI_FILE, EXECUTION_LOG_FILE, START_TIMES_FILE, CPU_TEMPERATURE_FILE, CPU_FILE_SEPARATOR
 # stable state constants
-from config import CPU_STD_TO_MEAN, RAM_STD_TO_MEAN, GPU_STD_TO_MEAN, CPU_MAXIMUM_TEMPERATURE, GPU_MAXIMUM_TEMPERATURE
+from tool.server.server_config import CPU_STD_TO_MEAN, RAM_STD_TO_MEAN, GPU_STD_TO_MEAN, CPU_MAXIMUM_TEMPERATURE, GPU_MAXIMUM_TEMPERATURE
 # stable state settings
-from config import WAIT_PER_STABLE_CHECK_LOOP_S, CHECK_LAST_N_POINTS, STABLE_CHECK_TOLERANCE
-from function_details import FunctionDetails # shown unused but still required since this is the class used for sending function details to the server
-from measurement_parse import parse_nvidia_smi, parse_perf, parse_cpu_temperature
+from tool.server.server_config import WAIT_PER_STABLE_CHECK_LOOP_S, CHECK_LAST_N_POINTS, STABLE_CHECK_TOLERANCE
+from tool.server.function_details import FunctionDetails # shown unused but still required since this is the class used for sending function details to the server
+from tool.server.measurement_parse import parse_nvidia_smi, parse_perf, parse_cpu_temperature
 
 
 
@@ -129,7 +128,7 @@ def server_is_stable(max_wait_secs: int) -> bool:
     # try this for the specified number of seconds
     for _ in range(int(max_wait_secs/WAIT_PER_STABLE_CHECK_LOOP_S)):
         print(f"Waiting {WAIT_PER_STABLE_CHECK_LOOP_S} seconds to reach stable state.\n")
-        sleep(WAIT_PER_STABLE_CHECK_LOOP_S)
+        time.sleep(WAIT_PER_STABLE_CHECK_LOOP_S)
 
         cpu_energies, ram_energies, gpu_energies, cpu_temperatures, gpu_temperatures = load_last_n_cpu_ram_gpu(CHECK_LAST_N_POINTS, PERF_FILE, NVIDIA_SMI_FILE, CPU_TEMPERATURE_FILE)
         if (
@@ -188,12 +187,12 @@ def run_function(imports: str, function_to_run: str, obj: object, args: list, kw
     # WARNING: potential security risk from exec and eval statements
 
     # (1) import relevant modules
-    import_time = time_ns()
+    import_time = time.time_ns()
     app.logger.info("Imports value: %s", imports)
     exec(imports)
 
     # (2) continue only when the system has reached a stable state of energy consumption
-    begin_stable_check_time = time_ns()
+    begin_stable_check_time = time.time_ns()
     if not server_is_stable(max_wait_secs):
         raise TimeoutError(f"System could not reach a stable state within {max_wait_secs} seconds")
 
@@ -201,9 +200,9 @@ def run_function(imports: str, function_to_run: str, obj: object, args: list, kw
     # TODO potentially correct here for the small time offset created by fetching the times for the files. We can use the server times for this.
     # (old) write_start_or_end_symbol(PERF_FILE, NVIDIA_SMI_FILE, start=True)
     start_time_perf, start_time_nvidia = get_current_times(PERF_FILE, NVIDIA_SMI_FILE)
-    start_time_server = time_ns()
+    start_time_server = time.time_ns()
     func_return = eval(function_to_run)
-    end_time_server = time_ns()
+    end_time_server = time.time_ns()
     end_time_perf, end_time_nvidia = get_current_times(PERF_FILE, NVIDIA_SMI_FILE)
     # (old) write_start_or_end_symbol(PERF_FILE, NVIDIA_SMI_FILE, start=False)
 
@@ -211,7 +210,7 @@ def run_function(imports: str, function_to_run: str, obj: object, args: list, kw
     if DEBUG:
         print(f"waiting idle for {wait_after_run_secs} seconds")
     if wait_after_run_secs > 0:
-        sleep(wait_after_run_secs)
+        time.sleep(wait_after_run_secs)
 
     # (5) get the energy data & gather all start and end times
     energy_data, df_gpu = get_energy_data()
@@ -264,7 +263,7 @@ def run_function(imports: str, function_to_run: str, obj: object, args: list, kw
 @auth.login_required
 def run_function_and_return_result():
     # (1) deserialise request data
-    pickle_load_time = time_ns()
+    pickle_load_time = time.time_ns()
     function_details = pickle.loads(request.data)
     
     if DEBUG:
@@ -336,7 +335,7 @@ def run_function_and_return_result():
     # This triggers the reload of perf & nvidia-smi, clearing the energy data from the execution of this function
     # (see start_measurement.py for implementation of this process) 
     with open(EXECUTION_LOG_FILE, 'a') as f:
-        f.write(f"{function_details.function_to_run};{time_ns()};{status}\n")
+        f.write(f"{function_details.function_to_run};{time.time_ns()};{status}\n")
 
     # (7) if needed, delete the module created for the custom class definition
     if custom_class_file is not None:

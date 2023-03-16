@@ -1,24 +1,21 @@
 import dill
 import requests
-from config import URL, DEBUG
-from function_details import FunctionDetails
-import sys
-sys.path.insert(0,'..')
 import os
 import traceback
 import time
-
 import json
-import concurrent.futures
 
+from tool.server.server_config import URL, DEBUG
+from tool.server.function_details import FunctionDetails
 
-def store_response(response,EXPERIMENT_FILE_PATH):
+# TODO requires drastic refactoring
+def store_response(response, experiment_file_path):
     if DEBUG:
         print(f"Result: {response}")
 
     try:
-        if os.path.exists(EXPERIMENT_FILE_PATH):
-            with open(EXPERIMENT_FILE_PATH, 'r+') as f:
+        if os.path.exists(experiment_file_path):
+            with open(experiment_file_path, 'r+') as f:
                 file_content = f.read()
                 if file_content.strip():
                     existing_data = json.loads(file_content)
@@ -26,7 +23,7 @@ def store_response(response,EXPERIMENT_FILE_PATH):
                     existing_data = []
         else:
             existing_data = []
-            with open(EXPERIMENT_FILE_PATH, 'w+') as f:
+            with open(experiment_file_path, 'w+') as f:
                 f.write(json.dumps(existing_data))
     except Exception as e:
         print(f"Error opening file: {e}")
@@ -37,12 +34,12 @@ def store_response(response,EXPERIMENT_FILE_PATH):
             data = json.loads(response)
             existing_data.append(data)
             print("Data loaded from response")
-            with open(EXPERIMENT_FILE_PATH, 'w+') as f:
+            with open(experiment_file_path, 'w+') as f:
                 print("Type of existing data", type(existing_data))
                 json_data = json.dumps(existing_data) # Convert to JSON string
                 print("Type of json data", type(json_data))
                 f.write(json_data)
-                print(f"New file created: {EXPERIMENT_FILE_PATH}")
+                print(f"New file created: {experiment_file_path}")
                 print("Data written to file")
         except json.decoder.JSONDecodeError as e:
             print(f"Error decoding JSON: {e}")

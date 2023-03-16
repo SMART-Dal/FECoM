@@ -4,11 +4,9 @@ Test client to send requests to the server
 
 import numpy as np
 import tensorflow as tf
-# add parent directory to path
-import sys
-sys.path.insert(0,'..')
-from config import DEBUG
-from send_request import send_request
+
+from tool.server.server_config import DEBUG
+from tool.server.send_request import send_request
 
 
 def send_matmul_request():

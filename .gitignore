@@ -2,6 +2,21 @@ client_agent/sample.py
 client_agent/data
 client_agent/__pycache__
 .idea/*
-client_agent/code-dataset/*
+data/code-dataset/*
 ENV/*
 .ipynb_checkpoints/
+tests/test_data
+
+# server
+venv
+__pycache__
+.DS_Store
+.pytest_cache
+*.pth
+patched-code/*
+Repositories/*
+flask.log
+
+# package
+*.egg-info
+build

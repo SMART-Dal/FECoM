@@ -3,12 +3,13 @@ import subprocess
 import concurrent.futures
 from pprint import pprint
 import sys
-from clientconfig import *
+from ..config import CLIENT_INPUT_DIR, CLIENT_OUTPUT_DIR, PATCHING_SCRIPT_PATH
 
+raise DeprecationWarning("Do we still have to modify PYTHONPATH after the repo restructuring?")
 os.environ['PYTHONPATH'] = '../server'
 
-input_dir = INPUT_DIR
-output_dir = OUTPUT_DIR
+input_dir = CLIENT_INPUT_DIR
+output_dir = CLIENT_OUTPUT_DIR
 script_path = PATCHING_SCRIPT_PATH
 
 # run the patched files and save the output in a json file

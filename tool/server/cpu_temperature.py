@@ -1,6 +1,8 @@
 import time
 import os
-from config import CPU_TEMPERATURE_FILE, CPU_TEMPERATURE_INTERVAL_S, CPU_FILE_SEPARATOR
+
+from tool.server.server_config import CPU_TEMPERATURE_FILE, CPU_TEMPERATURE_INTERVAL_S, CPU_FILE_SEPARATOR
+
 
 # the "sensors" command from lm_sensors gives statistics about the CPU temperature (https://wiki.archlinux.org/title/lm_sensors)
 def run_sensors_once(time_zero = None):

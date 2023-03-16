@@ -4,12 +4,12 @@ import concurrent.futures
 from pprint import pprint
 import sys
 import shutil
-from clientconfig import *
 import nbformat
 import importlib
 import re
+from pathlib import Path
 
-sys.path.append("../server")
+from client_config import PATCHED_REPO_DIR, SOURCE_REPO_DIR, PATCHING_SCRIPT_PATH
 # from server.send_request import send_request, send_single_thread_request
 
 

@@ -1,9 +1,0 @@
-venv
-__pycache__
-.DS_Store
-.pytest_cache
-data
-*.pth
-patched-code/*
-Repositories/*
-flask.log

@@ -14,7 +14,10 @@ import atexit
 import time
 import os
 
-from config import NVIDIA_SMI_FILE, PERF_FILE, SERVER_MODULE, START_TIMES_FILE, EXECUTION_LOG_FILE, COUNT_INTERVAL_MS, CPU_TEMPERATURE_MODULE, CPU_TEMPERATURE_FILE, CPU_FILE_SEPARATOR
+from tool.server.server_config import COUNT_INTERVAL_MS, CPU_FILE_SEPARATOR
+from tool.server.server_config import NVIDIA_SMI_FILE, PERF_FILE, SERVER_MODULE, START_TIMES_FILE, EXECUTION_LOG_FILE, CPU_TEMPERATURE_MODULE, CPU_TEMPERATURE_FILE
+
+
 
 
 # function registered atexit by start_measurements to terminate the measurement programs

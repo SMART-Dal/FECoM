@@ -2,6 +2,8 @@ import os
 import subprocess
 import csv
 
+raise DeprecationWarning("What is this used for? I moved it to the client package, so paths in here will be outdated.")
+
 def download_repo(repo_name, repos_base_path):
     repo_fullname = repo_name.strip('\n')
     if not repo_fullname == "":

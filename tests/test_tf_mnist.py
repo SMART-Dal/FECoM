@@ -4,10 +4,7 @@ Test
 
 import tensorflow as tf
 import pytest
-# add parent directory to path
-import sys
-sys.path.insert(0,'..')
-from send_request import send_request
+from tool.server.send_request import send_request
 
 @pytest.fixture
 def imports():
@@ -46,7 +43,7 @@ def compiled_model(model, loss_fn):
 def test_mnist_load(imports):
     function_to_run = "tf.keras.datasets.mnist.load_data()"
 
-    resp = send_request(imports, function_to_run, return_result=True)
+    resp = send_request(imports, function_to_run, return_result=True)[function_to_run]
 
     result = resp["return"]
 
@@ -69,24 +66,25 @@ def test_mnist_model_compile(model, loss_fn):
     }
     method_object = model
     
-    return_dict = send_request(imports, function_to_run, function_kwargs=function_kwargs, method_object=method_object, return_result=True)
+    return_dict = send_request(imports, function_to_run, function_kwargs=function_kwargs, method_object=method_object, return_result=True)[function_to_run]
 
     assert return_dict["return"] is None
     assert type(return_dict["method_object"]) == type(model)
 
 def test_mnist_model_train(compiled_model, mnist):
+    epochs = 2
     x_train, y_train, _, _ = mnist
 
     # training
     imports = "import tensorflow as tf"
     function_to_run = "obj.fit(*args,**kwargs)"
     function_args = x_train, y_train
-    function_kwargs = {"epochs": 5}
+    function_kwargs = {"epochs": epochs}
     method_object = compiled_model
     
-    return_dict = send_request(imports, function_to_run, function_args, function_kwargs, method_object=method_object, return_result=True)
+    return_dict = send_request(imports, function_to_run, function_args, function_kwargs, method_object=method_object, return_result=True)[function_to_run]
     test_history = return_dict["return"]
-    real_history = compiled_model.fit(x_train, y_train, epochs=5)
+    real_history = compiled_model.fit(x_train, y_train, epochs=epochs)
 
     assert(type(test_history) == type(real_history))
     assert(test_history.params == real_history.params)
@@ -111,7 +109,7 @@ def test_mnist_model_testing(compiled_model, mnist):
     function_kwargs = {"verbose": 2}
     method_object = compiled_model
     
-    return_dict = send_request(imports, function_to_run, function_args, function_kwargs, method_object=method_object, return_result=True)
+    return_dict = send_request(imports, function_to_run, function_args, function_kwargs, method_object=method_object, return_result=True)[function_to_run]
     test_evaluation = return_dict["return"]
     real_evaluation = compiled_model.evaluate(x_test, y_test, verbose=2)
 

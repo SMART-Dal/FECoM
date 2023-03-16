@@ -1,40 +1,10 @@
 # Server Application
 The server receives client requests to run ML methods and measure their energy consumption.
-Start the server by following the instructions below, wait a minute and then start sending requests from the client.
 
-# Environment Setup
-Install [miniconda3](https://docs.conda.io/en/latest/miniconda.html). Then open the `environment.yml` file in a text editor and change the paths stored as `prefix:` and `variables:` to point at your miniconda installation. If you keep the environment name the same (`tf2`), you will likely only need to replace `/home/tim`.  
-  
-Finally, in this directory, run the following command to create the required TensorFlow environment from the specified `environment.yml` file:  
-```conda env create -f environment.yml```   
-Activate the environemnt:  
-```conda activate tf2```  
-Check if the GPU is setup correctly by running  
-```python3 -c "import tensorflow as tf; print(tf.config.list_physical_devices('GPU'))"```  
-This might give some warnings about missing TensorRT libraries, but as long as the output is `[PhysicalDevice(name='/physical_device:GPU:0', device_type='GPU')]` there is a good chance that the GPU has been setup correctly. Despite this, an issue faced was an error message that `libdevice is required by this HLO module but was not found`. A fix for this is highlighted [here](https://discuss.tensorflow.org/t/cant-find-libdevice-directory-cuda-dir-nvvm-libdevice/11896/5).
-
-# Configuration
-All constants and settings can be found in `config.py`. This file is the single source of truth for all used constants and contains configurations regarding 
-- Server URL and port
-- Stable state checking
-- Energy measurements
-- Temperature measurements
-- Authentication & SSL  
-
-Some of these constants are critical settings for the experiments. 
-
-# Run  
-In the activated venv run this command to start the server. This will also start `perf` and `nvidia-smi` (energy measurement tools) as well as `sensors` (cpu temperature tool, run inside the wrapper `cpu_temperature.py`):  
-```python3 start_measurement.py```  
-  
-The application can be terminated by pressing Control-C.  
-  
-If you would just like to run the server, run:  
-```python3 server.py```
-To test if you have setup everything correctly, go to the `test` directory and follow the instructions in that directory's README file to run all tests. Make sure to do this in a new terminal with the activated environment. 
+Please find instructions for how to run the server in the repository's top-level README.md file.
 
 # Sending Requests
-The API (path specified in `config.py`) expects a POST request with request.data being a pickled FunctionDetails object (defined in `function_details.py`) which has the following attributes:
+The API (path specified in `tool/config.py`) expects a POST request with request.data being a pickled FunctionDetails object (defined in `function_details.py`) which has the following attributes:
 ```
 # read the following as "attribute: type = default_value". Attributes with default values are not required to be specified at initialisation.
 

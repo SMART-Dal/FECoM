@@ -3,7 +3,7 @@ from pathlib import Path
 """
 SERVER URL, PORT & DEBUG CONFIG
 """
-SERVER_MODULE = "server.py"
+SERVER_MODULE = "flask_server.py"
 
 ### SET TO FALSE FOR DEV SETTINGS ON YOUR LOCAL MACHINE ###
 PROD = True
@@ -57,9 +57,11 @@ ENERGY MEASUREMENT CONFIG
 CPU_FILE_SEPARATOR = ';'
 # set count interval for perf & nvidia-smi in milliseconds
 COUNT_INTERVAL_MS = 500
-# path to find energy data (this is also manually written into the energy_measurement.sh script,
-# but imported into the recommended way to start the program: start_measurement.py)
-energy_data_dir = Path("energy_measurement/out")
+# path to find energy data relative to the server package
+# if you want to use this in another package, you could
+# - use os.path.dirname(os.path.abspath(__file__)) to get your current file's absolute path
+# - use a relative path from your current file
+energy_data_dir = Path("out")
 PERF_FILE = energy_data_dir/"perf.txt"
 NVIDIA_SMI_FILE = energy_data_dir/"nvidia_smi.txt"
 # store start times here
@@ -94,7 +96,3 @@ USERS = {
 # HTTPS certificate relative paths from server directory
 CA_CERT_PATH = Path("certificates/cert.pem") # public key
 CA_KEY_PATH = Path("certificates/key.pem") # private key
-
-# experiment dataset path
-EXPERIMENT_TAG = 'experiment-1'
-EXPERIMENT_DIR = '/home/srajput/projects/def-tusharma/srajput/GreenAI-extension/client_agent/energy-dataset/'
