@@ -6,7 +6,7 @@ This is the client agent that takes a python program along with list of librarie
 
 <!-- Read a bit about measuring Software Energy Consumption and how it is done in Linux using the Profiling Tool known as [Perf](https://perf.wiki.kernel.org/index.php/Main_Page). -->
 
-The `~/data/code-dataset` directory (`~/data` indicates that data is in the top-level directory of this repository) contains the dataset for which we want to calculate the energy consumption for. Make sure it has two subdirectories:
+The `~/data/code-dataset` directory (`~/data` indicates that `data` is in the top-level directory of this repository) contains the dataset for which we want to calculate the energy consumption for. Make sure it has two subdirectories:
 - `Repositories`: this contains the client projects
 - `Patched-Repositories`: this will contain the patched version of the same client projects after running the patching script.  
 If needed, create these two subdirectories using `mkdir`.
