@@ -97,4 +97,4 @@ CA_KEY_PATH = Path("certificates/key.pem") # private key
 
 # experiment dataset path
 EXPERIMENT_TAG = 'experiment-1'
-EXPERIMENT_DIR = '../client_agent/energy-dataset/'
+EXPERIMENT_DIR = '/home/srajput/projects/def-tusharma/srajput/GreenAI-extension/client_agent/energy-dataset/'

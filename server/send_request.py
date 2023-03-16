@@ -30,9 +30,6 @@ def store_response(response,EXPERIMENT_FILE_PATH):
                 f.write(json.dumps(existing_data))
     except Exception as e:
         print(f"Error opening file: {e}")
-        existing_data = []
-            with open(EXPERIMENT_FILE_PATH, 'w+') as f:
-                f.write(json.dumps(existing_data))
         return
 
     if response:
@@ -45,6 +42,7 @@ def store_response(response,EXPERIMENT_FILE_PATH):
                 json_data = json.dumps(existing_data) # Convert to JSON string
                 print("Type of json data", type(json_data))
                 f.write(json_data)
+                print(f"New file created: {EXPERIMENT_FILE_PATH}")
                 print("Data written to file")
         except json.decoder.JSONDecodeError as e:
             print(f"Error decoding JSON: {e}")
