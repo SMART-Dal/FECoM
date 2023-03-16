@@ -97,6 +97,5 @@ CA_KEY_PATH = Path("certificates/key.pem") # private key
 
 # experiment dataset path
 EXPERIMENT_TAG = 'experiment-1'
-EXPERIMENT_PROJECT = 'audio'
-EXPERIMENT_DIR = './energy-dataset/' + EXPERIMENT_TAG + '/' + EXPERIMENT_PROJECT
-EXPERIMENT_FILE_PATH = EXPERIMENT_DIR + '/' + EXPERIMENT_PROJECT + EXPERIMENT_TAG + '-' + 'energy' +'.json'
+EXPERIMENT_DIR = '../client_agent/energy-dataset/'
+EXPERIMENT_FILE_PATH = ''
