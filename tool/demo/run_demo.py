@@ -69,6 +69,23 @@ def convert_json_to_df(results):
     gpu_df = pd.read_json(results["energy_data"]["gpu"], orient="split")
     return cpu_df, ram_df, gpu_df
 
+def convert_timeout_json_to_df(results):
+    cpu_df = pd.read_json(results["cpu"], orient="split")
+    ram_df = pd.read_json(results["ram"], orient="split")
+    gpu_df = pd.read_json(results["gpu"], orient="split")
+    return cpu_df, ram_df, gpu_df
+
+"""
+DEMO METHODS
+"""
+def demo_timeout():
+    # uncomment to also send a request
+    # results = run_mnist_model_train(max_wait_secs=30, wait_after_run_secs=20)
+    with open('timeout_energy_data.json', 'r') as f:
+        results = json.load(f)
+
+    cpu_df, ram_df, gpu_df = convert_timeout_json_to_df(results)
+
 """
 DEMO METHODS
 """
@@ -77,11 +94,8 @@ def demo_timeout(run=True):
         resp = run_mnist_model_train(max_wait_secs=10, wait_after_run_secs=20)
     with open('timeout_energy_data.json', 'r') as f:
         results = json.load(f)
-    
-    # TODO: remove this
-    # results = {"energy_data": data}
 
-    cpu_df, ram_df, gpu_df = convert_json_to_df(results)
+    cpu_df, ram_df, gpu_df = convert_timeout_json_to_df(results)
     cpu_stdv_mean = cpu_df["energy (J)"].std()/cpu_df["energy (J)"].mean()
     ram_stdv_mean = ram_df["energy (J)"].std()/ram_df["energy (J)"].mean()
     gpu_stdv_mean = gpu_df["power_draw (W)"].std()/gpu_df["power_draw (W)"].mean()
@@ -159,6 +173,6 @@ def demo_start_end_time_graphing(max_wait_secs, wait_after_run_secs, epochs, res
     plt.savefig('energy_plot.png', dpi=200)
 
 if __name__ == "__main__":
-    with open('methodcall_energy.json', 'r') as f:
-        results = json.load(f)
-    demo_start_end_time_graphing(max_wait_secs=60, wait_after_run_secs=20, epochs=5, results=results)
+    # with open('methodcall_energy.json', 'r') as f:
+    #     results = json.load(f)
+    demo_start_end_time_graphing(max_wait_secs=60, wait_after_run_secs=20, epochs=5) # results=results
