@@ -30,6 +30,9 @@ def store_response(response,EXPERIMENT_FILE_PATH):
                 f.write(json.dumps(existing_data))
     except Exception as e:
         print(f"Error opening file: {e}")
+        existing_data = []
+            with open(EXPERIMENT_FILE_PATH, 'w+') as f:
+                f.write(json.dumps(existing_data))
         return
 
     if response:
