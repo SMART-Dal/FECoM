@@ -1,7 +1,6 @@
 import dill
 import requests
-from config import URL, DEBUG, EXPERIMENT_FILE_PATH
-# from clientconfig import EXPERIMENT_FILE_PATH
+from config import URL, DEBUG
 from function_details import FunctionDetails
 import sys
 sys.path.insert(0,'..')
@@ -13,7 +12,7 @@ import json
 import concurrent.futures
 
 
-def store_response(response):
+def store_response(response,EXPERIMENT_FILE_PATH):
     if DEBUG:
         print(f"Result: {response}")
 
@@ -58,7 +57,7 @@ def store_response(response):
 
 # for testing purposes
 # TODO how can we best pass the username and password to this function? Write a wrapper?
-def send_request(imports: str, function_to_run: str, function_args: list = None, function_kwargs: dict = None, max_wait_secs: int = 0, wait_after_run_secs: int = 0, return_result: bool = False, method_object = None, custom_class: str = None, username: str = "tim9220", password: str = "qQ32XALjF9JqFh!vF3xY"):
+def send_request(imports: str, function_to_run: str, function_args: list = None, function_kwargs: dict = None, max_wait_secs: int = 0, wait_after_run_secs: int = 0, return_result: bool = False, method_object = None, custom_class: str = None, username: str = "tim9220", password: str = "qQ32XALjF9JqFh!vF3xY",experiment_file_path=''):
     """
         Send a request to execute any function to the server and return specified data.
         If return_result=False, the returned object is JSON of the following format:
@@ -142,5 +141,5 @@ def send_request(imports: str, function_to_run: str, function_args: list = None,
         return dill.loads(run_resp.content)
     else:
         # typically we expect json data
-        store_response(run_resp.content)
+        store_response(run_resp.content,experiment_file_path)
         return run_resp.json()

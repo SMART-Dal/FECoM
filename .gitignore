@@ -3,3 +3,5 @@ client_agent/data
 client_agent/__pycache__
 .idea/*
 client_agent/code-dataset/*
+ENV/*
+.ipynb_checkpoints/
