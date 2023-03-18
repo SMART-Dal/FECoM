@@ -8,7 +8,7 @@ import json
 from tool.server.server_config import URL, DEBUG
 from tool.server.function_details import FunctionDetails
 
-# TODO requires drastic refactoring
+# TODO maybe requires some refactoring
 def store_response(response, experiment_file_path):
     if DEBUG:
         print(f"Result: {response}")
