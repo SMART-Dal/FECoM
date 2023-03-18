@@ -115,7 +115,7 @@ def temperature_is_low(data: List[int], maximum_temperature: int):
     return is_low
 
 
-def server_is_stable(max_wait_secs: int) -> bool:
+def server_is_stable(max_wait_secs: int, wait_per_loop_s: int, tolerance: float, check_last_n_points: int, cpu_max_temp: int, gpu_max_temp: int) -> bool:
     """
     Return True only when the system's energy consumption is stable.
     Settings that determine what "stable" means can be found in config.py.
@@ -126,17 +126,17 @@ def server_is_stable(max_wait_secs: int) -> bool:
 
     # in each loop iteration, load new data, calculate statistics and check if the energy is stable.
     # try this for the specified number of seconds
-    for _ in range(int(max_wait_secs/WAIT_PER_STABLE_CHECK_LOOP_S)):
-        print(f"Waiting {WAIT_PER_STABLE_CHECK_LOOP_S} seconds to reach stable state.\n")
-        time.sleep(WAIT_PER_STABLE_CHECK_LOOP_S)
+    for _ in range(int(max_wait_secs/wait_per_loop_s)):
+        print(f"Waiting {wait_per_loop_s} seconds to reach stable state.\n")
+        time.sleep(wait_per_loop_s)
 
-        cpu_energies, ram_energies, gpu_energies, cpu_temperatures, gpu_temperatures = load_last_n_cpu_ram_gpu(CHECK_LAST_N_POINTS, PERF_FILE, NVIDIA_SMI_FILE, CPU_TEMPERATURE_FILE)
+        cpu_energies, ram_energies, gpu_energies, cpu_temperatures, gpu_temperatures = load_last_n_cpu_ram_gpu(check_last_n_points, PERF_FILE, NVIDIA_SMI_FILE, CPU_TEMPERATURE_FILE)
         if (
-            temperature_is_low(gpu_temperatures, GPU_MAXIMUM_TEMPERATURE) and
-            energy_is_stable(gpu_energies, STABLE_CHECK_TOLERANCE, GPU_STD_TO_MEAN) and
-            energy_is_stable(cpu_energies, STABLE_CHECK_TOLERANCE, CPU_STD_TO_MEAN) and
-            energy_is_stable(ram_energies, STABLE_CHECK_TOLERANCE, RAM_STD_TO_MEAN) and
-            temperature_is_low(cpu_temperatures, CPU_MAXIMUM_TEMPERATURE)
+            temperature_is_low(gpu_temperatures, gpu_max_temp) and
+            energy_is_stable(gpu_energies, tolerance, GPU_STD_TO_MEAN) and
+            energy_is_stable(cpu_energies, tolerance, CPU_STD_TO_MEAN) and
+            energy_is_stable(ram_energies, tolerance, RAM_STD_TO_MEAN) and
+            temperature_is_low(cpu_temperatures, cpu_max_temp)
         ):
             print("Server is stable.")
             return True
@@ -193,7 +193,7 @@ def run_function(imports: str, function_to_run: str, obj: object, args: list, kw
 
     # (2) continue only when the system has reached a stable state of energy consumption
     begin_stable_check_time = time.time_ns()
-    if not server_is_stable(max_wait_secs):
+    if not server_is_stable(max_wait_secs, WAIT_PER_STABLE_CHECK_LOOP_S, STABLE_CHECK_TOLERANCE, CHECK_LAST_N_POINTS, CPU_MAXIMUM_TEMPERATURE, GPU_MAXIMUM_TEMPERATURE):
         raise TimeoutError(f"System could not reach a stable state within {max_wait_secs} seconds")
 
     # (3) evaluate the function return. Mark the start & end times in the files and save their exact values.
@@ -216,6 +216,7 @@ def run_function(imports: str, function_to_run: str, obj: object, args: list, kw
     energy_data, df_gpu = get_energy_data()
     cpu_temperatures = get_cpu_temperature_data()
 
+    # "normalise" nvidia-smi start/end times such that the first value in the gpu energy data has timestamp 0
     start_time_nvidia_normalised = start_time_nvidia - df_gpu["timestamp"].iloc[0]
     end_time_nvidia_normalised = end_time_nvidia - df_gpu["timestamp"].iloc[0]
 
@@ -240,13 +241,24 @@ def run_function(imports: str, function_to_run: str, obj: object, args: list, kw
         "begin_stable_check_time": begin_stable_check_time
     }
 
-    # (6) return the energy data, times and status
+    # (6) collect all relevant settings
+    settings = {
+        "max_wait_s": max_wait_secs,
+        "wait_after_run_s": wait_after_run_secs,
+        "wait_per_stable_check_loop_s": WAIT_PER_STABLE_CHECK_LOOP_S,
+        "tolerance": STABLE_CHECK_TOLERANCE,
+        "check_last_n_points": CHECK_LAST_N_POINTS,
+        "cpu_max_temp": CPU_MAXIMUM_TEMPERATURE,
+        "gpu_max_temp": GPU_MAXIMUM_TEMPERATURE 
+    }
+
+    # (7) return the energy data, times, temperatures and settings
     return_dict = {
         "energy_data": energy_data,
         "times": times,
-        "cpu_temperatures": cpu_temperatures
+        "cpu_temperatures": cpu_temperatures,
+        "settings": settings
     }
-    # TODO From the meeting: add Total Consumption (still needed?)
 
     if return_result:
         return_dict["return"] = func_return

@@ -46,6 +46,7 @@ ram_energy_mean = 3.503457
 gpu_power_stdv = 0.190666
 gpu_power_mean = 21.077714
 
+# Do not change these between experiments!
 CPU_STD_TO_MEAN = 0.05 # 0.0454744
 RAM_STD_TO_MEAN = 0.03 # 0.0303726
 GPU_STD_TO_MEAN = 0.01 # 0.0090459
