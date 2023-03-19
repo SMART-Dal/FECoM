@@ -1,7 +1,14 @@
 import numpy as np
 import tensorflow as tf
+import requests
 
 from tool.server.send_request import send_request
+from tool.server.server_config import SERVER_HOST, SERVER_PORT
+
+def test_server_is_deployed():
+    url = "https://"+SERVER_HOST+":"+str(SERVER_PORT)+"/"
+    response = requests.get(url)
+    assert(response.content=='<h1>Application Deployed!</h1>')
 
 def test_matmul_request():
     arr1 = np.random.rand(100,100)
