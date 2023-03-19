@@ -1,21 +1,27 @@
-client_agent/sample.py
-client_agent/data
-client_agent/__pycache__
+# general
+venv
+__pycache__
+.DS_Store
+
+# tests
+tests/test_data
+.pytest_cache
+
+# client
+tool/client/sample.py
+tool/client/data
 .idea/*
 data/code-dataset/*
 ENV/*
 .ipynb_checkpoints/
-tests/test_data
-
-# server
-venv
-__pycache__
-.DS_Store
-.pytest_cache
-*.pth
 patched-code/*
 Repositories/*
+Patched-Repositories/*
+
+# server
+*.pth
 flask.log
+tool/server/out/*
 
 # package
 *.egg-info
