@@ -29,7 +29,7 @@ DEBUG = True
 STABLE STATE CONFIG
 """
 # re-calculate statistics every x seconds when checking stable state
-WAIT_PER_STABLE_CHECK_LOOP_S = 15
+WAIT_PER_STABLE_CHECK_LOOP_S = 20
 
 # only consider the last n points, with perf stat/nvidia-smi interval of 0.5secs this corresponds to the last 10 seconds
 CHECK_LAST_N_POINTS = 20
@@ -76,7 +76,7 @@ TEMPERATURE MEASUREMENT CONFIG
 CPU_TEMPERATURE_MODULE = "cpu_temperature.py"
 # set cpu temperature measurement interval for sensors in seconds
 # the actual interval will be a few milliseconds greater, due to processing time
-CPU_TEMPERATURE_INTERVAL_S = 1
+CPU_TEMPERATURE_INTERVAL_S = 5
 # store CPU temperatures in this file, populated by cpu_temperature.py
 CPU_TEMPERATURE_FILE = energy_data_dir/"cpu_temperature.txt"
 # the maximum average temperature in degrees Celsius that we allow the CPU & GPU to be before executing a method (to determine stable state)

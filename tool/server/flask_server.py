@@ -22,7 +22,7 @@ from tool.server.server_config import PERF_FILE, NVIDIA_SMI_FILE, EXECUTION_LOG_
 # stable state constants
 from tool.server.server_config import CPU_STD_TO_MEAN, RAM_STD_TO_MEAN, GPU_STD_TO_MEAN, CPU_MAXIMUM_TEMPERATURE, GPU_MAXIMUM_TEMPERATURE
 # stable state settings
-from tool.server.server_config import WAIT_PER_STABLE_CHECK_LOOP_S, CHECK_LAST_N_POINTS, STABLE_CHECK_TOLERANCE
+from tool.server.server_config import WAIT_PER_STABLE_CHECK_LOOP_S, CHECK_LAST_N_POINTS, STABLE_CHECK_TOLERANCE, CPU_TEMPERATURE_INTERVAL_S
 from tool.server.function_details import FunctionDetails # shown unused but still required since this is the class used for sending function details to the server
 from tool.server.measurement_parse import parse_nvidia_smi, parse_perf, parse_cpu_temperature
 
@@ -77,7 +77,7 @@ def load_last_n_cpu_ram_gpu(n: int, perf_file: Path, nvidia_smi_file: Path, cpu_
     # load CPU temperature data
     cpu_temperature = []
     with open(cpu_temperature_file, 'r') as f:
-        cpu_temperature = f.read().splitlines(True)[-n:]
+        cpu_temperature = f.read().splitlines(True)[int(-n/CPU_TEMPERATURE_INTERVAL_S):]
 
     # generate lists of data
     last_n_cpu_energies = [float(line.strip(' ').split(CPU_FILE_SEPARATOR)[1]) for line in cpu_ram[2::2][-n:]]
