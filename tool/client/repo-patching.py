@@ -58,6 +58,15 @@ def get_python_scripts_path(directory):
             else:
                 continue
 
+    # Create copies of each file with suffix 'original' and 'patched'
+    for i, file_path in enumerate(python_scripts_path):
+        base_path, ext = os.path.splitext(file_path)
+        original_path = f"{base_path}_original{ext}"
+        patched_path = f"{base_path}_patched{ext}"
+        os.rename(file_path, original_path)
+        shutil.copy2(original_path, patched_path)
+        python_scripts_path[i] = patched_path
+        
     return python_scripts_path
 
 

@@ -11,12 +11,10 @@ tests/test_data
 tool/client/sample.py
 tool/client/data
 .idea/*
-data/code-dataset/*
 ENV/*
 .ipynb_checkpoints/
 patched-code/*
 Repositories/*
-Patched-Repositories/*
 
 # server
 *.pth

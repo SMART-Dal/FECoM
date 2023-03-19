@@ -30,9 +30,6 @@ code_dir_tim = data_path_tim / code_dataset
 # directory where to find patched code
 CODE_DIR = code_dir_tim
 
-# TODO are these two paths still needed?
-# CLIENT_INPUT_DIR = Path('./code-dataset/input-code')
-# CLIENT_OUTPUT_DIR = Path('./code-dataset/patched-code/')
 PATCHING_SCRIPT_PATH = Path('script_patcher.py')
 code_dataset_path = Path('../../data/code-dataset')
 SOURCE_REPO_DIR = code_dataset_path / 'Repositories'
