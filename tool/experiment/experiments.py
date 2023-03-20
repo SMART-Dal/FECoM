@@ -46,13 +46,13 @@ class ProjectLevelExperiment(Experiment):
     def __init__(self, project: str, experiment_dir: Path, code_dir: Path, max_wait_secs: int, wait_after_run_secs: int):
         # raise NotImplementedError("This has not been tested properly yet. Test before using.")
         super().__init__("project-level", project, experiment_dir, code_dir, max_wait_secs, wait_after_run_secs)
-        self.__code_file = self.code_dir / f"{self.project}_original.py"
+        self.code_file = self.code_dir / f"{self.project}_original.py"
         self.__code_string = None
 
     def run(self):
         # have we already read the code file?
         if self.__code_string is None:
-            self.__code_string = self.read_project_file(self.__code_file)
+            self.__code_string = self.read_project_file(self.code_file)
 
         send_request(
             imports="",

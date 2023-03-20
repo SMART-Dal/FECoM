@@ -97,7 +97,7 @@ def send_request(imports: str, function_to_run: str, function_args: list = None,
     )
 
     if DEBUG:
-        print(f"Sending {function_to_run} request to {URL}")
+        print(f"Sending {function_to_run[:100]} request to {URL}")
         print("######SIZES######")
         print(f"Data size of function_args: {len(dill.dumps(function_args))}")
         print(f"Data size of function_kwargs: {len(dill.dumps(function_kwargs))}")
