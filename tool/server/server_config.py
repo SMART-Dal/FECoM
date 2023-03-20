@@ -77,7 +77,7 @@ TEMPERATURE MEASUREMENT CONFIG
 CPU_TEMPERATURE_MODULE = "cpu_temperature.py"
 # set cpu temperature measurement interval for sensors in seconds
 # the actual interval will be a few milliseconds greater, due to processing time
-CPU_TEMPERATURE_INTERVAL_S = 5
+CPU_TEMPERATURE_INTERVAL_S = 1
 # store CPU temperatures in this file, populated by cpu_temperature.py
 CPU_TEMPERATURE_FILE = energy_data_dir/"cpu_temperature.txt"
 # the maximum average temperature in degrees Celsius that we allow the CPU & GPU to be before executing a method (to determine stable state)

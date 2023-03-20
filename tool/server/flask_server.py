@@ -3,17 +3,19 @@ Server to receive client requests to run ML methods and measure energy.
 """
 
 import time
-from datetime import datetime
 import os
 import logging
-import dill as pickle
+import atexit
+import json
 from statistics import mean, stdev
 from pathlib import Path
-import json
+from datetime import datetime
 from typing import List
+from werkzeug.security import check_password_hash
+import dill as pickle
 from flask import Flask, Response, request
 from flask_httpauth import HTTPBasicAuth
-from werkzeug.security import check_password_hash
+from tool.server.start_measurement import start_sensors, quit_process, unregister_and_quit_process
 
 # server settings
 from tool.server.server_config import API_PATH, DEBUG, SERVER_HOST, SERVER_PORT, USERS, CA_CERT_PATH, CA_KEY_PATH
@@ -34,6 +36,10 @@ auth = HTTPBasicAuth()
 logging.basicConfig(filename='flask.log', level=logging.DEBUG,
                     format='%(asctime)s %(levelname)s %(name)s %(message)s')
 
+
+"""
+Authentication
+"""
 
 @auth.verify_password
 def verify_password(username, password):
@@ -56,10 +62,37 @@ def auth_error(status_code):
     )
     return response
 
+"""
+Energy & temperature data loaders for stable check
+"""
 
-def load_last_n_cpu_ram_gpu(n: int, perf_file: Path, nvidia_smi_file: Path, cpu_temperature_file: Path) -> tuple:
+def load_last_n_cpu_temperatures(n: int, cpu_temperature_file: Path) -> list:
     """
-    Helper method for is_stable_state to load the last n energy data points
+    Helper method for cpu_temperature_is_low to load the last n CPU temperature data points.
+    """
+    cpu_temperature = []
+    with open(cpu_temperature_file, 'r') as f:
+        cpu_temperature = f.read().splitlines(True)[-n:]
+    
+    # Note: CPU temperature reading frequency is lower/different to that of perf & nvidia-smi. Check config.py for the value.
+    last_n_cpu_temperatures = [float(line.strip(' ').split(CPU_FILE_SEPARATOR)[1]) for line in cpu_temperature]
+    return last_n_cpu_temperatures
+
+# load last n GPU data points from nvidia-smi file, used for GPU temperature & energy
+def load_last_n_gpu_lines(n: int, nvidia_smi_file: Path):
+    with open(nvidia_smi_file, 'r') as f:
+        return f.read().splitlines(True)[-n:]
+
+
+def load_last_n_gpu_temperatures(n: int, nvidia_smi_file: Path) -> list:
+    gpu = load_last_n_gpu_lines(n, nvidia_smi_file)
+    last_n_gpu_temperatures = [int(line.split(' ')[4]) for line in gpu]
+    return last_n_gpu_temperatures
+
+
+def load_last_n_cpu_ram_gpu_energies(n: int, perf_file: Path, nvidia_smi_file: Path) -> tuple:
+    """
+    Helper method for server_is_stable_check to load the last n energy data points
     for CPU, RAM and GPU (in this order)
     """
 
@@ -68,33 +101,19 @@ def load_last_n_cpu_ram_gpu(n: int, perf_file: Path, nvidia_smi_file: Path, cpu_
     with open(perf_file, 'r') as f:
         # get all lines initially, since otherwise we cannot be sure which values are RAM and which are CPU
         cpu_ram = f.read().splitlines(True)
-
-    # load GPU data
-    gpu = []
-    with open(nvidia_smi_file, 'r') as f:
-        gpu = f.read().splitlines(True)[-n:]
     
-    # load CPU temperature data
-    cpu_temperature = []
-    with open(cpu_temperature_file, 'r') as f:
-        cpu_temperature = f.read().splitlines(True)[int(-n/CPU_TEMPERATURE_INTERVAL_S):]
+    gpu = load_last_n_gpu_lines(n, nvidia_smi_file)
 
     # generate lists of data
     last_n_cpu_energies = [float(line.strip(' ').split(CPU_FILE_SEPARATOR)[1]) for line in cpu_ram[2::2][-n:]]
     last_n_ram_energies = [float(line.strip(' ').split(CPU_FILE_SEPARATOR)[1]) for line in cpu_ram[3::2][-n:]]
-    # create two lists from the nvidia-smi file, one with energy readings and one with temperatures
-    last_n_gpu_energies = []
-    last_n_gpu_temperatures = []
-    for line in gpu:
-        split_line = line.split(' ')
-        last_n_gpu_energies.append(float(split_line[2]))
-        last_n_gpu_temperatures.append(int(split_line[4]))
+    last_n_gpu_energies = [float(line.split(' ')[2]) for line in gpu]
 
-    # Note: CPU temperature reading frequency is lower/different to that of perf & nvidia-smi. Check config.py for the value.
-    last_n_cpu_temperatures = [float(line.strip(' ').split(CPU_FILE_SEPARATOR)[1]) for line in cpu_temperature]
+    return last_n_cpu_energies, last_n_ram_energies, last_n_gpu_energies
 
-    return last_n_cpu_energies, last_n_ram_energies, last_n_gpu_energies, last_n_cpu_temperatures, last_n_gpu_temperatures
-
+"""
+Stable check: temperature and energy
+"""
 
 # compare the energy data's standard deviation/mean ratio to that found in a stable state and allow for a tolerance
 def energy_is_stable(data: List[float], tolerance: float, stable_std_mean_ratio: float) -> bool:
@@ -115,10 +134,45 @@ def temperature_is_low(data: List[int], maximum_temperature: int):
     return is_low
 
 
-def server_is_stable(max_wait_secs: int, wait_per_loop_s: int, tolerance: float, check_last_n_points: int, cpu_max_temp: int, gpu_max_temp: int) -> bool:
+def server_is_stable_check(check_last_n_points: int, tolerance: float) -> bool:
     """
-    Return True only when the system's energy consumption is stable.
-    Settings that determine what "stable" means can be found in config.py.
+    Return True if all the energy data series are stable
+    Settings that determine what "stable" means can be found in server_config.py.
+    """
+    cpu_energies, ram_energies, gpu_energies = load_last_n_cpu_ram_gpu_energies(check_last_n_points, PERF_FILE, NVIDIA_SMI_FILE)
+    if (
+        energy_is_stable(gpu_energies, tolerance, GPU_STD_TO_MEAN) and
+        energy_is_stable(cpu_energies, tolerance, CPU_STD_TO_MEAN) and
+        energy_is_stable(ram_energies, tolerance, RAM_STD_TO_MEAN)
+    ):
+        print("Success: Server is stable.")
+        return True
+    else:
+        print("Server is not stable yet.")
+        return False
+
+
+def temperature_is_low_check(check_last_n_points: int, cpu_max_temp: int, gpu_max_temp: int) -> bool:
+    """
+    Tet the latest CPU & GPU temperatures and check that they are below threshold.
+    Return True if both are below threshold, else return False. Settings can be found in server_config.py.
+    """
+    cpu_temperatures = load_last_n_cpu_temperatures(check_last_n_points, CPU_TEMPERATURE_FILE)
+    gpu_temperatures = load_last_n_gpu_temperatures(check_last_n_points, NVIDIA_SMI_FILE)
+    if (
+        temperature_is_low(gpu_temperatures, gpu_max_temp) and
+        temperature_is_low(cpu_temperatures, cpu_max_temp)
+    ):
+        print("Success: temperature is below threshold.")
+        return True
+    else:
+        print("Temperature is too high.")
+        return False 
+
+
+def run_check_loop(max_wait_secs: int, wait_per_loop_s: int, check_name: str, check_function: callable, *args):
+    """
+    Return True if the given check_function returns True at some point, else return False.
     """
     # For testing purposes
     if max_wait_secs == 0:
@@ -127,24 +181,16 @@ def server_is_stable(max_wait_secs: int, wait_per_loop_s: int, tolerance: float,
     # in each loop iteration, load new data, calculate statistics and check if the energy is stable.
     # try this for the specified number of seconds
     for _ in range(int(max_wait_secs/wait_per_loop_s)):
-        print(f"Waiting {wait_per_loop_s} seconds to reach stable state.\n")
+        print(f"Waiting {wait_per_loop_s} seconds to reach {check_name}.\n")
         time.sleep(wait_per_loop_s)
-
-        cpu_energies, ram_energies, gpu_energies, cpu_temperatures, gpu_temperatures = load_last_n_cpu_ram_gpu(check_last_n_points, PERF_FILE, NVIDIA_SMI_FILE, CPU_TEMPERATURE_FILE)
-        if (
-            temperature_is_low(gpu_temperatures, gpu_max_temp) and
-            energy_is_stable(gpu_energies, tolerance, GPU_STD_TO_MEAN) and
-            energy_is_stable(cpu_energies, tolerance, CPU_STD_TO_MEAN) and
-            energy_is_stable(ram_energies, tolerance, RAM_STD_TO_MEAN) and
-            temperature_is_low(cpu_temperatures, cpu_max_temp)
-        ):
-            print("Server is stable.")
+        if check_function(*args):
             return True
-        else:
-            print("Server is not stable yet.")
-            continue
+        
     return False
 
+"""
+Energy & temperature data loaders for the server response
+"""
 
 def get_current_times(perf_file: Path, nvidia_smi_file: Path):
     with open(perf_file, 'r') as f:
@@ -177,6 +223,10 @@ def get_cpu_temperature_data():
     return df_cpu_temperature.to_json(orient="split")
 
 
+"""
+Core functions
+"""
+
 def run_function(imports: str, function_to_run: str, obj: object, args: list, kwargs: dict, max_wait_secs: int, wait_after_run_secs: int, return_result: bool):
     """
     Run the method given by function_to_run with the given arguments (args) and keyword arguments (kwargs).
@@ -186,15 +236,27 @@ def run_function(imports: str, function_to_run: str, obj: object, args: list, kw
     """
     # WARNING: potential security risk from exec and eval statements
 
+    # (0) start the cpu temperature measurement process
+    sensors = start_sensors()
+    atexit.register(quit_process, sensors, "sensors")
+
     # (1) import relevant modules
     import_time = time.time_ns()
     app.logger.info("Imports value: %s", imports)
     exec(imports)
 
-    # (2) continue only when the system has reached a stable state of energy consumption
+    # (2) continue only when CPU & GPU temperatures are below threshold and the system has reached a stable state of energy consumption
+
+    # (2a) check that temperatures are below threshold, then quit the CPU temperature measurement process
+    if not run_check_loop(max_wait_secs, WAIT_PER_STABLE_CHECK_LOOP_S, "low temperature", temperature_is_low_check, CHECK_LAST_N_POINTS, CPU_MAXIMUM_TEMPERATURE, GPU_MAXIMUM_TEMPERATURE):
+        unregister_and_quit_process(sensors, "sensors")
+        raise TimeoutError(f"CPU could not cool down to {CPU_MAXIMUM_TEMPERATURE} within {max_wait_secs} seconds")
+    unregister_and_quit_process(sensors, "sensors")
+
+    # (2b) check that the CPU, RAM and GPU energy consumption is stable
     begin_stable_check_time = time.time_ns()
-    if not server_is_stable(max_wait_secs, WAIT_PER_STABLE_CHECK_LOOP_S, STABLE_CHECK_TOLERANCE, CHECK_LAST_N_POINTS, CPU_MAXIMUM_TEMPERATURE, GPU_MAXIMUM_TEMPERATURE):
-        raise TimeoutError(f"System could not reach a stable state within {max_wait_secs} seconds")
+    if not run_check_loop(max_wait_secs, WAIT_PER_STABLE_CHECK_LOOP_S, "stable state", server_is_stable_check, CHECK_LAST_N_POINTS, STABLE_CHECK_TOLERANCE):
+        raise TimeoutError(f"Server could not reach a stable state within {max_wait_secs} seconds")
 
     # (3) evaluate the function return. Mark the start & end times in the files and save their exact values.
     # TODO potentially correct here for the small time offset created by fetching the times for the files. We can use the server times for this.

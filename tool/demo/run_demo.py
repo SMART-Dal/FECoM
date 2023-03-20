@@ -175,4 +175,4 @@ def demo_start_end_time_graphing(max_wait_secs, wait_after_run_secs, epochs, res
 if __name__ == "__main__":
     # with open('methodcall_energy.json', 'r') as f:
     #     results = json.load(f)
-    demo_start_end_time_graphing(max_wait_secs=60, wait_after_run_secs=20, epochs=5) # results=results
+    demo_start_end_time_graphing(max_wait_secs=120, wait_after_run_secs=20, epochs=5) # results=results
