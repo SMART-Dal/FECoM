@@ -41,7 +41,7 @@ class ProjectLevelExperiment(Experiment):
     def __init__(self, project: str, experiment_dir: Path, code_dir: Path):
         raise NotImplementedError("This has not been tested properly yet. Test before using.")
         super().__init__("project-level", project, experiment_dir, code_dir)
-        self.__code_file = self.code_dir / f"{self.project}-unpatched.py"
+        self.__code_file = self.code_dir / f"{self.project}_original.py"
         self.__code_string = None
 
     def run(self, max_wait_secs: int, wait_after_run_secs: int):
@@ -68,6 +68,11 @@ class ProjectLevelExperiment(Experiment):
             code_string = f.read()
         return code_string
 
+class MethodLevelExperiment(Experiment):
+    def __init__(self, project: str, experiment_dir: Path, code_dir: Path):
+        # raise NotImplementedError("This has not been tested properly yet. Test before using.").
+        super().__init__("method-level", project, experiment_dir, code_dir)
+        self.__code_file = self.code_dir / f"{self.project}_patched.py"
 
 if __name__ == "__main__":
     pass
