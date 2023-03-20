@@ -227,7 +227,7 @@ def get_cpu_temperature_data():
 Core functions
 """
 
-def run_function(imports: str, function_to_run: str, obj: object, args: list, kwargs: dict, max_wait_secs: int, wait_after_run_secs: int, return_result: bool):
+def run_function(imports: str, function_to_run: str, obj: object, args: list, kwargs: dict, max_wait_secs: int, wait_after_run_secs: int, return_result: bool, exec_not_eval: bool):
     """
     Run the method given by function_to_run with the given arguments (args) and keyword arguments (kwargs).
     These two variables appear to not be used, however, they are used when evaluating the function_to_run
@@ -263,7 +263,10 @@ def run_function(imports: str, function_to_run: str, obj: object, args: list, kw
     # (old) write_start_or_end_symbol(PERF_FILE, NVIDIA_SMI_FILE, start=True)
     start_time_perf, start_time_nvidia = get_current_times(PERF_FILE, NVIDIA_SMI_FILE)
     start_time_server = time.time_ns()
-    func_return = eval(function_to_run)
+    if exec_not_eval:
+        exec(function_to_run)
+    else:
+        func_return = eval(function_to_run)
     end_time_server = time.time_ns()
     end_time_perf, end_time_nvidia = get_current_times(PERF_FILE, NVIDIA_SMI_FILE)
     # (old) write_start_or_end_symbol(PERF_FILE, NVIDIA_SMI_FILE, start=False)
@@ -364,7 +367,8 @@ def run_function_and_return_result():
             function_details.kwargs,
             function_details.max_wait_secs,
             function_details.wait_after_run_secs,
-            function_details.return_result
+            function_details.return_result,
+            function_details.exec_not_eval
         )
         status = 200
     # TODO format the output dict the same way as in run_function

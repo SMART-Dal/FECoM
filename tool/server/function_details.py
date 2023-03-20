@@ -9,7 +9,7 @@ class FunctionDetails():
     method_object will remain serialised until the getter is called such
     that the custom class definition can be loaded first onto the server.
     """
-    def __init__(self, imports: str, function_to_run: str, args: list = None, kwargs: dict = None, max_wait_secs: int = 0, wait_after_run_secs: int = 0, return_result: bool = False, method_object: object = None, custom_class: str = None, module_name: str = None):
+    def __init__(self, imports: str, function_to_run: str, args: list = None, kwargs: dict = None, max_wait_secs: int = 0, wait_after_run_secs: int = 0, return_result: bool = False, method_object: object = None, custom_class: str = None, module_name: str = None, exec_not_eval: bool = False):
         # basic function details
         self.imports = imports
         self.function_to_run = function_to_run
@@ -20,6 +20,7 @@ class FunctionDetails():
         self.max_wait_secs = max_wait_secs
         self.wait_after_run_secs = wait_after_run_secs
         self.return_result = return_result # parameter for testing purposes
+        self.exec_not_eval = exec_not_eval # execute function_to_run, do not evaluate (useful for passing more than just a single function call)
         
         # required for running a method on an object
         self.__method_object = pickle.dumps(method_object)

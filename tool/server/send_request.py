@@ -55,7 +55,7 @@ def store_response(response, experiment_file_path):
 
 # for testing purposes
 # TODO how can we best pass the username and password to this function? Write a wrapper?
-def send_request(imports: str, function_to_run: str, function_args: list = None, function_kwargs: dict = None, max_wait_secs: int = 0, wait_after_run_secs: int = 0, return_result: bool = False, method_object = None, custom_class: str = None, username: str = "tim9220", password: str = "qQ32XALjF9JqFh!vF3xY",experiment_file_path=''):
+def send_request(imports: str, function_to_run: str, function_args: list = None, function_kwargs: dict = None, max_wait_secs: int = 0, wait_after_run_secs: int = 0, return_result: bool = False, method_object = None, custom_class: str = None, username: str = "tim9220", password: str = "qQ32XALjF9JqFh!vF3xY", experiment_file_path: str = '', exec_not_eval: bool = False):
     """
         Send a request to execute any function to the server and return specified data.
         If return_result=False, the returned object is JSON of the following format:
@@ -92,7 +92,8 @@ def send_request(imports: str, function_to_run: str, function_args: list = None,
         return_result,
         method_object,
         custom_class,
-        method_object.__module__ if custom_class is not None else None
+        method_object.__module__ if custom_class is not None else None,
+        exec_not_eval
     )
 
     if DEBUG:

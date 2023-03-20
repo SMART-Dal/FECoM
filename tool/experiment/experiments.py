@@ -59,7 +59,8 @@ class ProjectLevelExperiment(Experiment):
             function_to_run=self.__code_string,
             max_wait_secs=self.max_wait_secs,
             wait_after_run_secs=self.wait_after_run_secs,
-            experiment_file_path=self.output_file
+            experiment_file_path=self.output_file,
+            exec_not_eval=True
             )
         self.number += 1
         return
