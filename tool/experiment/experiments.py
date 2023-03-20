@@ -81,7 +81,7 @@ class MethodLevelExperiment(Experiment):
         self.__code_file = self.code_dir / f"{self.project}_patched.py"
 
     def run(self):
-        result = subprocess.run(['python3', self.__code_file,str(self.number)], stdout=subprocess.PIPE, stderr=subprocess.PIPE,env={'PYTHONPATH':os.environ['PYTHONPATH']})
+        result = subprocess.run(['python3', self.__code_file,str(self.number)], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         stderr = result.stderr.decode('utf-8')
         stderr = stderr.strip()
         print("Standard Error",stderr)
