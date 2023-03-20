@@ -21,6 +21,7 @@ from tool.server.server_config import NVIDIA_SMI_FILE, PERF_FILE, SERVER_MODULE,
 def quit_process(process: Popen, message: str):
     process.terminate()
     print(f"Terminated {message}")
+    del process
 
 def unregister_and_quit_process(process: Popen, message: str):
     """
@@ -117,17 +118,18 @@ def restart_measurements(previous_perf_stat, previous_nvidia_smi, latest_executi
     atexit.unregister(cleanup)
     # terminate the previous processes
     previous_nvidia_smi.terminate()
+    del previous_nvidia_smi
     print(f"Quit nvidia-smi after executing {latest_execution}")
     previous_perf_stat.terminate()
+    del previous_perf_stat
     print(f"Quit perf stat after executing {latest_execution}")
 
-    # delete the perf, nvidia-smi and sensors files
-    if os.path.isfile(PERF_FILE) and os.path.isfile(NVIDIA_SMI_FILE) and os.path.isfile(CPU_TEMPERATURE_FILE):
+    # delete the perf & nvidia-smi files
+    if os.path.isfile(PERF_FILE) and os.path.isfile(NVIDIA_SMI_FILE):
             os.remove(PERF_FILE)
             os.remove(NVIDIA_SMI_FILE)
-            os.remove(CPU_TEMPERATURE_FILE)
     else:
-        raise OSError("Could not find and remove perf, nvidia & cpu temperature files")
+        raise OSError("Could not find and remove perf & nvidia files")
 
     # restart the measurement programs
     perf_stat, nvidia_smi = start_measurements(server_start_time)

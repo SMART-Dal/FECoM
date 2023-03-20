@@ -25,6 +25,8 @@ URL = "https://"+SERVER_HOST+":"+str(SERVER_PORT)+API_PATH
 # set this to True to get print outs as the server receives and processes requests
 DEBUG = True
 
+TEMP_EXEC_CODE_FILE = Path("out/code_file_tmp.py")
+
 """
 STABLE STATE CONFIG
 """

@@ -7,6 +7,8 @@ import os
 import logging
 import atexit
 import json
+import subprocess
+import shlex
 from statistics import mean, stdev
 from pathlib import Path
 from datetime import datetime
@@ -18,7 +20,7 @@ from flask_httpauth import HTTPBasicAuth
 from tool.server.start_measurement import start_sensors, quit_process, unregister_and_quit_process
 
 # server settings
-from tool.server.server_config import API_PATH, DEBUG, SERVER_HOST, SERVER_PORT, USERS, CA_CERT_PATH, CA_KEY_PATH
+from tool.server.server_config import API_PATH, DEBUG, SERVER_HOST, SERVER_PORT, USERS, CA_CERT_PATH, CA_KEY_PATH, TEMP_EXEC_CODE_FILE
 # file paths and separators
 from tool.server.server_config import PERF_FILE, NVIDIA_SMI_FILE, EXECUTION_LOG_FILE, START_TIMES_FILE, CPU_TEMPERATURE_FILE, CPU_FILE_SEPARATOR
 # stable state constants
@@ -177,8 +179,12 @@ def run_check_loop(max_wait_secs: int, wait_per_loop_s: int, check_name: str, ch
     # For testing purposes
     if max_wait_secs == 0:
         return True
+    
+    # is the check already satisfied? Then we don't have to wait and enter the loop.
+    if check_function(*args):
+            return True
 
-    # in each loop iteration, load new data, calculate statistics and check if the energy is stable.
+    # in each loop iteration, load new data, calculate statistics and perform the check.
     # try this for the specified number of seconds
     for _ in range(int(max_wait_secs/wait_per_loop_s)):
         print(f"Waiting {wait_per_loop_s} seconds to reach {check_name}.\n")
@@ -236,8 +242,17 @@ def run_function(imports: str, function_to_run: str, obj: object, args: list, kw
     """
     # WARNING: potential security risk from exec and eval statements
 
+    # if this option is True, function_to_run is a python script that we need to execute.
+    # here we write it to a temporary module and prepare the command to execute it
+    if exec_not_eval:
+        with open(TEMP_EXEC_CODE_FILE, 'w') as f:
+            f.write(function_to_run)
+        exec_command = shlex.split("python3 out/code_file_tmp.py")
+
     # (0) start the cpu temperature measurement process
     sensors = start_sensors()
+    # give sensors some time to gather initial measurements
+    time.sleep(3)
     atexit.register(quit_process, sensors, "sensors")
 
     # (1) import relevant modules
@@ -264,7 +279,8 @@ def run_function(imports: str, function_to_run: str, obj: object, args: list, kw
     start_time_perf, start_time_nvidia = get_current_times(PERF_FILE, NVIDIA_SMI_FILE)
     start_time_server = time.time_ns()
     if exec_not_eval:
-        exec(function_to_run)
+        subprocess.run(exec_command)
+        func_return = None
     else:
         func_return = eval(function_to_run)
     end_time_server = time.time_ns()
@@ -330,7 +346,7 @@ def run_function(imports: str, function_to_run: str, obj: object, args: list, kw
         return_dict["method_object"] = obj
 
     if DEBUG:
-        print(f"Performed {function_to_run} on input")
+        print(f"Performed {function_to_run[:100]} on input")
         print(f"Output: {func_return}")
     
     return return_dict
@@ -390,7 +406,16 @@ def run_function_and_return_result():
 
         results["times"]["pickle_load_time"] = pickle_load_time
 
-        results = {function_details.function_to_run: results}
+        if function_details.exec_not_eval:
+            # if this option is enabled, we don't execute a single function, so use project-level as key instead
+            # to avoid having a multiline code string as the dict key
+            results = {"project-level": results}
+            if os.path.isfile(TEMP_EXEC_CODE_FILE):
+                os.remove(TEMP_EXEC_CODE_FILE)
+            else:
+                raise OSError("Could not remove temporary code file")
+        else:
+            results = {function_details.function_to_run: results}
 
     # (5) form the response to send to the client, stored in the response variable
     # if return_result is True, we need to serialise the response since we will return an object that is potentially not json-serialisable.
