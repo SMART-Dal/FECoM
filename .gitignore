@@ -3,6 +3,9 @@ venv
 __pycache__
 .DS_Store
 
+# data
+data/code-dataset/Repositories
+
 # tests
 tests/test_data
 .pytest_cache
