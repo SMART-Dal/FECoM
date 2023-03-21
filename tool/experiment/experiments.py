@@ -81,10 +81,15 @@ class MethodLevelExperiment(Experiment):
         self.__code_file = self.code_dir / f"{self.project}_patched.py"
 
     def run(self):
-        result = subprocess.run(['python3', self.__code_file,str(self.number)], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        stderr = result.stderr.decode('utf-8')
-        stderr = stderr.strip()
-        print("Standard Error",stderr)
+        result = subprocess.Popen(['python3', self.__code_file, str(self.number)], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        while True:
+            output = result.stdout.readline()
+            if output == '' and result.poll() is not None:
+                break
+            if output:
+                print(output.strip().decode('utf-8'))
+        stderr = result.stderr.read().decode('utf-8').strip()
+        print("Standard Error", stderr)
         self.number += 1
         return
 

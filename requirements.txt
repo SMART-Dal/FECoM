@@ -73,7 +73,7 @@ libclang==14.0.1+computecanada
 lockfile==0.12.2+computecanada
 Markdown==3.4.1+computecanada
 MarkupSafe==2.1.2+computecanada
-matplotlib==3.6.3
+matplotlib==3.7.0+computecanada
 matplotlib_inline==0.1.6+computecanada
 mistune==2.0.5+computecanada
 mock==5.0.1+computecanada
