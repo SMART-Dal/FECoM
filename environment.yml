@@ -9,16 +9,15 @@ dependencies:
   - pip=22.3.1
   - pip:
     - tensorflow==2.11.0
-    - numpy==1.24.1
+    - numpy==1.24.2
     - flask==2.2.2
     - requests==2.28.2
     - Flask-HTTPAuth==4.7.0
     - pandas==1.5.3
-    - matplotlib==3.6.3
+    - matplotlib==3.7.0
     - scikit-learn==1.2.1
     - pytest==7.2.1
     - dill==0.3.6
-    - dynaconf==3.1.12
 
 prefix: ~/miniconda3/envs/tf2 # replace with your conda environment path
 variables:
