@@ -48,7 +48,7 @@ def plot_cpu_and_ram(filename, n=100, normalise=True):
     ax4.set_title("RAM+CPU Energy over time")
     ax4.plot(time, ram_plus_cpu, 'o')
 
-def combined_plot(cpu_energy=None, ram_energy=None, gpu_power=None, directory=None):
+def combined_plot(cpu_energy=None, ram_energy=None, gpu_power=None, directory: Path = None):
     """
     Requires either
     - a path to a directory containing nvidia_smi.txt and perf.txt or
@@ -58,8 +58,8 @@ def combined_plot(cpu_energy=None, ram_energy=None, gpu_power=None, directory=No
     in a way that synchronises the measurements in same rows to be at the same time.
     """
     if directory is not None:
-        gpu_power = parse_nvidia_smi(f"{directory}nvidia_smi.txt")
-        cpu_energy, ram_energy = parse_perf(f"{directory}perf.txt")
+        gpu_power = parse_nvidia_smi(directory/"nvidia_smi.txt")
+        cpu_energy, ram_energy = parse_perf(directory/"perf.txt")
     min_len = min([len(gpu_power), len(cpu_energy), len(ram_energy)]) - 1
     print(min_len)
     df = pd.concat([gpu_power.iloc[:min_len]['power_draw (W)'], cpu_energy.iloc[:min_len]['energy (J)'], ram_energy.iloc[:min_len]['energy (J)']], axis=1)

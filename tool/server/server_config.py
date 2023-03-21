@@ -38,19 +38,12 @@ CHECK_LAST_N_POINTS = 20
 
 # relative tolerance for difference between stable stdev/mean ratio and current ratios as measured by the server
 # e.g. 0.1 would mean allowing a ratio that's 10% higher than the stable stdev/mean ratio
-STABLE_CHECK_TOLERANCE = 0.5
+STABLE_CHECK_TOLERANCE = 0
 
-# average (mean) standard deviations and means for stable energy data for 20 values in a row from 2022-12-10 data, generated with plot_energy.calc_stats_for_split_data()
-cpu_energy_stdv = 0.791626
-cpu_energy_mean = 17.408177
-ram_energy_stdv = 0.107354
-ram_energy_mean = 3.503457
-gpu_power_stdv = 0.190666
-gpu_power_mean = 21.077714
-
+# average (mean) standard deviations and means for stable energy data for 20 values in a row from, generated with replication/settings_calculation.stdev_mean_ratios()
 # Do not change these between experiments!
-CPU_STD_TO_MEAN = 0.05 # 0.0454744
-RAM_STD_TO_MEAN = 0.03 # 0.0303726
+CPU_STD_TO_MEAN = 0.23 # 0.0454744
+RAM_STD_TO_MEAN = 0.15 # 0.0303726
 GPU_STD_TO_MEAN = 0.01 # 0.0090459
 
 """
@@ -83,7 +76,7 @@ CPU_TEMPERATURE_INTERVAL_S = 1
 # store CPU temperatures in this file, populated by cpu_temperature.py
 CPU_TEMPERATURE_FILE = energy_data_dir/"cpu_temperature.txt"
 # the maximum average temperature in degrees Celsius that we allow the CPU & GPU to be before executing a method (to determine stable state)
-CPU_MAXIMUM_TEMPERATURE = 55
+CPU_MAXIMUM_TEMPERATURE = 55 # see replication package for how we arrived at this value
 GPU_MAXIMUM_TEMPERATURE = 40
 
 
