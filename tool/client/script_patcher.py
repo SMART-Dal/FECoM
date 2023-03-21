@@ -15,6 +15,7 @@ args = parser.parse_args()
 requiredLibraries = ["tensorflow"]
 requiredAlias = []
 requiredObjects = []
+requiredObjectsSignature = []
 requiredClassDefs = {}
 requiredObjClassMapping = {}
 importScriptList = ''
@@ -55,10 +56,12 @@ def main():
 
     # Step4: Get list of objects created from the required libraries
     global requiredObjects
+    global requiredObjectsSignature
     global requiredObjClassMapping
     objAnalyzer = ObjectAnalyzer()
     objAnalyzer.visit(tree)
     requiredObjects = objAnalyzer.stats['objects']
+    requiredObjectsSignature = objAnalyzer.stats['objectSignature']
     requiredObjClassMapping = objAnalyzer.userDefObjects
 
     #Step5: Tranform the client script by adding custom method calls
@@ -117,6 +120,7 @@ class TransformCall(ast.NodeTransformer):
         global sourceCode
         global requiredObjects
         global requiredObjClassMapping
+        global requiredObjectsSignature
 
     def visit_Call(self, node):
         callvisitor = FuncCallVisitor()
@@ -146,6 +150,9 @@ class TransformCall(ast.NodeTransformer):
                                         arg='method_object',
                                         value=ast.Constant(None)),
                                     ast.keyword(
+                                            arg='object_signature',
+                                            value=ast.Constant(None)),
+                                    ast.keyword(
                                         arg='function_args',
                                         value=ast.List(
                                             elts=[
@@ -176,66 +183,70 @@ class TransformCall(ast.NodeTransformer):
             ast.fix_missing_locations(new_node)
             return new_node
 
-        if(any(obj in callvisitor.name.split('.')[0] for obj in requiredObjects)):
-            dummyNode=copy.deepcopy(node)
-            dummyNode.args.clear()
-            dummyNode.keywords.clear()
-            argList = [ast.get_source_segment(sourceCode, a) for a in node.args]
-            keywordsDict = {a.arg:ast.get_source_segment(sourceCode, a.value) for a in node.keywords}
-            if(node.args):
-                dummyNode.args.append(ast.Name(id='*args', ctx=ast.Load()))
-            if(node.keywords):
-                dummyNode.keywords.append(ast.Name(id='**kwargs', ctx=ast.Load()))
-            new_node = ast.Call(func=ast.Name(id='custom_method', ctx=ast.Load()),
-                                args=[ast.Expr(node)],
-                                keywords=[
-                                    ast.keyword(
-                                        arg='imports',
-                                        value=ast.Constant(importScriptList)),
-                                    ast.keyword(
-                                        arg='function_to_run',
-                                        value=ast.Constant(ast.unparse(dummyNode).replace(callvisitor.name.split('.')[0], 'obj', 1))),
-                                    ast.keyword(
-                                        arg='method_object',
-                                        value= ast.Call(
-                                                    func=ast.Name(id='eval', ctx=ast.Load()),
-                                                    args=[
-                                                        ast.Constant(callvisitor.name.split('.')[0])],
-                                                    keywords=[])
-                                        ),
-                                    ast.keyword(
-                                        arg='function_args',
-                                        value=ast.List(
-                                            elts=[
-                                                ast.Call(
-                                                    func=ast.Name(id='eval', ctx=ast.Load()),
-                                                    args=[
-                                                        ast.Constant(value=argItem)],
-                                                    keywords=[]) for argItem in argList],
-                                            ctx=ast.Load())),
-                                    ast.keyword(
-                                        arg='function_kwargs',
-                                        value=ast.Dict(
-                                            keys=[
-                                                ast.Constant(value=KWItem) for KWItem in keywordsDict],
-                                            values=[
-                                                ast.Call(
-                                                    func=ast.Name(id='eval', ctx=ast.Load()),
-                                                    args=[
-                                                        ast.Constant(value=keywordsDict[KWItem])],
-                                                    keywords=[]) for KWItem in keywordsDict])),
-                                    ast.keyword(
-                                        arg='max_wait_secs',
-                                        value=ast.Constant(0)),
-                                    ast.keyword(
-                                        arg='custom_class',
-                                        value=ast.Constant(requiredClassDefs.get(requiredObjClassMapping.get(callvisitor.name.split('.')[0]))))
-                                        ],
-                                        starargs=None, kwargs=None
-                                )
-            ast.copy_location(new_node, node)
-            ast.fix_missing_locations(new_node)
-            return new_node
+        for i, obj in enumerate(requiredObjects):
+            if(obj in callvisitor.name.split('.')[0]):
+                dummyNode=copy.deepcopy(node)
+                dummyNode.args.clear()
+                dummyNode.keywords.clear()
+                argList = [ast.get_source_segment(sourceCode, a) for a in node.args]
+                keywordsDict = {a.arg:ast.get_source_segment(sourceCode, a.value) for a in node.keywords}
+                if(node.args):
+                    dummyNode.args.append(ast.Name(id='*args', ctx=ast.Load()))
+                if(node.keywords):
+                    dummyNode.keywords.append(ast.Name(id='**kwargs', ctx=ast.Load()))
+                new_node = ast.Call(func=ast.Name(id='custom_method', ctx=ast.Load()),
+                                    args=[ast.Expr(node)],
+                                    keywords=[
+                                        ast.keyword(
+                                            arg='imports',
+                                            value=ast.Constant(importScriptList)),
+                                        ast.keyword(
+                                            arg='function_to_run',
+                                            value=ast.Constant(ast.unparse(dummyNode).replace(callvisitor.name.split('.')[0], 'obj', 1))),
+                                        ast.keyword(
+                                            arg='method_object',
+                                            value= ast.Call(
+                                                        func=ast.Name(id='eval', ctx=ast.Load()),
+                                                        args=[
+                                                            ast.Constant(callvisitor.name.split('.')[0])],
+                                                        keywords=[])
+                                            ),
+                                            ast.keyword(
+                                            arg='object_signature',
+                                            value=ast.Constant(requiredObjectsSignature[i])),
+                                        ast.keyword(
+                                            arg='function_args',
+                                            value=ast.List(
+                                                elts=[
+                                                    ast.Call(
+                                                        func=ast.Name(id='eval', ctx=ast.Load()),
+                                                        args=[
+                                                            ast.Constant(value=argItem)],
+                                                        keywords=[]) for argItem in argList],
+                                                ctx=ast.Load())),
+                                        ast.keyword(
+                                            arg='function_kwargs',
+                                            value=ast.Dict(
+                                                keys=[
+                                                    ast.Constant(value=KWItem) for KWItem in keywordsDict],
+                                                values=[
+                                                    ast.Call(
+                                                        func=ast.Name(id='eval', ctx=ast.Load()),
+                                                        args=[
+                                                            ast.Constant(value=keywordsDict[KWItem])],
+                                                        keywords=[]) for KWItem in keywordsDict])),
+                                        ast.keyword(
+                                            arg='max_wait_secs',
+                                            value=ast.Constant(0)),
+                                        ast.keyword(
+                                            arg='custom_class',
+                                            value=ast.Constant(requiredClassDefs.get(requiredObjClassMapping.get(callvisitor.name.split('.')[0]))))
+                                            ],
+                                            starargs=None, kwargs=None
+                                    )
+                ast.copy_location(new_node, node)
+                ast.fix_missing_locations(new_node)
+                return new_node
         
         return node
 
@@ -286,7 +297,7 @@ class ClassDefAnalyzer(ast.NodeVisitor):
 
 class ObjectAnalyzer(ast.NodeVisitor):
     def __init__(self):
-        self.stats = {"objects": []}
+        self.stats = {"objects": [],"objectSignature": []}
         self.userDefObjects = {}
         global sourceCode
         global requiredClassDefs
@@ -297,10 +308,12 @@ class ObjectAnalyzer(ast.NodeVisitor):
             callvisitor2.visit(node.value.func)
             if((any(lib in callvisitor2.name for lib in requiredAlias)) and (isinstance(node.targets[0], ast.Name))):
                 self.stats["objects"].append(node.targets[0].id)
+                self.stats["objectSignature"].append(ast.get_source_segment(sourceCode, node.value.func))
             
             if((any(lib in callvisitor2.name.split('.')[0] for lib in list(requiredClassDefs.keys()))) and (isinstance(node.targets[0], ast.Name))):
                 self.stats["objects"].append(node.targets[0].id)
                 self.userDefObjects[node.targets[0].id] = callvisitor2.name.split('.')[0]
+                self.stats["objectSignature"].append(ast.get_source_segment(sourceCode, node.value.func))
         self.generic_visit(node)
 
 

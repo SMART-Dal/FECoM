@@ -96,19 +96,17 @@ class MethodLevelExperiment(Experiment):
         # raise NotImplementedError("This has not been tested properly yet. Test before using.")
         super().__init__(ExperimentKinds.METHOD_LEVEL.value, project, experiment_dir, code_dir)
         self.__code_file = self.code_dir / f"{self.project}_patched.py"
+        print("Test 3", self.__code_file)
 
     def run(self):
-        result = subprocess.Popen(['python3', self.__code_file, str(self.number)], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        while True:
-            output = result.stdout.readline()
-            if output == '' and result.poll() is not None:
-                break
-            if output:
-                print(output.strip().decode('utf-8'))
-        stderr = result.stderr.read().decode('utf-8').strip()
-        print("Standard Error", stderr)
-        self.number += 1
-        return
+        try:
+            with subprocess.Popen(['python', self.__code_file, str(self.number), str(self.project)], stdout=subprocess.PIPE, stderr=subprocess.PIPE, bufsize=1, universal_newlines=True) as p:
+                for line in p.stdout:
+                    print(line, end='')
+            self.number += 1
+            return
+        except Exception as e:
+            raise e
 
     def stop(self):
         pass
