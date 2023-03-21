@@ -199,33 +199,16 @@ def run_check_loop(max_wait_secs: int, wait_per_loop_s: int, check_name: str, ch
 Energy & temperature data loaders for the server response
 """
 
-# def get_current_times(perf_file: Path, nvidia_smi_file: Path):
-#     with open(perf_file, 'r') as f:
-#         last_line_perf = f.readlines()[-1]
-#     with open(nvidia_smi_file, 'r') as f:
-#         last_line_nvidia = f.readlines()[-1]
-    
-#     time_perf = float(last_line_perf.strip(' \n').split(';')[0])
-#     time_nvidia = datetime.strptime(last_line_nvidia.strip('\n').split(',')[0], '%Y/%m/%d %H:%M:%S.%f').timestamp()
-
-#     return time_perf, time_nvidia
-
 def get_current_times(perf_file: Path, nvidia_smi_file: Path):
-    try:
-        with open(perf_file, 'r') as f:
-            last_line_perf = f.readlines()[-1]
-        with open(nvidia_smi_file, 'r') as f:
-            last_line_nvidia = f.readlines()[-1]
+    with open(perf_file, 'r') as f:
+        last_line_perf = f.readlines()[-1]
+    with open(nvidia_smi_file, 'r') as f:
+        last_line_nvidia = f.readlines()[-1]
+    
+    time_perf = float(last_line_perf.strip(' \n').split(';')[0])
+    time_nvidia = datetime.strptime(last_line_nvidia.strip('\n').split(',')[0], '%Y/%m/%d %H:%M:%S.%f').timestamp()
 
-        time_perf = float(last_line_perf.strip(' \n').split(';')[0])
-        time_nvidia = datetime.strptime(last_line_nvidia.strip('\n').split(',')[0], '%Y/%m/%d %H:%M:%S.%f').timestamp()
-
-        return time_perf, time_nvidia
-
-    except Exception as e:
-        print(f"An error occurred: {e}")
-        time.sleep(2)  # wait for 2 seconds before trying again
-        return get_current_times(perf_file, nvidia_smi_file)  # recursive call with the same arguments
+    return time_perf, time_nvidia
 
 def get_energy_data():
     df_cpu, df_ram = parse_perf(PERF_FILE)

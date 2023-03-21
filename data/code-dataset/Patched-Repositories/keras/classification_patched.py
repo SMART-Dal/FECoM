@@ -9,14 +9,12 @@ from tool.client.client_config import EXPERIMENT_DIR, MAX_WAIT_S, WAIT_AFTER_RUN
 from tool.server.send_request import send_request
 from tool.server.function_details import FunctionDetails
 current_path = os.path.abspath(__file__)
-(immediate_folder, file_name) = os.path.split(current_path)
-immediate_folder = os.path.basename(immediate_folder)
-experiment_number = sys.argv[0]
-experiment_file_name = os.path.splitext(file_name)[0]
-EXPERIMENT_FILE_PATH = EXPERIMENT_DIR / 'method-level' / immediate_folder / experiment_file_name / f'experiment-{experiment_number}.json'
+experiment_number = sys.argv[1]
+experiment_project = sys.argv[2]
+EXPERIMENT_FILE_PATH = EXPERIMENT_DIR / 'method-level' / experiment_project / f'experiment-{experiment_number}.json'
 
 def custom_method(func, imports: str, function_to_run: str, method_object=None, function_args: list=None, function_kwargs: dict=None, max_wait_secs=MAX_WAIT_S, custom_class=None, wait_after_run_secs=WAIT_AFTER_RUN_S):
-    result = send_request(imports=imports, function_to_run=function_to_run, function_args=function_args, function_kwargs=function_kwargs, max_wait_secs=max_wait_secs, method_object=method_object, custom_class=custom_class, experiment_file_path=EXPERIMENT_FILE_PATH)
+    result = send_request(imports=imports, function_to_run=function_to_run, function_args=function_args, function_kwargs=function_kwargs, max_wait_secs=max_wait_secs, wait_after_run_secs=wait_after_run_secs, method_object=method_object, custom_class=custom_class, experiment_file_path=EXPERIMENT_FILE_PATH)
     return func
 if __name__ == '__main__':
     print(EXPERIMENT_FILE_PATH)
@@ -46,18 +44,18 @@ for i in range(25):
     plt.xlabel(class_names[train_labels[i]])
 plt.show()
 model = custom_method(
-tf.keras.Sequential([tf.keras.layers.Flatten(input_shape=(28, 28)), tf.keras.layers.Dense(128, activation='relu'), tf.keras.layers.Dense(10)]), imports='import tensorflow as tf;import matplotlib.pyplot as plt;import numpy as np', function_to_run='tf.keras.Sequential(*args)', method_object=None, function_args=[eval("[\n    tf.keras.layers.Flatten(input_shape=(28, 28)),\n    tf.keras.layers.Dense(128, activation='relu'),\n    tf.keras.layers.Dense(10)\n]")], function_kwargs={}, max_wait_secs=0)
+tf.keras.Sequential([tf.keras.layers.Flatten(input_shape=(28, 28)), tf.keras.layers.Dense(128, activation='relu'), tf.keras.layers.Dense(10)]), imports='import numpy as np;import tensorflow as tf;import matplotlib.pyplot as plt', function_to_run='tf.keras.Sequential(*args)', method_object=None, function_args=[eval("[\n    tf.keras.layers.Flatten(input_shape=(28, 28)),\n    tf.keras.layers.Dense(128, activation='relu'),\n    tf.keras.layers.Dense(10)\n]")], function_kwargs={}, max_wait_secs=0)
 custom_method(
-model.compile(optimizer='adam', loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True), metrics=['accuracy']), imports='import tensorflow as tf;import matplotlib.pyplot as plt;import numpy as np', function_to_run='obj.compile(**kwargs)', method_object=eval('model'), function_args=[], function_kwargs={'optimizer': eval("'adam'"), 'loss': eval('tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True)'), 'metrics': eval("['accuracy']")}, max_wait_secs=0, custom_class=None)
+model.compile(optimizer='adam', loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True), metrics=['accuracy']), imports='import numpy as np;import tensorflow as tf;import matplotlib.pyplot as plt', function_to_run='obj.compile(**kwargs)', method_object=eval('model'), function_args=[], function_kwargs={'optimizer': eval("'adam'"), 'loss': eval('tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True)'), 'metrics': eval("['accuracy']")}, max_wait_secs=0, custom_class=None)
 custom_method(
-model.fit(train_images, train_labels, epochs=10), imports='import tensorflow as tf;import matplotlib.pyplot as plt;import numpy as np', function_to_run='obj.fit(*args, **kwargs)', method_object=eval('model'), function_args=[eval('train_images'), eval('train_labels')], function_kwargs={'epochs': eval('10')}, max_wait_secs=0, custom_class=None)
+model.fit(train_images, train_labels, epochs=10), imports='import numpy as np;import tensorflow as tf;import matplotlib.pyplot as plt', function_to_run='obj.fit(*args, **kwargs)', method_object=eval('model'), function_args=[eval('train_images'), eval('train_labels')], function_kwargs={'epochs': eval('10')}, max_wait_secs=0, custom_class=None)
 (test_loss, test_acc) = custom_method(
-model.evaluate(test_images, test_labels, verbose=2), imports='import tensorflow as tf;import matplotlib.pyplot as plt;import numpy as np', function_to_run='obj.evaluate(*args, **kwargs)', method_object=eval('model'), function_args=[eval('test_images'), eval('test_labels')], function_kwargs={'verbose': eval('2')}, max_wait_secs=0, custom_class=None)
+model.evaluate(test_images, test_labels, verbose=2), imports='import numpy as np;import tensorflow as tf;import matplotlib.pyplot as plt', function_to_run='obj.evaluate(*args, **kwargs)', method_object=eval('model'), function_args=[eval('test_images'), eval('test_labels')], function_kwargs={'verbose': eval('2')}, max_wait_secs=0, custom_class=None)
 print('\nTest accuracy:', test_acc)
 probability_model = custom_method(
-tf.keras.Sequential([model, tf.keras.layers.Softmax()]), imports='import tensorflow as tf;import matplotlib.pyplot as plt;import numpy as np', function_to_run='tf.keras.Sequential(*args)', method_object=None, function_args=[eval('[model, \n                                         tf.keras.layers.Softmax()]')], function_kwargs={}, max_wait_secs=0)
+tf.keras.Sequential([model, tf.keras.layers.Softmax()]), imports='import numpy as np;import tensorflow as tf;import matplotlib.pyplot as plt', function_to_run='tf.keras.Sequential(*args)', method_object=None, function_args=[eval('[model, \n                                         tf.keras.layers.Softmax()]')], function_kwargs={}, max_wait_secs=0)
 predictions = custom_method(
-probability_model.predict(test_images), imports='import tensorflow as tf;import matplotlib.pyplot as plt;import numpy as np', function_to_run='obj.predict(*args)', method_object=eval('probability_model'), function_args=[eval('test_images')], function_kwargs={}, max_wait_secs=0, custom_class=None)
+probability_model.predict(test_images), imports='import numpy as np;import tensorflow as tf;import matplotlib.pyplot as plt', function_to_run='obj.predict(*args)', method_object=eval('probability_model'), function_args=[eval('test_images')], function_kwargs={}, max_wait_secs=0, custom_class=None)
 predictions[0]
 np.argmax(predictions[0])
 test_labels[0]
@@ -115,7 +113,7 @@ print(img.shape)
 img = np.expand_dims(img, 0)
 print(img.shape)
 predictions_single = custom_method(
-probability_model.predict(img), imports='import tensorflow as tf;import matplotlib.pyplot as plt;import numpy as np', function_to_run='obj.predict(*args)', method_object=eval('probability_model'), function_args=[eval('img')], function_kwargs={}, max_wait_secs=0, custom_class=None)
+probability_model.predict(img), imports='import numpy as np;import tensorflow as tf;import matplotlib.pyplot as plt', function_to_run='obj.predict(*args)', method_object=eval('probability_model'), function_args=[eval('img')], function_kwargs={}, max_wait_secs=0, custom_class=None)
 print(predictions_single)
 plot_value_array(1, predictions_single[0], test_labels)
 _ = plt.xticks(range(10), class_names, rotation=45)
