@@ -19,7 +19,7 @@ energy_dir_tim = data_path_tim / energy_dataset
 
 # directory where to store data, an Experiment will append to this the experiment kind
 # (e.g. project-level) and after that the subdirectory structure will be equivalent to the code dataset
-EXPERIMENT_DIR = energy_dir_saurabh
+EXPERIMENT_DIR = energy_dir_tim
 
 code_dataset = Path('code-dataset/Patched-Repositories')
 
@@ -28,7 +28,7 @@ code_dir_saurabh = data_path_saurabh / code_dataset
 code_dir_tim = data_path_tim / code_dataset
 
 # directory where to find patched code
-CODE_DIR = code_dir_saurabh
+CODE_DIR = code_dir_tim
 
 PATCHING_SCRIPT_PATH = Path('script_patcher.py')
 code_dataset_path = Path('../../data/code-dataset')
@@ -38,4 +38,4 @@ PATCHED_REPO_DIR =  code_dataset_path / 'Patched-Repositories'
 # When you want to update these seconds, you have to re-run repo-patching.py
 # such that the new settings are written to the patched python files
 MAX_WAIT_S = 120
-WAIT_AFTER_RUN_S = 25
+WAIT_AFTER_RUN_S = 30

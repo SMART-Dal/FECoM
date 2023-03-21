@@ -30,6 +30,7 @@ from tool.server.server_config import WAIT_PER_STABLE_CHECK_LOOP_S, CHECK_LAST_N
 from tool.server.function_details import FunctionDetails # shown unused but still required since this is the class used for sending function details to the server
 from tool.server.measurement_parse import parse_nvidia_smi, parse_perf, parse_cpu_temperature
 
+from tool.experiment.experiments import ExperimentKinds
 
 
 app = Flask(__name__)
@@ -409,7 +410,7 @@ def run_function_and_return_result():
         if function_details.exec_not_eval:
             # if this option is enabled, we don't execute a single function, so use project-level as key instead
             # to avoid having a multiline code string as the dict key
-            results = {"project-level": results}
+            results = {ExperimentKinds.PROJECT_LEVEL.value: results}
             if os.path.isfile(TEMP_EXEC_CODE_FILE):
                 os.remove(TEMP_EXEC_CODE_FILE)
             else:
