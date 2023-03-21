@@ -38,6 +38,8 @@ auth = HTTPBasicAuth()
 logging.basicConfig(filename='flask.log', level=logging.DEBUG,
                     format='%(asctime)s %(levelname)s %(name)s %(message)s')
 
+def print_server(message: str):
+    print("[SERVER] " + message)
 
 """
 Authentication
@@ -123,7 +125,7 @@ def energy_is_stable(data: List[float], tolerance: float, stable_std_mean_ratio:
     tolerated = (1 + tolerance)*stable_std_mean_ratio
     is_stable = std_mean <= tolerated
     if DEBUG and not is_stable:
-        print(f"Not stable: stdev/mean is {std_mean}, which is greater than {tolerated}")
+        print_server(f"Not stable: stdev/mean is {std_mean}, which is greater than {tolerated}")
     return is_stable
 
 
@@ -132,7 +134,7 @@ def temperature_is_low(data: List[int], maximum_temperature: int):
     mean_temperature = mean(data)
     is_low = mean_temperature <= maximum_temperature
     if DEBUG and not is_low:
-        print(f"Temperature too high: mean is {mean_temperature}, which is greater than {maximum_temperature}")
+        print_server(f"Temperature too high: mean is {mean_temperature}, which is greater than {maximum_temperature}")
     return is_low
 
 
@@ -147,10 +149,10 @@ def server_is_stable_check(check_last_n_points: int, tolerance: float) -> bool:
         energy_is_stable(cpu_energies, tolerance, CPU_STD_TO_MEAN) and
         energy_is_stable(ram_energies, tolerance, RAM_STD_TO_MEAN)
     ):
-        print("Success: Server is stable.")
+        print_server("Success: Server is stable.")
         return True
     else:
-        print("Server is not stable yet.")
+        print_server("Server is not stable yet.")
         return False
 
 
@@ -165,10 +167,10 @@ def temperature_is_low_check(check_last_n_points: int, cpu_max_temp: int, gpu_ma
         temperature_is_low(gpu_temperatures, gpu_max_temp) and
         temperature_is_low(cpu_temperatures, cpu_max_temp)
     ):
-        print("Success: temperature is below threshold.")
+        print_server("Success: temperature is below threshold.")
         return True
     else:
-        print("Temperature is too high.")
+        print_server("Temperature is too high.")
         return False 
 
 
@@ -187,7 +189,7 @@ def run_check_loop(max_wait_secs: int, wait_per_loop_s: int, check_name: str, ch
     # in each loop iteration, load new data, calculate statistics and perform the check.
     # try this for the specified number of seconds
     for _ in range(int(max_wait_secs/wait_per_loop_s)):
-        print(f"Waiting {wait_per_loop_s} seconds to reach {check_name}.\n")
+        print_server(f"Waiting {wait_per_loop_s} seconds to reach {check_name}.\n")
         time.sleep(wait_per_loop_s)
         if check_function(*args):
             return True
@@ -240,6 +242,7 @@ def run_function(imports: str, function_to_run: str, obj: object, args: list, kw
     since this is a string in the format function_signature(*args), function_signature(**kwargs) or
     function_signature(*args, **kwargs).
     """
+    app.logger.info("Running function: %s", function_to_run[:100])
     # WARNING: potential security risk from exec and eval statements
 
     # if this option is True, function_to_run is a python script that we need to execute.
@@ -250,15 +253,15 @@ def run_function(imports: str, function_to_run: str, obj: object, args: list, kw
         exec_command = shlex.split("python3 out/code_file_tmp.py")
 
     # (0) start the cpu temperature measurement process
-    sensors = start_sensors()
+    sensors = start_sensors(print_server)
     # give sensors some time to gather initial measurements
     time.sleep(3)
     atexit.register(quit_process, sensors, "sensors")
 
     # (1) import relevant modules
     import_time = time.time_ns()
-    app.logger.info("Imports value: %s", imports)
     exec(imports)
+    app.logger.info("Imports value: %s", imports)
 
     # (2) continue only when CPU & GPU temperatures are below threshold and the system has reached a stable state of energy consumption
 
@@ -289,7 +292,7 @@ def run_function(imports: str, function_to_run: str, obj: object, args: list, kw
 
     # (4) Wait some specified amount of time to measure potentially elevated energy consumption after the function has terminated
     if DEBUG:
-        print(f"waiting idle for {wait_after_run_secs} seconds")
+        print_server(f"waiting idle for {wait_after_run_secs} seconds after function execution")
     if wait_after_run_secs > 0:
         time.sleep(wait_after_run_secs)
 
@@ -346,8 +349,7 @@ def run_function(imports: str, function_to_run: str, obj: object, args: list, kw
         return_dict["method_object"] = obj
 
     if DEBUG:
-        print(f"Performed {function_to_run[:100]} on input")
-        print(f"Output: {func_return}")
+        print_server(f"Performed {function_to_run[:100]} on input and will now return energy data.")
     
     return return_dict
 
@@ -360,7 +362,7 @@ def run_function_and_return_result():
     function_details = pickle.loads(request.data)
     
     if DEBUG:
-        print(f"Received function details: {function_details}")
+        print_server(f"Received function details for function {function_details.function_to_run[:100]}")
 
     # (2) if needed, create module with custom class definition and import it
     custom_class_file = None
@@ -375,6 +377,8 @@ def run_function_and_return_result():
     # (3) Try reaching a stable state and running the function.
     # The experimental results are stored in the results variable
     try:
+        print_server("Waiting before running function for 10 seconds.")
+        time.sleep(10)
         results = run_function(
             function_details.imports,
             function_details.function_to_run,
@@ -422,7 +426,7 @@ def run_function_and_return_result():
     # if status is not 200, there was an error which also needs to be serialised.
     if function_details.return_result or status != 200:
         if DEBUG:
-            print("Pickling response to return result")
+            print_server("Pickling response to return result")
         response = Response(
             response=pickle.dumps(results),
             status=status,

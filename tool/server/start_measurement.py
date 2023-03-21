@@ -17,10 +17,12 @@ import os
 from tool.server.server_config import COUNT_INTERVAL_MS, CPU_FILE_SEPARATOR
 from tool.server.server_config import NVIDIA_SMI_FILE, PERF_FILE, SERVER_MODULE, START_TIMES_FILE, EXECUTION_LOG_FILE, CPU_TEMPERATURE_MODULE, CPU_TEMPERATURE_FILE
 
+def print_main(message: str):
+    print("[MAIN] " + message)
 
-def quit_process(process: Popen, message: str):
+def quit_process(process: Popen, message: str, print_func):
     process.terminate()
-    print(f"Terminated {message}")
+    print_func(f"Terminated {message}")
     del process
 
 def unregister_and_quit_process(process: Popen, message: str):
@@ -29,12 +31,12 @@ def unregister_and_quit_process(process: Popen, message: str):
     Used by flask_server.py to quit the CPU temperature process.
     """
     atexit.unregister(quit_process)
-    quit_process(process, message)
+    quit_process(process, message, print_main)
 
 # function registered atexit by start_measurements to terminate the measurement programs
 def cleanup(perf_stat, nvidia_smi):
-    quit_process(nvidia_smi, "nvidia smi")
-    quit_process(perf_stat, "perf stat")
+    quit_process(nvidia_smi, "nvidia smi", print_main)
+    quit_process(perf_stat, "perf stat", print_main)
 
 
 # start the flask server & make sure it is terminated when start_measurement is quit
@@ -44,9 +46,9 @@ def start_server():
     server = Popen(start_server)
 
     server_start_time = time.time_ns()
-    atexit.register(print, "Terminated the flask server")
+    atexit.register(print_main, "Terminated the flask server")
     atexit.register(server.terminate)
-    print(f"Server started at {server_start_time}")
+    print_main(f"Server started at {server_start_time}")
 
     return server_start_time
 
@@ -62,7 +64,7 @@ def start_nvidia():
         nvidia_smi = Popen(start_nvidia, stdout=nvidia_smi_file)
     
     nvidia_smi_start_time = time.time_ns()
-    print(f"Nvidia-smi started at {nvidia_smi_start_time}")
+    print_main(f"Nvidia-smi started at {nvidia_smi_start_time}")
     
     return nvidia_smi, nvidia_smi_start_time
 
@@ -75,19 +77,19 @@ def start_perf():
     perf_stat = Popen(start_perf)
 
     perf_start_time = time.time_ns()
-    print(f"Perf started at {perf_start_time}")
+    print_main(f"Perf started at {perf_start_time}")
 
     return perf_stat, perf_start_time
 
 
 # start sensors to track CPU temperature over time
-def start_sensors():
+def start_sensors(print_func):
     start_sensors = shlex.split(f"python3 {CPU_TEMPERATURE_MODULE}")
 
     sensors = Popen(start_sensors)
 
     sensors_start_time = time.time_ns()
-    print(f"Sensors started at {sensors_start_time}")
+    print_func(f"Sensors started at {sensors_start_time}")
 
     return sensors
 
@@ -119,10 +121,10 @@ def restart_measurements(previous_perf_stat, previous_nvidia_smi, latest_executi
     # terminate the previous processes
     previous_nvidia_smi.terminate()
     del previous_nvidia_smi
-    print(f"Quit nvidia-smi after executing {latest_execution}")
+    print_main(f"Quit nvidia-smi after executing {latest_execution}")
     previous_perf_stat.terminate()
     del previous_perf_stat
-    print(f"Quit perf stat after executing {latest_execution}")
+    print_main(f"Quit perf stat after executing {latest_execution}")
 
     # delete the perf & nvidia-smi files
     if os.path.isfile(PERF_FILE) and os.path.isfile(NVIDIA_SMI_FILE):
@@ -138,7 +140,7 @@ def restart_measurements(previous_perf_stat, previous_nvidia_smi, latest_executi
 
 
 if __name__ == "__main__":
-    atexit.register(print, "Successfully terminated the server application")
+    atexit.register(print_main, "Successfully terminated the server application")
     
     # (1) Start the server & energy measurement programs (perf stat & nvidia-smi).
     # Keep a reference to perf stat & nvidia-smi such that they can be terminated by the program.
@@ -165,10 +167,10 @@ if __name__ == "__main__":
                 perf_stat, nvidia_smi = restart_measurements(perf_stat, nvidia_smi, latest_execution.split(";")[0], server_start_time)
                 previous_execution = latest_execution
             
-            # TODO this is an arbitary number, does it work well?
+            # this is half the time the server waits after receiving a request, which gives the system enough time to restart in between method calls.
             time.sleep(5)
             continue
     except KeyboardInterrupt:
-        print("\n\nKeyboardInterrupt by User. Shutting down the server application.\n")
+        print_main("\n\nKeyboardInterrupt by User. Shutting down the server application.\n")
 
     
