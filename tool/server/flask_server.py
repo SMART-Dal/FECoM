@@ -173,21 +173,6 @@ def temperature_is_low_check(check_last_n_points: int, cpu_max_temp: int, gpu_ma
         print_server("Temperature is too high.")
         return False 
 
-def output_files_exist_check() -> bool:
-    """
-    Check if the output files exist. return true if they exist, else return false.
-    """
-    if not PERF_FILE.exists():
-        print(f"File {PERF_FILE} does not exist.")
-        return False
-    if not NVIDIA_SMI_FILE.exists():
-        print(f"File {NVIDIA_SMI_FILE} does not exist.")
-        return False
-    if not CPU_TEMPERATURE_FILE.exists():
-        print(f"File {CPU_TEMPERATURE_FILE} does not exist.")
-        return False
-    return True
-
 def run_check_loop(max_wait_secs: int, wait_per_loop_s: int, check_name: str, check_function: callable, *args):
     """
     Return True if the given check_function returns True at some point, else return False.
@@ -274,10 +259,6 @@ def run_function(imports: str, function_to_run: str, obj: object, args: list, kw
     """
     app.logger.info("Running function: %s", function_to_run[:100])
     # WARNING: potential security risk from exec and eval statements
-
-    # check if the output files exist, else wait for . If not, raise an error.
-    if not run_check_loop(20, 2, "output files", output_files_exist_check):
-            raise TimeoutError(f"Server couldn't create output files within {max_wait_secs} seconds")
     
     # if this option is True, function_to_run is a python script that we need to execute.
     # here we write it to a temporary module and prepare the command to execute it
@@ -312,7 +293,6 @@ def run_function(imports: str, function_to_run: str, obj: object, args: list, kw
 
     # (3) evaluate the function return. Mark the start & end times in the files and save their exact values.
     # TODO potentially correct here for the small time offset created by fetching the times for the files. We can use the server times for this.
-    # (old) write_start_or_end_symbol(PERF_FILE, NVIDIA_SMI_FILE, start=True)
     start_time_perf, start_time_nvidia = get_current_times(PERF_FILE, NVIDIA_SMI_FILE)
     start_time_server = time.time_ns()
     if exec_not_eval:
@@ -322,7 +302,6 @@ def run_function(imports: str, function_to_run: str, obj: object, args: list, kw
         func_return = eval(function_to_run)
     end_time_server = time.time_ns()
     end_time_perf, end_time_nvidia = get_current_times(PERF_FILE, NVIDIA_SMI_FILE)
-    # (old) write_start_or_end_symbol(PERF_FILE, NVIDIA_SMI_FILE, start=False)
 
     # (4) Wait some specified amount of time to measure potentially elevated energy consumption after the function has terminated
     if DEBUG:
