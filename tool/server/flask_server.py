@@ -171,6 +171,20 @@ def temperature_is_low_check(check_last_n_points: int, cpu_max_temp: int, gpu_ma
         print("Temperature is too high.")
         return False 
 
+def output_files_exist_check() -> bool:
+    """
+    Check if the output files exist. return true if they exist, else return false.
+    """
+    if not PERF_FILE.exists():
+        print(f"File {PERF_FILE} does not exist.")
+        return False
+    if not NVIDIA_SMI_FILE.exists():
+        print(f"File {NVIDIA_SMI_FILE} does not exist.")
+        return False
+    if not CPU_TEMPERATURE_FILE.exists():
+        print(f"File {CPU_TEMPERATURE_FILE} does not exist.")
+        return False
+    return True
 
 def run_check_loop(max_wait_secs: int, wait_per_loop_s: int, check_name: str, check_function: callable, *args):
     """
@@ -198,17 +212,33 @@ def run_check_loop(max_wait_secs: int, wait_per_loop_s: int, check_name: str, ch
 Energy & temperature data loaders for the server response
 """
 
-def get_current_times(perf_file: Path, nvidia_smi_file: Path):
-    with open(perf_file, 'r') as f:
-        last_line_perf = f.readlines()[-1]
-    with open(nvidia_smi_file, 'r') as f:
-        last_line_nvidia = f.readlines()[-1]
+# def get_current_times(perf_file: Path, nvidia_smi_file: Path):
+#     with open(perf_file, 'r') as f:
+#         last_line_perf = f.readlines()[-1]
+#     with open(nvidia_smi_file, 'r') as f:
+#         last_line_nvidia = f.readlines()[-1]
     
-    time_perf = float(last_line_perf.strip(' \n').split(';')[0])
-    time_nvidia = datetime.strptime(last_line_nvidia.strip('\n').split(',')[0], '%Y/%m/%d %H:%M:%S.%f').timestamp()
+#     time_perf = float(last_line_perf.strip(' \n').split(';')[0])
+#     time_nvidia = datetime.strptime(last_line_nvidia.strip('\n').split(',')[0], '%Y/%m/%d %H:%M:%S.%f').timestamp()
 
-    return time_perf, time_nvidia
+#     return time_perf, time_nvidia
 
+def get_current_times(perf_file: Path, nvidia_smi_file: Path):
+    try:
+        with open(perf_file, 'r') as f:
+            last_line_perf = f.readlines()[-1]
+        with open(nvidia_smi_file, 'r') as f:
+            last_line_nvidia = f.readlines()[-1]
+
+        time_perf = float(last_line_perf.strip(' \n').split(';')[0])
+        time_nvidia = datetime.strptime(last_line_nvidia.strip('\n').split(',')[0], '%Y/%m/%d %H:%M:%S.%f').timestamp()
+
+        return time_perf, time_nvidia
+
+    except Exception as e:
+        print(f"An error occurred: {e}")
+        time.sleep(2)  # wait for 2 seconds before trying again
+        return get_current_times(perf_file, nvidia_smi_file)  # recursive call with the same arguments
 
 def get_energy_data():
     df_cpu, df_ram = parse_perf(PERF_FILE)
@@ -242,6 +272,10 @@ def run_function(imports: str, function_to_run: str, obj: object, args: list, kw
     """
     # WARNING: potential security risk from exec and eval statements
 
+    # check if the output files exist, else wait for . If not, raise an error.
+    if not run_check_loop(20, 2, "output files", output_files_exist_check):
+            raise TimeoutError(f"Server couldn't create output files within {max_wait_secs} seconds")
+    
     # if this option is True, function_to_run is a python script that we need to execute.
     # here we write it to a temporary module and prepare the command to execute it
     if exec_not_eval:
