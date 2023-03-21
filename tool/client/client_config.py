@@ -28,7 +28,7 @@ code_dir_saurabh = data_path_saurabh / code_dataset
 code_dir_tim = data_path_tim / code_dataset
 
 # directory where to find patched code
-CODE_DIR = code_dir_tim
+CODE_DIR = code_dir_saurabh
 
 PATCHING_SCRIPT_PATH = Path('script_patcher.py')
 code_dataset_path = Path('../../data/code-dataset')

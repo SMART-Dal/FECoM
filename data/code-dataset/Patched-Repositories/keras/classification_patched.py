@@ -11,7 +11,7 @@ from tool.server.function_details import FunctionDetails
 current_path = os.path.abspath(__file__)
 (immediate_folder, file_name) = os.path.split(current_path)
 immediate_folder = os.path.basename(immediate_folder)
-experiment_number = int(sys.argv[0])
+experiment_number = sys.argv[0]
 experiment_file_name = os.path.splitext(file_name)[0]
 EXPERIMENT_FILE_PATH = EXPERIMENT_DIR / 'method-level' / immediate_folder / experiment_file_name / f'experiment-{experiment_number}.json'
 
