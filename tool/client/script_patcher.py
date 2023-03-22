@@ -184,7 +184,7 @@ class TransformCall(ast.NodeTransformer):
             return new_node
 
         for i, obj in enumerate(requiredObjects):
-            if(obj in callvisitor.name.split('.')[0]):
+            if(obj == callvisitor.name.split('.')[0]):
                 dummyNode=copy.deepcopy(node)
                 dummyNode.args.clear()
                 dummyNode.keywords.clear()

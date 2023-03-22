@@ -57,8 +57,7 @@ def serialize_example(feature0, feature1, feature2, feature3):
     return custom_method(
     example_proto.SerializeToString(), imports='import tensorflow as tf;import numpy as np;import IPython.display as display', function_to_run='obj.SerializeToString()', method_object=eval('example_proto'), object_signature='tf.train.Example', function_args=[], function_kwargs={}, max_wait_secs=0, custom_class=None)
 example_observation = []
-serialized_example = custom_method(
-serialize_example(False, 4, b'goat', 0.9876), imports='import tensorflow as tf;import numpy as np;import IPython.display as display', function_to_run='obj(*args)', method_object=eval('serialize_example'), object_signature='tf.train.Example', function_args=[eval('False'), eval('4'), eval("b'goat'"), eval('0.9876')], function_kwargs={}, max_wait_secs=0, custom_class=None)
+serialized_example = serialize_example(False, 4, b'goat', 0.9876)
 serialized_example
 example_proto = custom_method(
 tf.train.Example.FromString(serialized_example), imports='import tensorflow as tf;import numpy as np;import IPython.display as display', function_to_run='tf.train.Example.FromString(*args)', method_object=None, object_signature=None, function_args=[eval('serialized_example')], function_kwargs={}, max_wait_secs=0)
@@ -88,8 +87,7 @@ serialized_features_dataset
 
 def generator():
     for features in features_dataset:
-        yield custom_method(
-        serialize_example(*features), imports='import tensorflow as tf;import numpy as np;import IPython.display as display', function_to_run='obj(*args)', method_object=eval('serialize_example'), object_signature='tf.train.Example', function_args=[eval('*features')], function_kwargs={}, max_wait_secs=0, custom_class=None)
+        yield serialize_example(*features)
 serialized_features_dataset = custom_method(
 tf.data.Dataset.from_generator(generator, output_types=tf.string, output_shapes=()), imports='import tensorflow as tf;import numpy as np;import IPython.display as display', function_to_run='tf.data.Dataset.from_generator(*args, **kwargs)', method_object=None, object_signature=None, function_args=[eval('generator')], function_kwargs={'output_types': eval('tf.string'), 'output_shapes': eval('()')}, max_wait_secs=0)
 serialized_features_dataset
@@ -122,8 +120,7 @@ for parsed_record in parsed_dataset.take(10):
 with custom_method(
 tf.io.TFRecordWriter(filename), imports='import tensorflow as tf;import numpy as np;import IPython.display as display', function_to_run='tf.io.TFRecordWriter(*args)', method_object=None, object_signature=None, function_args=[eval('filename')], function_kwargs={}, max_wait_secs=0) as writer:
     for i in range(n_observations):
-        example = custom_method(
-        serialize_example(feature0[i], feature1[i], feature2[i], feature3[i]), imports='import tensorflow as tf;import numpy as np;import IPython.display as display', function_to_run='obj(*args)', method_object=eval('serialize_example'), object_signature='tf.train.Example', function_args=[eval('feature0[i]'), eval('feature1[i]'), eval('feature2[i]'), eval('feature3[i]')], function_kwargs={}, max_wait_secs=0, custom_class=None)
+        example = serialize_example(feature0[i], feature1[i], feature2[i], feature3[i])
         custom_method(
         writer.write(example), imports='import tensorflow as tf;import numpy as np;import IPython.display as display', function_to_run='obj.write(*args)', method_object=eval('writer'), object_signature='tf.data.experimental.TFRecordWriter', function_args=[eval('example')], function_kwargs={}, max_wait_secs=0, custom_class=None)
 filenames = [filename]
@@ -170,8 +167,7 @@ with custom_method(
 tf.io.TFRecordWriter(record_file), imports='import tensorflow as tf;import numpy as np;import IPython.display as display', function_to_run='tf.io.TFRecordWriter(*args)', method_object=None, object_signature=None, function_args=[eval('record_file')], function_kwargs={}, max_wait_secs=0) as writer:
     for (filename, label) in image_labels.items():
         image_string = open(filename, 'rb').read()
-        tf_example = custom_method(
-        image_example(image_string, label), imports='import tensorflow as tf;import numpy as np;import IPython.display as display', function_to_run='obj(*args)', method_object=eval('image_example'), object_signature='tf.train.Example', function_args=[eval('image_string'), eval('label')], function_kwargs={}, max_wait_secs=0, custom_class=None)
+        tf_example = image_example(image_string, label)
         custom_method(
         writer.write(tf_example.SerializeToString()), imports='import tensorflow as tf;import numpy as np;import IPython.display as display', function_to_run='obj.write(*args)', method_object=eval('writer'), object_signature='tf.data.experimental.TFRecordWriter', function_args=[eval('tf_example.SerializeToString()')], function_kwargs={}, max_wait_secs=0, custom_class=None)
 raw_image_dataset = custom_method(

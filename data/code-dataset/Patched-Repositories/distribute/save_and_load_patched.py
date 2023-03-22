@@ -43,8 +43,7 @@ def get_model():
         custom_method(
         model.compile(loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True), optimizer=tf.keras.optimizers.Adam(), metrics=[tf.metrics.SparseCategoricalAccuracy()]), imports='import tensorflow as tf;import tensorflow_hub as hub;import tensorflow_datasets as tfds', function_to_run='obj.compile(**kwargs)', method_object=eval('model'), object_signature='tf.keras.Sequential', function_args=[], function_kwargs={'loss': eval('tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True)'), 'optimizer': eval('tf.keras.optimizers.Adam()'), 'metrics': eval('[tf.metrics.SparseCategoricalAccuracy()]')}, max_wait_secs=0, custom_class=None)
         return model
-model = custom_method(
-get_model(), imports='import tensorflow as tf;import tensorflow_hub as hub;import tensorflow_datasets as tfds', function_to_run='obj()', method_object=eval('get_model'), object_signature='tf.keras.Sequential', function_args=[], function_kwargs={}, max_wait_secs=0, custom_class=None)
+model = get_model()
 (train_dataset, eval_dataset) = get_data()
 custom_method(
 model.fit(train_dataset, epochs=2), imports='import tensorflow as tf;import tensorflow_hub as hub;import tensorflow_datasets as tfds', function_to_run='obj.fit(*args, **kwargs)', method_object=eval('model'), object_signature='tf.keras.Sequential', function_args=[eval('train_dataset')], function_kwargs={'epochs': eval('2')}, max_wait_secs=0, custom_class=None)
@@ -54,7 +53,7 @@ model.save(keras_model_path), imports='import tensorflow as tf;import tensorflow
 restored_keras_model = custom_method(
 tf.keras.models.load_model(keras_model_path), imports='import tensorflow as tf;import tensorflow_hub as hub;import tensorflow_datasets as tfds', function_to_run='tf.keras.models.load_model(*args)', method_object=None, object_signature=None, function_args=[eval('keras_model_path')], function_kwargs={}, max_wait_secs=0)
 custom_method(
-restored_keras_model.fit(train_dataset, epochs=2), imports='import tensorflow as tf;import tensorflow_hub as hub;import tensorflow_datasets as tfds', function_to_run='obj.fit(*args, **kwargs)', method_object=eval('restored_keras_model'), object_signature='tf.keras.Sequential', function_args=[eval('train_dataset')], function_kwargs={'epochs': eval('2')}, max_wait_secs=0, custom_class=None)
+restored_keras_model.fit(train_dataset, epochs=2), imports='import tensorflow as tf;import tensorflow_hub as hub;import tensorflow_datasets as tfds', function_to_run='obj.fit(*args, **kwargs)', method_object=eval('restored_keras_model'), object_signature='tf.keras.models.load_model', function_args=[eval('train_dataset')], function_kwargs={'epochs': eval('2')}, max_wait_secs=0, custom_class=None)
 another_strategy = custom_method(
 tf.distribute.OneDeviceStrategy('/cpu:0'), imports='import tensorflow as tf;import tensorflow_hub as hub;import tensorflow_datasets as tfds', function_to_run='tf.distribute.OneDeviceStrategy(*args)', method_object=None, object_signature=None, function_args=[eval("'/cpu:0'")], function_kwargs={}, max_wait_secs=0)
 with custom_method(
@@ -62,9 +61,8 @@ another_strategy.scope(), imports='import tensorflow as tf;import tensorflow_hub
     restored_keras_model_ds = custom_method(
     tf.keras.models.load_model(keras_model_path), imports='import tensorflow as tf;import tensorflow_hub as hub;import tensorflow_datasets as tfds', function_to_run='tf.keras.models.load_model(*args)', method_object=None, object_signature=None, function_args=[eval('keras_model_path')], function_kwargs={}, max_wait_secs=0)
     custom_method(
-    restored_keras_model_ds.fit(train_dataset, epochs=2), imports='import tensorflow as tf;import tensorflow_hub as hub;import tensorflow_datasets as tfds', function_to_run='obj.fit(*args, **kwargs)', method_object=eval('restored_keras_model_ds'), object_signature='tf.keras.Sequential', function_args=[eval('train_dataset')], function_kwargs={'epochs': eval('2')}, max_wait_secs=0, custom_class=None)
-model = custom_method(
-get_model(), imports='import tensorflow as tf;import tensorflow_hub as hub;import tensorflow_datasets as tfds', function_to_run='obj()', method_object=eval('get_model'), object_signature='tf.keras.Sequential', function_args=[], function_kwargs={}, max_wait_secs=0, custom_class=None)
+    restored_keras_model_ds.fit(train_dataset, epochs=2), imports='import tensorflow as tf;import tensorflow_hub as hub;import tensorflow_datasets as tfds', function_to_run='obj.fit(*args, **kwargs)', method_object=eval('restored_keras_model_ds'), object_signature='tf.keras.models.load_model', function_args=[eval('train_dataset')], function_kwargs={'epochs': eval('2')}, max_wait_secs=0, custom_class=None)
+model = get_model()
 saved_model_path = '/tmp/tf_save'
 custom_method(
 tf.saved_model.save(model, saved_model_path), imports='import tensorflow as tf;import tensorflow_hub as hub;import tensorflow_datasets as tfds', function_to_run='tf.saved_model.save(*args)', method_object=None, object_signature=None, function_args=[eval('model'), eval('saved_model_path')], function_kwargs={}, max_wait_secs=0)
@@ -72,10 +70,8 @@ DEFAULT_FUNCTION_KEY = 'serving_default'
 loaded = custom_method(
 tf.saved_model.load(saved_model_path), imports='import tensorflow as tf;import tensorflow_hub as hub;import tensorflow_datasets as tfds', function_to_run='tf.saved_model.load(*args)', method_object=None, object_signature=None, function_args=[eval('saved_model_path')], function_kwargs={}, max_wait_secs=0)
 inference_func = loaded.signatures[DEFAULT_FUNCTION_KEY]
-predict_dataset = custom_method(
-eval_dataset.map(lambda image, label: image), imports='import tensorflow as tf;import tensorflow_hub as hub;import tensorflow_datasets as tfds', function_to_run='obj.map(*args)', method_object=eval('eval_dataset'), object_signature='tf.data.Dataset.from_tensors(\n    (tf.range(5, dtype=tf.float32), tf.range(5, dtype=tf.float32))\n    ).repeat(dataset_size).batch', function_args=[eval('lambda image, label: image')], function_kwargs={}, max_wait_secs=0, custom_class=None)
-for batch in custom_method(
-predict_dataset.take(1), imports='import tensorflow as tf;import tensorflow_hub as hub;import tensorflow_datasets as tfds', function_to_run='obj.take(*args)', method_object=eval('predict_dataset'), object_signature='tf.data.Dataset.from_tensors(\n    (tf.range(5, dtype=tf.float32), tf.range(5, dtype=tf.float32))\n    ).repeat(dataset_size).batch', function_args=[eval('1')], function_kwargs={}, max_wait_secs=0, custom_class=None):
+predict_dataset = eval_dataset.map(lambda image, label: image)
+for batch in predict_dataset.take(1):
     print(inference_func(batch))
 another_strategy = custom_method(
 tf.distribute.MirroredStrategy(), imports='import tensorflow as tf;import tensorflow_hub as hub;import tensorflow_datasets as tfds', function_to_run='tf.distribute.MirroredStrategy()', method_object=None, object_signature=None, function_args=[], function_kwargs={}, max_wait_secs=0)
@@ -107,14 +103,12 @@ with custom_method(
 another_strategy.scope(), imports='import tensorflow as tf;import tensorflow_hub as hub;import tensorflow_datasets as tfds', function_to_run='obj.scope()', method_object=eval('another_strategy'), object_signature='tf.distribute.OneDeviceStrategy', function_args=[], function_kwargs={}, max_wait_secs=0, custom_class=None):
     loaded = custom_method(
     tf.saved_model.load(saved_model_path), imports='import tensorflow as tf;import tensorflow_hub as hub;import tensorflow_datasets as tfds', function_to_run='tf.saved_model.load(*args)', method_object=None, object_signature=None, function_args=[eval('saved_model_path')], function_kwargs={}, max_wait_secs=0)
-    model = custom_method(
-    build_model(loaded), imports='import tensorflow as tf;import tensorflow_hub as hub;import tensorflow_datasets as tfds', function_to_run='obj(*args)', method_object=eval('build_model'), object_signature='tf.keras.Sequential', function_args=[eval('loaded')], function_kwargs={}, max_wait_secs=0, custom_class=None)
+    model = build_model(loaded)
     custom_method(
     model.compile(loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True), optimizer=tf.keras.optimizers.Adam(), metrics=[tf.metrics.SparseCategoricalAccuracy()]), imports='import tensorflow as tf;import tensorflow_hub as hub;import tensorflow_datasets as tfds', function_to_run='obj.compile(**kwargs)', method_object=eval('model'), object_signature='tf.keras.Sequential', function_args=[], function_kwargs={'loss': eval('tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True)'), 'optimizer': eval('tf.keras.optimizers.Adam()'), 'metrics': eval('[tf.metrics.SparseCategoricalAccuracy()]')}, max_wait_secs=0, custom_class=None)
     custom_method(
     model.fit(train_dataset, epochs=2), imports='import tensorflow as tf;import tensorflow_hub as hub;import tensorflow_datasets as tfds', function_to_run='obj.fit(*args, **kwargs)', method_object=eval('model'), object_signature='tf.keras.Sequential', function_args=[eval('train_dataset')], function_kwargs={'epochs': eval('2')}, max_wait_secs=0, custom_class=None)
-model = custom_method(
-get_model(), imports='import tensorflow as tf;import tensorflow_hub as hub;import tensorflow_datasets as tfds', function_to_run='obj()', method_object=eval('get_model'), object_signature='tf.keras.Sequential', function_args=[], function_kwargs={}, max_wait_secs=0, custom_class=None)
+model = get_model()
 custom_method(
 model.save(keras_model_path), imports='import tensorflow as tf;import tensorflow_hub as hub;import tensorflow_datasets as tfds', function_to_run='obj.save(*args)', method_object=eval('model'), object_signature='tf.keras.Sequential', function_args=[eval('keras_model_path')], function_kwargs={}, max_wait_secs=0, custom_class=None)
 another_strategy = custom_method(
@@ -123,8 +117,7 @@ with custom_method(
 another_strategy.scope(), imports='import tensorflow as tf;import tensorflow_hub as hub;import tensorflow_datasets as tfds', function_to_run='obj.scope()', method_object=eval('another_strategy'), object_signature='tf.distribute.OneDeviceStrategy', function_args=[], function_kwargs={}, max_wait_secs=0, custom_class=None):
     loaded = custom_method(
     tf.saved_model.load(keras_model_path), imports='import tensorflow as tf;import tensorflow_hub as hub;import tensorflow_datasets as tfds', function_to_run='tf.saved_model.load(*args)', method_object=None, object_signature=None, function_args=[eval('keras_model_path')], function_kwargs={}, max_wait_secs=0)
-model = custom_method(
-get_model(), imports='import tensorflow as tf;import tensorflow_hub as hub;import tensorflow_datasets as tfds', function_to_run='obj()', method_object=eval('get_model'), object_signature='tf.keras.Sequential', function_args=[], function_kwargs={}, max_wait_secs=0, custom_class=None)
+model = get_model()
 saved_model_path = '/tmp/tf_save'
 save_options = custom_method(
 tf.saved_model.SaveOptions(experimental_io_device='/job:localhost'), imports='import tensorflow as tf;import tensorflow_hub as hub;import tensorflow_datasets as tfds', function_to_run='tf.saved_model.SaveOptions(**kwargs)', method_object=None, object_signature=None, function_args=[], function_kwargs={'experimental_io_device': eval("'/job:localhost'")}, max_wait_secs=0)
@@ -153,7 +146,7 @@ class SubclassedModel(tf.keras.Model):
 my_model = SubclassedModel()
 try:
     custom_method(
-    my_model.save(keras_model_path), imports='import tensorflow as tf;import tensorflow_hub as hub;import tensorflow_datasets as tfds', function_to_run='obj.save(*args)', method_object=eval('my_model'), object_signature='tf.keras.Sequential', function_args=[eval('keras_model_path')], function_kwargs={}, max_wait_secs=0, custom_class='class SubclassedModel(tf.keras.Model):\n  """Example model defined by subclassing `tf.keras.Model`."""\n\n  output_name = \'output_layer\'\n\n  def __init__(self):\n    super(SubclassedModel, self).__init__()\n    self._dense_layer = tf.keras.layers.Dense(\n        5, dtype=tf.dtypes.float32, name=self.output_name)\n\n  def call(self, inputs):\n    return self._dense_layer(inputs)')
+    my_model.save(keras_model_path), imports='import tensorflow as tf;import tensorflow_hub as hub;import tensorflow_datasets as tfds', function_to_run='obj.save(*args)', method_object=eval('my_model'), object_signature='SubclassedModel', function_args=[eval('keras_model_path')], function_kwargs={}, max_wait_secs=0, custom_class='class SubclassedModel(tf.keras.Model):\n  """Example model defined by subclassing `tf.keras.Model`."""\n\n  output_name = \'output_layer\'\n\n  def __init__(self):\n    super(SubclassedModel, self).__init__()\n    self._dense_layer = tf.keras.layers.Dense(\n        5, dtype=tf.dtypes.float32, name=self.output_name)\n\n  def call(self, inputs):\n    return self._dense_layer(inputs)')
 except ValueError as e:
     print(f'{type(e).__name__}: ', *e.args)
 custom_method(
@@ -168,9 +161,9 @@ dataset_size = 100
 dataset = custom_method(
 tf.data.Dataset.from_tensors((tf.range(5, dtype=tf.float32), tf.range(5, dtype=tf.float32))).repeat(dataset_size).batch(BATCH_SIZE), imports='import tensorflow as tf;import tensorflow_hub as hub;import tensorflow_datasets as tfds', function_to_run='tf.data.Dataset.from_tensors((tf.range(5, dtype=tf.float32), tf.range(5, dtype=tf.float32))).repeat(dataset_size).batch(*args)', method_object=None, object_signature=None, function_args=[eval('BATCH_SIZE')], function_kwargs={}, max_wait_secs=0)
 custom_method(
-my_model.compile(optimizer='adam', loss='mean_squared_error'), imports='import tensorflow as tf;import tensorflow_hub as hub;import tensorflow_datasets as tfds', function_to_run='obj.compile(**kwargs)', method_object=eval('my_model'), object_signature='tf.keras.Sequential', function_args=[], function_kwargs={'optimizer': eval("'adam'"), 'loss': eval("'mean_squared_error'")}, max_wait_secs=0, custom_class='class SubclassedModel(tf.keras.Model):\n  """Example model defined by subclassing `tf.keras.Model`."""\n\n  output_name = \'output_layer\'\n\n  def __init__(self):\n    super(SubclassedModel, self).__init__()\n    self._dense_layer = tf.keras.layers.Dense(\n        5, dtype=tf.dtypes.float32, name=self.output_name)\n\n  def call(self, inputs):\n    return self._dense_layer(inputs)')
+my_model.compile(optimizer='adam', loss='mean_squared_error'), imports='import tensorflow as tf;import tensorflow_hub as hub;import tensorflow_datasets as tfds', function_to_run='obj.compile(**kwargs)', method_object=eval('my_model'), object_signature='SubclassedModel', function_args=[], function_kwargs={'optimizer': eval("'adam'"), 'loss': eval("'mean_squared_error'")}, max_wait_secs=0, custom_class='class SubclassedModel(tf.keras.Model):\n  """Example model defined by subclassing `tf.keras.Model`."""\n\n  output_name = \'output_layer\'\n\n  def __init__(self):\n    super(SubclassedModel, self).__init__()\n    self._dense_layer = tf.keras.layers.Dense(\n        5, dtype=tf.dtypes.float32, name=self.output_name)\n\n  def call(self, inputs):\n    return self._dense_layer(inputs)')
 custom_method(
-my_model.fit(dataset, epochs=2), imports='import tensorflow as tf;import tensorflow_hub as hub;import tensorflow_datasets as tfds', function_to_run='obj.fit(*args, **kwargs)', method_object=eval('my_model'), object_signature='tf.keras.Sequential', function_args=[eval('dataset')], function_kwargs={'epochs': eval('2')}, max_wait_secs=0, custom_class='class SubclassedModel(tf.keras.Model):\n  """Example model defined by subclassing `tf.keras.Model`."""\n\n  output_name = \'output_layer\'\n\n  def __init__(self):\n    super(SubclassedModel, self).__init__()\n    self._dense_layer = tf.keras.layers.Dense(\n        5, dtype=tf.dtypes.float32, name=self.output_name)\n\n  def call(self, inputs):\n    return self._dense_layer(inputs)')
+my_model.fit(dataset, epochs=2), imports='import tensorflow as tf;import tensorflow_hub as hub;import tensorflow_datasets as tfds', function_to_run='obj.fit(*args, **kwargs)', method_object=eval('my_model'), object_signature='SubclassedModel', function_args=[eval('dataset')], function_kwargs={'epochs': eval('2')}, max_wait_secs=0, custom_class='class SubclassedModel(tf.keras.Model):\n  """Example model defined by subclassing `tf.keras.Model`."""\n\n  output_name = \'output_layer\'\n\n  def __init__(self):\n    super(SubclassedModel, self).__init__()\n    self._dense_layer = tf.keras.layers.Dense(\n        5, dtype=tf.dtypes.float32, name=self.output_name)\n\n  def call(self, inputs):\n    return self._dense_layer(inputs)')
 print(my_model.save_spec() is None)
 custom_method(
-my_model.save(keras_model_path), imports='import tensorflow as tf;import tensorflow_hub as hub;import tensorflow_datasets as tfds', function_to_run='obj.save(*args)', method_object=eval('my_model'), object_signature='tf.keras.Sequential', function_args=[eval('keras_model_path')], function_kwargs={}, max_wait_secs=0, custom_class='class SubclassedModel(tf.keras.Model):\n  """Example model defined by subclassing `tf.keras.Model`."""\n\n  output_name = \'output_layer\'\n\n  def __init__(self):\n    super(SubclassedModel, self).__init__()\n    self._dense_layer = tf.keras.layers.Dense(\n        5, dtype=tf.dtypes.float32, name=self.output_name)\n\n  def call(self, inputs):\n    return self._dense_layer(inputs)')
+my_model.save(keras_model_path), imports='import tensorflow as tf;import tensorflow_hub as hub;import tensorflow_datasets as tfds', function_to_run='obj.save(*args)', method_object=eval('my_model'), object_signature='SubclassedModel', function_args=[eval('keras_model_path')], function_kwargs={}, max_wait_secs=0, custom_class='class SubclassedModel(tf.keras.Model):\n  """Example model defined by subclassing `tf.keras.Model`."""\n\n  output_name = \'output_layer\'\n\n  def __init__(self):\n    super(SubclassedModel, self).__init__()\n    self._dense_layer = tf.keras.layers.Dense(\n        5, dtype=tf.dtypes.float32, name=self.output_name)\n\n  def call(self, inputs):\n    return self._dense_layer(inputs)')

@@ -47,7 +47,6 @@ tf_config = {
 }
 json.dumps(tf_config)
 os.environ['GREETINGS'] = 'Hello TensorFlow!'
-echo ${GREETINGS}
 strategy = tf.distribute.MultiWorkerMirroredStrategy()
 with strategy.scope():
   multi_worker_model = mnist_setup.build_and_compile_cnn_model()
@@ -72,16 +71,11 @@ with strategy.scope():
 
 
 multi_worker_model.fit(multi_worker_dataset, epochs=3, steps_per_epoch=70)
-ls *.py
 os.environ['TF_CONFIG'] = json.dumps(tf_config)
-python main.py &> job_0.log
 import time
 time.sleep(10)
-cat job_0.log
 tf_config['task']['index'] = 1
 os.environ['TF_CONFIG'] = json.dumps(tf_config)
-python main.py
-cat job_0.log
 os.environ.pop('TF_CONFIG', None)
 options = tf.data.Options()
 options.experimental_distribute.auto_shard_policy = tf.data.experimental.AutoShardPolicy.OFF

@@ -96,7 +96,6 @@ class MethodLevelExperiment(Experiment):
         # raise NotImplementedError("This has not been tested properly yet. Test before using.")
         super().__init__(ExperimentKinds.METHOD_LEVEL.value, project, experiment_dir, code_dir)
         self.__code_file = self.code_dir / f"{self.project}_patched.py"
-        print("Test 3", self.__code_file)
 
     def run(self):
         try:

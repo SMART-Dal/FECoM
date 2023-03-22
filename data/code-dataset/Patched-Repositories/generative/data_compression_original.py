@@ -1,7 +1,3 @@
-
-read MAJOR MINOR <<< "$(pip show tensorflow | perl -p -0777 -e 's/.*Version: (\d+)\.(\d+).*/\1 \2/sg')"
-pip install "tensorflow-compression<$MAJOR.$(($MINOR+1))"
-
 import matplotlib.pyplot as plt
 import tensorflow as tf
 import tensorflow_compression as tfc

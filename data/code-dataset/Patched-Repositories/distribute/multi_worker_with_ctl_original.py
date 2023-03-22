@@ -44,7 +44,6 @@ tf_config = {
 }
 json.dumps(tf_config)
 os.environ['GREETINGS'] = 'Hello TensorFlow!'
-echo ${GREETINGS}
 strategy = tf.distribute.MultiWorkerMirroredStrategy()
 import mnist
 with strategy.scope():
@@ -265,14 +264,9 @@ while epoch.numpy() < num_epochs:
 
   epoch.assign_add(1)
   step_in_epoch.assign(0)
-ls *.py
 os.environ['TF_CONFIG'] = json.dumps(tf_config)
-python main.py &> job_0.log
 import time
 time.sleep(20)
-cat job_0.log
 tf_config['task']['index'] = 1
 os.environ['TF_CONFIG'] = json.dumps(tf_config)
-python main.py > /dev/null 2>&1
-cat job_0.log
 os.environ.pop('TF_CONFIG', None)

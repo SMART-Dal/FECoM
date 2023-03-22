@@ -1,11 +1,144 @@
-Traceback (most recent call last):
-  File "/home/saurabh/code-energy-consumption/tool/client/script_patcher.py", line 321, in <module>
-    main()
-  File "/home/saurabh/code-energy-consumption/tool/client/script_patcher.py", line 29, in main
-    tree = ast.parse(sourceCode)
-  File "/home/saurabh/miniconda3/envs/tf2/lib/python3.9/ast.py", line 50, in parse
-    return compile(source, filename, mode, flags,
-  File "<unknown>", line 50
-    echo ${GREETINGS}
-         ^
-SyntaxError: invalid syntax
+import json
+import os
+import sys
+import os
+from pathlib import Path
+import dill as pickle
+import sys
+from tool.client.client_config import EXPERIMENT_DIR, MAX_WAIT_S, WAIT_AFTER_RUN_S
+from tool.server.send_request import send_request
+from tool.server.function_details import FunctionDetails
+current_path = os.path.abspath(__file__)
+experiment_number = sys.argv[1]
+experiment_project = sys.argv[2]
+EXPERIMENT_FILE_PATH = EXPERIMENT_DIR / 'method-level' / experiment_project / f'experiment-{experiment_number}.json'
+
+def custom_method(func, imports: str, function_to_run: str, method_object=None, object_signature=None, function_args: list=None, function_kwargs: dict=None, max_wait_secs=MAX_WAIT_S, custom_class=None, wait_after_run_secs=WAIT_AFTER_RUN_S):
+    result = send_request(imports=imports, function_to_run=function_to_run, function_args=function_args, function_kwargs=function_kwargs, max_wait_secs=max_wait_secs, wait_after_run_secs=wait_after_run_secs, method_object=method_object, object_signature=object_signature, custom_class=custom_class, experiment_file_path=EXPERIMENT_FILE_PATH)
+    return func
+os.environ['CUDA_VISIBLE_DEVICES'] = '-1'
+os.environ.pop('TF_CONFIG', None)
+if '.' not in sys.path:
+    sys.path.insert(0, '.')
+import tensorflow as tf
+import os
+import tensorflow as tf
+import numpy as np
+
+def mnist_dataset(batch_size):
+    ((x_train, y_train), _) = custom_method(
+    tf.keras.datasets.mnist.load_data(), imports='import sys;import time;import numpy as np;import mnist_setup;import tensorflow as tf;import os;import json', function_to_run='tf.keras.datasets.mnist.load_data()', method_object=None, object_signature=None, function_args=[], function_kwargs={}, max_wait_secs=0)
+    x_train = x_train / np.float32(255)
+    y_train = y_train.astype(np.int64)
+    train_dataset = custom_method(
+    tf.data.Dataset.from_tensor_slices((x_train, y_train)).shuffle(60000).repeat().batch(batch_size), imports='import sys;import time;import numpy as np;import mnist_setup;import tensorflow as tf;import os;import json', function_to_run='tf.data.Dataset.from_tensor_slices((x_train, y_train)).shuffle(60000).repeat().batch(*args)', method_object=None, object_signature=None, function_args=[eval('batch_size')], function_kwargs={}, max_wait_secs=0)
+    return train_dataset
+
+def build_and_compile_cnn_model():
+    model = custom_method(
+    tf.keras.Sequential([tf.keras.layers.InputLayer(input_shape=(28, 28)), tf.keras.layers.Reshape(target_shape=(28, 28, 1)), tf.keras.layers.Conv2D(32, 3, activation='relu'), tf.keras.layers.Flatten(), tf.keras.layers.Dense(128, activation='relu'), tf.keras.layers.Dense(10)]), imports='import sys;import time;import numpy as np;import mnist_setup;import tensorflow as tf;import os;import json', function_to_run='tf.keras.Sequential(*args)', method_object=None, object_signature=None, function_args=[eval("[\n      tf.keras.layers.InputLayer(input_shape=(28, 28)),\n      tf.keras.layers.Reshape(target_shape=(28, 28, 1)),\n      tf.keras.layers.Conv2D(32, 3, activation='relu'),\n      tf.keras.layers.Flatten(),\n      tf.keras.layers.Dense(128, activation='relu'),\n      tf.keras.layers.Dense(10)\n  ]")], function_kwargs={}, max_wait_secs=0)
+    custom_method(
+    model.compile(loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True), optimizer=tf.keras.optimizers.SGD(learning_rate=0.001), metrics=['accuracy']), imports='import sys;import time;import numpy as np;import mnist_setup;import tensorflow as tf;import os;import json', function_to_run='obj.compile(**kwargs)', method_object=eval('model'), object_signature='tf.keras.Sequential', function_args=[], function_kwargs={'loss': eval('tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True)'), 'optimizer': eval('tf.keras.optimizers.SGD(learning_rate=0.001)'), 'metrics': eval("['accuracy']")}, max_wait_secs=0, custom_class=None)
+    return model
+import mnist_setup
+batch_size = 64
+single_worker_dataset = mnist_setup.mnist_dataset(batch_size)
+single_worker_model = mnist_setup.build_and_compile_cnn_model()
+single_worker_model.fit(single_worker_dataset, epochs=3, steps_per_epoch=70)
+tf_config = {'cluster': {'worker': ['localhost:12345', 'localhost:23456']}, 'task': {'type': 'worker', 'index': 0}}
+json.dumps(tf_config)
+os.environ['GREETINGS'] = 'Hello TensorFlow!'
+strategy = custom_method(
+tf.distribute.MultiWorkerMirroredStrategy(), imports='import sys;import time;import numpy as np;import mnist_setup;import tensorflow as tf;import os;import json', function_to_run='tf.distribute.MultiWorkerMirroredStrategy()', method_object=None, object_signature=None, function_args=[], function_kwargs={}, max_wait_secs=0)
+with custom_method(
+strategy.scope(), imports='import sys;import time;import numpy as np;import mnist_setup;import tensorflow as tf;import os;import json', function_to_run='obj.scope()', method_object=eval('strategy'), object_signature='tf.distribute.MultiWorkerMirroredStrategy', function_args=[], function_kwargs={}, max_wait_secs=0, custom_class=None):
+    multi_worker_model = mnist_setup.build_and_compile_cnn_model()
+import os
+import json
+import tensorflow as tf
+import mnist_setup
+per_worker_batch_size = 64
+tf_config = json.loads(os.environ['TF_CONFIG'])
+num_workers = len(tf_config['cluster']['worker'])
+strategy = custom_method(
+tf.distribute.MultiWorkerMirroredStrategy(), imports='import sys;import time;import numpy as np;import mnist_setup;import tensorflow as tf;import os;import json', function_to_run='tf.distribute.MultiWorkerMirroredStrategy()', method_object=None, object_signature=None, function_args=[], function_kwargs={}, max_wait_secs=0)
+global_batch_size = per_worker_batch_size * num_workers
+multi_worker_dataset = mnist_setup.mnist_dataset(global_batch_size)
+with custom_method(
+strategy.scope(), imports='import sys;import time;import numpy as np;import mnist_setup;import tensorflow as tf;import os;import json', function_to_run='obj.scope()', method_object=eval('strategy'), object_signature='tf.distribute.MultiWorkerMirroredStrategy', function_args=[], function_kwargs={}, max_wait_secs=0, custom_class=None):
+    multi_worker_model = mnist_setup.build_and_compile_cnn_model()
+multi_worker_model.fit(multi_worker_dataset, epochs=3, steps_per_epoch=70)
+os.environ['TF_CONFIG'] = json.dumps(tf_config)
+import time
+time.sleep(10)
+tf_config['task']['index'] = 1
+os.environ['TF_CONFIG'] = json.dumps(tf_config)
+os.environ.pop('TF_CONFIG', None)
+options = custom_method(
+tf.data.Options(), imports='import sys;import time;import numpy as np;import mnist_setup;import tensorflow as tf;import os;import json', function_to_run='tf.data.Options()', method_object=None, object_signature=None, function_args=[], function_kwargs={}, max_wait_secs=0)
+options.experimental_distribute.auto_shard_policy = tf.data.experimental.AutoShardPolicy.OFF
+global_batch_size = 64
+multi_worker_dataset = mnist_setup.mnist_dataset(batch_size=64)
+dataset_no_auto_shard = multi_worker_dataset.with_options(options)
+model_path = '/tmp/keras-model'
+
+def _is_chief(task_type, task_id):
+    return task_type == 'worker' and task_id == 0 or task_type is None
+
+def _get_temp_dir(dirpath, task_id):
+    base_dirpath = 'workertemp_' + str(task_id)
+    temp_dir = os.path.join(dirpath, base_dirpath)
+    custom_method(
+    tf.io.gfile.makedirs(temp_dir), imports='import sys;import time;import numpy as np;import mnist_setup;import tensorflow as tf;import os;import json', function_to_run='tf.io.gfile.makedirs(*args)', method_object=None, object_signature=None, function_args=[eval('temp_dir')], function_kwargs={}, max_wait_secs=0)
+    return temp_dir
+
+def write_filepath(filepath, task_type, task_id):
+    dirpath = os.path.dirname(filepath)
+    base = os.path.basename(filepath)
+    if not _is_chief(task_type, task_id):
+        dirpath = _get_temp_dir(dirpath, task_id)
+    return os.path.join(dirpath, base)
+(task_type, task_id) = (strategy.cluster_resolver.task_type, strategy.cluster_resolver.task_id)
+write_model_path = write_filepath(model_path, task_type, task_id)
+multi_worker_model.save(write_model_path)
+if not _is_chief(task_type, task_id):
+    custom_method(
+    tf.io.gfile.rmtree(os.path.dirname(write_model_path)), imports='import sys;import time;import numpy as np;import mnist_setup;import tensorflow as tf;import os;import json', function_to_run='tf.io.gfile.rmtree(*args)', method_object=None, object_signature=None, function_args=[eval('os.path.dirname(write_model_path)')], function_kwargs={}, max_wait_secs=0)
+loaded_model = custom_method(
+tf.keras.models.load_model(model_path), imports='import sys;import time;import numpy as np;import mnist_setup;import tensorflow as tf;import os;import json', function_to_run='tf.keras.models.load_model(*args)', method_object=None, object_signature=None, function_args=[eval('model_path')], function_kwargs={}, max_wait_secs=0)
+custom_method(
+loaded_model.fit(single_worker_dataset, epochs=2, steps_per_epoch=20), imports='import sys;import time;import numpy as np;import mnist_setup;import tensorflow as tf;import os;import json', function_to_run='obj.fit(*args, **kwargs)', method_object=eval('loaded_model'), object_signature='tf.keras.models.load_model', function_args=[eval('single_worker_dataset')], function_kwargs={'epochs': eval('2'), 'steps_per_epoch': eval('20')}, max_wait_secs=0, custom_class=None)
+checkpoint_dir = '/tmp/ckpt'
+checkpoint = custom_method(
+tf.train.Checkpoint(model=multi_worker_model), imports='import sys;import time;import numpy as np;import mnist_setup;import tensorflow as tf;import os;import json', function_to_run='tf.train.Checkpoint(**kwargs)', method_object=None, object_signature=None, function_args=[], function_kwargs={'model': eval('multi_worker_model')}, max_wait_secs=0)
+write_checkpoint_dir = write_filepath(checkpoint_dir, task_type, task_id)
+checkpoint_manager = custom_method(
+tf.train.CheckpointManager(checkpoint, directory=write_checkpoint_dir, max_to_keep=1), imports='import sys;import time;import numpy as np;import mnist_setup;import tensorflow as tf;import os;import json', function_to_run='tf.train.CheckpointManager(*args, **kwargs)', method_object=None, object_signature=None, function_args=[eval('checkpoint')], function_kwargs={'directory': eval('write_checkpoint_dir'), 'max_to_keep': eval('1')}, max_wait_secs=0)
+custom_method(
+checkpoint_manager.save(), imports='import sys;import time;import numpy as np;import mnist_setup;import tensorflow as tf;import os;import json', function_to_run='obj.save()', method_object=eval('checkpoint_manager'), object_signature='tf.train.CheckpointManager', function_args=[], function_kwargs={}, max_wait_secs=0, custom_class=None)
+if not _is_chief(task_type, task_id):
+    custom_method(
+    tf.io.gfile.rmtree(write_checkpoint_dir), imports='import sys;import time;import numpy as np;import mnist_setup;import tensorflow as tf;import os;import json', function_to_run='tf.io.gfile.rmtree(*args)', method_object=None, object_signature=None, function_args=[eval('write_checkpoint_dir')], function_kwargs={}, max_wait_secs=0)
+latest_checkpoint = custom_method(
+tf.train.latest_checkpoint(checkpoint_dir), imports='import sys;import time;import numpy as np;import mnist_setup;import tensorflow as tf;import os;import json', function_to_run='tf.train.latest_checkpoint(*args)', method_object=None, object_signature=None, function_args=[eval('checkpoint_dir')], function_kwargs={}, max_wait_secs=0)
+custom_method(
+checkpoint.restore(latest_checkpoint), imports='import sys;import time;import numpy as np;import mnist_setup;import tensorflow as tf;import os;import json', function_to_run='obj.restore(*args)', method_object=eval('checkpoint'), object_signature='tf.train.Checkpoint', function_args=[eval('latest_checkpoint')], function_kwargs={}, max_wait_secs=0, custom_class=None)
+multi_worker_model.fit(multi_worker_dataset, epochs=2, steps_per_epoch=20)
+callbacks = [custom_method(
+tf.keras.callbacks.BackupAndRestore(backup_dir='/tmp/backup'), imports='import sys;import time;import numpy as np;import mnist_setup;import tensorflow as tf;import os;import json', function_to_run='tf.keras.callbacks.BackupAndRestore(**kwargs)', method_object=None, object_signature=None, function_args=[], function_kwargs={'backup_dir': eval("'/tmp/backup'")}, max_wait_secs=0)]
+with custom_method(
+strategy.scope(), imports='import sys;import time;import numpy as np;import mnist_setup;import tensorflow as tf;import os;import json', function_to_run='obj.scope()', method_object=eval('strategy'), object_signature='tf.distribute.MultiWorkerMirroredStrategy', function_args=[], function_kwargs={}, max_wait_secs=0, custom_class=None):
+    multi_worker_model = mnist_setup.build_and_compile_cnn_model()
+multi_worker_model.fit(multi_worker_dataset, epochs=3, steps_per_epoch=70, callbacks=callbacks)
+callbacks = [custom_method(
+tf.keras.callbacks.BackupAndRestore(backup_dir='/tmp/backup'), imports='import sys;import time;import numpy as np;import mnist_setup;import tensorflow as tf;import os;import json', function_to_run='tf.keras.callbacks.BackupAndRestore(**kwargs)', method_object=None, object_signature=None, function_args=[], function_kwargs={'backup_dir': eval("'/tmp/backup'")}, max_wait_secs=0)]
+with custom_method(
+strategy.scope(), imports='import sys;import time;import numpy as np;import mnist_setup;import tensorflow as tf;import os;import json', function_to_run='obj.scope()', method_object=eval('strategy'), object_signature='tf.distribute.MultiWorkerMirroredStrategy', function_args=[], function_kwargs={}, max_wait_secs=0, custom_class=None):
+    multi_worker_model = mnist_setup.build_and_compile_cnn_model()
+multi_worker_model.fit(multi_worker_dataset, epochs=3, steps_per_epoch=70, callbacks=callbacks)
+callbacks = [custom_method(
+tf.keras.callbacks.BackupAndRestore(backup_dir='/tmp/backup', save_freq=30), imports='import sys;import time;import numpy as np;import mnist_setup;import tensorflow as tf;import os;import json', function_to_run='tf.keras.callbacks.BackupAndRestore(**kwargs)', method_object=None, object_signature=None, function_args=[], function_kwargs={'backup_dir': eval("'/tmp/backup'"), 'save_freq': eval('30')}, max_wait_secs=0)]
+with custom_method(
+strategy.scope(), imports='import sys;import time;import numpy as np;import mnist_setup;import tensorflow as tf;import os;import json', function_to_run='obj.scope()', method_object=eval('strategy'), object_signature='tf.distribute.MultiWorkerMirroredStrategy', function_args=[], function_kwargs={}, max_wait_secs=0, custom_class=None):
+    multi_worker_model = mnist_setup.build_and_compile_cnn_model()
+multi_worker_model.fit(multi_worker_dataset, epochs=3, steps_per_epoch=70, callbacks=callbacks)

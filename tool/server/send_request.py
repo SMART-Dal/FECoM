@@ -26,8 +26,7 @@ def store_response(response, experiment_file_path):
             with open(experiment_file_path, 'w+') as f:
                 f.write(json.dumps(existing_data))
     except Exception as e:
-        print(f"Error opening file: {e}")
-        return
+        raise Exception(f"Error opening file: {e}")
 
     if response:
         try:
@@ -42,10 +41,9 @@ def store_response(response, experiment_file_path):
                 print(f"New file created: {experiment_file_path}")
                 print("Data written to file")
         except json.decoder.JSONDecodeError as e:
-            print(f"Error decoding JSON: {e}")
+            raise Exception(f"Error decoding JSON: {e}")
         except Exception as e:
-            print(f"Error writing JSON to file: {e}")
-            print(traceback.format_exc())
+            raise Exception(f"Error writing JSON to file: {e}")
     else:
         print("Response content is empty")
 
@@ -91,6 +89,7 @@ def send_request(imports: str, function_to_run: str, function_args: list = None,
         wait_after_run_secs,
         return_result,
         method_object,
+        object_signature,
         custom_class,
         method_object.__module__ if custom_class is not None else None,
         exec_not_eval

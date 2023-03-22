@@ -416,7 +416,10 @@ def run_function_and_return_result():
             else:
                 raise OSError("Could not remove temporary code file")
         else:
-            results = {function_details.function_to_run: results}
+            if(function_details.method_object is not None):
+                results = {function_details.object_signature + function_details.function_to_run[3:]: results}
+            else:
+                results = {function_details.function_to_run: results}
 
     # (5) form the response to send to the client, stored in the response variable
     # if return_result is True, we need to serialise the response since we will return an object that is potentially not json-serialisable.

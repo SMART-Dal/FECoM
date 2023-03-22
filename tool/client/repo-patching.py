@@ -33,10 +33,11 @@ def ipynb_to_py(ipynb_file):
             for cell in nb['cells']:
                 if cell['cell_type'] == 'code':
                     source_lines = cell['source'].split('\n')
-                    for line in source_lines:
-                        # remove lines starting with any Jupyter magic command symbol
-                        if not re.match(r'^\s*(%|%%|!|#)', line):
-                            f.write(line + '\n')
+                    if not (source_lines and source_lines[0].startswith('%%bash')):
+                        for line in source_lines:
+                            # remove lines starting with any Jupyter magic command symbol
+                            if not re.match(r'^\s*(%|%%|!|#)', line):
+                                f.write(line + '\n')
     except Exception as e:
         print(f"Error writing file {py_file}: {e}")
         return None

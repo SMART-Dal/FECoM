@@ -36,4 +36,4 @@ model.evaluate(x_test, y_test, verbose=2), imports='import tensorflow as tf', fu
 probability_model = custom_method(
 tf.keras.Sequential([model, tf.keras.layers.Softmax()]), imports='import tensorflow as tf', function_to_run='tf.keras.Sequential(*args)', method_object=None, object_signature=None, function_args=[eval('[\n  model,\n  tf.keras.layers.Softmax()\n]')], function_kwargs={}, max_wait_secs=0)
 custom_method(
-probability_model(x_test[:5]), imports='import tensorflow as tf', function_to_run='obj(*args)', method_object=eval('probability_model'), object_signature='tf.keras.models.Sequential', function_args=[eval('x_test[:5]')], function_kwargs={}, max_wait_secs=0, custom_class=None)
+probability_model(x_test[:5]), imports='import tensorflow as tf', function_to_run='obj(*args)', method_object=eval('probability_model'), object_signature='tf.keras.Sequential', function_args=[eval('x_test[:5]')], function_kwargs={}, max_wait_secs=0, custom_class=None)

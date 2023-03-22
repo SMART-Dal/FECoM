@@ -1,5 +1,3 @@
-sudo apt-get install -y python-opengl > /dev/null 2>&1
-pip install git+https://github.com/tensorflow/docs > /dev/null 2>&1
 import collections
 import gym
 import numpy as np
