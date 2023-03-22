@@ -8,7 +8,7 @@ from pathlib import Path
 import pandas as pd
 
 from tool.experiment.experiments import format_full_output_dir, ExperimentKinds
-from tool.server.server_config import STABLE_CPU_ENERGY_MEAN, STABLE_RAM_ENERGY_MEAN, STABLE_GPU_POWER_MEAN
+from tool.server.server_config import STABLE_CPU_ENERGY_MEAN, STABLE_CPU_ENERGY_STDEV, STABLE_RAM_ENERGY_MEAN, STABLE_RAM_ENERGY_STDEV, STABLE_GPU_POWER_MEAN, STABLE_GPU_POWER_STDEV
 
 # one data sample, as obtained from one server response
 class EnergyData():
@@ -23,6 +23,9 @@ class EnergyData():
         self.cpu_energy_in_execution = self.__energy_in_execution(cpu_energy, times["start_time_perf"], times["end_time_perf"])
         self.ram_energy_in_execution = self.__energy_in_execution(ram_energy, times["start_time_perf"], times["end_time_perf"])
         self.gpu_energy_in_execution = self.__energy_in_execution(gpu_energy, times["start_time_nvidia"], times["end_time_nvidia"])
+
+        self.__gpu_lag_time = None
+        self.__gpu_energy_lag_df = None
     
     def __str__(self):
         return f"EnergyData of {self.function_name}\nCPU ENERGY:\n{str(self.cpu_energy)}\nRAM ENERGY:\n{self.ram_energy}\nGPU ENERGY:\n{self.gpu_energy}\n TIMES:\n{self.times}\n INPUT SIZES:\n{self.input_sizes}"
@@ -32,26 +35,38 @@ class EnergyData():
         # make sure that the filtering works: first time stamp must be start_time_perf and last time stamp must be end_time_perf,
         # since the server reads these times from the perf files
         assert self.cpu_energy_in_execution["time_elapsed"].iloc[0] == self.times["start_time_perf"]
-        assert self.cpu_energy_in_execution["time_elapsed"].iloc[-1] == self.times["end_time_perf"]
+        assert self.cpu_energy_in_execution["time_elapsed"].iloc[-1] <= self.times["end_time_perf"]
         # return the total energy consumption
         return self.cpu_energy_in_execution["energy (J)"].sum()
     
     @property
     def total_cpu_normalised(self):
-        return self.__total_normalised(self.cpu_energy_in_execution, STABLE_CPU_ENERGY_MEAN, self.total_cpu)
+        return self.total_cpu - self.__baseline_consumption(self.cpu_energy_in_execution, STABLE_CPU_ENERGY_MEAN)
+    
+    @property
+    def cpu_lag(self):
+        raise DeprecationWarning("this has to be adapted into a similar format as GPU")
+        self.__energy_lag(self.cpu_energy, self.times["end_time_perf"], self.cpu_energy_in_execution, STABLE_CPU_ENERGY_MEAN, STABLE_CPU_ENERGY_STDEV)
+    
     
     @property
     def total_ram(self):
         # make sure that the filtering works: first time stamp must be start_time_perf and last time stamp must be end_time_perf,
         # since the server reads these times from the perf files
         assert self.ram_energy_in_execution["time_elapsed"].iloc[0] == self.times["start_time_perf"]
-        assert self.ram_energy_in_execution["time_elapsed"].iloc[-1] == self.times["end_time_perf"]
+        assert self.ram_energy_in_execution["time_elapsed"].iloc[-1] <= self.times["end_time_perf"]
         # return the total energy consumption
         return self.ram_energy_in_execution["energy (J)"].sum()
     
     @property
     def total_ram_normalised(self):
-        return self.__total_normalised(self.ram_energy_in_execution, STABLE_RAM_ENERGY_MEAN, self.total_ram)
+        return self.total_ram - self.__baseline_consumption(self.ram_energy_in_execution, STABLE_RAM_ENERGY_MEAN)
+    
+    @property
+    def ram_lag(self):
+        raise DeprecationWarning("this has to be adapted into a similar format as GPU")
+        self.__energy_lag(self.ram_energy, self.times["end_time_perf"], self.ram_energy_in_execution, STABLE_RAM_ENERGY_MEAN, 2*STABLE_RAM_ENERGY_STDEV)
+    
     
     @property
     def total_gpu(self):
@@ -63,22 +78,83 @@ class EnergyData():
 
     @property
     def total_gpu_normalised(self):
-        return self.__total_normalised(self.gpu_energy_in_execution, STABLE_GPU_POWER_MEAN, self.total_gpu)
+        return self.total_gpu - self.__baseline_consumption(self.gpu_energy_in_execution, STABLE_GPU_POWER_MEAN)
     
+    @property
+    def gpu_lag(self):
+        """
+        The sum of energy consumed during the lag time.
+        """
+        self.__init_gpu_lag_time_and_df()
+        return self.__gpu_energy_lag_df["power_draw (W)"].sum()
+
+    @property
+    def gpu_lag_normalised(self):
+        """
+        The sum of energy consumed during the lag time, minus baseline energy consumption for that period.
+        """
+        return self.gpu_lag - self.__baseline_consumption(self.__gpu_energy_lag_df, STABLE_GPU_POWER_MEAN)
+
+    @property
+    def total_gpu_lag_normalised(self):
+        """
+        The sum of total_gpu_normalised and gpu_lag_normalised: i.e. total energy consumption including the energy consumed during the lag time.
+        """
+        return self.total_gpu_normalised + self.gpu_lag_normalised 
+
+    @property
+    def gpu_lag_time(self):
+        """
+        The time passed until GPU energy consumption has returned close to baseline.
+        """
+        self.__init_gpu_lag_time_and_df()
+        return self.__gpu_lag_time
+
+    def __init_gpu_lag_time_and_df(self):
+        """
+        Check if gpu lag time and the gpu energy lag df have been initialised, if not, initialise them.
+        GPU standard deviation during stable state is very low, since it is not used at all, therefore use a reasonably low value 
+        for the tolerance that is not too low to give false positives. GPU power will be significantly higher than in stable state
+        if used by method, so the lag is most noticeable here.
+        """
+        if self.__gpu_lag_time or self.__gpu_energy_lag_df is None:
+            self.__gpu_lag_time, self.__gpu_energy_lag_df = self.__energy_lag(self.gpu_energy, self.times["end_time_nvidia"], STABLE_GPU_POWER_MEAN, 2)
+
     @property
     # how long did the server check for stable state?
     def stable_check_waiting_time_s(self):
         return (self.times["start_time_server"]-self.times["begin_stable_check_time"])/1_000_000_000
     
+    def __baseline_consumption(self, comparable_df: pd.DataFrame, stable_mean):
+        return len(comparable_df) * stable_mean
+
     def __energy_in_execution(self, energy_df: pd.DataFrame, start_time: float, end_time: float):
         # get the energy data in between execution start and end time
-        energy_in_execution = energy_df.loc[(energy_df["time_elapsed"]>= start_time) & (energy_df["time_elapsed"]<= end_time)]
+        energy_in_execution = energy_df.loc[(energy_df["time_elapsed"] >= start_time) & (energy_df["time_elapsed"] < end_time)]
         return energy_in_execution
-
-    def __total_normalised(self, energy_in_execution_df: pd.DataFrame, stable_energy_mean: float, total_energy: float):
-        n_data_points = len(energy_in_execution_df)
-        baseline_energy_consumption = stable_energy_mean * n_data_points
-        return total_energy - baseline_energy_consumption
+    
+    def __energy_lag(self, energy_df: pd.DataFrame, end_time: float, stable_energy_mean: float, abs_tolerance: float):
+        """
+        returns lag time and a df containing the energy data during lag time
+        """
+        # look at energy after function execution
+        post_execution_df = energy_df[(energy_df["time_elapsed"] >= end_time)].copy()
+        # calculate a forward-looking moving average with window size 5 of the energy data column, using integer indexing since column headers are different for CPU/RAM and GPU
+        post_execution_df["moving_average"] = post_execution_df.iloc[:,1].rolling(window=5, min_periods=1).mean().shift(-4)
+        # the energy_lag_df contains all data points where the energy consumption is still above stable state.
+        # This makes use of a smart pandas trick by Christopher Tao (Jul 5, 2020) to make sure that the energy_lag_df
+        # only contains a single consecutive group of data points from the beginning of the post-execution energy data
+        # (https://towardsdatascience.com/pandas-dataframe-group-by-consecutive-certain-values-a6ed8e5d8cc)
+        energy_lag_df = post_execution_df[(post_execution_df["moving_average"] >= (stable_energy_mean + abs_tolerance))].groupby(((post_execution_df["moving_average"] < (stable_energy_mean + abs_tolerance))).cumsum()).get_group(0)
+        # the first index of the energy lag df must be the same as that of the post execution df, otherwise there was no lag immediately preceding execution
+        if len(energy_lag_df) > 0:
+            assert energy_lag_df.first_valid_index() == post_execution_df.first_valid_index()
+                
+        lag_time = energy_lag_df.iloc[-1]["time_elapsed"] - energy_lag_df.iloc[0]["time_elapsed"]
+        # print(post_execution_df.to_string() )
+        # print(energy_lag_df)
+        # print(lag_time)
+        return lag_time, energy_lag_df
 
 
 class DataLoader():
@@ -135,3 +211,10 @@ if __name__ == "__main__":
     print("GPU")
     print(example_data.total_gpu)
     print(example_data.total_gpu_normalised)
+    # example_data.gpu_lag
+    # example_data.ram_lag
+    # example_data.cpu_lag
+    print(example_data.gpu_lag_time)
+    print(example_data.gpu_lag)
+    print(example_data.gpu_lag_normalised)
+    print(example_data.total_gpu_lag_normalised)
