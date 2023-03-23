@@ -102,6 +102,8 @@ class MethodLevelExperiment(Experiment):
             with subprocess.Popen(['python', self.__code_file, str(self.number), str(self.project)], stdout=subprocess.PIPE, stderr=subprocess.PIPE, bufsize=1, universal_newlines=True) as p:
                 for line in p.stdout:
                     print(line, end='')
+                for line in p.stderr:
+                    print(line, end='')  # Print error output to console
             self.number += 1
             return
         except Exception as e:

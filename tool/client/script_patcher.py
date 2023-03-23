@@ -173,9 +173,6 @@ class TransformCall(ast.NodeTransformer):
                                                     args=[
                                                         ast.Constant(value=keywordsDict[KWItem])],
                                                     keywords=[]) for KWItem in keywordsDict])),
-                                    ast.keyword(
-                                        arg='max_wait_secs',
-                                        value=ast.Constant(0)),
                                         ],
                                         starargs=None, kwargs=None
                                 )
@@ -235,9 +232,6 @@ class TransformCall(ast.NodeTransformer):
                                                         args=[
                                                             ast.Constant(value=keywordsDict[KWItem])],
                                                         keywords=[]) for KWItem in keywordsDict])),
-                                        ast.keyword(
-                                            arg='max_wait_secs',
-                                            value=ast.Constant(0)),
                                         ast.keyword(
                                             arg='custom_class',
                                             value=ast.Constant(requiredClassDefs.get(requiredObjClassMapping.get(callvisitor.name.split('.')[0]))))
