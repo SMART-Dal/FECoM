@@ -1,4 +1,6 @@
 import matplotlib.pyplot as plt
+import matplotlib.lines as mlines
+import matplotlib.patches as mpatches
 import pandas as pd
 
 from tool.experiment.analysis import EnergyData
@@ -16,43 +18,64 @@ def plot_energy_with_times(energy_data: EnergyData):
     - color (str) is a matplotlib color, e.g. 'r','b','g'
     """
     perf_times = [
-        (energy_data.start_time_perf, "method_start", 'r'),
-        (energy_data.end_time_perf, "method_end", 'r'),
-        (energy_data.pickle_load_time_perf, "pickle_load", 'b'),
-        (energy_data.import_time_perf, "import", 'g'),
-        (energy_data.begin_stable_check_time_perf, "stable_check", 'y')
+        (energy_data.start_time_perf, "method_start", 'r', 'dashed'),
+        (energy_data.end_time_perf, "method_end", 'r', 'solid'),
+        (energy_data.pickle_load_time_perf, "pickle_load", 'b', 'solid'),
+        (energy_data.import_time_perf, "import", 'g', 'dotted'),
+        (energy_data.begin_stable_check_time_perf, "stable_check", 'y', 'dashed'),
+        (energy_data.begin_temperature_check_time_perf, "temperature_check", 'c', (0, (1, 10)))
     ]
 
-    nvidia_times = [
-        (energy_data.start_time_nvidia, "method_start", 'r'),
-        (energy_data.end_time_nvidia, "method_end", 'r'),
-        (energy_data.pickle_load_time_nvidia, "pickle_load", 'b'),
-        (energy_data.import_time_nvidia, "import", 'g'),
-        (energy_data.begin_stable_check_time_nvidia, "stable_check", 'y')
+    cpu_times = perf_times.copy()
+    cpu_times.append(
+        (energy_data.lag_end_time_cpu, "lag_end", 'm', 'dotted')
+    )
+
+    ram_times = perf_times.copy()
+    ram_times.append(
+        (energy_data.lag_end_time_ram, "lag_end", 'm', 'dotted')
+    )
+
+    gpu_times = [
+        (energy_data.start_time_nvidia, "method_start", 'r', 'solid'),
+        (energy_data.end_time_nvidia, "method_end", 'r', 'solid'),
+        (energy_data.pickle_load_time_nvidia, "pickle_load", 'b', 'solid'),
+        (energy_data.import_time_nvidia, "import", 'g', 'dotted'),
+        (energy_data.begin_stable_check_time_nvidia, "stable_check", 'y', 'dashed'),
+        (energy_data.lag_end_time_gpu, "lag_end", 'm', 'dotted'),
+        (energy_data.begin_temperature_check_time_nvidia, "temperature_check", 'c', (0, (1, 10)))
     ]
 
     fig, [ax1, ax2, ax3] = plt.subplots(nrows=1, ncols=3)
 
     fig.suptitle(f"Data for {energy_data.function_name} from {energy_data.project_name}", fontsize=16)
-
+    
     ax1.set_title("CPU Energy over time")
     ax1.plot(energy_data.cpu_energy["time_elapsed"], energy_data.cpu_energy["energy (J)"])
-    for time, label, color in perf_times:
-        ax1.axvline(x=time, color=color,linewidth=1)
-        ax1.text(time, 0, label, rotation=90)
+    ax1_legend_handles = []
+    for time, label, color, linestyle in cpu_times:
+        ax1.axvline(x=time, color=color, linewidth=1,linestyle=linestyle, alpha=0.7)
+        ax1_legend_handles.append(mlines.Line2D([], [], color=color, label=label, linestyle=linestyle))
+        
+    ax1.legend(handles=ax1_legend_handles)
 
     ax2.set_title("RAM Energy over time")
     ax2.plot(energy_data.ram_energy["time_elapsed"], energy_data.ram_energy["energy (J)"])
-    for time, label, color in perf_times:
-        ax2.axvline(x=time, color=color,linewidth=1)
-        ax2.text(time, 0, label, rotation=90)
+    ax2_legend_handles = []
+    for time, label, color, linestyle in ram_times:
+        ax2.axvline(x=time, color=color, linewidth=1, linestyle=linestyle, alpha=0.7)
+        ax2_legend_handles.append(mlines.Line2D([], [], color=color, label=label, linestyle=linestyle))
+    ax2.legend(handles=ax2_legend_handles)
 
     ax3.set_title("GPU Power over time")
     ax3.plot(energy_data.gpu_energy["time_elapsed"], energy_data.gpu_energy["power_draw (W)"])
-    for time, label, color in nvidia_times:
-        ax3.axvline(x=time, color=color,linewidth=1)
-        ax3.text(time, 0, label, rotation=90)
-
+    ax3_legend_handles = []
+    for time, label, color, linestyle in gpu_times:
+        ax3.axvline(x=time, color=color, linewidth=1, linestyle=linestyle, alpha=0.7)
+        ax3_legend_handles.append(mlines.Line2D([], [], color=color, label=label, linestyle=linestyle))
+    ax3.legend(handles=ax3_legend_handles)
+    
+    # fig.tight_layout()
     
     figure = plt.gcf() # get current figure
     figure.set_size_inches(20, 6)
