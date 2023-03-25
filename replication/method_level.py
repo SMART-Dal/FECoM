@@ -2,6 +2,14 @@ from tool.experiment.experiments import MethodLevelExperiment
 from tool.experiment.run import run_experiments
 from tool.client.client_config import EXPERIMENT_DIR, CODE_DIR
 
+on_hold = [
+    "images/cnn",
+    "generative/cvae",
+    "generative/autoencoder",
+    "generative/data_compression"
+]
+
 if __name__ == "__main__":
-    keras_classification = MethodLevelExperiment("keras/classification", EXPERIMENT_DIR, CODE_DIR)
-    run_experiments(keras_classification, 5)
+    start_number = 6
+    experiment = MethodLevelExperiment("keras/classification", EXPERIMENT_DIR, CODE_DIR, start_number)
+    run_experiments(experiment, count=5, start=start_number)

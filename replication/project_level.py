@@ -7,5 +7,6 @@ MAX_WAIT_S = 120
 WAIT_AFTER_RUN_S = 30
 
 if __name__ == "__main__":
-    keras_classification = ProjectLevelExperiment("keras/classification", EXPERIMENT_DIR, CODE_DIR, MAX_WAIT_S, WAIT_AFTER_RUN_S)
-    run_experiments(keras_classification, 5)
+    start_number = 1
+    generative_cvae = ProjectLevelExperiment("generative/cvae", EXPERIMENT_DIR, CODE_DIR, MAX_WAIT_S, WAIT_AFTER_RUN_S, number=start_number)
+    run_experiments(generative_cvae, count=10, start=start_number)

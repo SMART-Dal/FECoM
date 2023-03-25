@@ -30,7 +30,7 @@ def format_output_file(output_dir: Path, experiment_number: int):
 # base class that any Experiment subclass must implement
 # if there is shared code between experiments we can add it here as a method
 class Experiment(ABC):
-    def __init__(self, experiment_kind: str, project: str, output_dir: Path, code_dir: Path):
+    def __init__(self, experiment_kind: str, project: str, output_dir: Path, code_dir: Path, number: int):
         """
         args:
         - experiment_kind is a string that is hard-coded into the specific experiment implementation
@@ -38,8 +38,7 @@ class Experiment(ABC):
         - code_dir should most likely be set to client_config.CODE_DIR in 
         - output_dir should most likely be set to client_config.EXPERIMENT_DIR
         """
-        # experiments start with 1
-        self.number = 1
+        self.number = number
         self.project = project
         self.code_dir = code_dir
         self.__output_dir = format_full_output_dir(output_dir, experiment_kind, project)
@@ -61,9 +60,9 @@ class Experiment(ABC):
 
 
 class ProjectLevelExperiment(Experiment):
-    def __init__(self, project: str, experiment_dir: Path, code_dir: Path, max_wait_secs: int, wait_after_run_secs: int):
+    def __init__(self, project: str, experiment_dir: Path, code_dir: Path, max_wait_secs: int, wait_after_run_secs: int, number: int):
         # raise NotImplementedError("This has not been tested properly yet. Test before using.")
-        super().__init__(ExperimentKinds.PROJECT_LEVEL.value, project, experiment_dir, code_dir)
+        super().__init__(ExperimentKinds.PROJECT_LEVEL.value, project, experiment_dir, code_dir, number)
         self.code_file = self.code_dir / f"{self.project}_original.py"
         self.max_wait_secs = max_wait_secs
         self.wait_after_run_secs = wait_after_run_secs
@@ -95,9 +94,9 @@ class ProjectLevelExperiment(Experiment):
         return code_string
 
 class MethodLevelExperiment(Experiment):
-    def __init__(self, project: str, experiment_dir: Path, code_dir: Path):
+    def __init__(self, project: str, experiment_dir: Path, code_dir: Path, number: int):
         # raise NotImplementedError("This has not been tested properly yet. Test before using.")
-        super().__init__(ExperimentKinds.METHOD_LEVEL.value, project, experiment_dir, code_dir)
+        super().__init__(ExperimentKinds.METHOD_LEVEL.value, project, experiment_dir, code_dir, number)
         self.__code_file = self.code_dir / f"{self.project}_patched.py"
 
     def run(self):

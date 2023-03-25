@@ -11,7 +11,7 @@ from tool.server.function_details import FunctionDetails
 # TODO maybe requires some refactoring
 def store_response(response, experiment_file_path):
     if DEBUG:
-        print(f"Result: {response}")
+        print(f"Result: {str(response)[:100]}")
 
     try:
         if os.path.exists(experiment_file_path):
