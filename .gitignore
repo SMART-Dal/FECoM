@@ -3,6 +3,9 @@ venv
 __pycache__
 .DS_Store
 
+# replication
+energy_plot.png
+
 # data
 data/code-dataset/Repositories
 

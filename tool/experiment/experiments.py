@@ -17,6 +17,9 @@ class ExperimentKinds(Enum):
 
 
 def format_full_output_dir(output_dir: Path, experiment_kind: str, project: str):
+    """
+    returns the path output_dir/experiment_kind/project
+    """
     return output_dir / experiment_kind / project
 
 
