@@ -174,7 +174,7 @@ def temperature_is_low_check(check_last_n_points: int, cpu_max_temp: int, gpu_ma
         print_server("Temperature is too high.")
         return False 
 
-def run_check_loop(max_wait_secs: int, wait_per_loop_s: int, check_name: str, check_function: callable, *args):
+def run_check_loop(no_initial_wait: bool, max_wait_secs: int, wait_per_loop_s: int, check_name: str, check_function: callable, *args):
     """
     Return True if the given check_function returns True at some point, else return False.
     """
@@ -183,7 +183,7 @@ def run_check_loop(max_wait_secs: int, wait_per_loop_s: int, check_name: str, ch
         return True
     
     # is the check already satisfied? Then we don't have to wait and enter the loop.
-    if check_function(*args):
+    if no_initial_wait and check_function(*args):
             return True
 
     # in each loop iteration, load new data, calculate statistics and perform the check.
@@ -265,14 +265,15 @@ def run_function(imports: str, function_to_run: str, obj: object, args: list, kw
     # (2) continue only when CPU & GPU temperatures are below threshold and the system has reached a stable state of energy consumption
 
     # (2a) check that temperatures are below threshold, then quit the CPU temperature measurement process
-    if not run_check_loop(max_wait_secs, WAIT_PER_STABLE_CHECK_LOOP_S, "low temperature", temperature_is_low_check, CHECK_LAST_N_POINTS, CPU_MAXIMUM_TEMPERATURE, GPU_MAXIMUM_TEMPERATURE):
+    begin_temperature_check_time = time.time_ns()
+    if not run_check_loop(True, max_wait_secs, WAIT_PER_STABLE_CHECK_LOOP_S, "low temperature", temperature_is_low_check, CHECK_LAST_N_POINTS, CPU_MAXIMUM_TEMPERATURE, GPU_MAXIMUM_TEMPERATURE):
         unregister_and_quit_process(sensors, "sensors")
         raise TimeoutError(f"CPU could not cool down to {CPU_MAXIMUM_TEMPERATURE} within {max_wait_secs} seconds")
     unregister_and_quit_process(sensors, "sensors")
 
     # (2b) check that the CPU, RAM and GPU energy consumption is stable
     begin_stable_check_time = time.time_ns()
-    if not run_check_loop(max_wait_secs, WAIT_PER_STABLE_CHECK_LOOP_S, "stable state", server_is_stable_check, CHECK_LAST_N_POINTS, STABLE_CHECK_TOLERANCE):
+    if not run_check_loop(False, max_wait_secs, WAIT_PER_STABLE_CHECK_LOOP_S, "stable state", server_is_stable_check, CHECK_LAST_N_POINTS, STABLE_CHECK_TOLERANCE):
         raise TimeoutError(f"Server could not reach a stable state within {max_wait_secs} seconds")
 
     # (3) evaluate the function return. Mark the start & end times in the files and save their exact values.
@@ -319,7 +320,8 @@ def run_function(imports: str, function_to_run: str, obj: object, args: list, kw
         "end_time_nvidia": end_time_nvidia_normalised,
         "sys_start_time_nvidia": sys_start_time_nvidia,
         "import_time": import_time,
-        "begin_stable_check_time": begin_stable_check_time
+        "begin_stable_check_time": begin_stable_check_time,
+        "begin_temperature_check_time": begin_temperature_check_time
     }
 
     # (6) collect all relevant settings
