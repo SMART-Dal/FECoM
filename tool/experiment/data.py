@@ -6,6 +6,8 @@ This package contains two classes for handling experiment data
 import os
 import json
 from pathlib import Path
+from typing import List
+from statistics import mean
 
 import pandas as pd
 
@@ -16,28 +18,63 @@ NS_CONVERSION = 1_000_000_000
 
 class ProjectEnergyData():
     """
-    Contains three lists of MethodEnergyData objects, one list each for CPU, RAM and GPU.
-    The index of a method's data in the list corresponds to its index in the experiment file.
+    Contains three lists of FunctionEnergyData objects, one list each for CPU, RAM and GPU.
+    The index of a function's data in the list corresponds to its index in the experiment file.
     """
-    def __init__(self, method_count: int):
-        self.cpu = [MethodEnergyData() for _ in method_count]
-        self.ram = [MethodEnergyData() for _ in method_count]
-        self.gpu = [MethodEnergyData() for _ in method_count]
+    def __init__(self, function_count: int):
+        self.cpu = [FunctionEnergyData() for _ in range(function_count)]
+        self.ram = [FunctionEnergyData() for _ in range(function_count)]
+        self.gpu = [FunctionEnergyData() for _ in range(function_count)]
+        # keep track of functions without energy 
+        self.no_energy_functions = set()
+    
+    def __len__(self):
+        len_list = [1 if len(data) > 0 else 0 for data in self.cpu]
+        return sum(len_list)
 
-class MethodEnergyData():
+
+class FunctionEnergyData():
     """
     Each list contains the values from each experiment, TODO add averaging methods below.
     """
-    def __init__(self, experiment_count: int):
-        self.total = [None for _ in experiment_count]
-        self.total_normalised = [] # TODO do we need to initialise these lists like self.total?
+    def __init__(self):
+        self.total = []
+        self.total_normalised = []
         self.lag_time = []
         self.lag = []
         self.total_lag_normalised = []
+    
+    @property
+    def __len__(self):
+        return len(self.total)
+    
+    @property
+    def mean_total(self):
+        return mean(self.total)
+    
+    @property
+    def mean_total_normalised(self):
+        return mean(self.total_normalised)
+    
+    @property
+    def mean_lag_tim(self):
+        return mean(self.lag_tim)
+    
+    @property
+    def mean_lag(self):
+        return mean(self.lag)
+    
+    @property
+    def mean_total_lag_normalised(self):
+        return mean(self.total_lag_normalised)
 
 
 # one data sample, as obtained from one server response
 class EnergyData():
+    """
+    Initialised with the raw data for one sample, as obtained from one server response.
+    This class has a range of useful properties that return statistics calculated from the raw data.
+    """
     def __init__(self, function_name, project_name, cpu_energy: pd.DataFrame, ram_energy: pd.DataFrame, gpu_energy: pd.DataFrame, times, input_sizes):
         self.function_name = function_name
         self.project_name = project_name
@@ -392,7 +429,7 @@ class DataLoader():
         self.__data_dir = format_full_output_dir(
             output_dir, experiment_kind.value, project)
 
-    def get_all_data_files(self) -> list:
+    def get_all_data_files(self) -> List[str]:
         """
         Get all non-empty data file names as a list of strings
         """
@@ -411,7 +448,7 @@ class DataLoader():
     # returns a list of EnergyData objects where self.function_name is
     # - the function name (method-level experiment)
     # - "project-level" (project-level experiment), in this case there is only one dict in the list
-    def load_single_file(self, file_name: str) -> list:
+    def load_single_file(self, file_name: str) -> List[EnergyData]:
         file_path = self.__data_dir / file_name
         with open(file_path, 'r') as f:
             raw_data_list = json.load(f)
