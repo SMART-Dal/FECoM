@@ -1,7 +1,9 @@
 """
-This package contains two classes for handling experiment data
-1. EnergyData: a data structure for storing all data associated with one measurement, i.e. one server response
-2. DataLoader: a helper class for loading the json data into EnergyData objects
+This package contains four classes for handling experiment data
+1. FunctionEnergyData: a data structure for accumulating data for one function, but from multiple experiments for one hardware component (CPU, RAM or GPU)
+2. ProjectEnergyData: a data structure for accumulating all data associated with one project
+3. EnergyData: a data structure for storing all data associated with one function and one experiment, i.e. one server response
+4. DataLoader: a helper class for loading the json data into EnergyData objects
 """
 import os
 import json
@@ -16,6 +18,53 @@ from tool.server.server_config import STABLE_CPU_ENERGY_MEAN, STABLE_CPU_ENERGY_
 
 NS_CONVERSION = 1_000_000_000
 
+
+class FunctionEnergyData():
+    """
+    Each list contains the values collected over multiple experiments
+    """
+    def __init__(self):
+        self.__name = None
+        self.total = []
+        self.total_normalised = []
+        self.lag_time = []
+        self.lag = []
+        self.total_lag_normalised = []
+    
+    def __len__(self):
+        return len(self.total)
+    
+    @property
+    def name(self):
+        if self.__name is None:
+            raise AttributeError("Function name was not initialised")
+        return self.__name
+    
+    @name.setter
+    def name(self, function_name):
+        self.__name = function_name
+    
+    @property
+    def mean_total(self):
+        return mean(self.total)
+    
+    @property
+    def mean_total_normalised(self):
+        return mean(self.total_normalised)
+    
+    @property
+    def mean_lag_time(self):
+        return mean(self.lag_time)
+    
+    @property
+    def mean_lag(self):
+        return mean(self.lag)
+    
+    @property
+    def mean_total_lag_normalised(self):
+        return mean(self.total_lag_normalised)
+    
+
 class ProjectEnergyData():
     """
     Contains three lists of FunctionEnergyData objects, one list each for CPU, RAM and GPU.
@@ -29,44 +78,28 @@ class ProjectEnergyData():
         self.no_energy_functions = set()
     
     def __len__(self):
-        len_list = [1 if len(data) > 0 else 0 for data in self.cpu]
-        return sum(len_list)
-
-
-class FunctionEnergyData():
-    """
-    Each list contains the values from each experiment, TODO add averaging methods below.
-    """
-    def __init__(self):
-        self.total = []
-        self.total_normalised = []
-        self.lag_time = []
-        self.lag = []
-        self.total_lag_normalised = []
+        return len(self.cpu_data)
     
     @property
-    def __len__(self):
-        return len(self.total)
+    def cpu_data(self) -> List[FunctionEnergyData]:
+        """
+        The non-empty FunctionEnergyData objects, each containing CPU data for one function
+        """
+        return [data for data in self.cpu if len(data) > 0]
     
     @property
-    def mean_total(self):
-        return mean(self.total)
+    def ram_data(self) -> List[FunctionEnergyData]:
+        """
+        The non-empty FunctionEnergyData objects, each containing RAM data for one function
+        """
+        return [data for data in self.ram if len(data) > 0]
     
     @property
-    def mean_total_normalised(self):
-        return mean(self.total_normalised)
-    
-    @property
-    def mean_lag_tim(self):
-        return mean(self.lag_tim)
-    
-    @property
-    def mean_lag(self):
-        return mean(self.lag)
-    
-    @property
-    def mean_total_lag_normalised(self):
-        return mean(self.total_lag_normalised)
+    def gpu_data(self) -> List[FunctionEnergyData]:
+        """
+        The non-empty FunctionEnergyData objects, each containing GPU data for one function
+        """
+        return [data for data in self.gpu if len(data) > 0]
 
 
 # one data sample, as obtained from one server response
@@ -417,7 +450,6 @@ class EnergyData():
     
     def __energy_in_execution_is_empty(self):
         if self.cpu_energy_in_execution.empty or self.ram_energy_in_execution.empty or self.gpu_energy_in_execution.empty:
-            print(f"no energy data for {self.function_name}")
             return True
         else:
             return False
