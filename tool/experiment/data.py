@@ -29,6 +29,7 @@ class FunctionEnergyData():
         self.total_normalised = []
         self.lag_time = []
         self.lag = []
+        self.lag_normalised = []
         self.total_lag_normalised = []
     
     def __len__(self):
@@ -61,6 +62,10 @@ class FunctionEnergyData():
         return mean(self.lag)
     
     @property
+    def mean_lag_normalised(self):
+        return mean(self.lag_normalised)
+    
+    @property
     def mean_total_lag_normalised(self):
         return mean(self.total_lag_normalised)
     
@@ -70,7 +75,8 @@ class ProjectEnergyData():
     Contains three lists of FunctionEnergyData objects, one list each for CPU, RAM and GPU.
     The index of a function's data in the list corresponds to its index in the experiment file.
     """
-    def __init__(self, function_count: int):
+    def __init__(self, function_count: int, project: str):
+        self.name = project
         self.cpu = [FunctionEnergyData() for _ in range(function_count)]
         self.ram = [FunctionEnergyData() for _ in range(function_count)]
         self.gpu = [FunctionEnergyData() for _ in range(function_count)]
@@ -102,7 +108,6 @@ class ProjectEnergyData():
         return [data for data in self.gpu if len(data) > 0]
 
 
-# one data sample, as obtained from one server response
 class EnergyData():
     """
     Initialised with the raw data for one sample, as obtained from one server response.

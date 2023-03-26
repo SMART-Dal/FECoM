@@ -21,7 +21,7 @@ def init_project_energy_data(project: str, experiment_kind: ExperimentKinds, fir
 
     # initialse the project energy data holder object with the number of functions in the first experiment
     function_count = len(dl.load_single_file(experiment_files[0]))
-    project_energy_data = ProjectEnergyData(function_count)
+    project_energy_data = ProjectEnergyData(function_count, project)
 
     for exp_file in experiment_files[first_experiment-1:last_experiment]:
         # exp_data is a list of EnergyData objects for this experiment
@@ -39,6 +39,7 @@ def init_project_energy_data(project: str, experiment_kind: ExperimentKinds, fir
             project_energy_data.cpu[function_number].total_normalised.append(function_data.total_cpu_normalised)
             project_energy_data.cpu[function_number].lag_time.append(function_data.cpu_lag_time)
             project_energy_data.cpu[function_number].lag.append(function_data.cpu_lag)
+            project_energy_data.cpu[function_number].lag_normalised.append(function_data.cpu_lag_normalised)
             project_energy_data.cpu[function_number].total_lag_normalised.append(function_data.total_cpu_lag_normalised)
             # add RAM data
             project_energy_data.ram[function_number].name = function_data.function_name
@@ -46,6 +47,7 @@ def init_project_energy_data(project: str, experiment_kind: ExperimentKinds, fir
             project_energy_data.ram[function_number].total_normalised.append(function_data.total_ram_normalised)
             project_energy_data.ram[function_number].lag_time.append(function_data.ram_lag_time)
             project_energy_data.ram[function_number].lag.append(function_data.ram_lag)
+            project_energy_data.ram[function_number].lag_normalised.append(function_data.ram_lag_normalised)
             project_energy_data.ram[function_number].total_lag_normalised.append(function_data.total_ram_lag_normalised)
             # add GPU data
             project_energy_data.gpu[function_number].name = function_data.function_name
@@ -53,6 +55,7 @@ def init_project_energy_data(project: str, experiment_kind: ExperimentKinds, fir
             project_energy_data.gpu[function_number].total_normalised.append(function_data.total_gpu_normalised)
             project_energy_data.gpu[function_number].lag_time.append(function_data.gpu_lag_time)
             project_energy_data.gpu[function_number].lag.append(function_data.gpu_lag)
+            project_energy_data.gpu[function_number].lag_normalised.append(function_data.gpu_lag_normalised)
             project_energy_data.gpu[function_number].total_lag_normalised.append(function_data.total_gpu_lag_normalised)
     
     return project_energy_data
@@ -67,11 +70,12 @@ def build_summary_df(energy_data_list: List[FunctionEnergyData]):
             function_data.mean_total_normalised,
             function_data.mean_lag_time,
             function_data.mean_lag,
+            function_data.mean_lag_normalised,
             function_data.mean_total_lag_normalised
         ])
     
     summary_df = pd.DataFrame(data_list,
-                      columns=['function', 'total', 'total (normalised)', 'lag time', 'lag', 'total + lag (normalised)'])
+                      columns=['function', 'total', 'total (normalised)', 'lag time (s)', 'lag', 'lag (normalised)', 'total + lag (normalised)'])
     return summary_df
 
 
@@ -79,11 +83,12 @@ def create_summary(project_energy_data: ProjectEnergyData):
     cpu_summary = build_summary_df(project_energy_data.cpu_data)
     ram_summary = build_summary_df(project_energy_data.ram_data)
     gpu_summary = build_summary_df(project_energy_data.gpu_data)
-    print("\nMean CPU results")
+    print(f"\n### SUMMARY FOR {project_energy_data.name} ###\n")
+    print("\nMean CPU results (Energy unit: Joules)")
     print(cpu_summary)
-    print("\nMean RAM results")
+    print("\nMean RAM results (Energy unit: Joules)")
     print(ram_summary)
-    print("\nMean GPU results")
+    print("\nMean GPU results (Energy unit: Watt)")
     print(gpu_summary)
     
 
