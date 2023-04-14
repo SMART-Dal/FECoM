@@ -4,27 +4,33 @@ import os
 import traceback
 import time
 import json
+from pathlib import Path
 
 from tool.server.server_config import URL, DEBUG
 from tool.server.function_details import FunctionDetails
 
 # TODO maybe requires some refactoring
-def store_response(response, experiment_file_path):
+def store_response(response, experiment_file_path: Path):
+    # send_request give experiment_file_path a default value of None for testing purposes. But should be overwritten if want to save response.
+    if experiment_file_path is None:
+        raise FileNotFoundError("Experiment File Path is None, but was expected to be a valid Path.")
+    
     if DEBUG:
         print(f"Result: {str(response)[:100]}")
 
     try:
-        if os.path.exists(experiment_file_path):
-            with open(experiment_file_path, 'r+') as f:
+        if experiment_file_path.is_file():
+            with open(experiment_file_path, 'r') as f:
                 file_content = f.read()
-                if file_content.strip():
-                    existing_data = json.loads(file_content)
-                else:
-                    existing_data = []
+            if file_content.strip():
+                existing_data = json.loads(file_content)
+            else:
+                existing_data = []
         else:
             existing_data = []
-            with open(experiment_file_path, 'w+') as f:
-                f.write(json.dumps(existing_data))
+            with open(experiment_file_path, 'w') as f:
+                json.dump(existing_data, f)
+
     except Exception as e:
         raise Exception(f"Error opening file: {e}")
 
@@ -32,14 +38,12 @@ def store_response(response, experiment_file_path):
         try:
             data = json.loads(response)
             existing_data.append(data)
-            print("Data loaded from response")
-            with open(experiment_file_path, 'w+') as f:
-                print("Type of existing data", type(existing_data))
-                json_data = json.dumps(existing_data) # Convert to JSON string
-                print("Type of json data", type(json_data))
-                f.write(json_data)
-                print(f"New file created: {experiment_file_path}")
-                print("Data written to file")
+            if DEBUG:
+                print("Data loaded from response")
+            with open(experiment_file_path, 'w') as f:
+                json.dump(existing_data, f)
+            if DEBUG:
+                print(f"Data written to file {str(experiment_file_path)}")
         except json.decoder.JSONDecodeError as e:
             raise Exception(f"Error decoding JSON: {e}")
         except Exception as e:
@@ -53,32 +57,12 @@ def store_response(response, experiment_file_path):
 
 # for testing purposes
 # TODO how can we best pass the username and password to this function? Write a wrapper?
-def send_request(imports: str, function_to_run: str, function_args: list = None, function_kwargs: dict = None, max_wait_secs: int = 0, wait_after_run_secs: int = 0, return_result: bool = False, method_object = None,object_signature = None, custom_class: str = None, username: str = "tim9220", password: str = "qQ32XALjF9JqFh!vF3xY", experiment_file_path: str = '', exec_not_eval: bool = False):
+def send_request(imports: str, function_to_run: str, function_args: list = None, function_kwargs: dict = None, max_wait_secs: int = 0, wait_after_run_secs: int = 0, return_result: bool = False, method_object = None, object_signature = None, custom_class: str = None, username: str = "tim9220", password: str = "qQ32XALjF9JqFh!vF3xY", experiment_file_path: Path = None, exec_not_eval: bool = False):
     """
-        Send a request to execute any function to the server and return specified data.
-        If return_result=False, the returned object is JSON of the following format:
-        function_to_run: {
-            "energy_data": {
-                "cpu": df_cpu_json,
-                "ram": df_ram_json,
-                "gpu": df_gpu_json
-            },
-            "times": {
-                "start_time_server": start_time_server,
-                "end_time_server": end_time_server,
-                "start_time_perf": start_time_perf, 
-                "end_time_perf": end_time_perf,
-                "start_time_nvidia": start_time_nvidia_normalised,
-                "end_time_nvidia": end_time_nvidia_normalised,
-            },
-            "input_sizes" {
-                "args_size": args_size_bit,
-                "kwargs_size": kwargs_size_bit,
-                "object_size": object_size_bit
-            }
-        }
-    }
+    Send a request to execute any function to the server and return specified data.
+    If return_result=False, the returned object is JSON of the format specified in this directory's README.md
     """ 
+
     # (1) Construct a FunctionDetails object containg all the function data & settings for the server
     function_details = FunctionDetails(
         imports,
@@ -116,7 +100,6 @@ def send_request(imports: str, function_to_run: str, function_args: list = None,
             print("RECEIVED RESPONSE")
         # (4) Check whether the server could execute the method successfully
         # if the HTTP status code is 500, the server could not reach a stable state.
-        # TODO: now, we simply raise an error and save the energy data. Should we send a new request instead?
         if run_resp.status_code == 500:
             deserialised_response = dill.loads(run_resp.content)
             error_file = "timeout_energy_data.json"
@@ -139,5 +122,5 @@ def send_request(imports: str, function_to_run: str, function_args: list = None,
         return dill.loads(run_resp.content)
     else:
         # typically we expect json data
-        store_response(run_resp.content,experiment_file_path)
+        store_response(run_resp.content, experiment_file_path)
         return run_resp.json()
