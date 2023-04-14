@@ -17,17 +17,16 @@ def init_project_energy_data(project: str, experiment_kind: ExperimentKinds, fir
     dl = DataLoader(project, EXPERIMENT_DIR, experiment_kind)
     # get all experiment data files for this project
     experiment_files = dl.get_all_data_files()
-    print(experiment_files)
 
     # initialse the project energy data holder object with the number of functions in the first experiment
     function_count = len(dl.load_single_file(experiment_files[0]))
-    project_energy_data = ProjectEnergyData(function_count, project)
+    project_energy_data = ProjectEnergyData(function_count, project, experiment_kind)
 
     for exp_file in experiment_files[first_experiment-1:last_experiment]:
         # exp_data is a list of EnergyData objects for this experiment
         exp_data = dl.load_single_file(exp_file)
         # the number of functions executed should be the same for every experiment, otherwise something went wrong
-        assert len(exp_data) == function_count
+        assert len(exp_data) == function_count, f"{exp_file} contains data for {len(exp_data)} functions, but it should contain {function_count}!"
         for function_number, function_data in enumerate(exp_data):
             # skip a function if it has no energy data, but keep track of it
             if not function_data.has_energy_data:
@@ -76,6 +75,10 @@ def build_summary_df(energy_data_list: List[FunctionEnergyData]):
     
     summary_df = pd.DataFrame(data_list,
                       columns=['function', 'total', 'total (normalised)', 'lag time (s)', 'lag', 'lag (normalised)', 'total + lag (normalised)'])
+    
+    # add a sum row for method-level experiments where each row value is equal to the sum of all values in its column
+    if len(summary_df) > 1:
+        summary_df.loc['sum'] = summary_df.sum(numeric_only=True)
     return summary_df
 
 
@@ -83,7 +86,7 @@ def create_summary(project_energy_data: ProjectEnergyData):
     cpu_summary = build_summary_df(project_energy_data.cpu_data)
     ram_summary = build_summary_df(project_energy_data.ram_data)
     gpu_summary = build_summary_df(project_energy_data.gpu_data)
-    print(f"\n### SUMMARY FOR {project_energy_data.name} ###\n")
+    print(f"\n### SUMMARY FOR {project_energy_data.name} | {project_energy_data.experiment_kind.value} ###\n")
     print("\nMean CPU results (Energy unit: Joules)")
     print(cpu_summary)
     print("\nMean RAM results (Energy unit: Joules)")

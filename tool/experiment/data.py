@@ -75,8 +75,9 @@ class ProjectEnergyData():
     Contains three lists of FunctionEnergyData objects, one list each for CPU, RAM and GPU.
     The index of a function's data in the list corresponds to its index in the experiment file.
     """
-    def __init__(self, function_count: int, project: str):
+    def __init__(self, function_count: int, project: str, experiment_kind: ExperimentKinds):
         self.name = project
+        self.experiment_kind = experiment_kind
         self.cpu = [FunctionEnergyData() for _ in range(function_count)]
         self.ram = [FunctionEnergyData() for _ in range(function_count)]
         self.gpu = [FunctionEnergyData() for _ in range(function_count)]
