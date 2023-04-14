@@ -11,7 +11,8 @@ def run_sensors_once(time_zero = None):
     stream = os.popen(run_sensor)
     time_after = time.time_ns()
     
-    sensor_execution_time = (time_before + time_after) /2
+    # approximate sensor execution time by averaging the pre- and post-execution times
+    sensor_execution_time = (time_before + time_after) / 2
     
     sensor_output = stream.readlines()
 

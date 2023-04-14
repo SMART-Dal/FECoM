@@ -9,7 +9,7 @@ class FunctionDetails():
     method_object will remain serialised until the getter is called such
     that the custom class definition can be loaded first onto the server.
     """
-    def __init__(self, imports: str, function_to_run: str, args: list = None, kwargs: dict = None, max_wait_secs: int = 0, wait_after_run_secs: int = 0, return_result: bool = False, method_object: object = None,object_signature: str = None, custom_class: str = None, module_name: str = None, exec_not_eval: bool = False):
+    def __init__(self, imports: str, function_to_run: str, args: list, kwargs: dict, max_wait_secs: int, wait_after_run_secs: int, return_result: bool, method_object: object, object_signature: str, custom_class: str, module_name: str, exec_not_eval: bool):
         # basic function details
         self.imports = imports
         self.function_to_run = function_to_run

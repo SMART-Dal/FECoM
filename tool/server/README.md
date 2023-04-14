@@ -18,7 +18,8 @@ function_details = FunctionDetails(
     return_result: bool = False,
     method_object: object = None,
     custom_class: str = None,
-    module_name: str = None
+    module_name: str = None,
+    exec_not_eval: bool = False,
 )
 
 # serialising with pickle

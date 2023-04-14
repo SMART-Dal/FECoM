@@ -276,7 +276,7 @@ def run_function(imports: str, function_to_run: str, obj: object, args: list, kw
     if not run_check_loop(False, max_wait_secs, WAIT_PER_STABLE_CHECK_LOOP_S, "stable state", server_is_stable_check, CHECK_LAST_N_POINTS, STABLE_CHECK_TOLERANCE):
         raise TimeoutError(f"Server could not reach a stable state within {max_wait_secs} seconds")
 
-    # (3) evaluate the function return. Mark the start & end times in the files and save their exact values.
+    # (3) evaluate the function return. Get the start & end times from the files and also save their exact values.
     # TODO potentially correct here for the small time offset created by fetching the times for the files. We can use the server times for this.
     start_time_perf, start_time_nvidia = get_current_times(PERF_FILE, NVIDIA_SMI_FILE)
     start_time_server = time.time_ns()
