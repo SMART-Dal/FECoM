@@ -15,7 +15,7 @@ import time
 import os
 
 from tool.server.server_config import COUNT_INTERVAL_MS, CPU_FILE_SEPARATOR
-from tool.server.server_config import NVIDIA_SMI_FILE, PERF_FILE, SERVER_MODULE, START_TIMES_FILE, EXECUTION_LOG_FILE, CPU_TEMPERATURE_MODULE, CPU_TEMPERATURE_FILE
+from tool.server.server_config import NVIDIA_SMI_FILE, PERF_FILE, SERVER_MODULE, START_TIMES_FILE, EXECUTION_LOG_FILE, CPU_TEMPERATURE_MODULE
 
 def print_main(message: str):
     print("[MAIN] " + message)
@@ -95,7 +95,11 @@ def start_sensors(print_func):
 
 
 # write start times to a file for further processing
-def write_start_times(perf_start_time, nvidia_smi_start_time, server_start_time):
+def write_start_times(perf_start_time: int, nvidia_smi_start_time: int, server_start_time: int):
+    """
+    This method expects start times obtained from the time.time_ns() function such that
+    the server can synchronise its timing with the perf & nvidia-smi tools.
+    """
     with open(START_TIMES_FILE, "w") as f:
         f.writelines([
             f"PERF_START {perf_start_time}\n",
@@ -127,7 +131,7 @@ def restart_measurements(previous_perf_stat, previous_nvidia_smi, latest_executi
     print_main(f"Quit perf stat after executing {latest_execution}")
 
     # delete the perf & nvidia-smi files
-    if os.path.isfile(PERF_FILE) and os.path.isfile(NVIDIA_SMI_FILE):
+    if PERF_FILE.is_file() and NVIDIA_SMI_FILE.is_file():
             os.remove(PERF_FILE)
             os.remove(NVIDIA_SMI_FILE)
     else:
