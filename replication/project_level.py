@@ -10,8 +10,8 @@ if __name__ == "__main__":
     start_number = 6
     # commented code has already been run, uncomment to replicate
 
-    # experiment = ProjectLevelExperiment("keras/classification", EXPERIMENT_DIR, CODE_DIR, MAX_WAIT_S, WAIT_AFTER_RUN_S, number=start_number)
+    # experiment = ProjectLevelExperiment("keras/classification", EXPERIMENT_DIR, CODE_DIR, MAX_WAIT_S, WAIT_AFTER_RUN_S)
     # run_experiments(experiment, count=5, start=start_number)
 
-    # experiment = ProjectLevelExperiment("images/cnn", EXPERIMENT_DIR, CODE_DIR, MAX_WAIT_S, WAIT_AFTER_RUN_S, number=start_number)
+    # experiment = ProjectLevelExperiment("images/cnn", EXPERIMENT_DIR, CODE_DIR, MAX_WAIT_S, WAIT_AFTER_RUN_S)
     # run_experiments(experiment, count=5, start=start_number)
