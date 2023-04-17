@@ -14,7 +14,7 @@ from statistics import mean
 import pandas as pd
 
 from tool.experiment.experiments import format_full_output_dir, ExperimentKinds
-from tool.server.server_config import STABLE_CPU_ENERGY_MEAN, STABLE_CPU_ENERGY_STDEV, STABLE_RAM_ENERGY_MEAN, STABLE_RAM_ENERGY_STDEV, STABLE_GPU_POWER_MEAN, STABLE_GPU_POWER_STDEV
+from tool.server.server_config import STABLE_CPU_ENERGY_MEAN, STABLE_RAM_ENERGY_MEAN, STABLE_GPU_POWER_MEAN
 
 NS_CONVERSION = 1_000_000_000
 
@@ -31,6 +31,7 @@ class FunctionEnergyData():
         self.lag = []
         self.lag_normalised = []
         self.total_lag_normalised = []
+        self.execution_time_s = []
     
     def __len__(self):
         return len(self.total)
@@ -69,15 +70,20 @@ class FunctionEnergyData():
     def mean_total_lag_normalised(self):
         return mean(self.total_lag_normalised)
     
+    @property
+    def mean_execution_time_s(self):
+        return mean(self.execution_time_s)
+    
 
 class ProjectEnergyData():
     """
     Contains three lists of FunctionEnergyData objects, one list each for CPU, RAM and GPU.
     The index of a function's data in the list corresponds to its index in the experiment file.
     """
-    def __init__(self, function_count: int, project: str, experiment_kind: ExperimentKinds):
+    def __init__(self, function_count: int, project: str, experiment_kind: ExperimentKinds, experiment_count: int):
         self.name = project
         self.experiment_kind = experiment_kind
+        self.experiment_count = experiment_count
         self.cpu = [FunctionEnergyData() for _ in range(function_count)]
         self.ram = [FunctionEnergyData() for _ in range(function_count)]
         self.gpu = [FunctionEnergyData() for _ in range(function_count)]
@@ -90,23 +96,26 @@ class ProjectEnergyData():
     @property
     def cpu_data(self) -> List[FunctionEnergyData]:
         """
-        The non-empty FunctionEnergyData objects, each containing CPU data for one function
+        The FunctionEnergyData objects where there is energy data for all experiments.
+        Each object contains CPU data for one function.
         """
-        return [data for data in self.cpu if len(data) > 0]
+        return [data for data in self.cpu if len(data) == self.experiment_count]
     
     @property
     def ram_data(self) -> List[FunctionEnergyData]:
         """
-        The non-empty FunctionEnergyData objects, each containing RAM data for one function
+        The FunctionEnergyData objects where there is energy data for all experiments.
+        Each object contains RAM data for one function.
         """
-        return [data for data in self.ram if len(data) > 0]
+        return [data for data in self.ram if len(data) == self.experiment_count]
     
     @property
     def gpu_data(self) -> List[FunctionEnergyData]:
         """
-        The non-empty FunctionEnergyData objects, each containing GPU data for one function
+        The FunctionEnergyData objects where there is energy data for all experiments.
+        Each object contains GPU data for one function.
         """
-        return [data for data in self.gpu if len(data) > 0]
+        return [data for data in self.gpu if len(data) == self.experiment_count]
 
 
 class EnergyData():
@@ -353,7 +362,7 @@ class EnergyData():
         else:
             return self.__gpu_energy_lag_df["power_draw (W)"].sum()
         
-    ### Normalised energy consumption during lag time (subtracting baseline energy consumptino)
+    ### Normalised energy consumption during lag time (subtracting baseline energy consumption)
     @property
     def cpu_lag_normalised(self):
         """
@@ -384,7 +393,7 @@ class EnergyData():
         else:
             return self.gpu_lag - self.__baseline_consumption(self.__gpu_energy_lag_df, STABLE_GPU_POWER_MEAN)
         
-    ### Normalised total energy consumption and normalised energy consumed during lag time 
+    ### Normalised total energy consumption plus normalised energy consumed during lag time 
     @property
     def total_cpu_lag_normalised(self):
         """
@@ -483,10 +492,13 @@ class DataLoader():
         return all_data_files
 
 
-    # returns a list of EnergyData objects where self.function_name is
-    # - the function name (method-level experiment)
-    # - "project-level" (project-level experiment), in this case there is only one dict in the list
     def load_single_file(self, file_name: str) -> List[EnergyData]:
+        """
+         returns a list of EnergyData objects where self.function_name is
+            - the function name (method-level experiment) or
+            - "project-level" (project-level experiment), in this case there is only one dict in the list
+        """
+
         file_path = self.__data_dir / file_name
         with open(file_path, 'r') as f:
             raw_data_list = json.load(f)
