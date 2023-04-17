@@ -31,7 +31,7 @@ class FunctionEnergyData():
         self.lag = []
         self.lag_normalised = []
         self.total_lag_normalised = []
-        self.execution_time_s = []
+        self.execution_time = []
     
     def __len__(self):
         return len(self.total)
@@ -71,8 +71,8 @@ class FunctionEnergyData():
         return mean(self.total_lag_normalised)
     
     @property
-    def mean_execution_time_s(self):
-        return mean(self.execution_time_s)
+    def mean_execution_time(self):
+        return mean(self.execution_time)
     
 
 class ProjectEnergyData():

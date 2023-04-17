@@ -38,7 +38,7 @@ def init_project_energy_data(project: str, experiment_kind: ExperimentKinds, fir
                 continue
             # add CPU data
             project_energy_data.cpu[function_number].name = function_data.function_name
-            project_energy_data.cpu[function_number].execution_time_s.append(function_data.execution_time_s)
+            project_energy_data.cpu[function_number].execution_time.append(function_data.execution_time_s)
             project_energy_data.cpu[function_number].total.append(function_data.total_cpu)
             project_energy_data.cpu[function_number].total_normalised.append(function_data.total_cpu_normalised)
             project_energy_data.cpu[function_number].lag_time.append(function_data.cpu_lag_time)
@@ -47,7 +47,7 @@ def init_project_energy_data(project: str, experiment_kind: ExperimentKinds, fir
             project_energy_data.cpu[function_number].total_lag_normalised.append(function_data.total_cpu_lag_normalised)
             # add RAM data
             project_energy_data.ram[function_number].name = function_data.function_name
-            project_energy_data.ram[function_number].execution_time_s.append(function_data.execution_time_s)
+            project_energy_data.ram[function_number].execution_time.append(function_data.execution_time_s)
             project_energy_data.ram[function_number].total.append(function_data.total_ram)
             project_energy_data.ram[function_number].total_normalised.append(function_data.total_ram_normalised)
             project_energy_data.ram[function_number].lag_time.append(function_data.ram_lag_time)
@@ -56,7 +56,7 @@ def init_project_energy_data(project: str, experiment_kind: ExperimentKinds, fir
             project_energy_data.ram[function_number].total_lag_normalised.append(function_data.total_ram_lag_normalised)
             # add GPU data
             project_energy_data.gpu[function_number].name = function_data.function_name
-            project_energy_data.gpu[function_number].execution_time_s.append(function_data.execution_time_s)
+            project_energy_data.gpu[function_number].execution_time.append(function_data.execution_time_s)
             project_energy_data.gpu[function_number].total.append(function_data.total_gpu)
             project_energy_data.gpu[function_number].total_normalised.append(function_data.total_gpu_normalised)
             project_energy_data.gpu[function_number].lag_time.append(function_data.gpu_lag_time)
@@ -72,7 +72,7 @@ def build_summary_df(energy_data_list: List[FunctionEnergyData]):
     for function_data in energy_data_list:
         data_list.append([
             function_data.name,
-            function_data.mean_execution_time_s,
+            function_data.mean_execution_time,
             function_data.mean_total,
             function_data.mean_total_normalised,
             function_data.mean_lag_time,
