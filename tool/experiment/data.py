@@ -137,7 +137,7 @@ class EnergyData():
         self.ram_energy_in_execution = self.__energy_in_execution(
             ram_energy, self.start_time_perf, self.end_time_perf)
         self.gpu_energy_in_execution = self.__energy_in_execution(
-            gpu_energy, times["start_time_nvidia"], times["end_time_nvidia"])
+            gpu_energy, self.start_time_nvidia, self.end_time_nvidia)
 
         self.__cpu_lag_time = None
         self.__cpu_energy_lag_df = None
