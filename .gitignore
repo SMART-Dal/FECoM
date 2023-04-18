@@ -5,6 +5,7 @@ __pycache__
 
 # replication
 energy_plot.png
+*.tex
 
 # data
 data/code-dataset/Repositories

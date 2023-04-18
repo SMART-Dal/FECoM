@@ -3,7 +3,8 @@ Analyse the experimental results using the data structures from data.py.
 """
 
 import pandas as pd
-from typing import List
+from typing import List, Dict
+from pathlib import Path
 
 from tool.experiment.data import DataLoader, FunctionEnergyData, ProjectEnergyData
 from tool.experiment.experiments import ExperimentKinds
@@ -110,7 +111,13 @@ def build_summary_df_mean(energy_data_list: List[FunctionEnergyData]) -> pd.Data
     return format_summary_df(data_list)
 
 
-def create_summary(project_energy_data: ProjectEnergyData):
+def export_summary_to_latex(project_energy_data: ProjectEnergyData, output_dir: Path):
+    summary_dfs = create_summary(project_energy_data)
+    for name, df in summary_dfs.items():
+        df.style.format(precision=2).to_latex(buf = output_dir/f"{name}.tex")
+
+
+def create_summary(project_energy_data: ProjectEnergyData) -> Dict[str, pd.DataFrame]:
     cpu_summary_mean = build_summary_df_mean(project_energy_data.cpu_data)
     ram_summary_mean = build_summary_df_mean(project_energy_data.ram_data)
     gpu_summary_mean = build_summary_df_mean(project_energy_data.gpu_data)
@@ -135,6 +142,15 @@ def create_summary(project_energy_data: ProjectEnergyData):
     print("\nMedian GPU results (Energy unit: Joules)")
     print(gpu_summary_median)
     print("\n###=======###\n")
+
+    return {
+        "cpu_summary_mean": cpu_summary_mean,
+        "ram_summary_mean": ram_summary_mean,
+        "gpu_summary_mean": gpu_summary_mean,
+        "cpu_summary_median": cpu_summary_median,
+        "ram_summary_median": ram_summary_median,
+        "gpu_summary_median": gpu_summary_median,
+    }
     
 
 if __name__ == "__main__":
