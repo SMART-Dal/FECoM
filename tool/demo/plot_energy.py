@@ -7,6 +7,8 @@ from pathlib import Path
 from tool.server.measurement_parse import parse_nvidia_smi, parse_perf, parse_cpu_temperature
 from tool.server.server_config import CPU_TEMPERATURE_FILE
 
+# TODO refactor this module
+
 def normalised(lst, normalise=True):
     """
     normalise a list of data using max-min normalisation

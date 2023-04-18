@@ -494,7 +494,7 @@ class DataLoader():
 
     def load_single_file(self, file_name: str) -> List[EnergyData]:
         """
-         returns a list of EnergyData objects where self.function_name is
+         returns a list of EnergyData objects where EnergyData.function_name is
             - the function name (method-level experiment) or
             - "project-level" (project-level experiment), in this case there is only one dict in the list
         """
