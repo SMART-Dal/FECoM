@@ -66,8 +66,33 @@ def init_project_energy_data(project: str, experiment_kind: ExperimentKinds, fir
     
     return project_energy_data
 
+def format_summary_df(data_list: list) -> pd.DataFrame:
+    summary_df = pd.DataFrame(data_list,
+                      columns=['function', 'exec time (s)', 'total', 'total (normalised)', 'lag time (s)', 'lag', 'lag (normalised)', 'total + lag (normalised)'])
+    
+    # add a sum row for method-level experiments where each row value is equal to the sum of all values in its column
+    if len(summary_df) > 1:
+        summary_df.loc['sum'] = summary_df.sum(numeric_only=True)
+    return summary_df
 
-def build_summary_df(energy_data_list: List[FunctionEnergyData]):
+
+def build_summary_df_median(energy_data_list: List[FunctionEnergyData]) -> pd.DataFrame:
+    data_list = []
+    for function_data in energy_data_list:
+        data_list.append([
+            function_data.name,
+            function_data.median_execution_time,
+            function_data.median_total,
+            function_data.median_total_normalised,
+            function_data.median_lag_time,
+            function_data.median_lag,
+            function_data.median_lag_normalised,
+            function_data.median_total_lag_normalised
+        ])
+    return format_summary_df(data_list)
+
+
+def build_summary_df_mean(energy_data_list: List[FunctionEnergyData]) -> pd.DataFrame:
     data_list = []
     for function_data in energy_data_list:
         data_list.append([
@@ -80,27 +105,34 @@ def build_summary_df(energy_data_list: List[FunctionEnergyData]):
             function_data.mean_lag_normalised,
             function_data.mean_total_lag_normalised
         ])
-    
-    summary_df = pd.DataFrame(data_list,
-                      columns=['function', 'exec time (s)', 'total', 'total (normalised)', 'lag time (s)', 'lag', 'lag (normalised)', 'total + lag (normalised)'])
-    
-    # add a sum row for method-level experiments where each row value is equal to the sum of all values in its column
-    if len(summary_df) > 1:
-        summary_df.loc['sum'] = summary_df.sum(numeric_only=True)
-    return summary_df
+    return format_summary_df(data_list)
 
 
 def create_summary(project_energy_data: ProjectEnergyData):
-    cpu_summary = build_summary_df(project_energy_data.cpu_data)
-    ram_summary = build_summary_df(project_energy_data.ram_data)
-    gpu_summary = build_summary_df(project_energy_data.gpu_data)
+    cpu_summary_mean = build_summary_df_mean(project_energy_data.cpu_data)
+    ram_summary_mean = build_summary_df_mean(project_energy_data.ram_data)
+    gpu_summary_mean = build_summary_df_mean(project_energy_data.gpu_data)
+
+    cpu_summary_median = build_summary_df_median(project_energy_data.cpu_data)
+    ram_summary_median = build_summary_df_median(project_energy_data.ram_data)
+    gpu_summary_median = build_summary_df_median(project_energy_data.gpu_data)
+
     print(f"\n### SUMMARY FOR {project_energy_data.name} | {project_energy_data.experiment_kind.value} ###\n")
-    print("\nMean CPU results (Energy unit: Joules)")
-    print(cpu_summary)
-    print("\nMean RAM results (Energy unit: Joules)")
-    print(ram_summary)
-    print("\nMean GPU results (Energy unit: Watt)")
-    print(gpu_summary)
+    print("Mean CPU results (Energy unit: Joules)")
+    print(cpu_summary_mean)
+    print("\nMedian CPU results (Energy unit: Joules)")
+    print(cpu_summary_median)
+    print("\n###=======###\n")
+    print("Mean RAM results (Energy unit: Joules)")
+    print(ram_summary_mean)
+    print("\nMedian RAM results (Energy unit: Joules)")
+    print(ram_summary_median)
+    print("\n###=======###\n")
+    print("Mean GPU results (Energy unit: Watt)")
+    print(gpu_summary_mean)
+    print("\nMedian GPU results (Energy unit: Joules)")
+    print(gpu_summary_median)
+    print("\n###=======###\n")
     
 
 if __name__ == "__main__":

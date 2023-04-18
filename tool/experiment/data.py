@@ -9,7 +9,7 @@ import os
 import json
 from pathlib import Path
 from typing import List
-from statistics import mean
+from statistics import mean, median
 
 import pandas as pd
 
@@ -42,6 +42,7 @@ class FunctionEnergyData():
             raise AttributeError("Function name was not initialised")
         return self.__name
     
+    ### mean values
     @name.setter
     def name(self, function_name):
         self.__name = function_name
@@ -73,6 +74,35 @@ class FunctionEnergyData():
     @property
     def mean_execution_time(self):
         return mean(self.execution_time)
+    
+    ### median values
+    @property
+    def median_total(self):
+        return median(self.total)
+    
+    @property
+    def median_total_normalised(self):
+        return median(self.total_normalised)
+    
+    @property
+    def median_lag_time(self):
+        return median(self.lag_time)
+    
+    @property
+    def median_lag(self):
+        return median(self.lag)
+    
+    @property
+    def median_lag_normalised(self):
+        return median(self.lag_normalised)
+    
+    @property
+    def median_total_lag_normalised(self):
+        return median(self.total_lag_normalised)
+    
+    @property
+    def median_execution_time(self):
+        return median(self.execution_time)
     
 
 class ProjectEnergyData():
