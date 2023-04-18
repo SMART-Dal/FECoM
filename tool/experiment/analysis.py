@@ -73,7 +73,9 @@ def format_summary_df(data_list: list) -> pd.DataFrame:
     # add a sum row for method-level experiments where each row value is equal to the sum of all values in its column
     if len(summary_df) > 1:
         summary_df.loc['sum'] = summary_df.sum(numeric_only=True)
-    return summary_df
+    
+    # round to 2 decimal places
+    return summary_df.round(2)
 
 
 def build_summary_df_median(energy_data_list: List[FunctionEnergyData]) -> pd.DataFrame:
