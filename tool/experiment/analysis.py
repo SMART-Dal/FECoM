@@ -10,6 +10,8 @@ from tool.experiment.data import DataLoader, FunctionEnergyData, ProjectEnergyDa
 from tool.experiment.experiments import ExperimentKinds
 from tool.client.client_config import EXPERIMENT_DIR
 
+SUMMARY_DF_COLUMNS = ['function', 'exec time (s)', 'total', 'total (normalised)', 'lag time (s)', 'lag', 'lag (normalised)', 'total + lag (normalised)']
+
 def init_project_energy_data(project: str, experiment_kind: ExperimentKinds, first_experiment: int = 1, last_experiment: int = 10) -> ProjectEnergyData: 
     """
     Initialise a ProjectEnergyData object containing 3 lists of FunctionEnergyData objects (CPU, RAM, GPU),
@@ -67,13 +69,13 @@ def init_project_energy_data(project: str, experiment_kind: ExperimentKinds, fir
     
     return project_energy_data
 
-def format_summary_df(data_list: list) -> pd.DataFrame:
-    summary_df = pd.DataFrame(data_list,
-                      columns=['function', 'exec time (s)', 'total', 'total (normalised)', 'lag time (s)', 'lag', 'lag (normalised)', 'total + lag (normalised)'])
+def format_df(data_list: list, column_names: List[str]) -> pd.DataFrame:
+    summary_df = pd.DataFrame(data_list, columns=column_names)
     
     # add a sum row for method-level experiments where each row value is equal to the sum of all values in its column
     if len(summary_df) > 1:
-        summary_df.loc['sum'] = summary_df.sum(numeric_only=True)
+        summary_df.loc[len(summary_df)] = summary_df.sum(numeric_only=True)
+        summary_df.iloc[-1,0] = "method-level (sum)"
     
     # round to 2 decimal places
     return summary_df.round(2)
@@ -92,7 +94,8 @@ def build_summary_df_median(energy_data_list: List[FunctionEnergyData]) -> pd.Da
             function_data.median_lag_normalised,
             function_data.median_total_lag_normalised
         ])
-    return format_summary_df(data_list)
+    
+    return format_df(data_list, SUMMARY_DF_COLUMNS)
 
 
 def build_summary_df_mean(energy_data_list: List[FunctionEnergyData]) -> pd.DataFrame:
@@ -108,11 +111,51 @@ def build_summary_df_mean(energy_data_list: List[FunctionEnergyData]) -> pd.Data
             function_data.mean_lag_normalised,
             function_data.mean_total_lag_normalised
         ])
-    return format_summary_df(data_list)
+    return format_df(data_list, SUMMARY_DF_COLUMNS)
 
 
-def export_summary_to_latex(project_energy_data: ProjectEnergyData, output_dir: Path):
-    summary_dfs = create_summary(project_energy_data)
+def build_total_energy_df(method_level_energy: ProjectEnergyData, project_level_energy: ProjectEnergyData) -> pd.DataFrame:
+    """
+    Construct a DataFrame containing total normalised method-level and project-level energy.
+    Used to evaluate RQ1.
+    """
+    
+    data_list = []
+    for cpu, ram, gpu in zip(method_level_energy.cpu_data, method_level_energy.ram_data, method_level_energy.gpu_data):
+        assert cpu.name == ram.name and cpu.name == gpu.name, "The hardware components should list the functions in the same order."
+        data_list.append([
+            cpu.name,
+            cpu.mean_execution_time,
+            cpu.mean_total_normalised,
+            cpu.median_total_normalised,
+            ram.mean_total_normalised,
+            ram.median_total_normalised,
+            gpu.mean_total_normalised,
+            gpu.median_total_normalised
+        ])
+    
+    column_names = ["function", "run time", "CPU (mean)", "CPU (median)", "RAM (mean)", "RAM (median)", "GPU (mean)", "GPU (median)"]
+
+    total_energy_df = format_df(data_list, column_names)
+    
+    total_energy_df.loc[len(total_energy_df)] = [
+        project_level_energy.cpu_data[0].name,
+        project_level_energy.cpu_data[0].mean_execution_time,
+        project_level_energy.cpu_data[0].mean_total_normalised,
+        project_level_energy.cpu_data[0].median_total_normalised,
+        project_level_energy.ram_data[0].mean_total_normalised,
+        project_level_energy.ram_data[0].median_total_normalised,
+        project_level_energy.gpu_data[0].mean_total_normalised,
+        project_level_energy.gpu_data[0].median_total_normalised
+    ]
+    
+    return total_energy_df
+
+
+def export_summary_to_latex(output_dir: Path, summary_dfs: Dict[str, pd.DataFrame]):
+    """
+    Write a given set of summary dfs returned by create_summary() to latex files.
+    """
     for name, df in summary_dfs.items():
         df.style.format(precision=2).to_latex(buf = output_dir/f"{name}.tex")
 
@@ -151,11 +194,14 @@ def create_summary(project_energy_data: ProjectEnergyData) -> Dict[str, pd.DataF
         "ram_summary_median": ram_summary_median,
         "gpu_summary_median": gpu_summary_median,
     }
-    
+
 
 if __name__ == "__main__":
-    project_name = "keras/classification"
-    data = init_project_energy_data(project_name, ExperimentKinds.METHOD_LEVEL, first_experiment=6)
-    print(data.no_energy_functions)
-    print(f"Number of functions: {len(data)}")
-    create_summary(data)
+    project_name = "images/cnn"
+    method_level_data = init_project_energy_data(project_name, ExperimentKinds.METHOD_LEVEL, first_experiment=6)
+    print(method_level_data.no_energy_functions)
+    print(f"Number of functions: {len(method_level_data)}")
+    # create_summary(method_level_data)
+
+    project_level_data = init_project_energy_data(project_name, ExperimentKinds.PROJECT_LEVEL, first_experiment=6)
+    print(build_total_energy_df(method_level_data, project_level_data))
