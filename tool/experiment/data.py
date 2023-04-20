@@ -7,6 +7,7 @@ This package contains four classes for handling experiment data
 """
 import os
 import json
+import re
 from pathlib import Path
 from typing import List
 from statistics import mean, median
@@ -44,8 +45,11 @@ class FunctionEnergyData():
     
     ### mean values
     @name.setter
-    def name(self, function_name):
-        self.__name = function_name
+    def name(self, function_name: str):
+        # the following line removes content enclosed by brackets, in this case "func(*args, **kwargs)"" becomes "func"
+        # and has been adapted from https://www.geeksforgeeks.org/how-to-remove-text-inside-brackets-in-python/
+        name_without_args = re.sub("\(.*?\)","", function_name)
+        self.__name = name_without_args
     
     @property
     def mean_total(self):
