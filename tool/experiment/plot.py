@@ -2,8 +2,10 @@ import matplotlib.pyplot as plt
 import matplotlib.lines as mlines
 import matplotlib.patches as mpatches
 import pandas as pd
+from typing import List
 
-from tool.experiment.data import EnergyData
+from tool.experiment.data import EnergyData, ProjectEnergyData
+from tool.experiment.analysis import prepare_total_energy_from_project
 
 
 def get_perf_times(energy_data: EnergyData) -> list:
@@ -155,4 +157,33 @@ def plot_combined(energy_data):
     print(combined_df.std())
     print(combined_df.mean())
     combined_df.plot()
+    plt.show()
+
+
+def plot_total_energy_vs_execution_time(method_level_energies: List[ProjectEnergyData], title=True):
+    """
+    Takes a list of ProjectEnergyData objects, and plots the total normalised energy consumption
+    versus mean execution time for all functions in the ProjectEnergyData objects.
+    """
+    data_list = []
+    for method_level_energy in method_level_energies:
+        project_data_list, column_names = prepare_total_energy_from_project(method_level_energy)
+        data_list.extend(project_data_list)
+    
+    # TODO continue here by creating a dataframe and graphing CPU, RAM, GPU separately.
+    total_df = pd.DataFrame(data_list, columns=column_names)
+
+    for hardware in ["CPU", "RAM", "GPU"]:
+        plt.figure(f"{hardware}_total")
+        # allow the option to not set a title for graphs included in a report
+        if title:
+            plt.title(f"Total normalised energy consumption vs time ({hardware})", fontsize=16)
+        plt.xlabel("Mean execution time (s)")
+        plt.ylabel("Normalised energy consumption (Joules)")
+        scatter_1 = f"{hardware} (mean)"
+        scatter_2 = f"{hardware} (median)"
+        plt.scatter(total_df.loc[:,"run time"], total_df.loc[:, scatter_1])
+        plt.scatter(total_df.loc[:,"run time"], total_df.loc[:, scatter_2])
+        plt.legend([scatter_1, scatter_2])
+
     plt.show()

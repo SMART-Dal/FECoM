@@ -3,7 +3,7 @@ Analyse the experimental results using the data structures from data.py.
 """
 
 import pandas as pd
-from typing import List, Dict
+from typing import List, Dict, Tuple
 from pathlib import Path
 
 from tool.experiment.data import DataLoader, FunctionEnergyData, ProjectEnergyData
@@ -113,15 +113,13 @@ def build_summary_df_mean(energy_data_list: List[FunctionEnergyData]) -> pd.Data
         ])
     return format_df(data_list, SUMMARY_DF_COLUMNS)
 
-
-def build_total_energy_df(method_level_energy: ProjectEnergyData, project_level_energy: ProjectEnergyData) -> pd.DataFrame:
+def prepare_total_energy_from_project(project_energy_data: ProjectEnergyData) -> Tuple[List[list], List[str]]:
     """
-    Construct a DataFrame containing total normalised method-level and project-level energy.
-    Used to evaluate RQ1.
+    Given a ProjectEnergyData object, construct a list of lists for constructing a DataFrame
+    that contains total normalised energy data. Also return the column names for this DataFrame.
     """
-    
     data_list = []
-    for cpu, ram, gpu in zip(method_level_energy.cpu_data, method_level_energy.ram_data, method_level_energy.gpu_data):
+    for cpu, ram, gpu in zip(project_energy_data.cpu_data, project_energy_data.ram_data, project_energy_data.gpu_data):
         assert cpu.name == ram.name and cpu.name == gpu.name, "The hardware components should list the functions in the same order."
         data_list.append([
             cpu.name,
@@ -136,18 +134,19 @@ def build_total_energy_df(method_level_energy: ProjectEnergyData, project_level_
     
     column_names = ["function", "run time", "CPU (mean)", "CPU (median)", "RAM (mean)", "RAM (median)", "GPU (mean)", "GPU (median)"]
 
+    return data_list, column_names
+
+
+def build_total_energy_df(method_level_energy: ProjectEnergyData, project_level_energy: ProjectEnergyData) -> pd.DataFrame:
+    """
+    Construct a DataFrame containing total normalised method-level and project-level energy.
+    Used to evaluate RQ1.
+    """
+    data_list, column_names = prepare_total_energy_from_project(method_level_energy)
     total_energy_df = format_df(data_list, column_names)
     
-    total_energy_df.loc[len(total_energy_df)] = [
-        project_level_energy.cpu_data[0].name,
-        project_level_energy.cpu_data[0].mean_execution_time,
-        project_level_energy.cpu_data[0].mean_total_normalised,
-        project_level_energy.cpu_data[0].median_total_normalised,
-        project_level_energy.ram_data[0].mean_total_normalised,
-        project_level_energy.ram_data[0].median_total_normalised,
-        project_level_energy.gpu_data[0].mean_total_normalised,
-        project_level_energy.gpu_data[0].median_total_normalised
-    ]
+    data_list_project_level, _ = prepare_total_energy_from_project(project_level_energy)
+    total_energy_df.loc[len(total_energy_df)] = data_list_project_level[0]
     
     return total_energy_df
 
@@ -205,3 +204,12 @@ if __name__ == "__main__":
 
     project_level_data = init_project_energy_data(project_name, ExperimentKinds.PROJECT_LEVEL, first_experiment=6)
     print(build_total_energy_df(method_level_data, project_level_data))
+
+    method_level_energies = [method_level_data]
+
+    project_name = "keras/classification"
+    method_level_data = init_project_energy_data(project_name, ExperimentKinds.METHOD_LEVEL, first_experiment=6)
+    method_level_energies.append(method_level_data)
+
+    from tool.experiment.plot import plot_total_energy_vs_execution_time
+    plot_total_energy_vs_execution_time(method_level_energies)
