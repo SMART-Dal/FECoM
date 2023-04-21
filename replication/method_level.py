@@ -10,11 +10,11 @@ on_hold = [
 ]
 
 if __name__ == "__main__":
-    start_number = 6
+    start_number = 1
     # commented code has already been run, uncomment to replicate
 
     # experiment = MethodLevelExperiment("keras/classification", EXPERIMENT_DIR, CODE_DIR)
-    # run_experiments(experiment, count=5, start=start_number)
+    # run_experiments(experiment, count=10, start=start_number)
 
     # experiment = MethodLevelExperiment("images/cnn", EXPERIMENT_DIR, CODE_DIR)
-    # run_experiments(experiment, count=5, start=start_number)
+    # run_experiments(experiment, count=10, start=start_number)
