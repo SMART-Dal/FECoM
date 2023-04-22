@@ -91,7 +91,7 @@ class ProjectLevelExperiment(Experiment):
 class MethodLevelExperiment(Experiment):
     def __init__(self, project: str, experiment_dir: Path, code_dir: Path):
         super().__init__(ExperimentKinds.METHOD_LEVEL, project, experiment_dir)
-        self.__code_file = self.code_dir / f"{self.project}_patched.py"
+        self.__code_file = code_dir / f"{self.project}_patched.py"
 
     def run(self, exp_number):
         self.number = exp_number

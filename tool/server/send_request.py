@@ -1,7 +1,5 @@
 import dill
 import requests
-import os
-import traceback
 import time
 import json
 from pathlib import Path
@@ -122,4 +120,9 @@ def send_request(imports: str, function_to_run: str, function_args: list = None,
         custom_class,
         exec_not_eval
     )
-    return send_request_with_func_details(function_details, username, password, experiment_file_path)
+    return send_request_with_func_details(
+        function_details=function_details,
+        experiment_file_path=experiment_file_path,
+        username=username,
+        password=password
+    )
