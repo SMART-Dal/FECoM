@@ -8,7 +8,7 @@ from tool.demo.plot_energy import combined_plot, calc_stats_for_split_data
 from tool.server.measurement_parse import parse_cpu_temperature
 
 
-IDLE_DATA_DIR = Path("../data/other/idle_data_new/")
+IDLE_DATA_DIR = Path("../data/other/idle_data/")
 
 # code used to calculate the standard deviation to mean ratios 
 # gathered data by running the server application, nothing else
@@ -41,5 +41,8 @@ def cpu_temperature():
         f.write(f"max CPU temperature: {df_cpu_temp.iloc[:,1].max()}\n")
 
 if __name__ == "__main__":
-    stdev_mean_ratios()
+    ### commented code has already been run, uncomment to replicate
+
+    # stdev_mean_ratios()
     # cpu_temperature()
+    pass
