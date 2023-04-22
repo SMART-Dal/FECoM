@@ -33,3 +33,24 @@ class FunctionDetails():
     @property
     def method_object(self):
         return pickle.loads(self.__method_object)
+
+
+def build_function_details(imports: str, function_to_run: str, args: list = None, kwargs: dict = None, max_wait_secs: int = 0, wait_after_run_secs: int = 0, return_result: bool = False, method_object = None, object_signature = None, custom_class: str = None, exec_not_eval: bool = False) -> FunctionDetails:
+    """
+    Build a FunctionDetails object containg all the function data & settings for the server.
+    """
+    function_details = FunctionDetails(
+        imports,
+        function_to_run,
+        args,
+        kwargs,
+        max_wait_secs,
+        wait_after_run_secs,
+        return_result,
+        method_object,
+        object_signature,
+        custom_class,
+        method_object.__module__ if custom_class is not None else None,
+        exec_not_eval
+    )
+    return function_details
