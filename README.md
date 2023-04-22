@@ -2,6 +2,14 @@
 
 Our tool calculates the energy consumed by each individual ML method from a given script.
 
+## Directory Structure
+This repository has the following main directories:
+- **data**: the `code-dataset` subdirectory contains patched and original projects from the used repository, `energy-dataset` contains all experimental energy data, `other` contains failed experimental data or data used for calculating settings.
+- **deprecated**: old code that is no longer used, but could be useful again at some point.
+- **replication**: replication package for the study.
+- **tests**: see *Testing* below for more information.
+- **tool**: source code for the energy measurement tool. 
+
 ## Environment Setup
 ### Energy measurement tools
 First verify that [perf](https://perf.wiki.kernel.org/index.php/Main_Page), a tool to measure CPU and RAM energy consumption, is already available in you Linux system, if not then install separately:
