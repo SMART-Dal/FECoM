@@ -28,4 +28,8 @@ def rq1_plot_total_energy_vs_time():
     plot_total_energy_vs_execution_time([data_1, data_2], title=False)
 
 if __name__ == "__main__":
-    rq1_plot_total_energy_vs_time()
+    ### commented code has already been run, uncomment to replicate
+
+    # implementation_plot_GPU_energy_with_times()
+    # rq1_plot_total_energy_vs_time()
+    pass
