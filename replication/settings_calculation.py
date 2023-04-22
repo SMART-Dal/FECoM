@@ -3,16 +3,18 @@ Methods for calculating some of the settings.
 """
 from pathlib import Path
 import pandas as pd
+from matplotlib import pyplot as plt
 from tool.demo.plot_energy import combined_plot, calc_stats_for_split_data
 from tool.server.measurement_parse import parse_cpu_temperature
 
 
-IDLE_DATA_DIR = Path("../data/other/idle_data/")
+IDLE_DATA_DIR = Path("../data/other/idle_data_new/")
 
 # code used to calculate the standard deviation to mean ratios 
 # gathered data by running the server application, nothing else
-def stdev_mean_ratios():
-    idle_avgs = calc_stats_for_split_data(combined_plot(directory=IDLE_DATA_DIR), n=20)
+def stdev_mean_ratios(plot_data=False):
+    combined_df = combined_plot(directory=IDLE_DATA_DIR)
+    idle_avgs = calc_stats_for_split_data(combined_df, n=20)
     cpu_std_mean = str(round(idle_avgs[0] / idle_avgs[1], 2))
     ram_std_mean = str(round(idle_avgs[2] / idle_avgs[3], 2))
     gpu_std_mean = str(round(idle_avgs[4] / idle_avgs[5], 2))
@@ -25,6 +27,9 @@ def stdev_mean_ratios():
             "\nram_std_mean: " + ram_std_mean,
             "\ngpu_std_mean: " + gpu_std_mean
         ])
+    if plot_data:
+        combined_df.plot()
+        plt.show()
 
 # code used to calculate the maximum cpu temperature
 # gathered data by running the server application and cpu_temperature.py, nothing else
@@ -37,4 +42,4 @@ def cpu_temperature():
 
 if __name__ == "__main__":
     stdev_mean_ratios()
-    cpu_temperature()
+    # cpu_temperature()

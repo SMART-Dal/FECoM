@@ -38,21 +38,30 @@ CHECK_LAST_N_POINTS = 20
 
 # relative tolerance for difference between stable stdev/mean ratio and current ratios as measured by the server
 # e.g. 0.1 would mean allowing a ratio that's 10% higher than the stable stdev/mean ratio
-STABLE_CHECK_TOLERANCE = 0
+STABLE_CHECK_TOLERANCE = 0.5
 
 # average (mean) standard deviations and means for stable energy data for 20 values in a row from, generated with replication/settings_calculation.stdev_mean_ratios()
 # Do not change these between experiments!
-CPU_STD_TO_MEAN = 0.23 # 0.0454744
-RAM_STD_TO_MEAN = 0.15 # 0.0303726
-GPU_STD_TO_MEAN = 0.01 # 0.0090459
+CPU_STD_TO_MEAN = 0.06
+RAM_STD_TO_MEAN = 0.03
+GPU_STD_TO_MEAN = 0.01
+# CPU_STD_TO_MEAN = 0.23
+# RAM_STD_TO_MEAN = 0.15
+# GPU_STD_TO_MEAN = 0.01
 
 # used by tool.experiment.analysis
-STABLE_CPU_ENERGY_STDEV = 9.656240
-STABLE_CPU_ENERGY_MEAN = 42.266863
-STABLE_RAM_ENERGY_STDEV = 0.839687
-STABLE_RAM_ENERGY_MEAN = 5.500122
-STABLE_GPU_POWER_STDEV = 0.158472
-STABLE_GPU_POWER_MEAN = 18.096958
+STABLE_CPU_ENERGY_STDEV = 1.125721
+STABLE_CPU_ENERGY_MEAN = 17.326185
+STABLE_RAM_ENERGY_STDEV = 0.119762
+STABLE_RAM_ENERGY_MEAN = 3.559304
+STABLE_GPU_POWER_STDEV = 0.153557
+STABLE_GPU_POWER_MEAN = 19.654604
+# STABLE_CPU_ENERGY_STDEV = 9.656240
+# STABLE_CPU_ENERGY_MEAN = 42.266863
+# STABLE_RAM_ENERGY_STDEV = 0.839687
+# STABLE_RAM_ENERGY_MEAN = 5.500122
+# STABLE_GPU_POWER_STDEV = 0.158472
+# STABLE_GPU_POWER_MEAN = 18.096958
 
 """
 ENERGY MEASUREMENT CONFIG
