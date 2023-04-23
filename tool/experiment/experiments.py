@@ -119,7 +119,8 @@ class DataSizeExperiment(Experiment):
     def run(self, exp_number):
         self.number = exp_number
 
-        for run in range(self.n_runs):
+        # start with run 1, such that the fraction is never 0
+        for run in range(1, self.n_runs+1):
             fraction = run / self.n_runs
             print(f"Begin run [{run}] with data size {fraction} of original")
 
