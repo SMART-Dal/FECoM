@@ -55,22 +55,23 @@ def run_keras_classification_model_fit_datasize_experiment():
         },
         method_object = model,
         max_wait_secs = MAX_WAIT_S,
-        wait_after_run_secs = WAIT_AFTER_RUN_S
+        wait_after_run_secs = WAIT_AFTER_RUN_S,
+        object_signature = "tf.keras.Sequential"
     )
 
     vary_args = [train_images, train_labels]
 
     # (4) Initialise and run the experiment
-    n_runs = 10
     experiment = DataSizeExperiment(
         project = "keras/classification",
         experiment_dir = EXPERIMENT_DIR,
-        n_runs = n_runs,
+        n_runs = 10,
         function_details = function_details,
         vary_args = vary_args
     )
 
-    run_experiments(experiment, count=n_runs, start=1)
+    # TODO continue with running experiments 4-10, already reflected in settings below
+    run_experiments(experiment, count=7, start=4)
 
 
 if __name__ == "__main__":
