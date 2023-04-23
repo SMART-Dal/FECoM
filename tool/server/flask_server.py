@@ -53,6 +53,7 @@ def verify_password(username, password):
         app.logger.info('Auth successful')
         return True
     else:
+        app.logger.info(f'Auth failed for username {username}')
         return False
 
 
@@ -418,7 +419,10 @@ def run_function_and_return_result():
             else:
                 raise OSError("Could not remove temporary code file")
         else:
-            if(function_details.method_object is not None):
+            # if the function executed is a method run on an object (first condition),
+            # check if an object signature was sent with the request (second condition),
+            # if yes, remove obj and prepend it to the call: e.g. obj.fit() becomes tf.keras.Sequential.fit()
+            if (function_details.method_object is not None) and (function_details.object_signature is not None):
                 results = {function_details.object_signature + function_details.function_to_run[3:]: results}
             else:
                 results = {function_details.function_to_run: results}
