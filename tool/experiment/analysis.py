@@ -10,7 +10,9 @@ from tool.experiment.data import DataLoader, FunctionEnergyData, ProjectEnergyDa
 from tool.experiment.experiments import ExperimentKinds
 from tool.client.client_config import EXPERIMENT_DIR
 
+
 SUMMARY_DF_COLUMNS = ['function', 'exec time (s)', 'total', 'total (normalised)', 'lag time (s)', 'lag', 'lag (normalised)', 'total + lag (normalised)']
+
 
 def init_project_energy_data(project: str, experiment_kind: ExperimentKinds, first_experiment: int = 1, last_experiment: int = 10) -> ProjectEnergyData: 
     """
@@ -29,6 +31,7 @@ def init_project_energy_data(project: str, experiment_kind: ExperimentKinds, fir
     project_energy_data = ProjectEnergyData(function_count, project, experiment_kind, (last_experiment-first_experiment+1))
 
     # experiment 1 has index 0, so subtract 1 from the first_experiment variable
+    # TODO the current indexing into experiment_files is buggy if first_experiment is not 1!
     for exp_file in experiment_files[first_experiment-1:last_experiment]:
         # exp_data is a list of EnergyData objects for this experiment. Each list entry corresponds to a unique function executed in this experiment.
         exp_data = dl.load_single_file(exp_file)
@@ -39,27 +42,42 @@ def init_project_energy_data(project: str, experiment_kind: ExperimentKinds, fir
             if not function_data.has_energy_data:
                 project_energy_data.no_energy_functions.add(function_data.function_name)
                 continue
-            # add CPU data
+
+            ### add CPU data
+            # general data
             project_energy_data.cpu[function_number].name = function_data.function_name
             project_energy_data.cpu[function_number].execution_time.append(function_data.execution_time_s)
+            project_energy_data.cpu[function_number].total_args_size.append(function_data.total_args_size)
+            project_energy_data.cpu[function_number].total_input_size.append(function_data.total_input_size)
+            # device-specific data
             project_energy_data.cpu[function_number].total.append(function_data.total_cpu)
             project_energy_data.cpu[function_number].total_normalised.append(function_data.total_cpu_normalised)
             project_energy_data.cpu[function_number].lag_time.append(function_data.cpu_lag_time)
             project_energy_data.cpu[function_number].lag.append(function_data.cpu_lag)
             project_energy_data.cpu[function_number].lag_normalised.append(function_data.cpu_lag_normalised)
             project_energy_data.cpu[function_number].total_lag_normalised.append(function_data.total_cpu_lag_normalised)
-            # add RAM data
+
+            ### add RAM data
+            # general data
             project_energy_data.ram[function_number].name = function_data.function_name
             project_energy_data.ram[function_number].execution_time.append(function_data.execution_time_s)
+            project_energy_data.ram[function_number].total_args_size.append(function_data.total_args_size)
+            project_energy_data.ram[function_number].total_input_size.append(function_data.total_input_size)
+            # device-specific data
             project_energy_data.ram[function_number].total.append(function_data.total_ram)
             project_energy_data.ram[function_number].total_normalised.append(function_data.total_ram_normalised)
             project_energy_data.ram[function_number].lag_time.append(function_data.ram_lag_time)
             project_energy_data.ram[function_number].lag.append(function_data.ram_lag)
             project_energy_data.ram[function_number].lag_normalised.append(function_data.ram_lag_normalised)
             project_energy_data.ram[function_number].total_lag_normalised.append(function_data.total_ram_lag_normalised)
-            # add GPU data
+
+            ### add GPU data
+            # general data
             project_energy_data.gpu[function_number].name = function_data.function_name
             project_energy_data.gpu[function_number].execution_time.append(function_data.execution_time_s)
+            project_energy_data.gpu[function_number].total_args_size.append(function_data.total_args_size)
+            project_energy_data.gpu[function_number].total_input_size.append(function_data.total_input_size)
+            # device-specific data
             project_energy_data.gpu[function_number].total.append(function_data.total_gpu)
             project_energy_data.gpu[function_number].total_normalised.append(function_data.total_gpu_normalised)
             project_energy_data.gpu[function_number].lag_time.append(function_data.gpu_lag_time)
@@ -68,6 +86,7 @@ def init_project_energy_data(project: str, experiment_kind: ExperimentKinds, fir
             project_energy_data.gpu[function_number].total_lag_normalised.append(function_data.total_gpu_lag_normalised)
     
     return project_energy_data
+
 
 def format_df(data_list: list, column_names: List[str]) -> pd.DataFrame:
     summary_df = pd.DataFrame(data_list, columns=column_names)
@@ -112,6 +131,7 @@ def build_summary_df_mean(energy_data_list: List[FunctionEnergyData]) -> pd.Data
             function_data.mean_total_lag_normalised
         ])
     return format_df(data_list, SUMMARY_DF_COLUMNS)
+
 
 def prepare_total_energy_from_project(project_energy_data: ProjectEnergyData) -> Tuple[List[list], List[str]]:
     """

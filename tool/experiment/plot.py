@@ -131,7 +131,7 @@ def plot_energy_with_times(energy_data: EnergyData):
 
     plt.show()
 
-def plot_combined(energy_data):
+def plot_combined(energy_data: EnergyData):
     """
     Concatenates the three energy dataframes from the EnergyData object into one containing only energy consumption of each hardware component
     as well as the sum of these three values over time. It does not attempt to merge the perf and nvidia-smi data
@@ -170,7 +170,6 @@ def plot_total_energy_vs_execution_time(method_level_energies: List[ProjectEnerg
         project_data_list, column_names = prepare_total_energy_from_project(method_level_energy)
         data_list.extend(project_data_list)
     
-    # TODO continue here by creating a dataframe and graphing CPU, RAM, GPU separately.
     total_df = pd.DataFrame(data_list, columns=column_names)
 
     for hardware in ["CPU", "RAM", "GPU"]:
@@ -185,5 +184,32 @@ def plot_total_energy_vs_execution_time(method_level_energies: List[ProjectEnerg
         plt.scatter(total_df.loc[:,"run time"], total_df.loc[:, scatter_1])
         plt.scatter(total_df.loc[:,"run time"], total_df.loc[:, scatter_2])
         plt.legend([scatter_1, scatter_2])
+
+    plt.show()
+
+
+def plot_total_energy_vs_data_size(project_energy: ProjectEnergyData, title=True):
+    """
+    Takes a ProjectEnergyData object from any kind of experiment (typically data-size),
+    and plots the total normalised energy consumption versus total args size for all
+    data points (every experiment for every function) in the ProjectEnergyData object.
+    Creates 3 plots, one for each hardware device.
+    """
+    for hardware in ["cpu", "ram", "gpu"]:
+        hardware_label = hardware.upper()
+        function_energies = getattr(project_energy, hardware)
+        args_sizes = []
+        total_energies = []
+        for function_energy in function_energies:
+            args_sizes.extend(function_energy.total_args_size)
+            total_energies.extend(function_energy.total_normalised)
+
+        plt.figure(f"{hardware_label}_total_vs_data_size")
+        # allow the option to not set a title for graphs included in a report
+        if title:
+            plt.title(f"Total normalised energy consumption vs args size ({hardware_label})", fontsize=16)
+        plt.xlabel("Total args size (MB)")
+        plt.ylabel("Normalised energy consumption (Joules)")
+        plt.scatter(args_sizes, total_energies)
 
     plt.show()

@@ -6,7 +6,7 @@ from tool.experiment.data import DataLoader
 from tool.experiment.experiments import ExperimentKinds
 from tool.experiment.analysis import init_project_energy_data
 from tool.client.client_config import EXPERIMENT_DIR
-from tool.experiment.plot import plot_single_energy_with_times, plot_total_energy_vs_execution_time
+from tool.experiment.plot import plot_single_energy_with_times, plot_total_energy_vs_execution_time, plot_total_energy_vs_data_size
 
 def implementation_plot_GPU_energy_with_times():
     """
@@ -27,9 +27,26 @@ def rq1_plot_total_energy_vs_time():
 
     plot_total_energy_vs_execution_time([data_1, data_2], title=False)
 
+
+def rq1_plot_tail_power_states_gpu():
+    dl = DataLoader("images/cnn", EXPERIMENT_DIR, ExperimentKinds.METHOD_LEVEL)
+    energy_data_list = dl.load_single_file("experiment-1.json")
+    for energy_data in energy_data_list:
+        if energy_data.function_name == "models.Sequential.fit(*args, **kwargs)":
+            plot_single_energy_with_times(energy_data, hardware_component="ram")
+
+
+def rq2_plot_data_size_vs_energy():
+    project_name = "keras/classification"
+    project_data = init_project_energy_data(project_name, ExperimentKinds.DATA_SIZE, first_experiment=1, last_experiment=2)
+    plot_total_energy_vs_data_size(project_data, title=False)
+
+
 if __name__ == "__main__":
     ### commented code has already been run, uncomment to replicate
 
     # implementation_plot_GPU_energy_with_times()
     # rq1_plot_total_energy_vs_time()
+    # rq1_plot_tail_power_states_gpu()
+    rq2_plot_data_size_vs_energy()
     pass

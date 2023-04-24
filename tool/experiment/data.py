@@ -17,7 +17,8 @@ import pandas as pd
 from tool.experiment.experiments import format_full_output_dir, ExperimentKinds
 from tool.server.server_config import STABLE_CPU_ENERGY_MEAN, STABLE_RAM_ENERGY_MEAN, STABLE_GPU_POWER_MEAN
 
-NS_CONVERSION = 1_000_000_000
+NS_CONVERSION = 1_000_000_000 # 1 second = 1,000,000,000 seconds
+MB_CONVERSION = 1_048_576 # 1 Megabyte = 1,048,576 bytes
 
 
 class FunctionEnergyData():
@@ -33,6 +34,8 @@ class FunctionEnergyData():
         self.lag_normalised = []
         self.total_lag_normalised = []
         self.execution_time = []
+        self.total_args_size = []
+        self.total_input_size = []
     
     def __len__(self):
         return len(self.total)
@@ -448,6 +451,38 @@ class EnergyData():
         The sum of total_gpu_normalised and gpu_lag_normalised: i.e. total energy consumption including the energy consumed during the lag time.
         """
         return self.total_gpu_normalised + self.gpu_lag_normalised
+
+    ### Input sizes, and sums thereof in Megabytes
+    # these parameters can be None, since not every function executed
+    # will have args, kwargs and a method_object
+    @property
+    def args_size(self):
+        if self.input_sizes["args_size"] is None:
+            return 0
+        else:
+            return self.input_sizes["args_size"] / MB_CONVERSION
+    
+    @property
+    def kwargs_size(self):
+        if self.input_sizes["kwargs_size"] is None:
+            return 0
+        else:
+            return self.input_sizes["kwargs_size"] / MB_CONVERSION
+    
+    @property
+    def object_size(self):
+        if self.input_sizes["object_size"] is None:
+            return 0
+        else:
+            return self.input_sizes["object_size"] / MB_CONVERSION
+    
+    @property
+    def total_args_size(self):
+        return self.args_size + self.kwargs_size
+
+    @property
+    def total_input_size(self):
+        return self.total_args_size + self.object_size
     
 
     ### Helper methods
