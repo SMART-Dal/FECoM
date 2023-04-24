@@ -104,7 +104,8 @@ class MethodLevelExperiment(Experiment):
 
 
 class DataSizeExperiment(Experiment):
-    def __init__(self, project: str, experiment_dir: Path, n_runs: int, function_details: FunctionDetails, vary_args: list):
+    # TODO make it clear that n_runs is the theoretical number of runs, which is smaller when start_at > 1
+    def __init__(self, project: str, experiment_dir: Path, n_runs: int, function_details: FunctionDetails, vary_args: list, start_at: int = 1):
         # raise NotImplementedError("This experiment has not been tested yet")
         """
         args:
@@ -112,7 +113,9 @@ class DataSizeExperiment(Experiment):
             - vary_size_of (list[str]): a list of attributes of a FunctionDetails object, which are numpy arrays and the size of which should be varied.
         """
         super().__init__(ExperimentKinds.DATA_SIZE, project, experiment_dir)
+        assert start_at > 0 and start_at <= n_runs
         self.n_runs = n_runs
+        self.start_at = start_at
         self.function_details = function_details
         self.vary_args = vary_args
     
@@ -120,7 +123,7 @@ class DataSizeExperiment(Experiment):
         self.number = exp_number
 
         # start with run 1, such that the fraction is never 0
-        for run in range(1, self.n_runs+1):
+        for run in range(self.start_at, self.n_runs+1):
             fraction = run / self.n_runs
             print(f"Begin run [{run}] with data size {fraction} of original")
 

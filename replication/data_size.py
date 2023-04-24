@@ -67,11 +67,21 @@ def run_keras_classification_model_fit_datasize_experiment():
         experiment_dir = EXPERIMENT_DIR,
         n_runs = 10,
         function_details = function_details,
-        vary_args = vary_args
+        vary_args = vary_args,
+        start_at = 9
     )
 
     # TODO continue with running experiments 4-10, already reflected in settings below
-    run_experiments(experiment, count=7, start=4)
+    run_experiments(experiment, count=1, start=5)
+
+    experiment = DataSizeExperiment(
+        project = "keras/classification",
+        experiment_dir = EXPERIMENT_DIR,
+        n_runs = 10,
+        function_details = function_details,
+        vary_args = vary_args
+    )
+    run_experiments(experiment, count=5, start=6)
 
 
 if __name__ == "__main__":
