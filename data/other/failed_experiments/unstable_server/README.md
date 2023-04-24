@@ -1,0 +1,1 @@
+For some unknown reason, the server was significantly more unstable and had a much higher baseline energy consumption for CPU & RAM before and when it was executing these experiments. The associated stable state data can be found in `data/other/settings/idle_data_old`.
