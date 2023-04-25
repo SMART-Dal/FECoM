@@ -15,7 +15,7 @@ from statistics import mean, median
 import pandas as pd
 
 from tool.experiment.experiments import format_full_output_dir, ExperimentKinds
-from tool.server.server_config import STABLE_CPU_ENERGY_MEAN, STABLE_RAM_ENERGY_MEAN, STABLE_GPU_POWER_MEAN
+from tool.server.server_config import STABLE_CPU_ENERGY_MEAN, STABLE_RAM_ENERGY_MEAN, STABLE_GPU_POWER_MEAN, COUNT_INTERVAL_S
 
 NS_CONVERSION = 1_000_000_000 # 1 second = 1,000,000,000 seconds
 MB_CONVERSION = 1_048_576 # 1 Megabyte = 1,048,576 bytes
@@ -293,7 +293,7 @@ class EnergyData():
         # the gpu time_elapsed & start/end times and limited floating point precision can lead to slight differences in the values
         assert self.gpu_energy_in_execution["time_elapsed"].iloc[0] >= self.start_time_nvidia
         assert self.gpu_energy_in_execution["time_elapsed"].iloc[-1] <= self.end_time_nvidia
-        return self.gpu_energy_in_execution["power_draw (W)"].sum()
+        return self.gpu_energy_in_execution["power_draw (W)"].sum() * COUNT_INTERVAL_S # convert power to joules
     
 
     ### Normalised energy consumption during execution (subtracting baseline energy consumption)
@@ -307,7 +307,7 @@ class EnergyData():
     
     @property
     def total_gpu_normalised(self):
-        return self.total_gpu - self.__baseline_consumption(self.gpu_energy_in_execution, STABLE_GPU_POWER_MEAN)
+        return self.total_gpu - (self.__baseline_consumption(self.gpu_energy_in_execution, STABLE_GPU_POWER_MEAN) * COUNT_INTERVAL_S) # convert power to joules
     
 
     ### Energy lag time
@@ -397,7 +397,7 @@ class EnergyData():
         if self.__gpu_lag_time_is_zero():
             return 0
         else:
-            return self.__gpu_energy_lag_df["power_draw (W)"].sum()
+            return self.__gpu_energy_lag_df["power_draw (W)"].sum() * COUNT_INTERVAL_S # convert power to joules
         
     ### Normalised energy consumption during lag time (subtracting baseline energy consumption)
     @property
@@ -428,7 +428,7 @@ class EnergyData():
         if self.__gpu_lag_time_is_zero():
             return 0
         else:
-            return self.gpu_lag - self.__baseline_consumption(self.__gpu_energy_lag_df, STABLE_GPU_POWER_MEAN)
+            return self.gpu_lag - (self.__baseline_consumption(self.__gpu_energy_lag_df, STABLE_GPU_POWER_MEAN) * COUNT_INTERVAL_S) # convert power to joules
         
     ### Normalised total energy consumption plus normalised energy consumed during lag time 
     @property

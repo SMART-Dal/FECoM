@@ -6,6 +6,7 @@ from typing import List
 
 from tool.experiment.data import EnergyData, ProjectEnergyData
 from tool.experiment.analysis import prepare_total_energy_from_project
+from tool.server.server_config import COUNT_INTERVAL_S
 
 
 def get_perf_times(energy_data: EnergyData) -> list:
@@ -38,8 +39,8 @@ def format_ax_cpu(energy_data: EnergyData, ax: plt.Axes):
         (energy_data.lag_end_time_cpu, "lag_end", 'm', 'dotted')
     )
 
-    ax.set_title("CPU Energy over time")
-    ax.plot(energy_data.cpu_energy["time_elapsed"], energy_data.cpu_energy["energy (J)"])
+    ax.set_title("CPU Power over time")
+    ax.plot(energy_data.cpu_energy["time_elapsed"], energy_data.cpu_energy["energy (J)"].div(COUNT_INTERVAL_S))
     ax_legend_handles = []
     for time, label, color, linestyle in cpu_times:
         ax.axvline(x=time, color=color, linewidth=1,linestyle=linestyle, alpha=0.7)
@@ -59,8 +60,8 @@ def format_ax_ram(energy_data: EnergyData, ax: plt.Axes):
         (energy_data.lag_end_time_ram, "lag_end", 'm', 'dotted')
     )
 
-    ax.set_title("RAM Energy over time")
-    ax.plot(energy_data.ram_energy["time_elapsed"], energy_data.ram_energy["energy (J)"])
+    ax.set_title("RAM Power over time")
+    ax.plot(energy_data.ram_energy["time_elapsed"], energy_data.ram_energy["energy (J)"].div(COUNT_INTERVAL_S))
     ax_legend_handles = []
     for time, label, color, linestyle in ram_times:
         ax.axvline(x=time, color=color, linewidth=1, linestyle=linestyle, alpha=0.7)
@@ -143,11 +144,11 @@ def plot_combined(energy_data: EnergyData):
     combined_df = pd.concat(
         [
         energy_data.gpu_energy.iloc[:min_len]['power_draw (W)'],
-        energy_data.cpu_energy.iloc[:min_len]['energy (J)'],
-        energy_data.ram_energy.iloc[:min_len]['energy (J)']
+        energy_data.cpu_energy.iloc[:min_len]['energy (J)'].div(COUNT_INTERVAL_S),
+        energy_data.ram_energy.iloc[:min_len]['energy (J)'].div(COUNT_INTERVAL_S)
         ],
         axis=1)
-    combined_df.columns = ['gpu_power', 'cpu_energy', 'ram_energy']
+    combined_df.columns = ['gpu_power', 'cpu_power', 'ram_power']
   
     combined_df['sum'] = combined_df.sum(axis=1)
 
@@ -188,7 +189,7 @@ def plot_total_energy_vs_execution_time(method_level_energies: List[ProjectEnerg
     plt.show()
 
 
-def plot_total_energy_vs_data_size(project_energy: ProjectEnergyData, title=True):
+def plot_total_energy_vs_data_size_scatter(project_energy: ProjectEnergyData, title=True):
     """
     Takes a ProjectEnergyData object from any kind of experiment (typically data-size),
     and plots the total normalised energy consumption versus total args size for all
@@ -211,5 +212,34 @@ def plot_total_energy_vs_data_size(project_energy: ProjectEnergyData, title=True
         plt.xlabel("Total args size (MB)")
         plt.ylabel("Normalised energy consumption (Joules)")
         plt.scatter(args_sizes, total_energies)
+
+    plt.show()
+
+
+def plot_total_energy_vs_data_size_boxplot(project_energy: ProjectEnergyData, title=True):
+    """
+    Takes a ProjectEnergyData object from any kind of experiment (typically data-size),
+    and plots the total normalised energy consumption versus total args size as a boxplot.
+    It draws a box of the different data points for every datasize.
+    Creates 3 plots, one for each hardware device.
+    """
+    for hardware in ["cpu", "ram", "gpu"]:
+        hardware_label = hardware.upper()
+        # function_energies = project_energy.cpu
+        function_energies = getattr(project_energy, hardware)
+        total_energies = []
+        args_sizes = []
+        for function_energy in function_energies:
+            assert len(set(function_energy.total_args_size)) == 1, "The argument size of the same function should be the same across experiments."
+            args_sizes.append(int(function_energy.total_args_size[0]))
+            total_energies.append(function_energy.total_normalised)
+
+        plt.figure(f"{hardware_label}_total_vs_data_size")
+        # allow the option to not set a title for graphs included in a report
+        if title:
+            plt.title(f"Total normalised energy consumption vs args size ({hardware_label})", fontsize=16)
+        plt.xlabel("Total args size (MB)")
+        plt.ylabel("Normalised energy consumption (Joules)")
+        plt.boxplot(total_energies, labels=args_sizes)
 
     plt.show()
