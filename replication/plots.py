@@ -6,7 +6,7 @@ from tool.experiment.data import DataLoader
 from tool.experiment.experiments import ExperimentKinds
 from tool.experiment.analysis import init_project_energy_data
 from tool.client.client_config import EXPERIMENT_DIR
-from tool.experiment.plot import plot_single_energy_with_times, plot_total_energy_vs_execution_time, plot_total_energy_vs_data_size
+from tool.experiment.plot import plot_single_energy_with_times, plot_total_energy_vs_execution_time, plot_total_energy_vs_data_size_boxplot
 
 def implementation_plot_GPU_energy_with_times():
     """
@@ -18,7 +18,7 @@ def implementation_plot_GPU_energy_with_times():
         if energy_data.function_name == "tf.keras.Sequential.fit(*args, **kwargs)":
             plot_single_energy_with_times(energy_data, hardware_component="gpu")
 
-
+### RQ 2 PLOTS
 def rq1_plot_total_energy_vs_time():
     project_name = "keras/classification"
     data_1 = init_project_energy_data(project_name, ExperimentKinds.METHOD_LEVEL, first_experiment=6, last_experiment=10)
@@ -28,18 +28,47 @@ def rq1_plot_total_energy_vs_time():
     plot_total_energy_vs_execution_time([data_1, data_2], title=False)
 
 
-def rq1_plot_tail_power_states_gpu():
+def rq1_plot_tail_power_states_cpu():
+    dl = DataLoader("images/cnn", EXPERIMENT_DIR, ExperimentKinds.METHOD_LEVEL)
+    energy_data_list = dl.load_single_file("experiment-1.json")
+    for energy_data in energy_data_list:
+        if energy_data.function_name == "models.Sequential.fit(*args, **kwargs)":
+            plot_single_energy_with_times(energy_data, hardware_component="cpu")
+
+def rq1_plot_tail_power_states_ram():
     dl = DataLoader("images/cnn", EXPERIMENT_DIR, ExperimentKinds.METHOD_LEVEL)
     energy_data_list = dl.load_single_file("experiment-1.json")
     for energy_data in energy_data_list:
         if energy_data.function_name == "models.Sequential.fit(*args, **kwargs)":
             plot_single_energy_with_times(energy_data, hardware_component="ram")
+            
 
+def rq1_plot_tail_power_states_gpu():
+    dl = DataLoader("images/cnn", EXPERIMENT_DIR, ExperimentKinds.METHOD_LEVEL)
+    energy_data_list = dl.load_single_file("experiment-1.json")
+    for energy_data in energy_data_list:
+        if energy_data.function_name == "models.Sequential.fit(*args, **kwargs)":
+            plot_single_energy_with_times(energy_data, hardware_component="gpu")
 
+### RQ 2 PLOTS
 def rq2_plot_data_size_vs_energy():
     project_name = "keras/classification"
-    project_data = init_project_energy_data(project_name, ExperimentKinds.DATA_SIZE, first_experiment=1, last_experiment=2)
-    plot_total_energy_vs_data_size(project_data, title=False)
+    project_data = init_project_energy_data(project_name, ExperimentKinds.DATA_SIZE, first_experiment=1, last_experiment=5)
+    plot_total_energy_vs_data_size_boxplot(project_data, title=False)
+
+def rq2_plot_smallest_data_size_ram():
+    dl = DataLoader("keras/classification", EXPERIMENT_DIR, ExperimentKinds.DATA_SIZE)
+    energy_data_list = dl.load_single_file("experiment-1.json")
+    # first sample of a data-size experiment has the smallest data size
+    print(f"Total args size: {energy_data_list[0].total_args_size}")
+    plot_single_energy_with_times(energy_data_list[0], hardware_component="ram", start_at_stable_state=True, title=False, graph_stable_mean=True)
+
+def rq2_plot_largest_data_size_ram():
+    dl = DataLoader("keras/classification", EXPERIMENT_DIR, ExperimentKinds.DATA_SIZE)
+    energy_data_list = dl.load_single_file("experiment-1.json")
+    # last sample of a data-size experiment has the largest data size
+    print(f"Total args size: {energy_data_list[-1].total_args_size}")
+    plot_single_energy_with_times(energy_data_list[-1], hardware_component="ram", start_at_stable_state=True, title=False, graph_stable_mean=True)
 
 
 if __name__ == "__main__":
@@ -48,5 +77,7 @@ if __name__ == "__main__":
     # implementation_plot_GPU_energy_with_times()
     # rq1_plot_total_energy_vs_time()
     # rq1_plot_tail_power_states_gpu()
-    rq2_plot_data_size_vs_energy()
+    # rq2_plot_data_size_vs_energy()
+    # rq2_plot_smallest_data_size_ram()
+    # rq2_plot_largest_data_size_ram()
     pass

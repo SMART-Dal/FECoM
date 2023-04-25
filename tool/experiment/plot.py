@@ -6,7 +6,8 @@ from typing import List
 
 from tool.experiment.data import EnergyData, ProjectEnergyData
 from tool.experiment.analysis import prepare_total_energy_from_project
-from tool.server.server_config import COUNT_INTERVAL_S
+from tool.server.server_config import COUNT_INTERVAL_S, STABLE_CPU_ENERGY_MEAN, STABLE_RAM_ENERGY_MEAN, STABLE_GPU_POWER_MEAN
+from tool.client.client_config import WAIT_AFTER_RUN_S
 
 
 def get_perf_times(energy_data: EnergyData) -> list:
@@ -29,7 +30,15 @@ def get_perf_times(energy_data: EnergyData) -> list:
     return perf_times
 
 
-def format_ax_cpu(energy_data: EnergyData, ax: plt.Axes):
+def add_stable_mean_to_ax(ax: plt.Axes, ax_legend_handles: list, hardware_device: str):
+    stable_mean = eval(f"STABLE_{hardware_device.upper()}_ENERGY_MEAN") / COUNT_INTERVAL_S # convert energy (J) to power (W)
+    label, color, linestyle = "stable_mean_power", "grey", "dashed"
+    ax.axhline(y=stable_mean, color=color, linewidth=1, linestyle=linestyle, alpha=0.7)
+    ax_legend_handles.append(mlines.Line2D([], [], color=color, label=label, linestyle=linestyle))
+    return ax, ax_legend_handles
+
+
+def format_ax_cpu(energy_data: EnergyData, ax: plt.Axes, graph_stable_mean=False):
     """
     Populate the given Axes object with CPU energy data needed for plotting energy consumption over time,
     including markers for the key times.
@@ -45,12 +54,19 @@ def format_ax_cpu(energy_data: EnergyData, ax: plt.Axes):
     for time, label, color, linestyle in cpu_times:
         ax.axvline(x=time, color=color, linewidth=1,linestyle=linestyle, alpha=0.7)
         ax_legend_handles.append(mlines.Line2D([], [], color=color, label=label, linestyle=linestyle))
+    
+    if graph_stable_mean:
+        ax, ax_legend_handles = add_stable_mean_to_ax(ax, ax_legend_handles, "CPU")
+    
     ax.legend(handles=ax_legend_handles, loc="upper left")
+    
+    ax.set_ylabel("Power (W)")
+    ax.set_xlabel("Time elapsed (s)")
 
     return ax
 
 
-def format_ax_ram(energy_data: EnergyData, ax: plt.Axes):
+def format_ax_ram(energy_data: EnergyData, ax: plt.Axes, graph_stable_mean=False):
     """
     Populate the given Axes object with RAM energy data needed for plotting energy consumption over time,
     including markers for the key times.
@@ -66,12 +82,19 @@ def format_ax_ram(energy_data: EnergyData, ax: plt.Axes):
     for time, label, color, linestyle in ram_times:
         ax.axvline(x=time, color=color, linewidth=1, linestyle=linestyle, alpha=0.7)
         ax_legend_handles.append(mlines.Line2D([], [], color=color, label=label, linestyle=linestyle))
+    
+    if graph_stable_mean:
+        ax, ax_legend_handles = add_stable_mean_to_ax(ax, ax_legend_handles, "RAM")
+
     ax.legend(handles=ax_legend_handles, loc="upper left")
+    
+    ax.set_ylabel("Power (W)")
+    ax.set_xlabel("Time elapsed (s)")
 
     return ax
 
 
-def format_ax_gpu(energy_data: EnergyData, ax: plt.Axes):
+def format_ax_gpu(energy_data: EnergyData, ax: plt.Axes, graph_stable_mean=False):
     gpu_times = [
         (energy_data.start_time_nvidia, "method_start", 'r', 'dashed'),
         (energy_data.end_time_nvidia, "method_end", 'r', 'solid'),
@@ -88,19 +111,40 @@ def format_ax_gpu(energy_data: EnergyData, ax: plt.Axes):
     for time, label, color, linestyle in gpu_times:
         ax.axvline(x=time, color=color, linewidth=1, linestyle=linestyle, alpha=0.7)
         ax_legend_handles.append(mlines.Line2D([], [], color=color, label=label, linestyle=linestyle))
+    
+    if graph_stable_mean:
+        ax, ax_legend_handles = add_stable_mean_to_ax(ax, ax_legend_handles, "GPU")
+
     ax.legend(handles=ax_legend_handles, loc="upper left")
+    
+    ax.set_ylabel("Power (W)")
+    ax.set_xlabel("Time elapsed (s)")
+
+    return ax
 
 
-def plot_single_energy_with_times(energy_data: EnergyData, hardware_component: str = "gpu"):
+def plot_single_energy_with_times(energy_data: EnergyData, hardware_component: str = "gpu", start_at_stable_state = False, title = True, graph_stable_mean = False):
     """
     Given an EnergyData object, create a single plot showing the energy consumption over time
     with key start/end times indicated by lines.
     The hardware_component parameter must be one of "cpu", "ram", "gpu".
+    If start_at_stable_state is True, plot energy data starting at the beginning of stable state checking
     """
     fig, ax = plt.subplots()
-    fig.suptitle(f"Data for {energy_data.function_name} from {energy_data.project_name}", fontsize=16)
+    if title:
+        fig.suptitle(f"Data for {energy_data.function_name} from {energy_data.project_name}", fontsize=16)
 
-    ax = eval(f"format_ax_{hardware_component}(energy_data, ax)")
+    ax = eval(f"format_ax_{hardware_component}(energy_data, ax, graph_stable_mean)")
+
+    if start_at_stable_state:
+        if hardware_component in ["cpu", "ram"]:
+            start_stable_state_time = energy_data.begin_stable_check_time_perf
+            last_time = energy_data.end_time_perf + WAIT_AFTER_RUN_S
+        elif hardware_component == "gpu":
+            start_stable_state_time = energy_data.begin_stable_check_time_nvidia
+            last_time = energy_data.end_time_nvidia + WAIT_AFTER_RUN_S
+        ax.set_xlim(left = start_stable_state_time - 30, right = last_time)
+        # ax.margins(x=0, tight=True)
 
     figure = plt.gcf() # get current figure
     figure.set_size_inches(12, 6)
