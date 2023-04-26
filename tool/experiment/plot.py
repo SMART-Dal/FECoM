@@ -31,7 +31,10 @@ def get_perf_times(energy_data: EnergyData) -> list:
 
 
 def add_stable_mean_to_ax(ax: plt.Axes, ax_legend_handles: list, hardware_device: str):
-    stable_mean = eval(f"STABLE_{hardware_device.upper()}_ENERGY_MEAN") / COUNT_INTERVAL_S # convert energy (J) to power (W)
+    if hardware_device.lower() == "gpu":
+        stable_mean = STABLE_GPU_POWER_MEAN
+    else:
+        stable_mean = eval(f"STABLE_{hardware_device.upper()}_ENERGY_MEAN") / COUNT_INTERVAL_S # convert energy (J) to power (W)
     label, color, linestyle = "stable_mean_power", "grey", "dashed"
     ax.axhline(y=stable_mean, color=color, linewidth=1, linestyle=linestyle, alpha=0.7)
     ax_legend_handles.append(mlines.Line2D([], [], color=color, label=label, linestyle=linestyle))
@@ -240,6 +243,7 @@ def plot_total_energy_vs_data_size_scatter(project_energy: ProjectEnergyData, ti
     data points (every experiment for every function) in the ProjectEnergyData object.
     Creates 3 plots, one for each hardware device.
     """
+    raise DeprecationWarning("Reconsider using this function. The plot_total_energy_vs_data_size_boxplot function is preferrable.")
     for hardware in ["cpu", "ram", "gpu"]:
         hardware_label = hardware.upper()
         function_energies = getattr(project_energy, hardware)
@@ -283,7 +287,36 @@ def plot_total_energy_vs_data_size_boxplot(project_energy: ProjectEnergyData, ti
         if title:
             plt.title(f"Total normalised energy consumption vs args size ({hardware_label})", fontsize=16)
         plt.xlabel("Total args size (MB)")
-        plt.ylabel("Normalised energy consumption (Joules)")
+        plt.ylabel("Total normalised energy consumption (Joules)")
+        plt.boxplot(total_energies, labels=args_sizes)
+
+    plt.show()
+
+
+def plot_total_unnormalised_energy_vs_data_size_boxplot(project_energy: ProjectEnergyData, title=True):
+    """
+    Takes a ProjectEnergyData object from any kind of experiment (typically data-size),
+    and plots the total (unnormalised) energy consumption versus total args size as a boxplot.
+    It draws a box of the different data points for every datasize.
+    Creates 3 plots, one for each hardware device.
+    """
+    for hardware in ["cpu", "ram", "gpu"]:
+        hardware_label = hardware.upper()
+        # function_energies = project_energy.cpu
+        function_energies = getattr(project_energy, hardware)
+        total_energies = []
+        args_sizes = []
+        for function_energy in function_energies:
+            assert len(set(function_energy.total_args_size)) == 1, "The argument size of the same function should be the same across experiments."
+            args_sizes.append(int(function_energy.total_args_size[0]))
+            total_energies.append(function_energy.total)
+
+        plt.figure(f"{hardware_label}_total_vs_data_size")
+        # allow the option to not set a title for graphs included in a report
+        if title:
+            plt.title(f"Total energy consumption vs args size ({hardware_label})", fontsize=16)
+        plt.xlabel("Total args size (MB)")
+        plt.ylabel("Total energy consumption (Joules)")
         plt.boxplot(total_energies, labels=args_sizes)
 
     plt.show()

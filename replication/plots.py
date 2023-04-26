@@ -6,7 +6,7 @@ from tool.experiment.data import DataLoader
 from tool.experiment.experiments import ExperimentKinds
 from tool.experiment.analysis import init_project_energy_data
 from tool.client.client_config import EXPERIMENT_DIR
-from tool.experiment.plot import plot_single_energy_with_times, plot_total_energy_vs_execution_time, plot_total_energy_vs_data_size_boxplot
+from tool.experiment.plot import plot_single_energy_with_times, plot_total_energy_vs_execution_time, plot_total_energy_vs_data_size_boxplot, plot_total_unnormalised_energy_vs_data_size_boxplot
 
 def implementation_plot_GPU_energy_with_times():
     """
@@ -33,14 +33,14 @@ def rq1_plot_tail_power_states_cpu():
     energy_data_list = dl.load_single_file("experiment-1.json")
     for energy_data in energy_data_list:
         if energy_data.function_name == "models.Sequential.fit(*args, **kwargs)":
-            plot_single_energy_with_times(energy_data, hardware_component="cpu")
+            plot_single_energy_with_times(energy_data, hardware_component="cpu", graph_stable_mean=True, start_at_stable_state=True, title=False)
 
 def rq1_plot_tail_power_states_ram():
     dl = DataLoader("images/cnn", EXPERIMENT_DIR, ExperimentKinds.METHOD_LEVEL)
     energy_data_list = dl.load_single_file("experiment-1.json")
     for energy_data in energy_data_list:
         if energy_data.function_name == "models.Sequential.fit(*args, **kwargs)":
-            plot_single_energy_with_times(energy_data, hardware_component="ram")
+            plot_single_energy_with_times(energy_data, hardware_component="ram", graph_stable_mean=True, start_at_stable_state=True, title=False)
             
 
 def rq1_plot_tail_power_states_gpu():
@@ -48,13 +48,18 @@ def rq1_plot_tail_power_states_gpu():
     energy_data_list = dl.load_single_file("experiment-1.json")
     for energy_data in energy_data_list:
         if energy_data.function_name == "models.Sequential.fit(*args, **kwargs)":
-            plot_single_energy_with_times(energy_data, hardware_component="gpu")
+            plot_single_energy_with_times(energy_data, hardware_component="gpu", graph_stable_mean=True, start_at_stable_state=True, title=False)
 
 ### RQ 2 PLOTS
 def rq2_plot_data_size_vs_energy():
     project_name = "keras/classification"
-    project_data = init_project_energy_data(project_name, ExperimentKinds.DATA_SIZE, first_experiment=1, last_experiment=5)
+    project_data = init_project_energy_data(project_name, ExperimentKinds.DATA_SIZE, first_experiment=1, last_experiment=7)
     plot_total_energy_vs_data_size_boxplot(project_data, title=False)
+
+def rq2_plot_data_size_vs_unnormalised_energy():
+    project_name = "keras/classification"
+    project_data = init_project_energy_data(project_name, ExperimentKinds.DATA_SIZE, first_experiment=1, last_experiment=7)
+    plot_total_unnormalised_energy_vs_data_size_boxplot(project_data, title=False)
 
 def rq2_plot_smallest_data_size_ram():
     dl = DataLoader("keras/classification", EXPERIMENT_DIR, ExperimentKinds.DATA_SIZE)
@@ -77,7 +82,10 @@ if __name__ == "__main__":
     # implementation_plot_GPU_energy_with_times()
     # rq1_plot_total_energy_vs_time()
     # rq1_plot_tail_power_states_gpu()
+    # rq1_plot_tail_power_states_cpu()
+    # rq1_plot_tail_power_states_ram()
     # rq2_plot_data_size_vs_energy()
     # rq2_plot_smallest_data_size_ram()
     # rq2_plot_largest_data_size_ram()
+    # rq2_plot_data_size_vs_unnormalised_energy()
     pass

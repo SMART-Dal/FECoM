@@ -110,7 +110,9 @@ class DataSizeExperiment(Experiment):
         """
         args:
             - n_runs (int): the total number of runs per experiment
-            - vary_size_of (list[str]): a list of attributes of a FunctionDetails object, which are numpy arrays and the size of which should be varied.
+            - function_details (FunctionDetails): a fully configured FunctionDetails object, containig all details necessary for executing a function on the server
+            - vary_size_of (list[str]): a list the args of a FunctionDetails object, which are numpy arrays and the size of which should be varied.
+            - start_at (int) (optional): if specified, this should be a number between 1 and n_runs, and the run() method will start at this number instead of at 1.
         """
         super().__init__(ExperimentKinds.DATA_SIZE, project, experiment_dir)
         assert start_at > 0 and start_at <= n_runs
