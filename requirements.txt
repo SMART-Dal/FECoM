@@ -1,4 +1,6 @@
 # make sure these versions are the same as in environment.yml/pip
+# it is recommended to use miniconda, but this file can be used for
+# setting up an environment using the "python3 -m venv <env_name>" command
 tensorflow==2.11.0
 numpy==1.24.2
 flask==2.2.2
