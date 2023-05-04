@@ -14,7 +14,7 @@ import atexit
 import time
 import os
 
-from tool.server.server_config import COUNT_INTERVAL_MS, CPU_FILE_SEPARATOR
+from tool.server.server_config import MEASUREMENT_INTERVAL_MS, CPU_FILE_SEPARATOR
 from tool.server.server_config import NVIDIA_SMI_FILE, PERF_FILE, SERVER_MODULE, START_TIMES_FILE, EXECUTION_LOG_FILE, CPU_TEMPERATURE_MODULE
 
 def print_main(message: str):
@@ -56,7 +56,7 @@ def start_server():
 # start nvidia-smi and return the process such that it can be registered by cleanup
 def start_nvidia():
     # split bash command into a list, which is the required format for subprocess.Popen
-    start_nvidia = shlex.split(f"nvidia-smi -i 0 --loop-ms={COUNT_INTERVAL_MS} --format=csv,noheader --query-gpu=timestamp,power.draw,temperature.gpu")
+    start_nvidia = shlex.split(f"nvidia-smi -i 0 --loop-ms={MEASUREMENT_INTERVAL_MS} --format=csv,noheader --query-gpu=timestamp,power.draw,temperature.gpu")
 
     # open the file for nvidia-smi output
     with open(NVIDIA_SMI_FILE, "w", encoding="utf-8") as nvidia_smi_file:
@@ -72,7 +72,7 @@ def start_nvidia():
 # start perf stat and return the process such that it can be registered by cleanup (similar to start_nvidia)
 def start_perf():
     # equivalent procedure as with nvidia-smi for perf but perf writes to a file on its own
-    start_perf = shlex.split(f"perf stat -I {COUNT_INTERVAL_MS} -e power/energy-pkg/,power/energy-ram/ -o {str(PERF_FILE)} -x \{CPU_FILE_SEPARATOR}")
+    start_perf = shlex.split(f"perf stat -I {MEASUREMENT_INTERVAL_MS} -e power/energy-pkg/,power/energy-ram/ -o {str(PERF_FILE)} -x \{CPU_FILE_SEPARATOR}")
 
     perf_stat = Popen(start_perf)
 

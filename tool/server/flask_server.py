@@ -26,7 +26,7 @@ from tool.server.server_config import PERF_FILE, NVIDIA_SMI_FILE, EXECUTION_LOG_
 # stable state constants
 from tool.server.server_config import CPU_STD_TO_MEAN, RAM_STD_TO_MEAN, GPU_STD_TO_MEAN, CPU_MAXIMUM_TEMPERATURE, GPU_MAXIMUM_TEMPERATURE
 # stable state settings
-from tool.server.server_config import WAIT_PER_STABLE_CHECK_LOOP_S, CHECK_LAST_N_POINTS, STABLE_CHECK_TOLERANCE, CPU_TEMPERATURE_INTERVAL_S
+from tool.server.server_config import WAIT_PER_STABLE_CHECK_LOOP_S, CHECK_LAST_N_POINTS, STABLE_CHECK_TOLERANCE, CPU_TEMPERATURE_INTERVAL_S, MEASUREMENT_INTERVAL_S
 from tool.server.function_details import FunctionDetails # shown unused but still required since this is the class used for sending function details to the server
 from tool.server.measurement_parse import parse_nvidia_smi, parse_perf, parse_cpu_temperature
 
@@ -331,9 +331,14 @@ def run_function(imports: str, function_to_run: str, obj: object, args: list, kw
         "wait_after_run_s": wait_after_run_secs,
         "wait_per_stable_check_loop_s": WAIT_PER_STABLE_CHECK_LOOP_S,
         "tolerance": STABLE_CHECK_TOLERANCE,
+        "measurement_interval_s": MEASUREMENT_INTERVAL_S,
+        "cpu_std_to_mean": CPU_STD_TO_MEAN,
+        "ram_std_to_mean": RAM_STD_TO_MEAN,
+        "gpu_std_to_mean": GPU_STD_TO_MEAN,
         "check_last_n_points": CHECK_LAST_N_POINTS,
         "cpu_max_temp": CPU_MAXIMUM_TEMPERATURE,
-        "gpu_max_temp": GPU_MAXIMUM_TEMPERATURE 
+        "gpu_max_temp": GPU_MAXIMUM_TEMPERATURE,
+        "cpu_temperature_interval_s": CPU_TEMPERATURE_INTERVAL_S
     }
 
     # (7) return the energy data, times, temperatures and settings

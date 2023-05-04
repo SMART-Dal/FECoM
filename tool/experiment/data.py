@@ -15,7 +15,6 @@ from statistics import mean, median
 import pandas as pd
 
 from tool.experiment.experiments import format_full_output_dir, ExperimentKinds
-from tool.server.server_config import STABLE_CPU_ENERGY_MEAN, STABLE_RAM_ENERGY_MEAN, STABLE_GPU_POWER_MEAN, COUNT_INTERVAL_S
 
 NS_CONVERSION = 1_000_000_000 # 1 second = 1,000,000,000 seconds
 MB_CONVERSION = 1_048_576 # 1 Megabyte = 1,048,576 bytes
@@ -160,7 +159,7 @@ class EnergyData():
     Initialised with the raw data for one sample, as obtained from one server response.
     This class has a range of useful properties that return statistics calculated from the raw data.
     """
-    def __init__(self, function_name, project_name, cpu_energy: pd.DataFrame, ram_energy: pd.DataFrame, gpu_energy: pd.DataFrame, times, input_sizes):
+    def __init__(self, function_name, project_name, cpu_energy: pd.DataFrame, ram_energy: pd.DataFrame, gpu_energy: pd.DataFrame, times: dict, input_sizes: dict, settings: dict):
         self.function_name = function_name
         self.project_name = project_name
         self.cpu_energy = cpu_energy
@@ -168,6 +167,7 @@ class EnergyData():
         self.gpu_energy = gpu_energy
         self.times = times
         self.input_sizes = input_sizes
+        self.settings = settings
 
         self.cpu_energy_in_execution = self.__energy_in_execution(
             cpu_energy, self.start_time_perf, self.end_time_perf)
@@ -186,6 +186,7 @@ class EnergyData():
     def __str__(self):
         return f"EnergyData of {self.function_name}\nCPU ENERGY:\n{str(self.cpu_energy)}\nRAM ENERGY:\n{self.ram_energy}\nGPU ENERGY:\n{self.gpu_energy}\n TIMES:\n{self.times}\n INPUT SIZES:\n{self.input_sizes}"
     
+    
     ### General properties
     @property
     def has_energy_data(self):
@@ -201,7 +202,23 @@ class EnergyData():
     @property
     def execution_time_s(self):
         return (self.times["end_time_server"] - self.times["start_time_server"]) / NS_CONVERSION
+
+    @property
+    def wait_per_stable_check_loop_s(self):
+        return self.settings["wait_per_stable_check_loop_s"]
     
+    @property
+    def measurement_interval_s(self):
+        # data gathered until 04 May 2023 does have the settings/measurement_interval_s attribute,
+        # so use the previous server_config constant value of 0.5 if the attribute does not exist
+        measurement_interval_s_old = 0.5
+        return self.settings.get("measurement_interval_s", measurement_interval_s_old)
+    
+    @property
+    def wait_after_run_s(self):
+        return self.settings["wait_after_run_s"]
+    
+
     ### perf-calibrated times
     @property
     def start_time_perf(self):
@@ -267,6 +284,39 @@ class EnergyData():
         return (self.times["begin_temperature_check_time"] - self.times["sys_start_time_nvidia"]) / NS_CONVERSION
     
 
+    ### Mean stable state energy consumption
+    # stable state is defined as the last <wait_per_stable_check_loop_s> seconds of energy data before execution,
+    # i.e. the interval of energy data which was deemed "stable" by the server
+
+    @property
+    def stable_cpu_energy_mean(self):
+        stable_mean = self.__stable_energy_pre_execution(self.cpu_energy, self.start_time_perf)["energy (J)"].mean()
+        return stable_mean
+
+    @property
+    def stable_ram_energy_mean(self):
+        stable_mean = self.__stable_energy_pre_execution(self.ram_energy, self.start_time_perf)["energy (J)"].mean()
+        return stable_mean
+
+    @property
+    def stable_gpu_energy_mean(self):
+        return self.stable_gpu_energy_mean * self.measurement_interval_s # convert power (W) to energy (J)
+    
+
+    ### Mean stable state power draw
+    @property
+    def stable_cpu_power_mean(self):
+        return self.stable_cpu_energy_mean / self.measurement_interval_s # convert energy (J) to power (W)
+    
+    @property
+    def stable_ram_power_mean(self):
+        return self.stable_ram_energy_mean / self.measurement_interval_s # convert energy (J) to power (W)
+    
+    @property
+    def stable_gpu_power_mean(self):
+        stable_mean = self.__stable_energy_pre_execution(self.gpu_energy, self.start_time_perf)["power_draw (W)"].mean()
+        return stable_mean
+
 
     ### Total energy consumption during execution.
     @property
@@ -293,21 +343,21 @@ class EnergyData():
         # the gpu time_elapsed & start/end times and limited floating point precision can lead to slight differences in the values
         assert self.gpu_energy_in_execution["time_elapsed"].iloc[0] >= self.start_time_nvidia
         assert self.gpu_energy_in_execution["time_elapsed"].iloc[-1] <= self.end_time_nvidia
-        return self.gpu_energy_in_execution["power_draw (W)"].sum() * COUNT_INTERVAL_S # convert power to joules
+        return self.gpu_energy_in_execution["power_draw (W)"].sum() * self.measurement_interval_s # convert power to joules
     
 
     ### Normalised energy consumption during execution (subtracting baseline energy consumption)
     @property
     def total_cpu_normalised(self):
-        return self.total_cpu - self.__baseline_consumption(self.cpu_energy_in_execution, STABLE_CPU_ENERGY_MEAN)
+        return self.total_cpu - self.__baseline_consumption(self.cpu_energy_in_execution, self.stable_cpu_energy_mean)
     
     @property
     def total_ram_normalised(self):
-        return self.total_ram - self.__baseline_consumption(self.ram_energy_in_execution, STABLE_RAM_ENERGY_MEAN)
+        return self.total_ram - self.__baseline_consumption(self.ram_energy_in_execution, self.stable_ram_energy_mean)
     
     @property
     def total_gpu_normalised(self):
-        return self.total_gpu - (self.__baseline_consumption(self.gpu_energy_in_execution, STABLE_GPU_POWER_MEAN) * COUNT_INTERVAL_S) # convert power to joules
+        return self.total_gpu - (self.__baseline_consumption(self.gpu_energy_in_execution, self.stable_gpu_power_mean) * self.measurement_interval_s) # convert power to joules
     
 
     ### Energy lag time
@@ -342,7 +392,7 @@ class EnergyData():
         """
         if self.__cpu_lag_time is None:
             self.__cpu_lag_time, self.__cpu_energy_lag_df = self.__energy_lag(
-                self.cpu_energy, self.end_time_perf, STABLE_CPU_ENERGY_MEAN, 0)
+                self.cpu_energy, self.end_time_perf, self.stable_cpu_energy_mean, 0)
         return self.__cpu_lag_time == 0
    
     def __ram_lag_time_is_zero(self):
@@ -352,7 +402,7 @@ class EnergyData():
         """
         if self.__ram_lag_time is None:
             self.__ram_lag_time, self.__ram_energy_lag_df = self.__energy_lag(
-                self.ram_energy, self.end_time_perf, STABLE_RAM_ENERGY_MEAN, 0)
+                self.ram_energy, self.end_time_perf, self.stable_ram_energy_mean, 0)
         return self.__ram_lag_time == 0
 
     def __gpu_lag_time_is_zero(self) -> bool:
@@ -365,7 +415,7 @@ class EnergyData():
         """
         if self.__gpu_lag_time is None:
             self.__gpu_lag_time, self.__gpu_energy_lag_df = self.__energy_lag(
-                self.gpu_energy, self.end_time_nvidia, STABLE_GPU_POWER_MEAN, 2)
+                self.gpu_energy, self.end_time_nvidia, self.stable_gpu_power_mean, 2)
         return self.__gpu_lag_time == 0
     
     ### Energy consumed during lag time
@@ -397,7 +447,7 @@ class EnergyData():
         if self.__gpu_lag_time_is_zero():
             return 0
         else:
-            return self.__gpu_energy_lag_df["power_draw (W)"].sum() * COUNT_INTERVAL_S # convert power to joules
+            return self.__gpu_energy_lag_df["power_draw (W)"].sum() * self.measurement_interval_s # convert power to joules
         
     ### Normalised energy consumption during lag time (subtracting baseline energy consumption)
     @property
@@ -408,7 +458,7 @@ class EnergyData():
         if self.__cpu_lag_time_is_zero():
             return 0
         else:
-            return self.cpu_lag - self.__baseline_consumption(self.__cpu_energy_lag_df, STABLE_CPU_ENERGY_MEAN)
+            return self.cpu_lag - self.__baseline_consumption(self.__cpu_energy_lag_df, self.stable_cpu_energy_mean)
         
     @property
     def ram_lag_normalised(self):
@@ -418,7 +468,7 @@ class EnergyData():
         if self.__ram_lag_time_is_zero():
             return 0
         else:
-            return self.ram_lag - self.__baseline_consumption(self.__ram_energy_lag_df, STABLE_RAM_ENERGY_MEAN)
+            return self.ram_lag - self.__baseline_consumption(self.__ram_energy_lag_df, self.stable_ram_energy_mean)
         
     @property
     def gpu_lag_normalised(self):
@@ -428,7 +478,7 @@ class EnergyData():
         if self.__gpu_lag_time_is_zero():
             return 0
         else:
-            return self.gpu_lag - (self.__baseline_consumption(self.__gpu_energy_lag_df, STABLE_GPU_POWER_MEAN) * COUNT_INTERVAL_S) # convert power to joules
+            return self.gpu_lag - (self.__baseline_consumption(self.__gpu_energy_lag_df, self.stable_gpu_power_mean) * self.measurement_interval_s) # convert power to joules
         
     ### Normalised total energy consumption plus normalised energy consumed during lag time 
     @property
@@ -497,6 +547,16 @@ class EnergyData():
     
     def __energy_post_execution(self, energy_df: pd.DataFrame, end_time: float):
         return energy_df[(energy_df["time_elapsed"] >= end_time)].copy()
+
+    def __stable_energy_pre_execution(self, energy_df: pd.DataFrame, start_time: float):
+        """
+        Return a slice of the given energy dataframe. This slice corresponds to the energy data
+        from the last stable check interval before execution, which was thus deemed stable by the server.
+        """
+        pre_execution_df = energy_df[(energy_df["time_elapsed"] < start_time)].copy()
+        # number of values to consider for stable energy before execution
+        stable_check_window_size = int(self.wait_per_stable_check_loop_s / self.measurement_interval_s)
+        return pre_execution_df.iloc[-stable_check_window_size:,:]
 
     def __energy_lag(self, energy_df: pd.DataFrame, end_time: float, stable_energy_mean: float, abs_tolerance: float):
         """
@@ -586,7 +646,8 @@ class DataLoader():
                 self.convert_json_dict_to_df(energy_data["ram"]),
                 self.convert_json_dict_to_df(energy_data["gpu"]),
                 data_dict[function_name]["times"],
-                data_dict[function_name]["input_sizes"]
+                data_dict[function_name]["input_sizes"],
+                data_dict[function_name]["settings"]
             ))
 
         return data_samples

@@ -6,8 +6,6 @@ from typing import List
 
 from tool.experiment.data import EnergyData, ProjectEnergyData
 from tool.experiment.analysis import prepare_total_energy_from_project
-from tool.server.server_config import COUNT_INTERVAL_S, STABLE_CPU_ENERGY_MEAN, STABLE_RAM_ENERGY_MEAN, STABLE_GPU_POWER_MEAN
-from tool.client.client_config import WAIT_AFTER_RUN_S
 
 
 def get_perf_times(energy_data: EnergyData) -> list:
@@ -30,11 +28,10 @@ def get_perf_times(energy_data: EnergyData) -> list:
     return perf_times
 
 
-def add_stable_mean_to_ax(ax: plt.Axes, ax_legend_handles: list, hardware_device: str):
-    if hardware_device.lower() == "gpu":
-        stable_mean = STABLE_GPU_POWER_MEAN
-    else:
-        stable_mean = eval(f"STABLE_{hardware_device.upper()}_ENERGY_MEAN") / COUNT_INTERVAL_S # convert energy (J) to power (W)
+def add_stable_mean_to_ax(ax: plt.Axes, ax_legend_handles: list, hardware_device: str, energy_data: EnergyData):
+    hardware_device = hardware_device.lower()
+    stable_mean = getattr(energy_data, f"stable_{hardware_device}_power_mean")
+    
     label, color, linestyle = "stable_mean_power", "grey", "dashed"
     ax.axhline(y=stable_mean, color=color, linewidth=1, linestyle=linestyle, alpha=0.7)
     ax_legend_handles.append(mlines.Line2D([], [], color=color, label=label, linestyle=linestyle))
@@ -52,14 +49,14 @@ def format_ax_cpu(energy_data: EnergyData, ax: plt.Axes, graph_stable_mean=False
     )
 
     ax.set_title("CPU Power over time")
-    ax.plot(energy_data.cpu_energy["time_elapsed"], energy_data.cpu_energy["energy (J)"].div(COUNT_INTERVAL_S))
+    ax.plot(energy_data.cpu_energy["time_elapsed"], energy_data.cpu_energy["energy (J)"].div(energy_data.measurement_interval_s)) # convert energy (J) to power (W)
     ax_legend_handles = []
     for time, label, color, linestyle in cpu_times:
         ax.axvline(x=time, color=color, linewidth=1,linestyle=linestyle, alpha=0.7)
         ax_legend_handles.append(mlines.Line2D([], [], color=color, label=label, linestyle=linestyle))
     
     if graph_stable_mean:
-        ax, ax_legend_handles = add_stable_mean_to_ax(ax, ax_legend_handles, "CPU")
+        ax, ax_legend_handles = add_stable_mean_to_ax(ax, ax_legend_handles, "CPU", energy_data)
     
     ax.legend(handles=ax_legend_handles, loc="upper left")
     
@@ -80,14 +77,14 @@ def format_ax_ram(energy_data: EnergyData, ax: plt.Axes, graph_stable_mean=False
     )
 
     ax.set_title("RAM Power over time")
-    ax.plot(energy_data.ram_energy["time_elapsed"], energy_data.ram_energy["energy (J)"].div(COUNT_INTERVAL_S))
+    ax.plot(energy_data.ram_energy["time_elapsed"], energy_data.ram_energy["energy (J)"].div(energy_data.measurement_interval_s)) # convert energy (J) to power (W)
     ax_legend_handles = []
     for time, label, color, linestyle in ram_times:
         ax.axvline(x=time, color=color, linewidth=1, linestyle=linestyle, alpha=0.7)
         ax_legend_handles.append(mlines.Line2D([], [], color=color, label=label, linestyle=linestyle))
     
     if graph_stable_mean:
-        ax, ax_legend_handles = add_stable_mean_to_ax(ax, ax_legend_handles, "RAM")
+        ax, ax_legend_handles = add_stable_mean_to_ax(ax, ax_legend_handles, "RAM", energy_data)
 
     ax.legend(handles=ax_legend_handles, loc="upper left")
     
@@ -116,7 +113,7 @@ def format_ax_gpu(energy_data: EnergyData, ax: plt.Axes, graph_stable_mean=False
         ax_legend_handles.append(mlines.Line2D([], [], color=color, label=label, linestyle=linestyle))
     
     if graph_stable_mean:
-        ax, ax_legend_handles = add_stable_mean_to_ax(ax, ax_legend_handles, "GPU")
+        ax, ax_legend_handles = add_stable_mean_to_ax(ax, ax_legend_handles, "GPU", energy_data)
 
     ax.legend(handles=ax_legend_handles, loc="upper left")
     
@@ -142,10 +139,10 @@ def plot_single_energy_with_times(energy_data: EnergyData, hardware_component: s
     if start_at_stable_state:
         if hardware_component in ["cpu", "ram"]:
             start_stable_state_time = energy_data.begin_stable_check_time_perf
-            last_time = energy_data.end_time_perf + WAIT_AFTER_RUN_S
+            last_time = energy_data.end_time_perf + energy_data.wait_after_run_s
         elif hardware_component == "gpu":
             start_stable_state_time = energy_data.begin_stable_check_time_nvidia
-            last_time = energy_data.end_time_nvidia + WAIT_AFTER_RUN_S
+            last_time = energy_data.end_time_nvidia + energy_data.wait_after_run_s
         ax.set_xlim(left = start_stable_state_time - 30, right = last_time)
         # ax.margins(x=0, tight=True)
 
@@ -191,8 +188,8 @@ def plot_combined(energy_data: EnergyData):
     combined_df = pd.concat(
         [
         energy_data.gpu_energy.iloc[:min_len]['power_draw (W)'],
-        energy_data.cpu_energy.iloc[:min_len]['energy (J)'].div(COUNT_INTERVAL_S),
-        energy_data.ram_energy.iloc[:min_len]['energy (J)'].div(COUNT_INTERVAL_S)
+        energy_data.cpu_energy.iloc[:min_len]['energy (J)'].div(energy_data.measurement_interval_s), # convert energy (J) to power (W)
+        energy_data.ram_energy.iloc[:min_len]['energy (J)'].div(energy_data.measurement_interval_s) # convert energy (J) to power (W)
         ],
         axis=1)
     combined_df.columns = ['gpu_power', 'cpu_power', 'ram_power']

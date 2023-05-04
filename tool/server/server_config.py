@@ -68,10 +68,10 @@ ENERGY MEASUREMENT CONFIG
 """
 # this is also used for the cpu temperature file
 CPU_FILE_SEPARATOR = ';'
-# set count interval for perf & nvidia-smi in milliseconds
-COUNT_INTERVAL_MS = 500
-# having the count interval in seconds is useful for converting power to energy and vice versa
-COUNT_INTERVAL_S = COUNT_INTERVAL_MS / 1000
+# set measurement interval for perf & nvidia-smi in milliseconds
+MEASUREMENT_INTERVAL_MS = 500
+# having the measurement interval in seconds is useful for converting power to energy and vice versa
+MEASUREMENT_INTERVAL_S = MEASUREMENT_INTERVAL_MS / 1000
 # path to find energy data relative to the server package
 # if you want to use this in another package, you could
 # - use os.path.dirname(os.path.abspath(__file__)) to get your current file's absolute path
