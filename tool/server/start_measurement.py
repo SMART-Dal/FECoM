@@ -142,8 +142,26 @@ def restart_measurements(previous_perf_stat, previous_nvidia_smi, latest_executi
 
     return perf_stat, nvidia_smi
 
+def print_experiment_settings():
+    """
+    Print the most important experiment settings such that the user
+    can confirm they are correct when starting the server.
+    """
+    from tool.server.server_config import WAIT_PER_STABLE_CHECK_LOOP_S, STABLE_CHECK_TOLERANCE, MEASUREMENT_INTERVAL_S, CHECK_LAST_N_POINTS, CPU_MAXIMUM_TEMPERATURE, GPU_MAXIMUM_TEMPERATURE, CPU_TEMPERATURE_INTERVAL_S
+    print_main(f"""### Experiment Settings ###
+        "wait_per_stable_check_loop_s": {WAIT_PER_STABLE_CHECK_LOOP_S},
+        "tolerance": {STABLE_CHECK_TOLERANCE},
+        "measurement_interval_s": {MEASUREMENT_INTERVAL_S},
+        "check_last_n_points": {CHECK_LAST_N_POINTS},
+        "cpu_max_temp": {CPU_MAXIMUM_TEMPERATURE},
+        "gpu_max_temp": {GPU_MAXIMUM_TEMPERATURE},
+        "cpu_temperature_interval_s": {CPU_TEMPERATURE_INTERVAL_S}
+        """
+    )
+
 
 if __name__ == "__main__":
+    print_experiment_settings()
     atexit.register(print_main, "Successfully terminated the server application")
     
     # (1) Start the server & energy measurement programs (perf stat & nvidia-smi).
