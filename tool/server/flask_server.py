@@ -40,7 +40,8 @@ logging.basicConfig(filename='flask.log', level=logging.DEBUG,
                     format='%(asctime)s %(levelname)s %(name)s %(message)s')
 
 def print_server(message: str):
-    print("[SERVER] " + message)
+    time_stamp = datetime.now().strftime("%H:%M:%S")
+    print(f"[SERVER] [{time_stamp}] " + message)
 
 """
 Authentication

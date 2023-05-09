@@ -9,16 +9,21 @@ the server.
 """
 
 from subprocess import Popen
+from pathlib import Path
 import shlex
 import atexit
 import time
+from datetime import datetime
 import os
 
+from tool.server.idle_stats import calc_ratios_from_data
 from tool.server.server_config import MEASUREMENT_INTERVAL_MS, CPU_FILE_SEPARATOR
 from tool.server.server_config import NVIDIA_SMI_FILE, PERF_FILE, SERVER_MODULE, START_TIMES_FILE, EXECUTION_LOG_FILE, CPU_TEMPERATURE_MODULE
+from tool.server.server_config import CHECK_LAST_N_POINTS, CPU_STD_TO_MEAN, RAM_STD_TO_MEAN, GPU_STD_TO_MEAN, STABLE_CHECK_TOLERANCE
 
 def print_main(message: str):
-    print("[MAIN] " + message)
+    time_stamp = datetime.now().strftime("%H:%M:%S")
+    print(f"[MAIN] [{time_stamp}] " + message)
 
 def quit_process(process: Popen, message: str, print_func):
     process.terminate()
@@ -48,7 +53,7 @@ def start_server():
     server_start_time = time.time_ns()
     atexit.register(print_main, "Terminated the flask server")
     atexit.register(server.terminate)
-    print_main(f"Server started at {server_start_time}")
+    print_main(f"Server started")
 
     return server_start_time
 
@@ -64,7 +69,7 @@ def start_nvidia():
         nvidia_smi = Popen(start_nvidia, stdout=nvidia_smi_file)
     
     nvidia_smi_start_time = time.time_ns()
-    print_main(f"Nvidia-smi started at {nvidia_smi_start_time}")
+    print_main(f"Nvidia-smi started")
     
     return nvidia_smi, nvidia_smi_start_time
 
@@ -77,7 +82,7 @@ def start_perf():
     perf_stat = Popen(start_perf)
 
     perf_start_time = time.time_ns()
-    print_main(f"Perf started at {perf_start_time}")
+    print_main(f"Perf started")
 
     return perf_stat, perf_start_time
 
@@ -89,7 +94,7 @@ def start_sensors(print_func):
     sensors = Popen(start_sensors)
 
     sensors_start_time = time.time_ns()
-    print_func(f"Sensors started at {sensors_start_time}")
+    print_func(f"Sensors started")
 
     return sensors
 
@@ -147,16 +152,30 @@ def print_experiment_settings():
     Print the most important experiment settings such that the user
     can confirm they are correct when starting the server.
     """
-    from tool.server.server_config import WAIT_PER_STABLE_CHECK_LOOP_S, STABLE_CHECK_TOLERANCE, MEASUREMENT_INTERVAL_S, CHECK_LAST_N_POINTS, CPU_MAXIMUM_TEMPERATURE, GPU_MAXIMUM_TEMPERATURE, CPU_TEMPERATURE_INTERVAL_S
-    print_main(f"""### Experiment Settings ###
-        "wait_per_stable_check_loop_s": {WAIT_PER_STABLE_CHECK_LOOP_S},
-        "tolerance": {STABLE_CHECK_TOLERANCE},
-        "measurement_interval_s": {MEASUREMENT_INTERVAL_S},
-        "check_last_n_points": {CHECK_LAST_N_POINTS},
-        "cpu_max_temp": {CPU_MAXIMUM_TEMPERATURE},
-        "gpu_max_temp": {GPU_MAXIMUM_TEMPERATURE},
-        "cpu_temperature_interval_s": {CPU_TEMPERATURE_INTERVAL_S}
-        """
+    from tool.server.server_config import WAIT_PER_STABLE_CHECK_LOOP_S, MEASUREMENT_INTERVAL_S, CPU_MAXIMUM_TEMPERATURE, GPU_MAXIMUM_TEMPERATURE, CPU_TEMPERATURE_INTERVAL_S
+    print_main(f"""
+    ### Experiment Settings ###
+    "wait_per_stable_check_loop_s": {WAIT_PER_STABLE_CHECK_LOOP_S},
+    "tolerance": {STABLE_CHECK_TOLERANCE},
+    "measurement_interval_s": {MEASUREMENT_INTERVAL_S},
+    "check_last_n_points": {CHECK_LAST_N_POINTS},
+    "cpu_max_temp": {CPU_MAXIMUM_TEMPERATURE},
+    "gpu_max_temp": {GPU_MAXIMUM_TEMPERATURE},
+    "cpu_temperature_interval_s": {CPU_TEMPERATURE_INTERVAL_S}
+    """
+    )
+
+def print_stdev_mean_ratios(wait_until_printing_stats: int):
+    cpu_std_mean, ram_std_mean, gpu_std_mean = calc_ratios_from_data(CHECK_LAST_N_POINTS, directory=Path("out"))
+    print_main(
+    f"""
+    Stats after {wait_until_printing_stats} seconds:
+    CPU stdev/mean ratio: {cpu_std_mean} (current) vs {CPU_STD_TO_MEAN} (config) vs {CPU_STD_TO_MEAN * (1 + STABLE_CHECK_TOLERANCE)} (config + tolerance)
+    RAM stdev/mean ratio: {ram_std_mean} (current) vs {RAM_STD_TO_MEAN} (config) vs {RAM_STD_TO_MEAN * (1 + STABLE_CHECK_TOLERANCE)} (config + tolerance)
+    GPU stdev/mean ratio: {gpu_std_mean} (current) vs {GPU_STD_TO_MEAN} (config) vs {GPU_STD_TO_MEAN * (1 + STABLE_CHECK_TOLERANCE)} (config + tolerance)
+    If the current ratios are significantly larger than the config ones, there might
+    be an excess number of background processes running.
+    """
     )
 
 
@@ -178,7 +197,15 @@ if __name__ == "__main__":
 
     # (3) Start the main loop and quit when receiving keyboard interrupt (Control-C)
     try:
+        time_counter = 0
+        check_idle_stats = True
+        wait_until_printing_stats = 120
+        print_main(f"Please wait {wait_until_printing_stats} seconds to see if the server is in a stable state")
         while(True):
+            if check_idle_stats and time_counter >= wait_until_printing_stats:
+                print_stdev_mean_ratios(wait_until_printing_stats)
+                check_idle_stats = False
+
             # check the execution log: has the server added a new execution?
             with open(EXECUTION_LOG_FILE, 'r') as f:
                 latest_execution = f.readlines()[-1]
@@ -191,6 +218,7 @@ if __name__ == "__main__":
             
             # this is half the time the server waits after receiving a request, which gives the system enough time to restart in between method calls.
             time.sleep(5)
+            time_counter += 5
             continue
     except KeyboardInterrupt:
         print_main("\n\nKeyboardInterrupt by User. Shutting down the server application.\n")
