@@ -4,23 +4,22 @@ Methods for calculating some of the settings.
 from pathlib import Path
 import pandas as pd
 from matplotlib import pyplot as plt
-from tool.demo.plot_energy import combined_plot, calc_stats_for_split_data
+from tool.server.idle_stats import create_combined_df, calc_stats_for_split_data, calc_stdev_mean_ratios
 from tool.server.measurement_parse import parse_cpu_temperature
+from tool.server.server_config import CHECK_LAST_N_POINTS
 
 
-IDLE_DATA_DIR = Path("../data/other/idle_data/")
+IDLE_DATA_DIR = Path("../data/other/settings/idle_data/")
 
 # code used to calculate the standard deviation to mean ratios 
 # gathered data by running the server application, nothing else
 def stdev_mean_ratios(plot_data=False):
-    combined_df = combined_plot(directory=IDLE_DATA_DIR)
-    idle_avgs = calc_stats_for_split_data(combined_df, n=20)
-    cpu_std_mean = str(round(idle_avgs[0] / idle_avgs[1], 2))
-    ram_std_mean = str(round(idle_avgs[2] / idle_avgs[3], 2))
-    gpu_std_mean = str(round(idle_avgs[4] / idle_avgs[5], 2))
+    combined_df = create_combined_df(directory=IDLE_DATA_DIR)
+    mean_stats = calc_stats_for_split_data(CHECK_LAST_N_POINTS, combined_df)
+    cpu_std_mean, ram_std_mean, gpu_std_mean = calc_stdev_mean_ratios(mean_stats)
 
     with open("out/idle_data.txt", 'w') as f:
-        f.write(str(idle_avgs))
+        f.write(str(mean_stats))
         f.write("\n")
         f.writelines([
             "\ncpu_std_mean: " + cpu_std_mean,
@@ -43,6 +42,6 @@ def cpu_temperature():
 if __name__ == "__main__":
     ### commented code has already been run, uncomment to replicate
 
-    # stdev_mean_ratios()
+    stdev_mean_ratios()
     # cpu_temperature()
     pass
