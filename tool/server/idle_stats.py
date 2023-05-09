@@ -32,7 +32,6 @@ def create_combined_df(cpu_energy: pd.DataFrame = None, ram_energy: pd.DataFrame
         gpu_power = parse_nvidia_smi(directory/"nvidia_smi.txt")
         cpu_energy, ram_energy = parse_perf(directory/"perf.txt")
     min_len = min([len(gpu_power), len(cpu_energy), len(ram_energy)]) - 1
-    print(min_len)
     df = pd.concat([gpu_power.iloc[:min_len]['power_draw (W)'], cpu_energy.iloc[:min_len]['energy (J)'], ram_energy.iloc[:min_len]['energy (J)']], axis=1)
     df.columns = ['gpu_power', 'cpu_energy', 'ram_energy']
   
