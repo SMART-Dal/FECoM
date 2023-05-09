@@ -27,13 +27,9 @@ tf.nn.softmax(predictions).numpy(), imports='import tensorflow as tf', function_
 loss_fn = custom_method(
 tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True), imports='import tensorflow as tf', function_to_run='tf.keras.losses.SparseCategoricalCrossentropy(**kwargs)', method_object=None, object_signature=None, function_args=[], function_kwargs={'from_logits': eval('True')})
 loss_fn(y_train[:1], predictions).numpy()
-custom_method(
-model.compile(optimizer='adam', loss=loss_fn, metrics=['accuracy']), imports='import tensorflow as tf', function_to_run='obj.compile(**kwargs)', method_object=eval('model'), object_signature='tf.keras.models.Sequential', function_args=[], function_kwargs={'optimizer': eval("'adam'"), 'loss': eval('loss_fn'), 'metrics': eval("['accuracy']")}, custom_class=None)
-custom_method(
-model.fit(x_train, y_train, epochs=5), imports='import tensorflow as tf', function_to_run='obj.fit(*args, **kwargs)', method_object=eval('model'), object_signature='tf.keras.models.Sequential', function_args=[eval('x_train'), eval('y_train')], function_kwargs={'epochs': eval('5')}, custom_class=None)
-custom_method(
-model.evaluate(x_test, y_test, verbose=2), imports='import tensorflow as tf', function_to_run='obj.evaluate(*args, **kwargs)', method_object=eval('model'), object_signature='tf.keras.models.Sequential', function_args=[eval('x_test'), eval('y_test')], function_kwargs={'verbose': eval('2')}, custom_class=None)
+model.compile(optimizer='adam', loss=loss_fn, metrics=['accuracy'])
+model.fit(x_train, y_train, epochs=5)
+model.evaluate(x_test, y_test, verbose=2)
 probability_model = custom_method(
 tf.keras.Sequential([model, tf.keras.layers.Softmax()]), imports='import tensorflow as tf', function_to_run='tf.keras.Sequential(*args)', method_object=None, object_signature=None, function_args=[eval('[\n  model,\n  tf.keras.layers.Softmax()\n]')], function_kwargs={})
-custom_method(
-probability_model(x_test[:5]), imports='import tensorflow as tf', function_to_run='obj(*args)', method_object=eval('probability_model'), object_signature='tf.keras.Sequential', function_args=[eval('x_test[:5]')], function_kwargs={}, custom_class=None)
+probability_model(x_test[:5])

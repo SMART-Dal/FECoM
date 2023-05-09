@@ -30,13 +30,9 @@ tf.data.Dataset.from_tensor_slices((test_examples, test_labels)), imports='impor
 BATCH_SIZE = 64
 SHUFFLE_BUFFER_SIZE = 100
 train_dataset = train_dataset.shuffle(SHUFFLE_BUFFER_SIZE).batch(BATCH_SIZE)
-test_dataset = custom_method(
-test_dataset.batch(BATCH_SIZE), imports='import numpy as np;import tensorflow as tf', function_to_run='obj.batch(*args)', method_object=eval('test_dataset'), object_signature='tf.data.Dataset.from_tensor_slices', function_args=[eval('BATCH_SIZE')], function_kwargs={}, custom_class=None)
+test_dataset = test_dataset.batch(BATCH_SIZE)
 model = custom_method(
 tf.keras.Sequential([tf.keras.layers.Flatten(input_shape=(28, 28)), tf.keras.layers.Dense(128, activation='relu'), tf.keras.layers.Dense(10)]), imports='import numpy as np;import tensorflow as tf', function_to_run='tf.keras.Sequential(*args)', method_object=None, object_signature=None, function_args=[eval("[\n    tf.keras.layers.Flatten(input_shape=(28, 28)),\n    tf.keras.layers.Dense(128, activation='relu'),\n    tf.keras.layers.Dense(10)\n]")], function_kwargs={})
-custom_method(
-model.compile(optimizer=tf.keras.optimizers.RMSprop(), loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True), metrics=['sparse_categorical_accuracy']), imports='import numpy as np;import tensorflow as tf', function_to_run='obj.compile(**kwargs)', method_object=eval('model'), object_signature='tf.keras.Sequential', function_args=[], function_kwargs={'optimizer': eval('tf.keras.optimizers.RMSprop()'), 'loss': eval('tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True)'), 'metrics': eval("['sparse_categorical_accuracy']")}, custom_class=None)
-custom_method(
-model.fit(train_dataset, epochs=10), imports='import numpy as np;import tensorflow as tf', function_to_run='obj.fit(*args, **kwargs)', method_object=eval('model'), object_signature='tf.keras.Sequential', function_args=[eval('train_dataset')], function_kwargs={'epochs': eval('10')}, custom_class=None)
-custom_method(
-model.evaluate(test_dataset), imports='import numpy as np;import tensorflow as tf', function_to_run='obj.evaluate(*args)', method_object=eval('model'), object_signature='tf.keras.Sequential', function_args=[eval('test_dataset')], function_kwargs={}, custom_class=None)
+model.compile(optimizer=tf.keras.optimizers.RMSprop(), loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True), metrics=['sparse_categorical_accuracy'])
+model.fit(train_dataset, epochs=10)
+model.evaluate(test_dataset)

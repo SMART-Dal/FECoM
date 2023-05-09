@@ -34,16 +34,15 @@ def main():
     global requiredAlias
     global importScriptList
     requiredAlias = analyzer.stats['required']
-    # print("required Alias:",requiredAlias)
     importScriptList = list(set(analyzer.stats['importScript']))
 
-# Get list of libraries and aliases with __future__ imports as they need to be moved to the beginning
+    # Get list of libraries and aliases with __future__ imports as they need to be moved to the beginning
     future_imports = [imp for imp in importScriptList if imp.startswith("from __future__")]
 
-# Get list of libraries and aliases without __future__ imports
+    # Get list of libraries and aliases without __future__ imports
     importScriptList = [imp for imp in importScriptList if not imp.startswith("from __future__")]
 
-# Add __future__ imports to the beginning of the list
+    # Add __future__ imports to the beginning of the list
     importScriptList = future_imports + importScriptList
 
     importScriptList = ';'.join(importScriptList)
@@ -61,8 +60,6 @@ def main():
     objAnalyzer = ObjectAnalyzer()
     objAnalyzer.visit(tree)
     requiredObjects = objAnalyzer.stats['objects']
-    # print("objects list is:",requiredObjects)
-    # print("requiredObjClassMapping is :",requiredObjClassMapping)
 
     #Step5: Tranform the client script by adding custom method calls
     transf = TransformCall()
@@ -87,25 +84,19 @@ def main():
 
     #Step6: Unparse and convert AST to final code
     print(ast.unparse(tree))
-    # print('+'*100)
 
 
 class FuncCallVisitor(ast.NodeVisitor):
     def __init__(self):
         self.name_list = []
-        # print("__init__CallList===",self.name_list)
 
     def visit_Name(self, node):
-        # print("BeforeVisit_NameCallList===",self.name_list)
         self.name_list.append(node.id)
-        # print("AfterVisit_NameCallList===",self.name_list)
         return self.name_list
 
     def visit_Attribute(self, node):
-        # print("BeforeVisit_AttributeCallList===",self.name_list)
         self.visit(node.value)
         self.name_list.append(node.attr)
-        # print("AfterVisit_AttributeCallList===",self.name_list)
         return self.name_list
 
     def visit_Call(self, node):
@@ -185,31 +176,22 @@ class TransformCall(ast.NodeTransformer):
             return None
 
     def visit_Assign(self, node):
-        # print("visit_Assign(self, node):",ast.dump(node))
         target = node.targets[0]
         self.objectname = self.get_target_id(target)
-        # print("print(ast.dump(node)):=====",ast.dump(node))
         classname = self.get_func_name(node.value)
         if classname and classname in list(requiredClassDefs.keys()):
             requiredObjClassMapping[self.objectname] = classname
-            # print("ast.get_source_segment(sourceCode, node.value):",ast.get_source_segment(sourceCode, node.value))
             requiredObjectsSignature[self.objectname] = ast.get_source_segment(sourceCode, node.value)
         
         if isinstance(node.value, ast.Call):
-            # print("inside visit_AssignCall",ast.dump(node.value))
-            self.generic_visit(node.value)
-
+            node.value = self.visit_Call(node.value)
         return node
 
     def visit_Call(self, node):
-        # print("visit_Call",ast.dump(node))
         callvisitor = FuncCallVisitor()
-        # print("-------------------------------------------")
-        # print("Debug callvisitor:",ast.dump(node.func))
         callvisitor.visit(node.func)
 
         if(any(lib in callvisitor.get_name_list() for lib in requiredAlias)):
-            # print("blahhhhh")
             dummyNode=copy.deepcopy(node)
             dummyNode.args.clear()
             dummyNode.keywords.clear()
@@ -263,12 +245,8 @@ class TransformCall(ast.NodeTransformer):
             ast.fix_missing_locations(new_node)
             return new_node
 
-        # print("ast.get_source_segment(sourceCode, node) inside Call",ast.get_source_segment(sourceCode, node))
-        # print("callvisitor.name.split('.')=========", callvisitor.get_name_list())
-        # print("self object name is:",self.objectname)
         callvisitor_list = callvisitor.get_name_list()
         if(callvisitor_list and (callvisitor_list[0] in requiredObjects) and (requiredObjClassMapping.get(callvisitor_list[0]) in list(requiredClassDefs.keys()))):
-            # print("blahhh222")
             dummyNode=copy.deepcopy(node)
             dummyNode.args.clear()
             dummyNode.keywords.clear()
@@ -277,10 +255,7 @@ class TransformCall(ast.NodeTransformer):
             if(node.args):
                 dummyNode.args.append(ast.Name(id='*args', ctx=ast.Load()))
             if(node.keywords):
-                # print("obj is:",obj)
-                # print("-----requiredObjClassMapping[i] is :",requiredObjClassMapping[i],"i is",i,"object is :",obj,"-----","callvisitor.name.split('.')[0] IS", callvisitor.name.split('.'))
                 dummyNode.keywords.append(ast.Name(id='**kwargs', ctx=ast.Load()))
-            # print("blaaah333")
             new_node = ast.Call(func=ast.Name(id='custom_method', ctx=ast.Load()),
                                 args=[ast.Expr(node)],
                                 keywords=[
@@ -328,10 +303,7 @@ class TransformCall(ast.NodeTransformer):
                                         ],
                                         starargs=None, kwargs=None
                                 )
-            # print("new_node:",ast.dump(new_node))
-            # print("old_node:",ast.dump(node))
             ast.copy_location(new_node, node)
-            # print("blaah444")
             ast.fix_missing_locations(new_node)
             return new_node
         

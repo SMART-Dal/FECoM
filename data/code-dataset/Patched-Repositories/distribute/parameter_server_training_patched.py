@@ -28,75 +28,64 @@ def create_in_process_cluster(num_workers, num_ps):
     if num_ps > 0:
         cluster_dict['ps'] = ['localhost:%s' % port for port in ps_ports]
     cluster_spec = custom_method(
-    tf.train.ClusterSpec(cluster_dict), imports='import tensorflow as tf;import portpicker;import random;import os;import multiprocessing', function_to_run='tf.train.ClusterSpec(*args)', method_object=None, object_signature=None, function_args=[eval('cluster_dict')], function_kwargs={})
+    tf.train.ClusterSpec(cluster_dict), imports='import random;import portpicker;import os;import tensorflow as tf;import multiprocessing', function_to_run='tf.train.ClusterSpec(*args)', method_object=None, object_signature=None, function_args=[eval('cluster_dict')], function_kwargs={})
     worker_config = custom_method(
-    tf.compat.v1.ConfigProto(), imports='import tensorflow as tf;import portpicker;import random;import os;import multiprocessing', function_to_run='tf.compat.v1.ConfigProto()', method_object=None, object_signature=None, function_args=[], function_kwargs={})
+    tf.compat.v1.ConfigProto(), imports='import random;import portpicker;import os;import tensorflow as tf;import multiprocessing', function_to_run='tf.compat.v1.ConfigProto()', method_object=None, object_signature=None, function_args=[], function_kwargs={})
     if multiprocessing.cpu_count() < num_workers + 1:
         worker_config.inter_op_parallelism_threads = num_workers + 1
     for i in range(num_workers):
         custom_method(
-        tf.distribute.Server(cluster_spec, job_name='worker', task_index=i, config=worker_config, protocol='grpc'), imports='import tensorflow as tf;import portpicker;import random;import os;import multiprocessing', function_to_run='tf.distribute.Server(*args, **kwargs)', method_object=None, object_signature=None, function_args=[eval('cluster_spec')], function_kwargs={'job_name': eval('"worker"'), 'task_index': eval('i'), 'config': eval('worker_config'), 'protocol': eval('"grpc"')})
+        tf.distribute.Server(cluster_spec, job_name='worker', task_index=i, config=worker_config, protocol='grpc'), imports='import random;import portpicker;import os;import tensorflow as tf;import multiprocessing', function_to_run='tf.distribute.Server(*args, **kwargs)', method_object=None, object_signature=None, function_args=[eval('cluster_spec')], function_kwargs={'job_name': eval('"worker"'), 'task_index': eval('i'), 'config': eval('worker_config'), 'protocol': eval('"grpc"')})
     for i in range(num_ps):
         custom_method(
-        tf.distribute.Server(cluster_spec, job_name='ps', task_index=i, protocol='grpc'), imports='import tensorflow as tf;import portpicker;import random;import os;import multiprocessing', function_to_run='tf.distribute.Server(*args, **kwargs)', method_object=None, object_signature=None, function_args=[eval('cluster_spec')], function_kwargs={'job_name': eval('"ps"'), 'task_index': eval('i'), 'protocol': eval('"grpc"')})
+        tf.distribute.Server(cluster_spec, job_name='ps', task_index=i, protocol='grpc'), imports='import random;import portpicker;import os;import tensorflow as tf;import multiprocessing', function_to_run='tf.distribute.Server(*args, **kwargs)', method_object=None, object_signature=None, function_args=[eval('cluster_spec')], function_kwargs={'job_name': eval('"ps"'), 'task_index': eval('i'), 'protocol': eval('"grpc"')})
     cluster_resolver = custom_method(
-    tf.distribute.cluster_resolver.SimpleClusterResolver(cluster_spec, rpc_layer='grpc'), imports='import tensorflow as tf;import portpicker;import random;import os;import multiprocessing', function_to_run='tf.distribute.cluster_resolver.SimpleClusterResolver(*args, **kwargs)', method_object=None, object_signature=None, function_args=[eval('cluster_spec')], function_kwargs={'rpc_layer': eval('"grpc"')})
+    tf.distribute.cluster_resolver.SimpleClusterResolver(cluster_spec, rpc_layer='grpc'), imports='import random;import portpicker;import os;import tensorflow as tf;import multiprocessing', function_to_run='tf.distribute.cluster_resolver.SimpleClusterResolver(*args, **kwargs)', method_object=None, object_signature=None, function_args=[eval('cluster_spec')], function_kwargs={'rpc_layer': eval('"grpc"')})
     return cluster_resolver
 os.environ['GRPC_FAIL_FAST'] = 'use_caller'
 NUM_WORKERS = 3
 NUM_PS = 2
 cluster_resolver = create_in_process_cluster(NUM_WORKERS, NUM_PS)
 variable_partitioner = custom_method(
-tf.distribute.experimental.partitioners.MinSizePartitioner(min_shard_bytes=256 << 10, max_shards=NUM_PS), imports='import tensorflow as tf;import portpicker;import random;import os;import multiprocessing', function_to_run='tf.distribute.experimental.partitioners.MinSizePartitioner(**kwargs)', method_object=None, object_signature=None, function_args=[], function_kwargs={'min_shard_bytes': eval('256 << 10'), 'max_shards': eval('NUM_PS')})
+tf.distribute.experimental.partitioners.MinSizePartitioner(min_shard_bytes=256 << 10, max_shards=NUM_PS), imports='import random;import portpicker;import os;import tensorflow as tf;import multiprocessing', function_to_run='tf.distribute.experimental.partitioners.MinSizePartitioner(**kwargs)', method_object=None, object_signature=None, function_args=[], function_kwargs={'min_shard_bytes': eval('256 << 10'), 'max_shards': eval('NUM_PS')})
 strategy = custom_method(
-tf.distribute.ParameterServerStrategy(cluster_resolver, variable_partitioner=variable_partitioner), imports='import tensorflow as tf;import portpicker;import random;import os;import multiprocessing', function_to_run='tf.distribute.ParameterServerStrategy(*args, **kwargs)', method_object=None, object_signature=None, function_args=[eval('cluster_resolver')], function_kwargs={'variable_partitioner': eval('variable_partitioner')})
+tf.distribute.ParameterServerStrategy(cluster_resolver, variable_partitioner=variable_partitioner), imports='import random;import portpicker;import os;import tensorflow as tf;import multiprocessing', function_to_run='tf.distribute.ParameterServerStrategy(*args, **kwargs)', method_object=None, object_signature=None, function_args=[eval('cluster_resolver')], function_kwargs={'variable_partitioner': eval('variable_partitioner')})
 global_batch_size = 64
 x = custom_method(
-tf.random.uniform((10, 10)), imports='import tensorflow as tf;import portpicker;import random;import os;import multiprocessing', function_to_run='tf.random.uniform(*args)', method_object=None, object_signature=None, function_args=[eval('(10, 10)')], function_kwargs={})
+tf.random.uniform((10, 10)), imports='import random;import portpicker;import os;import tensorflow as tf;import multiprocessing', function_to_run='tf.random.uniform(*args)', method_object=None, object_signature=None, function_args=[eval('(10, 10)')], function_kwargs={})
 y = custom_method(
-tf.random.uniform((10,)), imports='import tensorflow as tf;import portpicker;import random;import os;import multiprocessing', function_to_run='tf.random.uniform(*args)', method_object=None, object_signature=None, function_args=[eval('(10,)')], function_kwargs={})
+tf.random.uniform((10,)), imports='import random;import portpicker;import os;import tensorflow as tf;import multiprocessing', function_to_run='tf.random.uniform(*args)', method_object=None, object_signature=None, function_args=[eval('(10,)')], function_kwargs={})
 dataset = custom_method(
-tf.data.Dataset.from_tensor_slices((x, y)).shuffle(10).repeat(), imports='import tensorflow as tf;import portpicker;import random;import os;import multiprocessing', function_to_run='tf.data.Dataset.from_tensor_slices((x, y)).shuffle(10).repeat()', method_object=None, object_signature=None, function_args=[], function_kwargs={})
-dataset = custom_method(
-dataset.batch(global_batch_size), imports='import tensorflow as tf;import portpicker;import random;import os;import multiprocessing', function_to_run='obj.batch(*args)', method_object=eval('dataset'), object_signature='tf.data.Dataset.from_tensor_slices((x, y)).shuffle(10).repeat', function_args=[eval('global_batch_size')], function_kwargs={}, custom_class=None)
-dataset = custom_method(
-dataset.prefetch(2), imports='import tensorflow as tf;import portpicker;import random;import os;import multiprocessing', function_to_run='obj.prefetch(*args)', method_object=eval('dataset'), object_signature='tf.data.Dataset.from_tensor_slices((x, y)).shuffle(10).repeat', function_args=[eval('2')], function_kwargs={}, custom_class=None)
-with custom_method(
-strategy.scope(), imports='import tensorflow as tf;import portpicker;import random;import os;import multiprocessing', function_to_run='obj.scope()', method_object=eval('strategy'), object_signature='tf.distribute.ParameterServerStrategy', function_args=[], function_kwargs={}, custom_class=None):
+tf.data.Dataset.from_tensor_slices((x, y)).shuffle(10).repeat(), imports='import random;import portpicker;import os;import tensorflow as tf;import multiprocessing', function_to_run='tf.data.Dataset.from_tensor_slices((x, y)).shuffle(10).repeat()', method_object=None, object_signature=None, function_args=[], function_kwargs={})
+dataset = dataset.batch(global_batch_size)
+dataset = dataset.prefetch(2)
+with strategy.scope():
     model = custom_method(
-    tf.keras.models.Sequential([tf.keras.layers.Dense(10)]), imports='import tensorflow as tf;import portpicker;import random;import os;import multiprocessing', function_to_run='tf.keras.models.Sequential(*args)', method_object=None, object_signature=None, function_args=[eval('[tf.keras.layers.Dense(10)]')], function_kwargs={})
-    custom_method(
-    model.compile(tf.keras.optimizers.legacy.SGD(), loss='mse', steps_per_execution=10), imports='import tensorflow as tf;import portpicker;import random;import os;import multiprocessing', function_to_run='obj.compile(*args, **kwargs)', method_object=eval('model'), object_signature='tf.keras.models.Sequential', function_args=[eval('tf.keras.optimizers.legacy.SGD()')], function_kwargs={'loss': eval('"mse"'), 'steps_per_execution': eval('10')}, custom_class=None)
+    tf.keras.models.Sequential([tf.keras.layers.Dense(10)]), imports='import random;import portpicker;import os;import tensorflow as tf;import multiprocessing', function_to_run='tf.keras.models.Sequential(*args)', method_object=None, object_signature=None, function_args=[eval('[tf.keras.layers.Dense(10)]')], function_kwargs={})
+    model.compile(tf.keras.optimizers.legacy.SGD(), loss='mse', steps_per_execution=10)
 working_dir = '/tmp/my_working_dir'
 log_dir = os.path.join(working_dir, 'log')
 ckpt_filepath = os.path.join(working_dir, 'ckpt')
 backup_dir = os.path.join(working_dir, 'backup')
-callbacks = [custom_method(
-tf.keras.callbacks.TensorBoard(log_dir=log_dir), imports='import tensorflow as tf;import portpicker;import random;import os;import multiprocessing', function_to_run='tf.keras.callbacks.TensorBoard(**kwargs)', method_object=None, object_signature=None, function_args=[], function_kwargs={'log_dir': eval('log_dir')}), custom_method(
-tf.keras.callbacks.ModelCheckpoint(filepath=ckpt_filepath), imports='import tensorflow as tf;import portpicker;import random;import os;import multiprocessing', function_to_run='tf.keras.callbacks.ModelCheckpoint(**kwargs)', method_object=None, object_signature=None, function_args=[], function_kwargs={'filepath': eval('ckpt_filepath')}), custom_method(
-tf.keras.callbacks.BackupAndRestore(backup_dir=backup_dir), imports='import tensorflow as tf;import portpicker;import random;import os;import multiprocessing', function_to_run='tf.keras.callbacks.BackupAndRestore(**kwargs)', method_object=None, object_signature=None, function_args=[], function_kwargs={'backup_dir': eval('backup_dir')})]
-custom_method(
-model.fit(dataset, epochs=5, steps_per_epoch=20, callbacks=callbacks), imports='import tensorflow as tf;import portpicker;import random;import os;import multiprocessing', function_to_run='obj.fit(*args, **kwargs)', method_object=eval('model'), object_signature='tf.keras.models.Sequential', function_args=[eval('dataset')], function_kwargs={'epochs': eval('5'), 'steps_per_epoch': eval('20'), 'callbacks': eval('callbacks')}, custom_class=None)
+callbacks = [tf.keras.callbacks.TensorBoard(log_dir=log_dir), tf.keras.callbacks.ModelCheckpoint(filepath=ckpt_filepath), tf.keras.callbacks.BackupAndRestore(backup_dir=backup_dir)]
+model.fit(dataset, epochs=5, steps_per_epoch=20, callbacks=callbacks)
 feature_vocab = ['avenger', 'ironman', 'batman', 'hulk', 'spiderman', 'kingkong', 'wonder_woman']
 label_vocab = ['yes', 'no']
-with custom_method(
-strategy.scope(), imports='import tensorflow as tf;import portpicker;import random;import os;import multiprocessing', function_to_run='obj.scope()', method_object=eval('strategy'), object_signature='tf.distribute.ParameterServerStrategy', function_args=[], function_kwargs={}, custom_class=None):
+with strategy.scope():
     feature_lookup_layer = custom_method(
-    tf.keras.layers.StringLookup(vocabulary=feature_vocab, mask_token=None), imports='import tensorflow as tf;import portpicker;import random;import os;import multiprocessing', function_to_run='tf.keras.layers.StringLookup(**kwargs)', method_object=None, object_signature=None, function_args=[], function_kwargs={'vocabulary': eval('feature_vocab'), 'mask_token': eval('None')})
+    tf.keras.layers.StringLookup(vocabulary=feature_vocab, mask_token=None), imports='import random;import portpicker;import os;import tensorflow as tf;import multiprocessing', function_to_run='tf.keras.layers.StringLookup(**kwargs)', method_object=None, object_signature=None, function_args=[], function_kwargs={'vocabulary': eval('feature_vocab'), 'mask_token': eval('None')})
     label_lookup_layer = custom_method(
-    tf.keras.layers.StringLookup(vocabulary=label_vocab, num_oov_indices=0, mask_token=None), imports='import tensorflow as tf;import portpicker;import random;import os;import multiprocessing', function_to_run='tf.keras.layers.StringLookup(**kwargs)', method_object=None, object_signature=None, function_args=[], function_kwargs={'vocabulary': eval('label_vocab'), 'num_oov_indices': eval('0'), 'mask_token': eval('None')})
+    tf.keras.layers.StringLookup(vocabulary=label_vocab, num_oov_indices=0, mask_token=None), imports='import random;import portpicker;import os;import tensorflow as tf;import multiprocessing', function_to_run='tf.keras.layers.StringLookup(**kwargs)', method_object=None, object_signature=None, function_args=[], function_kwargs={'vocabulary': eval('label_vocab'), 'num_oov_indices': eval('0'), 'mask_token': eval('None')})
     raw_feature_input = custom_method(
-    tf.keras.layers.Input(shape=(3,), dtype=tf.string, name='feature'), imports='import tensorflow as tf;import portpicker;import random;import os;import multiprocessing', function_to_run='tf.keras.layers.Input(**kwargs)', method_object=None, object_signature=None, function_args=[], function_kwargs={'shape': eval('(3,)'), 'dtype': eval('tf.string'), 'name': eval('"feature"')})
-    feature_id_input = custom_method(
-    feature_lookup_layer(raw_feature_input), imports='import tensorflow as tf;import portpicker;import random;import os;import multiprocessing', function_to_run='obj(*args)', method_object=eval('feature_lookup_layer'), object_signature='tf.keras.layers.StringLookup', function_args=[eval('raw_feature_input')], function_kwargs={}, custom_class=None)
+    tf.keras.layers.Input(shape=(3,), dtype=tf.string, name='feature'), imports='import random;import portpicker;import os;import tensorflow as tf;import multiprocessing', function_to_run='tf.keras.layers.Input(**kwargs)', method_object=None, object_signature=None, function_args=[], function_kwargs={'shape': eval('(3,)'), 'dtype': eval('tf.string'), 'name': eval('"feature"')})
+    feature_id_input = feature_lookup_layer(raw_feature_input)
     feature_preprocess_stage = custom_method(
-    tf.keras.Model({'features': raw_feature_input}, feature_id_input), imports='import tensorflow as tf;import portpicker;import random;import os;import multiprocessing', function_to_run='tf.keras.Model(*args)', method_object=None, object_signature=None, function_args=[eval('{"features": raw_feature_input}'), eval('feature_id_input')], function_kwargs={})
+    tf.keras.Model({'features': raw_feature_input}, feature_id_input), imports='import random;import portpicker;import os;import tensorflow as tf;import multiprocessing', function_to_run='tf.keras.Model(*args)', method_object=None, object_signature=None, function_args=[eval('{"features": raw_feature_input}'), eval('feature_id_input')], function_kwargs={})
     raw_label_input = custom_method(
-    tf.keras.layers.Input(shape=(1,), dtype=tf.string, name='label'), imports='import tensorflow as tf;import portpicker;import random;import os;import multiprocessing', function_to_run='tf.keras.layers.Input(**kwargs)', method_object=None, object_signature=None, function_args=[], function_kwargs={'shape': eval('(1,)'), 'dtype': eval('tf.string'), 'name': eval('"label"')})
-    label_id_input = custom_method(
-    label_lookup_layer(raw_label_input), imports='import tensorflow as tf;import portpicker;import random;import os;import multiprocessing', function_to_run='obj(*args)', method_object=eval('label_lookup_layer'), object_signature='tf.keras.layers.StringLookup', function_args=[eval('raw_label_input')], function_kwargs={}, custom_class=None)
+    tf.keras.layers.Input(shape=(1,), dtype=tf.string, name='label'), imports='import random;import portpicker;import os;import tensorflow as tf;import multiprocessing', function_to_run='tf.keras.layers.Input(**kwargs)', method_object=None, object_signature=None, function_args=[], function_kwargs={'shape': eval('(1,)'), 'dtype': eval('tf.string'), 'name': eval('"label"')})
+    label_id_input = label_lookup_layer(raw_label_input)
     label_preprocess_stage = custom_method(
-    tf.keras.Model({'label': raw_label_input}, label_id_input), imports='import tensorflow as tf;import portpicker;import random;import os;import multiprocessing', function_to_run='tf.keras.Model(*args)', method_object=None, object_signature=None, function_args=[eval('{"label": raw_label_input}'), eval('label_id_input')], function_kwargs={})
+    tf.keras.Model({'label': raw_label_input}, label_id_input), imports='import random;import portpicker;import os;import tensorflow as tf;import multiprocessing', function_to_run='tf.keras.Model(*args)', method_object=None, object_signature=None, function_args=[eval('{"label": raw_label_input}'), eval('label_id_input')], function_kwargs={})
 
 def feature_and_label_gen(num_examples=200):
     examples = {'features': [], 'label': []}
@@ -110,26 +99,24 @@ examples = feature_and_label_gen()
 
 def dataset_fn(_):
     raw_dataset = custom_method(
-    tf.data.Dataset.from_tensor_slices(examples), imports='import tensorflow as tf;import portpicker;import random;import os;import multiprocessing', function_to_run='tf.data.Dataset.from_tensor_slices(*args)', method_object=None, object_signature=None, function_args=[eval('examples')], function_kwargs={})
-    train_dataset = custom_method(
-    raw_dataset.map(lambda x: ({'features': feature_preprocess_stage(x['features'])}, label_preprocess_stage(x['label']))).shuffle(200).batch(32).repeat(), imports='import tensorflow as tf;import portpicker;import random;import os;import multiprocessing', function_to_run="raw_dataset.map(lambda obj: ({'features': feature_preprocess_stage(x['features'])}, label_preprocess_stage(x['label']))).shuffle(200).batch(32).repeat()", method_object=eval('x'), object_signature='tf.random.uniform', function_args=[], function_kwargs={}, custom_class=None)
+    tf.data.Dataset.from_tensor_slices(examples), imports='import random;import portpicker;import os;import tensorflow as tf;import multiprocessing', function_to_run='tf.data.Dataset.from_tensor_slices(*args)', method_object=None, object_signature=None, function_args=[eval('examples')], function_kwargs={})
+    train_dataset = raw_dataset.map(lambda x: ({'features': feature_preprocess_stage(x['features'])}, label_preprocess_stage(x['label']))).shuffle(200).batch(32).repeat()
     return train_dataset
-with custom_method(
-strategy.scope(), imports='import tensorflow as tf;import portpicker;import random;import os;import multiprocessing', function_to_run='obj.scope()', method_object=eval('strategy'), object_signature='tf.distribute.ParameterServerStrategy', function_args=[], function_kwargs={}, custom_class=None):
+with strategy.scope():
     model_input = custom_method(
-    tf.keras.layers.Input(shape=(3,), dtype=tf.int64, name='model_input'), imports='import tensorflow as tf;import portpicker;import random;import os;import multiprocessing', function_to_run='tf.keras.layers.Input(**kwargs)', method_object=None, object_signature=None, function_args=[], function_kwargs={'shape': eval('(3,)'), 'dtype': eval('tf.int64'), 'name': eval('"model_input"')})
+    tf.keras.layers.Input(shape=(3,), dtype=tf.int64, name='model_input'), imports='import random;import portpicker;import os;import tensorflow as tf;import multiprocessing', function_to_run='tf.keras.layers.Input(**kwargs)', method_object=None, object_signature=None, function_args=[], function_kwargs={'shape': eval('(3,)'), 'dtype': eval('tf.int64'), 'name': eval('"model_input"')})
     emb_layer = custom_method(
-    tf.keras.layers.Embedding(input_dim=len(feature_lookup_layer.get_vocabulary()), output_dim=16384), imports='import tensorflow as tf;import portpicker;import random;import os;import multiprocessing', function_to_run='tf.keras.layers.Embedding(**kwargs)', method_object=None, object_signature=None, function_args=[], function_kwargs={'input_dim': eval('len(feature_lookup_layer.get_vocabulary())'), 'output_dim': eval('16384')})
+    tf.keras.layers.Embedding(input_dim=len(feature_lookup_layer.get_vocabulary()), output_dim=16384), imports='import random;import portpicker;import os;import tensorflow as tf;import multiprocessing', function_to_run='tf.keras.layers.Embedding(**kwargs)', method_object=None, object_signature=None, function_args=[], function_kwargs={'input_dim': eval('len(feature_lookup_layer.get_vocabulary())'), 'output_dim': eval('16384')})
     emb_output = custom_method(
-    tf.reduce_mean(emb_layer(model_input), axis=1), imports='import tensorflow as tf;import portpicker;import random;import os;import multiprocessing', function_to_run='tf.reduce_mean(*args, **kwargs)', method_object=None, object_signature=None, function_args=[eval('emb_layer(model_input)')], function_kwargs={'axis': eval('1')})
+    tf.reduce_mean(emb_layer(model_input), axis=1), imports='import random;import portpicker;import os;import tensorflow as tf;import multiprocessing', function_to_run='tf.reduce_mean(*args, **kwargs)', method_object=None, object_signature=None, function_args=[eval('emb_layer(model_input)')], function_kwargs={'axis': eval('1')})
     dense_output = custom_method(
-    tf.keras.layers.Dense(units=1, activation='sigmoid')(emb_output), imports='import tensorflow as tf;import portpicker;import random;import os;import multiprocessing', function_to_run="tf.keras.layers.Dense(units=1, activation='sigmoid')(*args)", method_object=None, object_signature=None, function_args=[eval('emb_output')], function_kwargs={})
+    tf.keras.layers.Dense(units=1, activation='sigmoid')(emb_output), imports='import random;import portpicker;import os;import tensorflow as tf;import multiprocessing', function_to_run="tf.keras.layers.Dense(units=1, activation='sigmoid')(*args)", method_object=None, object_signature=None, function_args=[eval('emb_output')], function_kwargs={})
     model = custom_method(
-    tf.keras.Model({'features': model_input}, dense_output), imports='import tensorflow as tf;import portpicker;import random;import os;import multiprocessing', function_to_run='tf.keras.Model(*args)', method_object=None, object_signature=None, function_args=[eval('{"features": model_input}'), eval('dense_output')], function_kwargs={})
+    tf.keras.Model({'features': model_input}, dense_output), imports='import random;import portpicker;import os;import tensorflow as tf;import multiprocessing', function_to_run='tf.keras.Model(*args)', method_object=None, object_signature=None, function_args=[eval('{"features": model_input}'), eval('dense_output')], function_kwargs={})
     optimizer = custom_method(
-    tf.keras.optimizers.legacy.RMSprop(learning_rate=0.1), imports='import tensorflow as tf;import portpicker;import random;import os;import multiprocessing', function_to_run='tf.keras.optimizers.legacy.RMSprop(**kwargs)', method_object=None, object_signature=None, function_args=[], function_kwargs={'learning_rate': eval('0.1')})
+    tf.keras.optimizers.legacy.RMSprop(learning_rate=0.1), imports='import random;import portpicker;import os;import tensorflow as tf;import multiprocessing', function_to_run='tf.keras.optimizers.legacy.RMSprop(**kwargs)', method_object=None, object_signature=None, function_args=[], function_kwargs={'learning_rate': eval('0.1')})
     accuracy = custom_method(
-    tf.keras.metrics.Accuracy(), imports='import tensorflow as tf;import portpicker;import random;import os;import multiprocessing', function_to_run='tf.keras.metrics.Accuracy()', method_object=None, object_signature=None, function_args=[], function_kwargs={})
+    tf.keras.metrics.Accuracy(), imports='import random;import portpicker;import os;import tensorflow as tf;import multiprocessing', function_to_run='tf.keras.metrics.Accuracy()', method_object=None, object_signature=None, function_args=[], function_kwargs={})
 assert len(emb_layer.weights) == 2
 assert emb_layer.weights[0].shape == (4, 16384)
 assert emb_layer.weights[1].shape == (4, 16384)
@@ -141,91 +128,71 @@ def step_fn(iterator):
 
     def replica_fn(batch_data, labels):
         with custom_method(
-        tf.GradientTape(), imports='import tensorflow as tf;import portpicker;import random;import os;import multiprocessing', function_to_run='tf.GradientTape()', method_object=None, object_signature=None, function_args=[], function_kwargs={}) as tape:
-            pred = custom_method(
-            model(batch_data, training=True), imports='import tensorflow as tf;import portpicker;import random;import os;import multiprocessing', function_to_run='obj(*args, **kwargs)', method_object=eval('model'), object_signature='tf.keras.models.Sequential', function_args=[eval('batch_data')], function_kwargs={'training': eval('True')}, custom_class=None)
+        tf.GradientTape(), imports='import random;import portpicker;import os;import tensorflow as tf;import multiprocessing', function_to_run='tf.GradientTape()', method_object=None, object_signature=None, function_args=[], function_kwargs={}) as tape:
+            pred = model(batch_data, training=True)
             per_example_loss = custom_method(
-            tf.keras.losses.BinaryCrossentropy(reduction=tf.keras.losses.Reduction.NONE)(labels, pred), imports='import tensorflow as tf;import portpicker;import random;import os;import multiprocessing', function_to_run='tf.keras.losses.BinaryCrossentropy(reduction=tf.keras.losses.Reduction.NONE)(*args)', method_object=None, object_signature=None, function_args=[eval('labels'), eval('pred')], function_kwargs={})
+            tf.keras.losses.BinaryCrossentropy(reduction=tf.keras.losses.Reduction.NONE)(labels, pred), imports='import random;import portpicker;import os;import tensorflow as tf;import multiprocessing', function_to_run='tf.keras.losses.BinaryCrossentropy(reduction=tf.keras.losses.Reduction.NONE)(*args)', method_object=None, object_signature=None, function_args=[eval('labels'), eval('pred')], function_kwargs={})
             loss = custom_method(
-            tf.nn.compute_average_loss(per_example_loss), imports='import tensorflow as tf;import portpicker;import random;import os;import multiprocessing', function_to_run='tf.nn.compute_average_loss(*args)', method_object=None, object_signature=None, function_args=[eval('per_example_loss')], function_kwargs={})
+            tf.nn.compute_average_loss(per_example_loss), imports='import random;import portpicker;import os;import tensorflow as tf;import multiprocessing', function_to_run='tf.nn.compute_average_loss(*args)', method_object=None, object_signature=None, function_args=[eval('per_example_loss')], function_kwargs={})
             gradients = tape.gradient(loss, model.trainable_variables)
-        custom_method(
-        optimizer.apply_gradients(zip(gradients, model.trainable_variables)), imports='import tensorflow as tf;import portpicker;import random;import os;import multiprocessing', function_to_run='obj.apply_gradients(*args)', method_object=eval('optimizer'), object_signature='tf.keras.optimizers.legacy.RMSprop', function_args=[eval('zip(gradients, model.trainable_variables)')], function_kwargs={}, custom_class=None)
+        optimizer.apply_gradients(zip(gradients, model.trainable_variables))
         actual_pred = custom_method(
-        tf.cast(tf.greater(pred, 0.5), tf.int64), imports='import tensorflow as tf;import portpicker;import random;import os;import multiprocessing', function_to_run='tf.cast(*args)', method_object=None, object_signature=None, function_args=[eval('tf.greater(pred, 0.5)'), eval('tf.int64')], function_kwargs={})
-        custom_method(
-        accuracy.update_state(labels, actual_pred), imports='import tensorflow as tf;import portpicker;import random;import os;import multiprocessing', function_to_run='obj.update_state(*args)', method_object=eval('accuracy'), object_signature='tf.keras.metrics.Accuracy', function_args=[eval('labels'), eval('actual_pred')], function_kwargs={}, custom_class=None)
+        tf.cast(tf.greater(pred, 0.5), tf.int64), imports='import random;import portpicker;import os;import tensorflow as tf;import multiprocessing', function_to_run='tf.cast(*args)', method_object=None, object_signature=None, function_args=[eval('tf.greater(pred, 0.5)'), eval('tf.int64')], function_kwargs={})
+        accuracy.update_state(labels, actual_pred)
         return loss
     (batch_data, labels) = next(iterator)
-    losses = custom_method(
-    strategy.run(replica_fn, args=(batch_data, labels)), imports='import tensorflow as tf;import portpicker;import random;import os;import multiprocessing', function_to_run='obj.run(*args, **kwargs)', method_object=eval('strategy'), object_signature='tf.distribute.ParameterServerStrategy', function_args=[eval('replica_fn')], function_kwargs={'args': eval('(batch_data, labels)')}, custom_class=None)
-    return custom_method(
-    strategy.reduce(tf.distribute.ReduceOp.SUM, losses, axis=None), imports='import tensorflow as tf;import portpicker;import random;import os;import multiprocessing', function_to_run='obj.reduce(*args, **kwargs)', method_object=eval('strategy'), object_signature='tf.distribute.ParameterServerStrategy', function_args=[eval('tf.distribute.ReduceOp.SUM'), eval('losses')], function_kwargs={'axis': eval('None')}, custom_class=None)
+    losses = strategy.run(replica_fn, args=(batch_data, labels))
+    return strategy.reduce(tf.distribute.ReduceOp.SUM, losses, axis=None)
 coordinator = custom_method(
-tf.distribute.coordinator.ClusterCoordinator(strategy), imports='import tensorflow as tf;import portpicker;import random;import os;import multiprocessing', function_to_run='tf.distribute.coordinator.ClusterCoordinator(*args)', method_object=None, object_signature=None, function_args=[eval('strategy')], function_kwargs={})
+tf.distribute.coordinator.ClusterCoordinator(strategy), imports='import random;import portpicker;import os;import tensorflow as tf;import multiprocessing', function_to_run='tf.distribute.coordinator.ClusterCoordinator(*args)', method_object=None, object_signature=None, function_args=[eval('strategy')], function_kwargs={})
 
 @tf.function
 def per_worker_dataset_fn():
-    return custom_method(
-    strategy.distribute_datasets_from_function(dataset_fn), imports='import tensorflow as tf;import portpicker;import random;import os;import multiprocessing', function_to_run='obj.distribute_datasets_from_function(*args)', method_object=eval('strategy'), object_signature='tf.distribute.ParameterServerStrategy', function_args=[eval('dataset_fn')], function_kwargs={}, custom_class=None)
-per_worker_dataset = custom_method(
-coordinator.create_per_worker_dataset(per_worker_dataset_fn), imports='import tensorflow as tf;import portpicker;import random;import os;import multiprocessing', function_to_run='obj.create_per_worker_dataset(*args)', method_object=eval('coordinator'), object_signature='tf.distribute.coordinator.ClusterCoordinator', function_args=[eval('per_worker_dataset_fn')], function_kwargs={}, custom_class=None)
+    return strategy.distribute_datasets_from_function(dataset_fn)
+per_worker_dataset = coordinator.create_per_worker_dataset(per_worker_dataset_fn)
 per_worker_iterator = iter(per_worker_dataset)
 num_epochs = 4
 steps_per_epoch = 5
 for i in range(num_epochs):
-    custom_method(
-    accuracy.reset_states(), imports='import tensorflow as tf;import portpicker;import random;import os;import multiprocessing', function_to_run='obj.reset_states()', method_object=eval('accuracy'), object_signature='tf.keras.metrics.Accuracy', function_args=[], function_kwargs={}, custom_class=None)
+    accuracy.reset_states()
     for _ in range(steps_per_epoch):
-        custom_method(
-        coordinator.schedule(step_fn, args=(per_worker_iterator,)), imports='import tensorflow as tf;import portpicker;import random;import os;import multiprocessing', function_to_run='obj.schedule(*args, **kwargs)', method_object=eval('coordinator'), object_signature='tf.distribute.coordinator.ClusterCoordinator', function_args=[eval('step_fn')], function_kwargs={'args': eval('(per_worker_iterator,)')}, custom_class=None)
-    custom_method(
-    coordinator.join(), imports='import tensorflow as tf;import portpicker;import random;import os;import multiprocessing', function_to_run='obj.join()', method_object=eval('coordinator'), object_signature='tf.distribute.coordinator.ClusterCoordinator', function_args=[], function_kwargs={}, custom_class=None)
+        coordinator.schedule(step_fn, args=(per_worker_iterator,))
+    coordinator.join()
     print('Finished epoch %d, accuracy is %f.' % (i, accuracy.result().numpy()))
-loss = custom_method(
-coordinator.schedule(step_fn, args=(per_worker_iterator,)), imports='import tensorflow as tf;import portpicker;import random;import os;import multiprocessing', function_to_run='obj.schedule(*args, **kwargs)', method_object=eval('coordinator'), object_signature='tf.distribute.coordinator.ClusterCoordinator', function_args=[eval('step_fn')], function_kwargs={'args': eval('(per_worker_iterator,)')}, custom_class=None)
+loss = coordinator.schedule(step_fn, args=(per_worker_iterator,))
 print('Final loss is %f' % loss.fetch())
 eval_dataset = custom_method(
-tf.data.Dataset.from_tensor_slices(feature_and_label_gen(num_examples=16)).map(lambda x: ({'features': feature_preprocess_stage(x['features'])}, label_preprocess_stage(x['label']))).batch(8), imports='import tensorflow as tf;import portpicker;import random;import os;import multiprocessing', function_to_run="tf.data.Dataset.from_tensor_slices(feature_and_label_gen(num_examples=16)).map(lambda x: ({'features': feature_preprocess_stage(x['features'])}, label_preprocess_stage(x['label']))).batch(*args)", method_object=None, object_signature=None, function_args=[eval('8')], function_kwargs={})
+tf.data.Dataset.from_tensor_slices(feature_and_label_gen(num_examples=16)).map(lambda x: ({'features': feature_preprocess_stage(x['features'])}, label_preprocess_stage(x['label']))).batch(8), imports='import random;import portpicker;import os;import tensorflow as tf;import multiprocessing', function_to_run="tf.data.Dataset.from_tensor_slices(feature_and_label_gen(num_examples=16)).map(lambda x: ({'features': feature_preprocess_stage(x['features'])}, label_preprocess_stage(x['label']))).batch(*args)", method_object=None, object_signature=None, function_args=[eval('8')], function_kwargs={})
 eval_accuracy = custom_method(
-tf.keras.metrics.Accuracy(), imports='import tensorflow as tf;import portpicker;import random;import os;import multiprocessing', function_to_run='tf.keras.metrics.Accuracy()', method_object=None, object_signature=None, function_args=[], function_kwargs={})
+tf.keras.metrics.Accuracy(), imports='import random;import portpicker;import os;import tensorflow as tf;import multiprocessing', function_to_run='tf.keras.metrics.Accuracy()', method_object=None, object_signature=None, function_args=[], function_kwargs={})
 for (batch_data, labels) in eval_dataset:
-    pred = custom_method(
-    model(batch_data, training=False), imports='import tensorflow as tf;import portpicker;import random;import os;import multiprocessing', function_to_run='obj(*args, **kwargs)', method_object=eval('model'), object_signature='tf.keras.models.Sequential', function_args=[eval('batch_data')], function_kwargs={'training': eval('False')}, custom_class=None)
+    pred = model(batch_data, training=False)
     actual_pred = custom_method(
-    tf.cast(tf.greater(pred, 0.5), tf.int64), imports='import tensorflow as tf;import portpicker;import random;import os;import multiprocessing', function_to_run='tf.cast(*args)', method_object=None, object_signature=None, function_args=[eval('tf.greater(pred, 0.5)'), eval('tf.int64')], function_kwargs={})
-    custom_method(
-    eval_accuracy.update_state(labels, actual_pred), imports='import tensorflow as tf;import portpicker;import random;import os;import multiprocessing', function_to_run='obj.update_state(*args)', method_object=eval('eval_accuracy'), object_signature='tf.keras.metrics.Accuracy', function_args=[eval('labels'), eval('actual_pred')], function_kwargs={}, custom_class=None)
+    tf.cast(tf.greater(pred, 0.5), tf.int64), imports='import random;import portpicker;import os;import tensorflow as tf;import multiprocessing', function_to_run='tf.cast(*args)', method_object=None, object_signature=None, function_args=[eval('tf.greater(pred, 0.5)'), eval('tf.int64')], function_kwargs={})
+    eval_accuracy.update_state(labels, actual_pred)
 print('Evaluation accuracy: %f' % eval_accuracy.result())
-with custom_method(
-strategy.scope(), imports='import tensorflow as tf;import portpicker;import random;import os;import multiprocessing', function_to_run='obj.scope()', method_object=eval('strategy'), object_signature='tf.distribute.ParameterServerStrategy', function_args=[], function_kwargs={}, custom_class=None):
+with strategy.scope():
     eval_accuracy = custom_method(
-    tf.keras.metrics.Accuracy(), imports='import tensorflow as tf;import portpicker;import random;import os;import multiprocessing', function_to_run='tf.keras.metrics.Accuracy()', method_object=None, object_signature=None, function_args=[], function_kwargs={})
+    tf.keras.metrics.Accuracy(), imports='import random;import portpicker;import os;import tensorflow as tf;import multiprocessing', function_to_run='tf.keras.metrics.Accuracy()', method_object=None, object_signature=None, function_args=[], function_kwargs={})
 
 @tf.function
 def eval_step(iterator):
 
     def replica_fn(batch_data, labels):
-        pred = custom_method(
-        model(batch_data, training=False), imports='import tensorflow as tf;import portpicker;import random;import os;import multiprocessing', function_to_run='obj(*args, **kwargs)', method_object=eval('model'), object_signature='tf.keras.models.Sequential', function_args=[eval('batch_data')], function_kwargs={'training': eval('False')}, custom_class=None)
+        pred = model(batch_data, training=False)
         actual_pred = custom_method(
-        tf.cast(tf.greater(pred, 0.5), tf.int64), imports='import tensorflow as tf;import portpicker;import random;import os;import multiprocessing', function_to_run='tf.cast(*args)', method_object=None, object_signature=None, function_args=[eval('tf.greater(pred, 0.5)'), eval('tf.int64')], function_kwargs={})
-        custom_method(
-        eval_accuracy.update_state(labels, actual_pred), imports='import tensorflow as tf;import portpicker;import random;import os;import multiprocessing', function_to_run='obj.update_state(*args)', method_object=eval('eval_accuracy'), object_signature='tf.keras.metrics.Accuracy', function_args=[eval('labels'), eval('actual_pred')], function_kwargs={}, custom_class=None)
+        tf.cast(tf.greater(pred, 0.5), tf.int64), imports='import random;import portpicker;import os;import tensorflow as tf;import multiprocessing', function_to_run='tf.cast(*args)', method_object=None, object_signature=None, function_args=[eval('tf.greater(pred, 0.5)'), eval('tf.int64')], function_kwargs={})
+        eval_accuracy.update_state(labels, actual_pred)
     (batch_data, labels) = next(iterator)
-    custom_method(
-    strategy.run(replica_fn, args=(batch_data, labels)), imports='import tensorflow as tf;import portpicker;import random;import os;import multiprocessing', function_to_run='obj.run(*args, **kwargs)', method_object=eval('strategy'), object_signature='tf.distribute.ParameterServerStrategy', function_args=[eval('replica_fn')], function_kwargs={'args': eval('(batch_data, labels)')}, custom_class=None)
+    strategy.run(replica_fn, args=(batch_data, labels))
 
 def eval_dataset_fn():
     return custom_method(
-    tf.data.Dataset.from_tensor_slices(feature_and_label_gen(num_examples=16)).map(lambda x: ({'features': feature_preprocess_stage(x['features'])}, label_preprocess_stage(x['label']))).shuffle(16).repeat().batch(8), imports='import tensorflow as tf;import portpicker;import random;import os;import multiprocessing', function_to_run="tf.data.Dataset.from_tensor_slices(feature_and_label_gen(num_examples=16)).map(lambda x: ({'features': feature_preprocess_stage(x['features'])}, label_preprocess_stage(x['label']))).shuffle(16).repeat().batch(*args)", method_object=None, object_signature=None, function_args=[eval('8')], function_kwargs={})
-per_worker_eval_dataset = custom_method(
-coordinator.create_per_worker_dataset(eval_dataset_fn), imports='import tensorflow as tf;import portpicker;import random;import os;import multiprocessing', function_to_run='obj.create_per_worker_dataset(*args)', method_object=eval('coordinator'), object_signature='tf.distribute.coordinator.ClusterCoordinator', function_args=[eval('eval_dataset_fn')], function_kwargs={}, custom_class=None)
+    tf.data.Dataset.from_tensor_slices(feature_and_label_gen(num_examples=16)).map(lambda x: ({'features': feature_preprocess_stage(x['features'])}, label_preprocess_stage(x['label']))).shuffle(16).repeat().batch(8), imports='import random;import portpicker;import os;import tensorflow as tf;import multiprocessing', function_to_run="tf.data.Dataset.from_tensor_slices(feature_and_label_gen(num_examples=16)).map(lambda x: ({'features': feature_preprocess_stage(x['features'])}, label_preprocess_stage(x['label']))).shuffle(16).repeat().batch(*args)", method_object=None, object_signature=None, function_args=[eval('8')], function_kwargs={})
+per_worker_eval_dataset = coordinator.create_per_worker_dataset(eval_dataset_fn)
 per_worker_eval_iterator = iter(per_worker_eval_dataset)
 eval_steps_per_epoch = 2
 for _ in range(eval_steps_per_epoch):
-    custom_method(
-    coordinator.schedule(eval_step, args=(per_worker_eval_iterator,)), imports='import tensorflow as tf;import portpicker;import random;import os;import multiprocessing', function_to_run='obj.schedule(*args, **kwargs)', method_object=eval('coordinator'), object_signature='tf.distribute.coordinator.ClusterCoordinator', function_args=[eval('eval_step')], function_kwargs={'args': eval('(per_worker_eval_iterator,)')}, custom_class=None)
-custom_method(
-coordinator.join(), imports='import tensorflow as tf;import portpicker;import random;import os;import multiprocessing', function_to_run='obj.join()', method_object=eval('coordinator'), object_signature='tf.distribute.coordinator.ClusterCoordinator', function_args=[], function_kwargs={}, custom_class=None)
+    coordinator.schedule(eval_step, args=(per_worker_eval_iterator,))
+coordinator.join()
 print('Evaluation accuracy: %f' % eval_accuracy.result())
