@@ -70,11 +70,13 @@ ds_test = ds_test.prefetch(tf.data.AUTOTUNE)
 def train_step(model, x, y, optimizer, metrics):
     with custom_method(
     tf.GradientTape(), imports='import tensorflow_datasets as tfds;import tensorflow as tf;from tensorflow.experimental import dtensor', function_to_run='tf.GradientTape()', method_object=None, object_signature=None, function_args=[], function_kwargs={}) as tape:
-        logits = model(x, training=True)
+        logits = custom_method(
+        model(x, training=True), imports='import tensorflow_datasets as tfds;import tensorflow as tf;from tensorflow.experimental import dtensor', function_to_run='obj(*args, **kwargs)', method_object=eval('model'), object_signature=None, function_args=[eval('x')], function_kwargs={'training': eval('True')}, custom_class=None)
         loss = custom_method(
         tf.reduce_sum(tf.keras.losses.sparse_categorical_crossentropy(y, logits, from_logits=True)), imports='import tensorflow_datasets as tfds;import tensorflow as tf;from tensorflow.experimental import dtensor', function_to_run='tf.reduce_sum(*args)', method_object=None, object_signature=None, function_args=[eval('tf.keras.losses.sparse_categorical_crossentropy(\n        y, logits, from_logits=True)')], function_kwargs={})
     gradients = tape.gradient(loss, model.trainable_variables)
-    optimizer.apply_gradients(zip(gradients, model.trainable_variables))
+    custom_method(
+    optimizer.apply_gradients(zip(gradients, model.trainable_variables)), imports='import tensorflow_datasets as tfds;import tensorflow as tf;from tensorflow.experimental import dtensor', function_to_run='obj.apply_gradients(*args)', method_object=eval('optimizer'), object_signature=None, function_args=[eval('zip(gradients, model.trainable_variables)')], function_kwargs={}, custom_class=None)
     for metric in metrics.values():
         metric.update_state(y_true=y, y_pred=logits)
     loss_per_sample = loss / len(x)
@@ -83,7 +85,8 @@ def train_step(model, x, y, optimizer, metrics):
 
 @tf.function
 def eval_step(model, x, y, metrics):
-    logits = model(x, training=False)
+    logits = custom_method(
+    model(x, training=False), imports='import tensorflow_datasets as tfds;import tensorflow as tf;from tensorflow.experimental import dtensor', function_to_run='obj(*args, **kwargs)', method_object=eval('model'), object_signature=None, function_args=[eval('x')], function_kwargs={'training': eval('False')}, custom_class=None)
     loss = custom_method(
     tf.reduce_sum(tf.keras.losses.sparse_categorical_crossentropy(y, logits, from_logits=True)), imports='import tensorflow_datasets as tfds;import tensorflow as tf;from tensorflow.experimental import dtensor', function_to_run='tf.reduce_sum(*args)', method_object=None, object_signature=None, function_args=[eval('tf.keras.losses.sparse_categorical_crossentropy(\n        y, logits, from_logits=True)')], function_kwargs={})
     for metric in metrics.values():
@@ -93,7 +96,8 @@ def eval_step(model, x, y, metrics):
     return results
 
 def pack_dtensor_inputs(images, labels, image_layout, label_layout):
-    num_local_devices = image_layout.mesh.num_local_devices()
+    num_local_devices = custom_method(
+    image_layout.mesh.num_local_devices(), imports='import tensorflow_datasets as tfds;import tensorflow as tf;from tensorflow.experimental import dtensor', function_to_run='obj.mesh.num_local_devices()', method_object=eval('image_layout'), object_signature=None, function_args=[], function_kwargs={}, custom_class=None)
     images = custom_method(
     tf.split(images, num_local_devices), imports='import tensorflow_datasets as tfds;import tensorflow as tf;from tensorflow.experimental import dtensor', function_to_run='tf.split(*args)', method_object=None, object_signature=None, function_args=[eval('images'), eval('num_local_devices')], function_kwargs={})
     labels = custom_method(
@@ -127,9 +131,11 @@ for epoch in range(num_epochs):
         results.update(train_step(model, images, labels, optimizer, metrics))
         for (metric_name, metric) in metrics.items():
             results[metric_name] = metric.result()
-        pbar.update(step, values=results.items(), finalize=False)
+        custom_method(
+        pbar.update(step, values=results.items(), finalize=False), imports='import tensorflow_datasets as tfds;import tensorflow as tf;from tensorflow.experimental import dtensor', function_to_run='obj.update(*args, **kwargs)', method_object=eval('pbar'), object_signature=None, function_args=[eval('step')], function_kwargs={'values': eval('results.items()'), 'finalize': eval('False')}, custom_class=None)
         step += 1
-    pbar.update(step, values=results.items(), finalize=True)
+    custom_method(
+    pbar.update(step, values=results.items(), finalize=True), imports='import tensorflow_datasets as tfds;import tensorflow as tf;from tensorflow.experimental import dtensor', function_to_run='obj.update(*args, **kwargs)', method_object=eval('pbar'), object_signature=None, function_args=[eval('step')], function_kwargs={'values': eval('results.items()'), 'finalize': eval('True')}, custom_class=None)
     for metric in eval_metrics.values():
         metric.reset_state()
     for input in ds_test:

@@ -38,15 +38,19 @@ def input_fn(features, labels, training=True, batch_size=256):
     dataset = custom_method(
     tf.data.Dataset.from_tensor_slices((dict(features), labels)), imports='import pandas as pd;import tensorflow as tf', function_to_run='tf.data.Dataset.from_tensor_slices(*args)', method_object=None, object_signature=None, function_args=[eval('(dict(features), labels)')], function_kwargs={})
     if training:
-        dataset = dataset.shuffle(1000).repeat()
-    return dataset.batch(batch_size)
+        dataset = custom_method(
+        dataset.shuffle(1000).repeat(), imports='import pandas as pd;import tensorflow as tf', function_to_run='obj.shuffle(1000).repeat()', method_object=eval('dataset'), object_signature=None, function_args=[], function_kwargs={}, custom_class=None)
+    return custom_method(
+    dataset.batch(batch_size), imports='import pandas as pd;import tensorflow as tf', function_to_run='obj.batch(*args)', method_object=eval('dataset'), object_signature=None, function_args=[eval('batch_size')], function_kwargs={}, custom_class=None)
 my_feature_columns = []
 for key in train.keys():
     my_feature_columns.append(tf.feature_column.numeric_column(key=key))
 classifier = custom_method(
 tf.estimator.DNNClassifier(feature_columns=my_feature_columns, hidden_units=[30, 10], n_classes=3), imports='import pandas as pd;import tensorflow as tf', function_to_run='tf.estimator.DNNClassifier(**kwargs)', method_object=None, object_signature=None, function_args=[], function_kwargs={'feature_columns': eval('my_feature_columns'), 'hidden_units': eval('[30, 10]'), 'n_classes': eval('3')})
-classifier.train(input_fn=lambda : input_fn(train, train_y, training=True), steps=5000)
-eval_result = classifier.evaluate(input_fn=lambda : input_fn(test, test_y, training=False))
+custom_method(
+classifier.train(input_fn=lambda : input_fn(train, train_y, training=True), steps=5000), imports='import pandas as pd;import tensorflow as tf', function_to_run='obj.train(**kwargs)', method_object=eval('classifier'), object_signature=None, function_args=[], function_kwargs={'input_fn': eval('lambda: input_fn(train, train_y, training=True)'), 'steps': eval('5000')}, custom_class=None)
+eval_result = custom_method(
+classifier.evaluate(input_fn=lambda : input_fn(test, test_y, training=False)), imports='import pandas as pd;import tensorflow as tf', function_to_run='obj.evaluate(**kwargs)', method_object=eval('classifier'), object_signature=None, function_args=[], function_kwargs={'input_fn': eval('lambda: input_fn(test, test_y, training=False)')}, custom_class=None)
 print('\nTest set accuracy: {accuracy:0.3f}\n'.format(**eval_result))
 expected = ['Setosa', 'Versicolor', 'Virginica']
 predict_x = {'SepalLength': [5.1, 5.9, 6.9], 'SepalWidth': [3.3, 3.0, 3.1], 'PetalLength': [1.7, 4.2, 5.4], 'PetalWidth': [0.5, 1.5, 2.1]}
@@ -55,7 +59,8 @@ def input_fn(features, batch_size=256):
     """An input function for prediction."""
     return custom_method(
     tf.data.Dataset.from_tensor_slices(dict(features)).batch(batch_size), imports='import pandas as pd;import tensorflow as tf', function_to_run='tf.data.Dataset.from_tensor_slices(dict(features)).batch(*args)', method_object=None, object_signature=None, function_args=[eval('batch_size')], function_kwargs={})
-predictions = classifier.predict(input_fn=lambda : input_fn(predict_x))
+predictions = custom_method(
+classifier.predict(input_fn=lambda : input_fn(predict_x)), imports='import pandas as pd;import tensorflow as tf', function_to_run='obj.predict(**kwargs)', method_object=eval('classifier'), object_signature=None, function_args=[], function_kwargs={'input_fn': eval('lambda: input_fn(predict_x)')}, custom_class=None)
 for (pred_dict, expec) in zip(predictions, expected):
     class_id = pred_dict['class_ids'][0]
     probability = pred_dict['probabilities'][class_id]

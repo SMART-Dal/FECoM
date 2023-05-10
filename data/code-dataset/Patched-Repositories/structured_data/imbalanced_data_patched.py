@@ -75,35 +75,47 @@ METRICS = [keras.metrics.BinaryCrossentropy(name='cross entropy'), keras.metrics
 def make_model(metrics=METRICS, output_bias=None):
     if output_bias is not None:
         output_bias = custom_method(
-        tf.keras.initializers.Constant(output_bias), imports='import os;from sklearn.model_selection import train_test_split;import tensorflow as tf;import sklearn;import matplotlib.pyplot as plt;from tensorflow import keras;from sklearn.preprocessing import StandardScaler;import seaborn as sns;from sklearn.metrics import confusion_matrix;import matplotlib as mpl;import pandas as pd;import tempfile;import numpy as np', function_to_run='tf.keras.initializers.Constant(*args)', method_object=None, object_signature=None, function_args=[eval('output_bias')], function_kwargs={})
+        tf.keras.initializers.Constant(output_bias), imports='import seaborn as sns;import sklearn;from sklearn.model_selection import train_test_split;from sklearn.metrics import confusion_matrix;from tensorflow import keras;from sklearn.preprocessing import StandardScaler;import matplotlib.pyplot as plt;import matplotlib as mpl;import os;import tempfile;import tensorflow as tf;import numpy as np;import pandas as pd', function_to_run='tf.keras.initializers.Constant(*args)', method_object=None, object_signature=None, function_args=[eval('output_bias')], function_kwargs={})
     model = custom_method(
-    keras.Sequential([keras.layers.Dense(16, activation='relu', input_shape=(train_features.shape[-1],)), keras.layers.Dropout(0.5), keras.layers.Dense(1, activation='sigmoid', bias_initializer=output_bias)]), imports='import os;from sklearn.model_selection import train_test_split;import tensorflow as tf;import sklearn;import matplotlib.pyplot as plt;from tensorflow import keras;from sklearn.preprocessing import StandardScaler;import seaborn as sns;from sklearn.metrics import confusion_matrix;import matplotlib as mpl;import pandas as pd;import tempfile;import numpy as np', function_to_run='keras.Sequential(*args)', method_object=None, object_signature=None, function_args=[eval("[\n      keras.layers.Dense(\n          16, activation='relu',\n          input_shape=(train_features.shape[-1],)),\n      keras.layers.Dropout(0.5),\n      keras.layers.Dense(1, activation='sigmoid',\n                         bias_initializer=output_bias),\n  ]")], function_kwargs={})
-    model.compile(optimizer=keras.optimizers.Adam(learning_rate=0.001), loss=keras.losses.BinaryCrossentropy(), metrics=metrics)
+    keras.Sequential([keras.layers.Dense(16, activation='relu', input_shape=(train_features.shape[-1],)), keras.layers.Dropout(0.5), keras.layers.Dense(1, activation='sigmoid', bias_initializer=output_bias)]), imports='import seaborn as sns;import sklearn;from sklearn.model_selection import train_test_split;from sklearn.metrics import confusion_matrix;from tensorflow import keras;from sklearn.preprocessing import StandardScaler;import matplotlib.pyplot as plt;import matplotlib as mpl;import os;import tempfile;import tensorflow as tf;import numpy as np;import pandas as pd', function_to_run='keras.Sequential(*args)', method_object=None, object_signature=None, function_args=[eval("[\n      keras.layers.Dense(\n          16, activation='relu',\n          input_shape=(train_features.shape[-1],)),\n      keras.layers.Dropout(0.5),\n      keras.layers.Dense(1, activation='sigmoid',\n                         bias_initializer=output_bias),\n  ]")], function_kwargs={})
+    custom_method(
+    model.compile(optimizer=keras.optimizers.Adam(learning_rate=0.001), loss=keras.losses.BinaryCrossentropy(), metrics=metrics), imports='import seaborn as sns;import sklearn;from sklearn.model_selection import train_test_split;from sklearn.metrics import confusion_matrix;from tensorflow import keras;from sklearn.preprocessing import StandardScaler;import matplotlib.pyplot as plt;import matplotlib as mpl;import os;import tempfile;import tensorflow as tf;import numpy as np;import pandas as pd', function_to_run='obj.compile(**kwargs)', method_object=eval('model'), object_signature=None, function_args=[], function_kwargs={'optimizer': eval('keras.optimizers.Adam(learning_rate=1e-3)'), 'loss': eval('keras.losses.BinaryCrossentropy()'), 'metrics': eval('metrics')}, custom_class=None)
     return model
 EPOCHS = 100
 BATCH_SIZE = 2048
 early_stopping = custom_method(
-tf.keras.callbacks.EarlyStopping(monitor='val_prc', verbose=1, patience=10, mode='max', restore_best_weights=True), imports='import os;from sklearn.model_selection import train_test_split;import tensorflow as tf;import sklearn;import matplotlib.pyplot as plt;from tensorflow import keras;from sklearn.preprocessing import StandardScaler;import seaborn as sns;from sklearn.metrics import confusion_matrix;import matplotlib as mpl;import pandas as pd;import tempfile;import numpy as np', function_to_run='tf.keras.callbacks.EarlyStopping(**kwargs)', method_object=None, object_signature=None, function_args=[], function_kwargs={'monitor': eval("'val_prc'"), 'verbose': eval('1'), 'patience': eval('10'), 'mode': eval("'max'"), 'restore_best_weights': eval('True')})
+tf.keras.callbacks.EarlyStopping(monitor='val_prc', verbose=1, patience=10, mode='max', restore_best_weights=True), imports='import seaborn as sns;import sklearn;from sklearn.model_selection import train_test_split;from sklearn.metrics import confusion_matrix;from tensorflow import keras;from sklearn.preprocessing import StandardScaler;import matplotlib.pyplot as plt;import matplotlib as mpl;import os;import tempfile;import tensorflow as tf;import numpy as np;import pandas as pd', function_to_run='tf.keras.callbacks.EarlyStopping(**kwargs)', method_object=None, object_signature=None, function_args=[], function_kwargs={'monitor': eval("'val_prc'"), 'verbose': eval('1'), 'patience': eval('10'), 'mode': eval("'max'"), 'restore_best_weights': eval('True')})
 model = make_model()
-model.summary()
-model.predict(train_features[:10])
-results = model.evaluate(train_features, train_labels, batch_size=BATCH_SIZE, verbose=0)
+custom_method(
+model.summary(), imports='import seaborn as sns;import sklearn;from sklearn.model_selection import train_test_split;from sklearn.metrics import confusion_matrix;from tensorflow import keras;from sklearn.preprocessing import StandardScaler;import matplotlib.pyplot as plt;import matplotlib as mpl;import os;import tempfile;import tensorflow as tf;import numpy as np;import pandas as pd', function_to_run='obj.summary()', method_object=eval('model'), object_signature=None, function_args=[], function_kwargs={}, custom_class=None)
+custom_method(
+model.predict(train_features[:10]), imports='import seaborn as sns;import sklearn;from sklearn.model_selection import train_test_split;from sklearn.metrics import confusion_matrix;from tensorflow import keras;from sklearn.preprocessing import StandardScaler;import matplotlib.pyplot as plt;import matplotlib as mpl;import os;import tempfile;import tensorflow as tf;import numpy as np;import pandas as pd', function_to_run='obj.predict(*args)', method_object=eval('model'), object_signature=None, function_args=[eval('train_features[:10]')], function_kwargs={}, custom_class=None)
+results = custom_method(
+model.evaluate(train_features, train_labels, batch_size=BATCH_SIZE, verbose=0), imports='import seaborn as sns;import sklearn;from sklearn.model_selection import train_test_split;from sklearn.metrics import confusion_matrix;from tensorflow import keras;from sklearn.preprocessing import StandardScaler;import matplotlib.pyplot as plt;import matplotlib as mpl;import os;import tempfile;import tensorflow as tf;import numpy as np;import pandas as pd', function_to_run='obj.evaluate(*args, **kwargs)', method_object=eval('model'), object_signature=None, function_args=[eval('train_features'), eval('train_labels')], function_kwargs={'batch_size': eval('BATCH_SIZE'), 'verbose': eval('0')}, custom_class=None)
 print('Loss: {:0.4f}'.format(results[0]))
 initial_bias = np.log([pos / neg])
 initial_bias
 model = make_model(output_bias=initial_bias)
-model.predict(train_features[:10])
-results = model.evaluate(train_features, train_labels, batch_size=BATCH_SIZE, verbose=0)
+custom_method(
+model.predict(train_features[:10]), imports='import seaborn as sns;import sklearn;from sklearn.model_selection import train_test_split;from sklearn.metrics import confusion_matrix;from tensorflow import keras;from sklearn.preprocessing import StandardScaler;import matplotlib.pyplot as plt;import matplotlib as mpl;import os;import tempfile;import tensorflow as tf;import numpy as np;import pandas as pd', function_to_run='obj.predict(*args)', method_object=eval('model'), object_signature=None, function_args=[eval('train_features[:10]')], function_kwargs={}, custom_class=None)
+results = custom_method(
+model.evaluate(train_features, train_labels, batch_size=BATCH_SIZE, verbose=0), imports='import seaborn as sns;import sklearn;from sklearn.model_selection import train_test_split;from sklearn.metrics import confusion_matrix;from tensorflow import keras;from sklearn.preprocessing import StandardScaler;import matplotlib.pyplot as plt;import matplotlib as mpl;import os;import tempfile;import tensorflow as tf;import numpy as np;import pandas as pd', function_to_run='obj.evaluate(*args, **kwargs)', method_object=eval('model'), object_signature=None, function_args=[eval('train_features'), eval('train_labels')], function_kwargs={'batch_size': eval('BATCH_SIZE'), 'verbose': eval('0')}, custom_class=None)
 print('Loss: {:0.4f}'.format(results[0]))
 initial_weights = os.path.join(tempfile.mkdtemp(), 'initial_weights')
-model.save_weights(initial_weights)
+custom_method(
+model.save_weights(initial_weights), imports='import seaborn as sns;import sklearn;from sklearn.model_selection import train_test_split;from sklearn.metrics import confusion_matrix;from tensorflow import keras;from sklearn.preprocessing import StandardScaler;import matplotlib.pyplot as plt;import matplotlib as mpl;import os;import tempfile;import tensorflow as tf;import numpy as np;import pandas as pd', function_to_run='obj.save_weights(*args)', method_object=eval('model'), object_signature=None, function_args=[eval('initial_weights')], function_kwargs={}, custom_class=None)
 model = make_model()
-model.load_weights(initial_weights)
-model.layers[-1].bias.assign([0.0])
-zero_bias_history = model.fit(train_features, train_labels, batch_size=BATCH_SIZE, epochs=20, validation_data=(val_features, val_labels), verbose=0)
+custom_method(
+model.load_weights(initial_weights), imports='import seaborn as sns;import sklearn;from sklearn.model_selection import train_test_split;from sklearn.metrics import confusion_matrix;from tensorflow import keras;from sklearn.preprocessing import StandardScaler;import matplotlib.pyplot as plt;import matplotlib as mpl;import os;import tempfile;import tensorflow as tf;import numpy as np;import pandas as pd', function_to_run='obj.load_weights(*args)', method_object=eval('model'), object_signature=None, function_args=[eval('initial_weights')], function_kwargs={}, custom_class=None)
+custom_method(
+model.layers[-1].bias.assign([0.0]), imports='import seaborn as sns;import sklearn;from sklearn.model_selection import train_test_split;from sklearn.metrics import confusion_matrix;from tensorflow import keras;from sklearn.preprocessing import StandardScaler;import matplotlib.pyplot as plt;import matplotlib as mpl;import os;import tempfile;import tensorflow as tf;import numpy as np;import pandas as pd', function_to_run='obj.layers[-1].bias.assign(*args)', method_object=eval('model'), object_signature=None, function_args=[eval('[0.0]')], function_kwargs={}, custom_class=None)
+zero_bias_history = custom_method(
+model.fit(train_features, train_labels, batch_size=BATCH_SIZE, epochs=20, validation_data=(val_features, val_labels), verbose=0), imports='import seaborn as sns;import sklearn;from sklearn.model_selection import train_test_split;from sklearn.metrics import confusion_matrix;from tensorflow import keras;from sklearn.preprocessing import StandardScaler;import matplotlib.pyplot as plt;import matplotlib as mpl;import os;import tempfile;import tensorflow as tf;import numpy as np;import pandas as pd', function_to_run='obj.fit(*args, **kwargs)', method_object=eval('model'), object_signature=None, function_args=[eval('train_features'), eval('train_labels')], function_kwargs={'batch_size': eval('BATCH_SIZE'), 'epochs': eval('20'), 'validation_data': eval('(val_features, val_labels)'), 'verbose': eval('0')}, custom_class=None)
 model = make_model()
-model.load_weights(initial_weights)
-careful_bias_history = model.fit(train_features, train_labels, batch_size=BATCH_SIZE, epochs=20, validation_data=(val_features, val_labels), verbose=0)
+custom_method(
+model.load_weights(initial_weights), imports='import seaborn as sns;import sklearn;from sklearn.model_selection import train_test_split;from sklearn.metrics import confusion_matrix;from tensorflow import keras;from sklearn.preprocessing import StandardScaler;import matplotlib.pyplot as plt;import matplotlib as mpl;import os;import tempfile;import tensorflow as tf;import numpy as np;import pandas as pd', function_to_run='obj.load_weights(*args)', method_object=eval('model'), object_signature=None, function_args=[eval('initial_weights')], function_kwargs={}, custom_class=None)
+careful_bias_history = custom_method(
+model.fit(train_features, train_labels, batch_size=BATCH_SIZE, epochs=20, validation_data=(val_features, val_labels), verbose=0), imports='import seaborn as sns;import sklearn;from sklearn.model_selection import train_test_split;from sklearn.metrics import confusion_matrix;from tensorflow import keras;from sklearn.preprocessing import StandardScaler;import matplotlib.pyplot as plt;import matplotlib as mpl;import os;import tempfile;import tensorflow as tf;import numpy as np;import pandas as pd', function_to_run='obj.fit(*args, **kwargs)', method_object=eval('model'), object_signature=None, function_args=[eval('train_features'), eval('train_labels')], function_kwargs={'batch_size': eval('BATCH_SIZE'), 'epochs': eval('20'), 'validation_data': eval('(val_features, val_labels)'), 'verbose': eval('0')}, custom_class=None)
 
 def plot_loss(history, label, n):
     plt.semilogy(history.epoch, history.history['loss'], color=colors[n], label='Train ' + label)
@@ -114,8 +126,10 @@ def plot_loss(history, label, n):
 plot_loss(zero_bias_history, 'Zero Bias', 0)
 plot_loss(careful_bias_history, 'Careful Bias', 1)
 model = make_model()
-model.load_weights(initial_weights)
-baseline_history = model.fit(train_features, train_labels, batch_size=BATCH_SIZE, epochs=EPOCHS, callbacks=[early_stopping], validation_data=(val_features, val_labels))
+custom_method(
+model.load_weights(initial_weights), imports='import seaborn as sns;import sklearn;from sklearn.model_selection import train_test_split;from sklearn.metrics import confusion_matrix;from tensorflow import keras;from sklearn.preprocessing import StandardScaler;import matplotlib.pyplot as plt;import matplotlib as mpl;import os;import tempfile;import tensorflow as tf;import numpy as np;import pandas as pd', function_to_run='obj.load_weights(*args)', method_object=eval('model'), object_signature=None, function_args=[eval('initial_weights')], function_kwargs={}, custom_class=None)
+baseline_history = custom_method(
+model.fit(train_features, train_labels, batch_size=BATCH_SIZE, epochs=EPOCHS, callbacks=[early_stopping], validation_data=(val_features, val_labels)), imports='import seaborn as sns;import sklearn;from sklearn.model_selection import train_test_split;from sklearn.metrics import confusion_matrix;from tensorflow import keras;from sklearn.preprocessing import StandardScaler;import matplotlib.pyplot as plt;import matplotlib as mpl;import os;import tempfile;import tensorflow as tf;import numpy as np;import pandas as pd', function_to_run='obj.fit(*args, **kwargs)', method_object=eval('model'), object_signature=None, function_args=[eval('train_features'), eval('train_labels')], function_kwargs={'batch_size': eval('BATCH_SIZE'), 'epochs': eval('EPOCHS'), 'callbacks': eval('[early_stopping]'), 'validation_data': eval('(val_features, val_labels)')}, custom_class=None)
 
 def plot_metrics(history):
     metrics = ['loss', 'prc', 'precision', 'recall']
@@ -134,8 +148,10 @@ def plot_metrics(history):
             plt.ylim([0, 1])
         plt.legend()
 plot_metrics(baseline_history)
-train_predictions_baseline = model.predict(train_features, batch_size=BATCH_SIZE)
-test_predictions_baseline = model.predict(test_features, batch_size=BATCH_SIZE)
+train_predictions_baseline = custom_method(
+model.predict(train_features, batch_size=BATCH_SIZE), imports='import seaborn as sns;import sklearn;from sklearn.model_selection import train_test_split;from sklearn.metrics import confusion_matrix;from tensorflow import keras;from sklearn.preprocessing import StandardScaler;import matplotlib.pyplot as plt;import matplotlib as mpl;import os;import tempfile;import tensorflow as tf;import numpy as np;import pandas as pd', function_to_run='obj.predict(*args, **kwargs)', method_object=eval('model'), object_signature=None, function_args=[eval('train_features')], function_kwargs={'batch_size': eval('BATCH_SIZE')}, custom_class=None)
+test_predictions_baseline = custom_method(
+model.predict(test_features, batch_size=BATCH_SIZE), imports='import seaborn as sns;import sklearn;from sklearn.model_selection import train_test_split;from sklearn.metrics import confusion_matrix;from tensorflow import keras;from sklearn.preprocessing import StandardScaler;import matplotlib.pyplot as plt;import matplotlib as mpl;import os;import tempfile;import tensorflow as tf;import numpy as np;import pandas as pd', function_to_run='obj.predict(*args, **kwargs)', method_object=eval('model'), object_signature=None, function_args=[eval('test_features')], function_kwargs={'batch_size': eval('BATCH_SIZE')}, custom_class=None)
 
 def plot_cm(labels, predictions, threshold=0.5):
     cm = confusion_matrix(labels, predictions > threshold)
@@ -149,7 +165,8 @@ def plot_cm(labels, predictions, threshold=0.5):
     print('Fraudulent Transactions Missed (False Negatives): ', cm[1][0])
     print('Fraudulent Transactions Detected (True Positives): ', cm[1][1])
     print('Total Fraudulent Transactions: ', np.sum(cm[1]))
-baseline_results = model.evaluate(test_features, test_labels, batch_size=BATCH_SIZE, verbose=0)
+baseline_results = custom_method(
+model.evaluate(test_features, test_labels, batch_size=BATCH_SIZE, verbose=0), imports='import seaborn as sns;import sklearn;from sklearn.model_selection import train_test_split;from sklearn.metrics import confusion_matrix;from tensorflow import keras;from sklearn.preprocessing import StandardScaler;import matplotlib.pyplot as plt;import matplotlib as mpl;import os;import tempfile;import tensorflow as tf;import numpy as np;import pandas as pd', function_to_run='obj.evaluate(*args, **kwargs)', method_object=eval('model'), object_signature=None, function_args=[eval('test_features'), eval('test_labels')], function_kwargs={'batch_size': eval('BATCH_SIZE'), 'verbose': eval('0')}, custom_class=None)
 for (name, value) in zip(model.metrics_names, baseline_results):
     print(name, ': ', value)
 print()
@@ -228,8 +245,9 @@ BUFFER_SIZE = 100000
 
 def make_ds(features, labels):
     ds = custom_method(
-    tf.data.Dataset.from_tensor_slices((features, labels)), imports='import os;from sklearn.model_selection import train_test_split;import tensorflow as tf;import sklearn;import matplotlib.pyplot as plt;from tensorflow import keras;from sklearn.preprocessing import StandardScaler;import seaborn as sns;from sklearn.metrics import confusion_matrix;import matplotlib as mpl;import pandas as pd;import tempfile;import numpy as np', function_to_run='tf.data.Dataset.from_tensor_slices(*args)', method_object=None, object_signature=None, function_args=[eval('(features, labels)')], function_kwargs={})
-    ds = ds.shuffle(BUFFER_SIZE).repeat()
+    tf.data.Dataset.from_tensor_slices((features, labels)), imports='import seaborn as sns;import sklearn;from sklearn.model_selection import train_test_split;from sklearn.metrics import confusion_matrix;from tensorflow import keras;from sklearn.preprocessing import StandardScaler;import matplotlib.pyplot as plt;import matplotlib as mpl;import os;import tempfile;import tensorflow as tf;import numpy as np;import pandas as pd', function_to_run='tf.data.Dataset.from_tensor_slices(*args)', method_object=None, object_signature=None, function_args=[eval('(features, labels)')], function_kwargs={})
+    ds = custom_method(
+    ds.shuffle(BUFFER_SIZE).repeat(), imports='import seaborn as sns;import sklearn;from sklearn.model_selection import train_test_split;from sklearn.metrics import confusion_matrix;from tensorflow import keras;from sklearn.preprocessing import StandardScaler;import matplotlib.pyplot as plt;import matplotlib as mpl;import os;import tempfile;import tensorflow as tf;import numpy as np;import pandas as pd', function_to_run='obj.shuffle(BUFFER_SIZE).repeat()', method_object=eval('ds'), object_signature=None, function_args=[], function_kwargs={}, custom_class=None)
     return ds
 pos_ds = make_ds(pos_features, pos_labels)
 neg_ds = make_ds(neg_features, neg_labels)
@@ -238,9 +256,11 @@ for (features, label) in pos_ds.take(1):
     print()
     print('Label: ', label.numpy())
 resampled_ds = custom_method(
-tf.data.Dataset.sample_from_datasets([pos_ds, neg_ds], weights=[0.5, 0.5]), imports='import os;from sklearn.model_selection import train_test_split;import tensorflow as tf;import sklearn;import matplotlib.pyplot as plt;from tensorflow import keras;from sklearn.preprocessing import StandardScaler;import seaborn as sns;from sklearn.metrics import confusion_matrix;import matplotlib as mpl;import pandas as pd;import tempfile;import numpy as np', function_to_run='tf.data.Dataset.sample_from_datasets(*args, **kwargs)', method_object=None, object_signature=None, function_args=[eval('[pos_ds, neg_ds]')], function_kwargs={'weights': eval('[0.5, 0.5]')})
-resampled_ds = resampled_ds.batch(BATCH_SIZE).prefetch(2)
-for (features, label) in resampled_ds.take(1):
+tf.data.Dataset.sample_from_datasets([pos_ds, neg_ds], weights=[0.5, 0.5]), imports='import seaborn as sns;import sklearn;from sklearn.model_selection import train_test_split;from sklearn.metrics import confusion_matrix;from tensorflow import keras;from sklearn.preprocessing import StandardScaler;import matplotlib.pyplot as plt;import matplotlib as mpl;import os;import tempfile;import tensorflow as tf;import numpy as np;import pandas as pd', function_to_run='tf.data.Dataset.sample_from_datasets(*args, **kwargs)', method_object=None, object_signature=None, function_args=[eval('[pos_ds, neg_ds]')], function_kwargs={'weights': eval('[0.5, 0.5]')})
+resampled_ds = custom_method(
+resampled_ds.batch(BATCH_SIZE).prefetch(2), imports='import seaborn as sns;import sklearn;from sklearn.model_selection import train_test_split;from sklearn.metrics import confusion_matrix;from tensorflow import keras;from sklearn.preprocessing import StandardScaler;import matplotlib.pyplot as plt;import matplotlib as mpl;import os;import tempfile;import tensorflow as tf;import numpy as np;import pandas as pd', function_to_run='obj.batch(BATCH_SIZE).prefetch(*args)', method_object=eval('resampled_ds'), object_signature=None, function_args=[eval('2')], function_kwargs={}, custom_class=None)
+for (features, label) in custom_method(
+resampled_ds.take(1), imports='import seaborn as sns;import sklearn;from sklearn.model_selection import train_test_split;from sklearn.metrics import confusion_matrix;from tensorflow import keras;from sklearn.preprocessing import StandardScaler;import matplotlib.pyplot as plt;import matplotlib as mpl;import os;import tempfile;import tensorflow as tf;import numpy as np;import pandas as pd', function_to_run='obj.take(*args)', method_object=eval('resampled_ds'), object_signature=None, function_args=[eval('1')], function_kwargs={}, custom_class=None):
     print(label.numpy().mean())
 resampled_steps_per_epoch = np.ceil(2.0 * neg / BATCH_SIZE)
 resampled_steps_per_epoch
@@ -249,8 +269,9 @@ resampled_model.load_weights(initial_weights)
 output_layer = resampled_model.layers[-1]
 output_layer.bias.assign([0])
 val_ds = custom_method(
-tf.data.Dataset.from_tensor_slices((val_features, val_labels)).cache(), imports='import os;from sklearn.model_selection import train_test_split;import tensorflow as tf;import sklearn;import matplotlib.pyplot as plt;from tensorflow import keras;from sklearn.preprocessing import StandardScaler;import seaborn as sns;from sklearn.metrics import confusion_matrix;import matplotlib as mpl;import pandas as pd;import tempfile;import numpy as np', function_to_run='tf.data.Dataset.from_tensor_slices((val_features, val_labels)).cache()', method_object=None, object_signature=None, function_args=[], function_kwargs={})
-val_ds = val_ds.batch(BATCH_SIZE).prefetch(2)
+tf.data.Dataset.from_tensor_slices((val_features, val_labels)).cache(), imports='import seaborn as sns;import sklearn;from sklearn.model_selection import train_test_split;from sklearn.metrics import confusion_matrix;from tensorflow import keras;from sklearn.preprocessing import StandardScaler;import matplotlib.pyplot as plt;import matplotlib as mpl;import os;import tempfile;import tensorflow as tf;import numpy as np;import pandas as pd', function_to_run='tf.data.Dataset.from_tensor_slices((val_features, val_labels)).cache()', method_object=None, object_signature=None, function_args=[], function_kwargs={})
+val_ds = custom_method(
+val_ds.batch(BATCH_SIZE).prefetch(2), imports='import seaborn as sns;import sklearn;from sklearn.model_selection import train_test_split;from sklearn.metrics import confusion_matrix;from tensorflow import keras;from sklearn.preprocessing import StandardScaler;import matplotlib.pyplot as plt;import matplotlib as mpl;import os;import tempfile;import tensorflow as tf;import numpy as np;import pandas as pd', function_to_run='obj.batch(BATCH_SIZE).prefetch(*args)', method_object=eval('val_ds'), object_signature=None, function_args=[eval('2')], function_kwargs={}, custom_class=None)
 resampled_history = resampled_model.fit(resampled_ds, epochs=EPOCHS, steps_per_epoch=resampled_steps_per_epoch, callbacks=[early_stopping], validation_data=val_ds)
 plot_metrics(resampled_history)
 resampled_model = make_model()

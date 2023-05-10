@@ -36,24 +36,24 @@ class CustomDense(tf.keras.layers.Layer):
         if other is None:
             kernel_shape = (input_shape[-1], self.filters)
             kernel = custom_method(
-            tf.keras.initializers.GlorotUniform()(shape=kernel_shape), imports='import tensorflow_datasets as tfds;import tensorflow_compression as tfc;import matplotlib.pyplot as plt;import shutil;import os;import tensorflow as tf', function_to_run='tf.keras.initializers.GlorotUniform()(**kwargs)', method_object=None, object_signature=None, function_args=[], function_kwargs={'shape': eval('kernel_shape')})
+            tf.keras.initializers.GlorotUniform()(shape=kernel_shape), imports='import os;import tensorflow_datasets as tfds;import shutil;import tensorflow_compression as tfc;import tensorflow as tf;import matplotlib.pyplot as plt', function_to_run='tf.keras.initializers.GlorotUniform()(**kwargs)', method_object=None, object_signature=None, function_args=[], function_kwargs={'shape': eval('kernel_shape')})
             bias = custom_method(
-            tf.keras.initializers.Zeros()(shape=(self.filters,)), imports='import tensorflow_datasets as tfds;import tensorflow_compression as tfc;import matplotlib.pyplot as plt;import shutil;import os;import tensorflow as tf', function_to_run='tf.keras.initializers.Zeros()(**kwargs)', method_object=None, object_signature=None, function_args=[], function_kwargs={'shape': eval('(self.filters,)')})
+            tf.keras.initializers.Zeros()(shape=(self.filters,)), imports='import os;import tensorflow_datasets as tfds;import shutil;import tensorflow_compression as tfc;import tensorflow as tf;import matplotlib.pyplot as plt', function_to_run='tf.keras.initializers.Zeros()(**kwargs)', method_object=None, object_signature=None, function_args=[], function_kwargs={'shape': eval('(self.filters,)')})
         else:
             (kernel, bias) = (other.kernel, other.bias)
         self.kernel = custom_method(
-        tf.Variable(tf.cast(kernel, self.variable_dtype), name='kernel'), imports='import tensorflow_datasets as tfds;import tensorflow_compression as tfc;import matplotlib.pyplot as plt;import shutil;import os;import tensorflow as tf', function_to_run='tf.Variable(*args, **kwargs)', method_object=None, object_signature=None, function_args=[eval('tf.cast(kernel, self.variable_dtype)')], function_kwargs={'name': eval('"kernel"')})
+        tf.Variable(tf.cast(kernel, self.variable_dtype), name='kernel'), imports='import os;import tensorflow_datasets as tfds;import shutil;import tensorflow_compression as tfc;import tensorflow as tf;import matplotlib.pyplot as plt', function_to_run='tf.Variable(*args, **kwargs)', method_object=None, object_signature=None, function_args=[eval('tf.cast(kernel, self.variable_dtype)')], function_kwargs={'name': eval('"kernel"')})
         self.bias = custom_method(
-        tf.Variable(tf.cast(bias, self.variable_dtype), name='bias'), imports='import tensorflow_datasets as tfds;import tensorflow_compression as tfc;import matplotlib.pyplot as plt;import shutil;import os;import tensorflow as tf', function_to_run='tf.Variable(*args, **kwargs)', method_object=None, object_signature=None, function_args=[eval('tf.cast(bias, self.variable_dtype)')], function_kwargs={'name': eval('"bias"')})
+        tf.Variable(tf.cast(bias, self.variable_dtype), name='bias'), imports='import os;import tensorflow_datasets as tfds;import shutil;import tensorflow_compression as tfc;import tensorflow as tf;import matplotlib.pyplot as plt', function_to_run='tf.Variable(*args, **kwargs)', method_object=None, object_signature=None, function_args=[eval('tf.cast(bias, self.variable_dtype)')], function_kwargs={'name': eval('"bias"')})
         self.built = True
 
     def call(self, inputs):
         outputs = custom_method(
-        tf.linalg.matvec(self.kernel, inputs, transpose_a=True), imports='import tensorflow_datasets as tfds;import tensorflow_compression as tfc;import matplotlib.pyplot as plt;import shutil;import os;import tensorflow as tf', function_to_run='tf.linalg.matvec(*args, **kwargs)', method_object=None, object_signature=None, function_args=[eval('self.kernel'), eval('inputs')], function_kwargs={'transpose_a': eval('True')})
+        tf.linalg.matvec(self.kernel, inputs, transpose_a=True), imports='import os;import tensorflow_datasets as tfds;import shutil;import tensorflow_compression as tfc;import tensorflow as tf;import matplotlib.pyplot as plt', function_to_run='tf.linalg.matvec(*args, **kwargs)', method_object=None, object_signature=None, function_args=[eval('self.kernel'), eval('inputs')], function_kwargs={'transpose_a': eval('True')})
         outputs = custom_method(
-        tf.nn.bias_add(outputs, self.bias), imports='import tensorflow_datasets as tfds;import tensorflow_compression as tfc;import matplotlib.pyplot as plt;import shutil;import os;import tensorflow as tf', function_to_run='tf.nn.bias_add(*args)', method_object=None, object_signature=None, function_args=[eval('outputs'), eval('self.bias')], function_kwargs={})
+        tf.nn.bias_add(outputs, self.bias), imports='import os;import tensorflow_datasets as tfds;import shutil;import tensorflow_compression as tfc;import tensorflow as tf;import matplotlib.pyplot as plt', function_to_run='tf.nn.bias_add(*args)', method_object=None, object_signature=None, function_args=[eval('outputs'), eval('self.bias')], function_kwargs={})
         return custom_method(
-        tf.nn.leaky_relu(outputs), imports='import tensorflow_datasets as tfds;import tensorflow_compression as tfc;import matplotlib.pyplot as plt;import shutil;import os;import tensorflow as tf', function_to_run='tf.nn.leaky_relu(*args)', method_object=None, object_signature=None, function_args=[eval('outputs')], function_kwargs={})
+        tf.nn.leaky_relu(outputs), imports='import os;import tensorflow_datasets as tfds;import shutil;import tensorflow_compression as tfc;import tensorflow as tf;import matplotlib.pyplot as plt', function_to_run='tf.nn.leaky_relu(*args)', method_object=None, object_signature=None, function_args=[eval('outputs')], function_kwargs={})
 
 class CustomConv2D(tf.keras.layers.Layer):
 
@@ -76,31 +76,31 @@ class CustomConv2D(tf.keras.layers.Layer):
         if other is None:
             kernel_shape = 2 * (self.kernel_size,) + (input_shape[-1], self.filters)
             kernel = custom_method(
-            tf.keras.initializers.GlorotUniform()(shape=kernel_shape), imports='import tensorflow_datasets as tfds;import tensorflow_compression as tfc;import matplotlib.pyplot as plt;import shutil;import os;import tensorflow as tf', function_to_run='tf.keras.initializers.GlorotUniform()(**kwargs)', method_object=None, object_signature=None, function_args=[], function_kwargs={'shape': eval('kernel_shape')})
+            tf.keras.initializers.GlorotUniform()(shape=kernel_shape), imports='import os;import tensorflow_datasets as tfds;import shutil;import tensorflow_compression as tfc;import tensorflow as tf;import matplotlib.pyplot as plt', function_to_run='tf.keras.initializers.GlorotUniform()(**kwargs)', method_object=None, object_signature=None, function_args=[], function_kwargs={'shape': eval('kernel_shape')})
             bias = custom_method(
-            tf.keras.initializers.Zeros()(shape=(self.filters,)), imports='import tensorflow_datasets as tfds;import tensorflow_compression as tfc;import matplotlib.pyplot as plt;import shutil;import os;import tensorflow as tf', function_to_run='tf.keras.initializers.Zeros()(**kwargs)', method_object=None, object_signature=None, function_args=[], function_kwargs={'shape': eval('(self.filters,)')})
+            tf.keras.initializers.Zeros()(shape=(self.filters,)), imports='import os;import tensorflow_datasets as tfds;import shutil;import tensorflow_compression as tfc;import tensorflow as tf;import matplotlib.pyplot as plt', function_to_run='tf.keras.initializers.Zeros()(**kwargs)', method_object=None, object_signature=None, function_args=[], function_kwargs={'shape': eval('(self.filters,)')})
         else:
             (kernel, bias) = (other.kernel, other.bias)
         self.kernel = custom_method(
-        tf.Variable(tf.cast(kernel, self.variable_dtype), name='kernel'), imports='import tensorflow_datasets as tfds;import tensorflow_compression as tfc;import matplotlib.pyplot as plt;import shutil;import os;import tensorflow as tf', function_to_run='tf.Variable(*args, **kwargs)', method_object=None, object_signature=None, function_args=[eval('tf.cast(kernel, self.variable_dtype)')], function_kwargs={'name': eval('"kernel"')})
+        tf.Variable(tf.cast(kernel, self.variable_dtype), name='kernel'), imports='import os;import tensorflow_datasets as tfds;import shutil;import tensorflow_compression as tfc;import tensorflow as tf;import matplotlib.pyplot as plt', function_to_run='tf.Variable(*args, **kwargs)', method_object=None, object_signature=None, function_args=[eval('tf.cast(kernel, self.variable_dtype)')], function_kwargs={'name': eval('"kernel"')})
         self.bias = custom_method(
-        tf.Variable(tf.cast(bias, self.variable_dtype), name='bias'), imports='import tensorflow_datasets as tfds;import tensorflow_compression as tfc;import matplotlib.pyplot as plt;import shutil;import os;import tensorflow as tf', function_to_run='tf.Variable(*args, **kwargs)', method_object=None, object_signature=None, function_args=[eval('tf.cast(bias, self.variable_dtype)')], function_kwargs={'name': eval('"bias"')})
+        tf.Variable(tf.cast(bias, self.variable_dtype), name='bias'), imports='import os;import tensorflow_datasets as tfds;import shutil;import tensorflow_compression as tfc;import tensorflow as tf;import matplotlib.pyplot as plt', function_to_run='tf.Variable(*args, **kwargs)', method_object=None, object_signature=None, function_args=[eval('tf.cast(bias, self.variable_dtype)')], function_kwargs={'name': eval('"bias"')})
         self.built = True
 
     def call(self, inputs):
         outputs = custom_method(
-        tf.nn.convolution(inputs, self.kernel, strides=self.strides, padding=self.padding), imports='import tensorflow_datasets as tfds;import tensorflow_compression as tfc;import matplotlib.pyplot as plt;import shutil;import os;import tensorflow as tf', function_to_run='tf.nn.convolution(*args, **kwargs)', method_object=None, object_signature=None, function_args=[eval('inputs'), eval('self.kernel')], function_kwargs={'strides': eval('self.strides'), 'padding': eval('self.padding')})
+        tf.nn.convolution(inputs, self.kernel, strides=self.strides, padding=self.padding), imports='import os;import tensorflow_datasets as tfds;import shutil;import tensorflow_compression as tfc;import tensorflow as tf;import matplotlib.pyplot as plt', function_to_run='tf.nn.convolution(*args, **kwargs)', method_object=None, object_signature=None, function_args=[eval('inputs'), eval('self.kernel')], function_kwargs={'strides': eval('self.strides'), 'padding': eval('self.padding')})
         outputs = custom_method(
-        tf.nn.bias_add(outputs, self.bias), imports='import tensorflow_datasets as tfds;import tensorflow_compression as tfc;import matplotlib.pyplot as plt;import shutil;import os;import tensorflow as tf', function_to_run='tf.nn.bias_add(*args)', method_object=None, object_signature=None, function_args=[eval('outputs'), eval('self.bias')], function_kwargs={})
+        tf.nn.bias_add(outputs, self.bias), imports='import os;import tensorflow_datasets as tfds;import shutil;import tensorflow_compression as tfc;import tensorflow as tf;import matplotlib.pyplot as plt', function_to_run='tf.nn.bias_add(*args)', method_object=None, object_signature=None, function_args=[eval('outputs'), eval('self.bias')], function_kwargs={})
         return custom_method(
-        tf.nn.leaky_relu(outputs), imports='import tensorflow_datasets as tfds;import tensorflow_compression as tfc;import matplotlib.pyplot as plt;import shutil;import os;import tensorflow as tf', function_to_run='tf.nn.leaky_relu(*args)', method_object=None, object_signature=None, function_args=[eval('outputs')], function_kwargs={})
+        tf.nn.leaky_relu(outputs), imports='import os;import tensorflow_datasets as tfds;import shutil;import tensorflow_compression as tfc;import tensorflow as tf;import matplotlib.pyplot as plt', function_to_run='tf.nn.leaky_relu(*args)', method_object=None, object_signature=None, function_args=[eval('outputs')], function_kwargs={})
 classifier = custom_method(
-tf.keras.Sequential([CustomConv2D(20, 5, strides=2, name='conv_1'), CustomConv2D(50, 5, strides=2, name='conv_2'), tf.keras.layers.Flatten(), CustomDense(500, name='fc_1'), CustomDense(10, name='fc_2')], name='classifier'), imports='import tensorflow_datasets as tfds;import tensorflow_compression as tfc;import matplotlib.pyplot as plt;import shutil;import os;import tensorflow as tf', function_to_run='tf.keras.Sequential(*args, **kwargs)', method_object=None, object_signature=None, function_args=[eval('[\n    CustomConv2D(20, 5, strides=2, name="conv_1"),\n    CustomConv2D(50, 5, strides=2, name="conv_2"),\n    tf.keras.layers.Flatten(),\n    CustomDense(500, name="fc_1"),\n    CustomDense(10, name="fc_2"),\n]')], function_kwargs={'name': eval('"classifier"')})
+tf.keras.Sequential([CustomConv2D(20, 5, strides=2, name='conv_1'), CustomConv2D(50, 5, strides=2, name='conv_2'), tf.keras.layers.Flatten(), CustomDense(500, name='fc_1'), CustomDense(10, name='fc_2')], name='classifier'), imports='import os;import tensorflow_datasets as tfds;import shutil;import tensorflow_compression as tfc;import tensorflow as tf;import matplotlib.pyplot as plt', function_to_run='tf.keras.Sequential(*args, **kwargs)', method_object=None, object_signature=None, function_args=[eval('[\n    CustomConv2D(20, 5, strides=2, name="conv_1"),\n    CustomConv2D(50, 5, strides=2, name="conv_2"),\n    tf.keras.layers.Flatten(),\n    CustomDense(500, name="fc_1"),\n    CustomDense(10, name="fc_2"),\n]')], function_kwargs={'name': eval('"classifier"')})
 
 def normalize_img(image, label):
     """Normalizes images: `uint8` -> `float32`."""
     return (custom_method(
-    tf.cast(image, tf.float32), imports='import tensorflow_datasets as tfds;import tensorflow_compression as tfc;import matplotlib.pyplot as plt;import shutil;import os;import tensorflow as tf', function_to_run='tf.cast(*args)', method_object=None, object_signature=None, function_args=[eval('image'), eval('tf.float32')], function_kwargs={}) / 255.0, label)
+    tf.cast(image, tf.float32), imports='import os;import tensorflow_datasets as tfds;import shutil;import tensorflow_compression as tfc;import tensorflow as tf;import matplotlib.pyplot as plt', function_to_run='tf.cast(*args)', method_object=None, object_signature=None, function_args=[eval('image'), eval('tf.float32')], function_kwargs={}) / 255.0, label)
 (training_dataset, validation_dataset) = tfds.load('mnist', split=['train', 'test'], shuffle_files=True, as_supervised=True, with_info=False)
 training_dataset = training_dataset.map(normalize_img)
 validation_dataset = validation_dataset.map(normalize_img)
@@ -114,7 +114,7 @@ def train_model(model, training_data, validation_data, **kwargs):
 classifier_accuracy = train_model(classifier, training_dataset, validation_dataset)
 print(f'Accuracy: {classifier_accuracy:0.4f}')
 _ = custom_method(
-tf.linspace(-5.0, 5.0, 501), imports='import tensorflow_datasets as tfds;import tensorflow_compression as tfc;import matplotlib.pyplot as plt;import shutil;import os;import tensorflow as tf', function_to_run='tf.linspace(*args)', method_object=None, object_signature=None, function_args=[eval('-5.'), eval('5.'), eval('501')], function_kwargs={})
+tf.linspace(-5.0, 5.0, 501), imports='import os;import tensorflow_datasets as tfds;import shutil;import tensorflow_compression as tfc;import tensorflow as tf;import matplotlib.pyplot as plt', function_to_run='tf.linspace(*args)', method_object=None, object_signature=None, function_args=[eval('-5.'), eval('5.'), eval('501')], function_kwargs={})
 plt.plot(_, tfc.PowerLawEntropyModel(0).penalty(_))
 
 class PowerLawRegularizer(tf.keras.regularizers.Regularizer):
@@ -130,7 +130,7 @@ regularizer = PowerLawRegularizer(lmbda=2.0 / classifier.count_params())
 
 def quantize(latent, log_step):
     step = custom_method(
-    tf.exp(log_step), imports='import tensorflow_datasets as tfds;import tensorflow_compression as tfc;import matplotlib.pyplot as plt;import shutil;import os;import tensorflow as tf', function_to_run='tf.exp(*args)', method_object=None, object_signature=None, function_args=[eval('log_step')], function_kwargs={})
+    tf.exp(log_step), imports='import os;import tensorflow_datasets as tfds;import shutil;import tensorflow_compression as tfc;import tensorflow as tf;import matplotlib.pyplot as plt', function_to_run='tf.exp(*args)', method_object=None, object_signature=None, function_args=[eval('log_step')], function_kwargs={})
     return tfc.round_st(latent / step) * step
 
 class CompressibleDense(CustomDense):
@@ -148,9 +148,9 @@ class CompressibleDense(CustomDense):
         else:
             kernel_log_step = bias_log_step = -4.0
         self.kernel_log_step = custom_method(
-        tf.Variable(tf.cast(kernel_log_step, self.variable_dtype), name='kernel_log_step'), imports='import tensorflow_datasets as tfds;import tensorflow_compression as tfc;import matplotlib.pyplot as plt;import shutil;import os;import tensorflow as tf', function_to_run='tf.Variable(*args, **kwargs)', method_object=None, object_signature=None, function_args=[eval('tf.cast(kernel_log_step, self.variable_dtype)')], function_kwargs={'name': eval('"kernel_log_step"')})
+        tf.Variable(tf.cast(kernel_log_step, self.variable_dtype), name='kernel_log_step'), imports='import os;import tensorflow_datasets as tfds;import shutil;import tensorflow_compression as tfc;import tensorflow as tf;import matplotlib.pyplot as plt', function_to_run='tf.Variable(*args, **kwargs)', method_object=None, object_signature=None, function_args=[eval('tf.cast(kernel_log_step, self.variable_dtype)')], function_kwargs={'name': eval('"kernel_log_step"')})
         self.bias_log_step = custom_method(
-        tf.Variable(tf.cast(bias_log_step, self.variable_dtype), name='bias_log_step'), imports='import tensorflow_datasets as tfds;import tensorflow_compression as tfc;import matplotlib.pyplot as plt;import shutil;import os;import tensorflow as tf', function_to_run='tf.Variable(*args, **kwargs)', method_object=None, object_signature=None, function_args=[eval('tf.cast(bias_log_step, self.variable_dtype)')], function_kwargs={'name': eval('"bias_log_step"')})
+        tf.Variable(tf.cast(bias_log_step, self.variable_dtype), name='bias_log_step'), imports='import os;import tensorflow_datasets as tfds;import shutil;import tensorflow_compression as tfc;import tensorflow as tf;import matplotlib.pyplot as plt', function_to_run='tf.Variable(*args, **kwargs)', method_object=None, object_signature=None, function_args=[eval('tf.cast(bias_log_step, self.variable_dtype)')], function_kwargs={'name': eval('"bias_log_step"')})
         self.add_loss(lambda : self.regularizer(self.kernel_latent / tf.exp(self.kernel_log_step)))
         self.add_loss(lambda : self.regularizer(self.bias_latent / tf.exp(self.bias_log_step)))
 
@@ -161,7 +161,7 @@ class CompressibleDense(CustomDense):
     @kernel.setter
     def kernel(self, kernel):
         self.kernel_latent = custom_method(
-        tf.Variable(kernel, name='kernel_latent'), imports='import tensorflow_datasets as tfds;import tensorflow_compression as tfc;import matplotlib.pyplot as plt;import shutil;import os;import tensorflow as tf', function_to_run='tf.Variable(*args, **kwargs)', method_object=None, object_signature=None, function_args=[eval('kernel')], function_kwargs={'name': eval('"kernel_latent"')})
+        tf.Variable(kernel, name='kernel_latent'), imports='import os;import tensorflow_datasets as tfds;import shutil;import tensorflow_compression as tfc;import tensorflow as tf;import matplotlib.pyplot as plt', function_to_run='tf.Variable(*args, **kwargs)', method_object=None, object_signature=None, function_args=[eval('kernel')], function_kwargs={'name': eval('"kernel_latent"')})
 
     @property
     def bias(self):
@@ -170,25 +170,25 @@ class CompressibleDense(CustomDense):
     @bias.setter
     def bias(self, bias):
         self.bias_latent = custom_method(
-        tf.Variable(bias, name='bias_latent'), imports='import tensorflow_datasets as tfds;import tensorflow_compression as tfc;import matplotlib.pyplot as plt;import shutil;import os;import tensorflow as tf', function_to_run='tf.Variable(*args, **kwargs)', method_object=None, object_signature=None, function_args=[eval('bias')], function_kwargs={'name': eval('"bias_latent"')})
+        tf.Variable(bias, name='bias_latent'), imports='import os;import tensorflow_datasets as tfds;import shutil;import tensorflow_compression as tfc;import tensorflow as tf;import matplotlib.pyplot as plt', function_to_run='tf.Variable(*args, **kwargs)', method_object=None, object_signature=None, function_args=[eval('bias')], function_kwargs={'name': eval('"bias_latent"')})
 
 def to_rdft(kernel, kernel_size):
     kernel = custom_method(
-    tf.transpose(kernel, (2, 3, 0, 1)), imports='import tensorflow_datasets as tfds;import tensorflow_compression as tfc;import matplotlib.pyplot as plt;import shutil;import os;import tensorflow as tf', function_to_run='tf.transpose(*args)', method_object=None, object_signature=None, function_args=[eval('kernel'), eval('(2, 3, 0, 1)')], function_kwargs={})
+    tf.transpose(kernel, (2, 3, 0, 1)), imports='import os;import tensorflow_datasets as tfds;import shutil;import tensorflow_compression as tfc;import tensorflow as tf;import matplotlib.pyplot as plt', function_to_run='tf.transpose(*args)', method_object=None, object_signature=None, function_args=[eval('kernel'), eval('(2, 3, 0, 1)')], function_kwargs={})
     kernel_rdft = custom_method(
-    tf.signal.rfft2d(kernel), imports='import tensorflow_datasets as tfds;import tensorflow_compression as tfc;import matplotlib.pyplot as plt;import shutil;import os;import tensorflow as tf', function_to_run='tf.signal.rfft2d(*args)', method_object=None, object_signature=None, function_args=[eval('kernel')], function_kwargs={})
+    tf.signal.rfft2d(kernel), imports='import os;import tensorflow_datasets as tfds;import shutil;import tensorflow_compression as tfc;import tensorflow as tf;import matplotlib.pyplot as plt', function_to_run='tf.signal.rfft2d(*args)', method_object=None, object_signature=None, function_args=[eval('kernel')], function_kwargs={})
     kernel_rdft = custom_method(
-    tf.stack([tf.math.real(kernel_rdft), tf.math.imag(kernel_rdft)], axis=-1), imports='import tensorflow_datasets as tfds;import tensorflow_compression as tfc;import matplotlib.pyplot as plt;import shutil;import os;import tensorflow as tf', function_to_run='tf.stack(*args, **kwargs)', method_object=None, object_signature=None, function_args=[eval('[tf.math.real(kernel_rdft), tf.math.imag(kernel_rdft)]')], function_kwargs={'axis': eval('-1')})
+    tf.stack([tf.math.real(kernel_rdft), tf.math.imag(kernel_rdft)], axis=-1), imports='import os;import tensorflow_datasets as tfds;import shutil;import tensorflow_compression as tfc;import tensorflow as tf;import matplotlib.pyplot as plt', function_to_run='tf.stack(*args, **kwargs)', method_object=None, object_signature=None, function_args=[eval('[tf.math.real(kernel_rdft), tf.math.imag(kernel_rdft)]')], function_kwargs={'axis': eval('-1')})
     return kernel_rdft / kernel_size
 
 def from_rdft(kernel_rdft, kernel_size):
     kernel_rdft *= kernel_size
     kernel_rdft = custom_method(
-    tf.dtypes.complex(*tf.unstack(kernel_rdft, axis=-1)), imports='import tensorflow_datasets as tfds;import tensorflow_compression as tfc;import matplotlib.pyplot as plt;import shutil;import os;import tensorflow as tf', function_to_run='tf.dtypes.complex(*args)', method_object=None, object_signature=None, function_args=[eval('*tf.unstack(kernel_rdft, axis=-1)')], function_kwargs={})
+    tf.dtypes.complex(*tf.unstack(kernel_rdft, axis=-1)), imports='import os;import tensorflow_datasets as tfds;import shutil;import tensorflow_compression as tfc;import tensorflow as tf;import matplotlib.pyplot as plt', function_to_run='tf.dtypes.complex(*args)', method_object=None, object_signature=None, function_args=[eval('*tf.unstack(kernel_rdft, axis=-1)')], function_kwargs={})
     kernel = custom_method(
-    tf.signal.irfft2d(kernel_rdft, fft_length=2 * (kernel_size,)), imports='import tensorflow_datasets as tfds;import tensorflow_compression as tfc;import matplotlib.pyplot as plt;import shutil;import os;import tensorflow as tf', function_to_run='tf.signal.irfft2d(*args, **kwargs)', method_object=None, object_signature=None, function_args=[eval('kernel_rdft')], function_kwargs={'fft_length': eval('2 * (kernel_size,)')})
+    tf.signal.irfft2d(kernel_rdft, fft_length=2 * (kernel_size,)), imports='import os;import tensorflow_datasets as tfds;import shutil;import tensorflow_compression as tfc;import tensorflow as tf;import matplotlib.pyplot as plt', function_to_run='tf.signal.irfft2d(*args, **kwargs)', method_object=None, object_signature=None, function_args=[eval('kernel_rdft')], function_kwargs={'fft_length': eval('2 * (kernel_size,)')})
     return custom_method(
-    tf.transpose(kernel, (2, 3, 0, 1)), imports='import tensorflow_datasets as tfds;import tensorflow_compression as tfc;import matplotlib.pyplot as plt;import shutil;import os;import tensorflow as tf', function_to_run='tf.transpose(*args)', method_object=None, object_signature=None, function_args=[eval('kernel'), eval('(2, 3, 0, 1)')], function_kwargs={})
+    tf.transpose(kernel, (2, 3, 0, 1)), imports='import os;import tensorflow_datasets as tfds;import shutil;import tensorflow_compression as tfc;import tensorflow as tf;import matplotlib.pyplot as plt', function_to_run='tf.transpose(*args)', method_object=None, object_signature=None, function_args=[eval('kernel'), eval('(2, 3, 0, 1)')], function_kwargs={})
 
 class CompressibleConv2D(CustomConv2D):
 
@@ -204,12 +204,12 @@ class CompressibleConv2D(CustomConv2D):
             bias_log_step = other.bias_log_step
         else:
             kernel_log_step = custom_method(
-            tf.fill(self.kernel_latent.shape[2:], -4.0), imports='import tensorflow_datasets as tfds;import tensorflow_compression as tfc;import matplotlib.pyplot as plt;import shutil;import os;import tensorflow as tf', function_to_run='tf.fill(*args)', method_object=None, object_signature=None, function_args=[eval('self.kernel_latent.shape[2:]'), eval('-4.')], function_kwargs={})
+            tf.fill(self.kernel_latent.shape[2:], -4.0), imports='import os;import tensorflow_datasets as tfds;import shutil;import tensorflow_compression as tfc;import tensorflow as tf;import matplotlib.pyplot as plt', function_to_run='tf.fill(*args)', method_object=None, object_signature=None, function_args=[eval('self.kernel_latent.shape[2:]'), eval('-4.')], function_kwargs={})
             bias_log_step = -4.0
         self.kernel_log_step = custom_method(
-        tf.Variable(tf.cast(kernel_log_step, self.variable_dtype), name='kernel_log_step'), imports='import tensorflow_datasets as tfds;import tensorflow_compression as tfc;import matplotlib.pyplot as plt;import shutil;import os;import tensorflow as tf', function_to_run='tf.Variable(*args, **kwargs)', method_object=None, object_signature=None, function_args=[eval('tf.cast(kernel_log_step, self.variable_dtype)')], function_kwargs={'name': eval('"kernel_log_step"')})
+        tf.Variable(tf.cast(kernel_log_step, self.variable_dtype), name='kernel_log_step'), imports='import os;import tensorflow_datasets as tfds;import shutil;import tensorflow_compression as tfc;import tensorflow as tf;import matplotlib.pyplot as plt', function_to_run='tf.Variable(*args, **kwargs)', method_object=None, object_signature=None, function_args=[eval('tf.cast(kernel_log_step, self.variable_dtype)')], function_kwargs={'name': eval('"kernel_log_step"')})
         self.bias_log_step = custom_method(
-        tf.Variable(tf.cast(bias_log_step, self.variable_dtype), name='bias_log_step'), imports='import tensorflow_datasets as tfds;import tensorflow_compression as tfc;import matplotlib.pyplot as plt;import shutil;import os;import tensorflow as tf', function_to_run='tf.Variable(*args, **kwargs)', method_object=None, object_signature=None, function_args=[eval('tf.cast(bias_log_step, self.variable_dtype)')], function_kwargs={'name': eval('"bias_log_step"')})
+        tf.Variable(tf.cast(bias_log_step, self.variable_dtype), name='bias_log_step'), imports='import os;import tensorflow_datasets as tfds;import shutil;import tensorflow_compression as tfc;import tensorflow as tf;import matplotlib.pyplot as plt', function_to_run='tf.Variable(*args, **kwargs)', method_object=None, object_signature=None, function_args=[eval('tf.cast(bias_log_step, self.variable_dtype)')], function_kwargs={'name': eval('"bias_log_step"')})
         self.add_loss(lambda : self.regularizer(self.kernel_latent / tf.exp(self.kernel_log_step)))
         self.add_loss(lambda : self.regularizer(self.bias_latent / tf.exp(self.bias_log_step)))
 
@@ -222,7 +222,7 @@ class CompressibleConv2D(CustomConv2D):
     def kernel(self, kernel):
         kernel_rdft = to_rdft(kernel, self.kernel_size)
         self.kernel_latent = custom_method(
-        tf.Variable(kernel_rdft, name='kernel_latent'), imports='import tensorflow_datasets as tfds;import tensorflow_compression as tfc;import matplotlib.pyplot as plt;import shutil;import os;import tensorflow as tf', function_to_run='tf.Variable(*args, **kwargs)', method_object=None, object_signature=None, function_args=[eval('kernel_rdft')], function_kwargs={'name': eval('"kernel_latent"')})
+        tf.Variable(kernel_rdft, name='kernel_latent'), imports='import os;import tensorflow_datasets as tfds;import shutil;import tensorflow_compression as tfc;import tensorflow as tf;import matplotlib.pyplot as plt', function_to_run='tf.Variable(*args, **kwargs)', method_object=None, object_signature=None, function_args=[eval('kernel_rdft')], function_kwargs={'name': eval('"kernel_latent"')})
 
     @property
     def bias(self):
@@ -231,11 +231,11 @@ class CompressibleConv2D(CustomConv2D):
     @bias.setter
     def bias(self, bias):
         self.bias_latent = custom_method(
-        tf.Variable(bias, name='bias_latent'), imports='import tensorflow_datasets as tfds;import tensorflow_compression as tfc;import matplotlib.pyplot as plt;import shutil;import os;import tensorflow as tf', function_to_run='tf.Variable(*args, **kwargs)', method_object=None, object_signature=None, function_args=[eval('bias')], function_kwargs={'name': eval('"bias_latent"')})
+        tf.Variable(bias, name='bias_latent'), imports='import os;import tensorflow_datasets as tfds;import shutil;import tensorflow_compression as tfc;import tensorflow as tf;import matplotlib.pyplot as plt', function_to_run='tf.Variable(*args, **kwargs)', method_object=None, object_signature=None, function_args=[eval('bias')], function_kwargs={'name': eval('"bias_latent"')})
 
 def make_mnist_classifier(regularizer):
     return custom_method(
-    tf.keras.Sequential([CompressibleConv2D(regularizer, 20, 5, strides=2, name='conv_1'), CompressibleConv2D(regularizer, 50, 5, strides=2, name='conv_2'), tf.keras.layers.Flatten(), CompressibleDense(regularizer, 500, name='fc_1'), CompressibleDense(regularizer, 10, name='fc_2')], name='classifier'), imports='import tensorflow_datasets as tfds;import tensorflow_compression as tfc;import matplotlib.pyplot as plt;import shutil;import os;import tensorflow as tf', function_to_run='tf.keras.Sequential(*args, **kwargs)', method_object=None, object_signature=None, function_args=[eval('[\n      CompressibleConv2D(regularizer, 20, 5, strides=2, name="conv_1"),\n      CompressibleConv2D(regularizer, 50, 5, strides=2, name="conv_2"),\n      tf.keras.layers.Flatten(),\n      CompressibleDense(regularizer, 500, name="fc_1"),\n      CompressibleDense(regularizer, 10, name="fc_2"),\n  ]')], function_kwargs={'name': eval('"classifier"')})
+    tf.keras.Sequential([CompressibleConv2D(regularizer, 20, 5, strides=2, name='conv_1'), CompressibleConv2D(regularizer, 50, 5, strides=2, name='conv_2'), tf.keras.layers.Flatten(), CompressibleDense(regularizer, 500, name='fc_1'), CompressibleDense(regularizer, 10, name='fc_2')], name='classifier'), imports='import os;import tensorflow_datasets as tfds;import shutil;import tensorflow_compression as tfc;import tensorflow as tf;import matplotlib.pyplot as plt', function_to_run='tf.keras.Sequential(*args, **kwargs)', method_object=None, object_signature=None, function_args=[eval('[\n      CompressibleConv2D(regularizer, 20, 5, strides=2, name="conv_1"),\n      CompressibleConv2D(regularizer, 50, 5, strides=2, name="conv_2"),\n      tf.keras.layers.Flatten(),\n      CompressibleDense(regularizer, 500, name="fc_1"),\n      CompressibleDense(regularizer, 10, name="fc_2"),\n  ]')], function_kwargs={'name': eval('"classifier"')})
 compressible_classifier = make_mnist_classifier(regularizer)
 penalized_accuracy = train_model(compressible_classifier, training_dataset, validation_dataset)
 print(f'Accuracy: {penalized_accuracy:0.4f}')
@@ -244,17 +244,17 @@ def compress_latent(latent, log_step, name):
     em = tfc.PowerLawEntropyModel(latent.shape.rank)
     compressed = em.compress(latent / tf.exp(log_step))
     compressed = custom_method(
-    tf.Variable(compressed, name=f'{name}_compressed'), imports='import tensorflow_datasets as tfds;import tensorflow_compression as tfc;import matplotlib.pyplot as plt;import shutil;import os;import tensorflow as tf', function_to_run='tf.Variable(*args, **kwargs)', method_object=None, object_signature=None, function_args=[eval('compressed')], function_kwargs={'name': eval('f"{name}_compressed"')})
+    tf.Variable(compressed, name=f'{name}_compressed'), imports='import os;import tensorflow_datasets as tfds;import shutil;import tensorflow_compression as tfc;import tensorflow as tf;import matplotlib.pyplot as plt', function_to_run='tf.Variable(*args, **kwargs)', method_object=None, object_signature=None, function_args=[eval('compressed')], function_kwargs={'name': eval('f"{name}_compressed"')})
     log_step = custom_method(
-    tf.cast(log_step, tf.float16), imports='import tensorflow_datasets as tfds;import tensorflow_compression as tfc;import matplotlib.pyplot as plt;import shutil;import os;import tensorflow as tf', function_to_run='tf.cast(*args)', method_object=None, object_signature=None, function_args=[eval('log_step'), eval('tf.float16')], function_kwargs={})
+    tf.cast(log_step, tf.float16), imports='import os;import tensorflow_datasets as tfds;import shutil;import tensorflow_compression as tfc;import tensorflow as tf;import matplotlib.pyplot as plt', function_to_run='tf.cast(*args)', method_object=None, object_signature=None, function_args=[eval('log_step'), eval('tf.float16')], function_kwargs={})
     log_step = custom_method(
-    tf.Variable(log_step, name=f'{name}_log_step'), imports='import tensorflow_datasets as tfds;import tensorflow_compression as tfc;import matplotlib.pyplot as plt;import shutil;import os;import tensorflow as tf', function_to_run='tf.Variable(*args, **kwargs)', method_object=None, object_signature=None, function_args=[eval('log_step')], function_kwargs={'name': eval('f"{name}_log_step"')})
+    tf.Variable(log_step, name=f'{name}_log_step'), imports='import os;import tensorflow_datasets as tfds;import shutil;import tensorflow_compression as tfc;import tensorflow as tf;import matplotlib.pyplot as plt', function_to_run='tf.Variable(*args, **kwargs)', method_object=None, object_signature=None, function_args=[eval('log_step')], function_kwargs={'name': eval('f"{name}_log_step"')})
     return (compressed, log_step)
 
 def decompress_latent(compressed, shape, log_step):
     latent = tfc.PowerLawEntropyModel(len(shape)).decompress(compressed, shape)
     step = custom_method(
-    tf.exp(tf.cast(log_step, latent.dtype)), imports='import tensorflow_datasets as tfds;import tensorflow_compression as tfc;import matplotlib.pyplot as plt;import shutil;import os;import tensorflow as tf', function_to_run='tf.exp(*args)', method_object=None, object_signature=None, function_args=[eval('tf.cast(log_step, latent.dtype)')], function_kwargs={})
+    tf.exp(tf.cast(log_step, latent.dtype)), imports='import os;import tensorflow_datasets as tfds;import shutil;import tensorflow_compression as tfc;import tensorflow as tf;import matplotlib.pyplot as plt', function_to_run='tf.exp(*args)', method_object=None, object_signature=None, function_args=[eval('tf.cast(log_step, latent.dtype)')], function_kwargs={})
     return latent * step
 
 class CompressedDense(CustomDense):
@@ -303,19 +303,21 @@ def compress_layer(layer):
         return CompressedConv2D.copy(layer)
     return type(layer).from_config(layer.get_config())
 compressed_classifier = custom_method(
-tf.keras.models.clone_model(compressible_classifier, clone_function=compress_layer), imports='import tensorflow_datasets as tfds;import tensorflow_compression as tfc;import matplotlib.pyplot as plt;import shutil;import os;import tensorflow as tf', function_to_run='tf.keras.models.clone_model(*args, **kwargs)', method_object=None, object_signature=None, function_args=[eval('compressible_classifier')], function_kwargs={'clone_function': eval('compress_layer')})
-compressed_classifier.compile(metrics=[tf.keras.metrics.SparseCategoricalAccuracy()])
-(_, compressed_accuracy) = compressed_classifier.evaluate(validation_dataset.batch(128))
+tf.keras.models.clone_model(compressible_classifier, clone_function=compress_layer), imports='import os;import tensorflow_datasets as tfds;import shutil;import tensorflow_compression as tfc;import tensorflow as tf;import matplotlib.pyplot as plt', function_to_run='tf.keras.models.clone_model(*args, **kwargs)', method_object=None, object_signature=None, function_args=[eval('compressible_classifier')], function_kwargs={'clone_function': eval('compress_layer')})
+custom_method(
+compressed_classifier.compile(metrics=[tf.keras.metrics.SparseCategoricalAccuracy()]), imports='import os;import tensorflow_datasets as tfds;import shutil;import tensorflow_compression as tfc;import tensorflow as tf;import matplotlib.pyplot as plt', function_to_run='obj.compile(**kwargs)', method_object=eval('compressed_classifier'), object_signature=None, function_args=[], function_kwargs={'metrics': eval('[tf.keras.metrics.SparseCategoricalAccuracy()]')}, custom_class=None)
+(_, compressed_accuracy) = custom_method(
+compressed_classifier.evaluate(validation_dataset.batch(128)), imports='import os;import tensorflow_datasets as tfds;import shutil;import tensorflow_compression as tfc;import tensorflow as tf;import matplotlib.pyplot as plt', function_to_run='obj.evaluate(*args)', method_object=eval('compressed_classifier'), object_signature=None, function_args=[eval('validation_dataset.batch(128)')], function_kwargs={}, custom_class=None)
 print(f'Accuracy of the compressible classifier: {penalized_accuracy:0.4f}')
 print(f'Accuracy of the compressed classifier: {compressed_accuracy:0.4f}')
 
 def get_weight_size_in_bytes(weight):
     if weight.dtype == tf.string:
         return custom_method(
-        tf.reduce_sum(tf.strings.length(weight, unit='BYTE')), imports='import tensorflow_datasets as tfds;import tensorflow_compression as tfc;import matplotlib.pyplot as plt;import shutil;import os;import tensorflow as tf', function_to_run='tf.reduce_sum(*args)', method_object=None, object_signature=None, function_args=[eval('tf.strings.length(weight, unit="BYTE")')], function_kwargs={})
+        tf.reduce_sum(tf.strings.length(weight, unit='BYTE')), imports='import os;import tensorflow_datasets as tfds;import shutil;import tensorflow_compression as tfc;import tensorflow as tf;import matplotlib.pyplot as plt', function_to_run='tf.reduce_sum(*args)', method_object=None, object_signature=None, function_args=[eval('tf.strings.length(weight, unit="BYTE")')], function_kwargs={})
     else:
         return custom_method(
-        tf.size(weight), imports='import tensorflow_datasets as tfds;import tensorflow_compression as tfc;import matplotlib.pyplot as plt;import shutil;import os;import tensorflow as tf', function_to_run='tf.size(*args)', method_object=None, object_signature=None, function_args=[eval('weight')], function_kwargs={}) * weight.dtype.size
+        tf.size(weight), imports='import os;import tensorflow_datasets as tfds;import shutil;import tensorflow_compression as tfc;import tensorflow as tf;import matplotlib.pyplot as plt', function_to_run='tf.size(*args)', method_object=None, object_signature=None, function_args=[eval('weight')], function_kwargs={}) * weight.dtype.size
 original_size = sum(map(get_weight_size_in_bytes, classifier.weights))
 compressed_size = sum(map(get_weight_size_in_bytes, compressed_classifier.weights))
 print(f'Size of original model weights: {original_size} bytes')
@@ -343,20 +345,22 @@ def compress_and_evaluate_model(lmbda):
     train_model(compressible_classifier, training_dataset, validation_dataset, verbose=0)
     print('compressing...', flush=True)
     compressed_classifier = custom_method(
-    tf.keras.models.clone_model(compressible_classifier, clone_function=compress_layer), imports='import tensorflow_datasets as tfds;import tensorflow_compression as tfc;import matplotlib.pyplot as plt;import shutil;import os;import tensorflow as tf', function_to_run='tf.keras.models.clone_model(*args, **kwargs)', method_object=None, object_signature=None, function_args=[eval('compressible_classifier')], function_kwargs={'clone_function': eval('compress_layer')})
+    tf.keras.models.clone_model(compressible_classifier, clone_function=compress_layer), imports='import os;import tensorflow_datasets as tfds;import shutil;import tensorflow_compression as tfc;import tensorflow as tf;import matplotlib.pyplot as plt', function_to_run='tf.keras.models.clone_model(*args, **kwargs)', method_object=None, object_signature=None, function_args=[eval('compressible_classifier')], function_kwargs={'clone_function': eval('compress_layer')})
     compressed_size = sum(map(get_weight_size_in_bytes, compressed_classifier.weights))
     compressed_zip_size = float(get_disk_size(compressed_classifier, '/tmp/compressed_classifier'))
     print('evaluating...', flush=True)
     compressed_classifier = custom_method(
-    tf.keras.models.load_model('/tmp/compressed_classifier'), imports='import tensorflow_datasets as tfds;import tensorflow_compression as tfc;import matplotlib.pyplot as plt;import shutil;import os;import tensorflow as tf', function_to_run='tf.keras.models.load_model(*args)', method_object=None, object_signature=None, function_args=[eval('"/tmp/compressed_classifier"')], function_kwargs={})
-    compressed_classifier.compile(metrics=[tf.keras.metrics.SparseCategoricalAccuracy()])
-    (_, compressed_accuracy) = compressed_classifier.evaluate(validation_dataset.batch(128), verbose=0)
+    tf.keras.models.load_model('/tmp/compressed_classifier'), imports='import os;import tensorflow_datasets as tfds;import shutil;import tensorflow_compression as tfc;import tensorflow as tf;import matplotlib.pyplot as plt', function_to_run='tf.keras.models.load_model(*args)', method_object=None, object_signature=None, function_args=[eval('"/tmp/compressed_classifier"')], function_kwargs={})
+    custom_method(
+    compressed_classifier.compile(metrics=[tf.keras.metrics.SparseCategoricalAccuracy()]), imports='import os;import tensorflow_datasets as tfds;import shutil;import tensorflow_compression as tfc;import tensorflow as tf;import matplotlib.pyplot as plt', function_to_run='obj.compile(**kwargs)', method_object=eval('compressed_classifier'), object_signature=None, function_args=[], function_kwargs={'metrics': eval('[tf.keras.metrics.SparseCategoricalAccuracy()]')}, custom_class=None)
+    (_, compressed_accuracy) = custom_method(
+    compressed_classifier.evaluate(validation_dataset.batch(128), verbose=0), imports='import os;import tensorflow_datasets as tfds;import shutil;import tensorflow_compression as tfc;import tensorflow as tf;import matplotlib.pyplot as plt', function_to_run='obj.evaluate(*args, **kwargs)', method_object=eval('compressed_classifier'), object_signature=None, function_args=[eval('validation_dataset.batch(128)')], function_kwargs={'verbose': eval('0')}, custom_class=None)
     print()
     return (compressed_size, compressed_zip_size, compressed_accuracy)
 lambdas = (2.0, 5.0, 10.0, 20.0, 50.0)
 metrics = [compress_and_evaluate_model(l) for l in lambdas]
 metrics = custom_method(
-tf.convert_to_tensor(metrics, tf.float32), imports='import tensorflow_datasets as tfds;import tensorflow_compression as tfc;import matplotlib.pyplot as plt;import shutil;import os;import tensorflow as tf', function_to_run='tf.convert_to_tensor(*args)', method_object=None, object_signature=None, function_args=[eval('metrics'), eval('tf.float32')], function_kwargs={})
+tf.convert_to_tensor(metrics, tf.float32), imports='import os;import tensorflow_datasets as tfds;import shutil;import tensorflow_compression as tfc;import tensorflow as tf;import matplotlib.pyplot as plt', function_to_run='tf.convert_to_tensor(*args)', method_object=None, object_signature=None, function_args=[eval('metrics'), eval('tf.float32')], function_kwargs={})
 
 def plot_broken_xaxis(ax, compressed_sizes, original_size, original_accuracy):
     xticks = list(range(int(tf.math.floor(min(compressed_sizes) / 5) * 5), int(tf.math.ceil(max(compressed_sizes) / 5) * 5) + 1, 5))
@@ -366,7 +370,7 @@ def plot_broken_xaxis(ax, compressed_sizes, original_size, original_accuracy):
     ax.set_xticklabels(xticks[1:-1] + [f'{original_size:0.2f}'])
     ax.plot(xticks[-1], original_accuracy, 'o', label='float32')
 (sizes, zip_sizes, accuracies) = custom_method(
-tf.transpose(metrics), imports='import tensorflow_datasets as tfds;import tensorflow_compression as tfc;import matplotlib.pyplot as plt;import shutil;import os;import tensorflow as tf', function_to_run='tf.transpose(*args)', method_object=None, object_signature=None, function_args=[eval('metrics')], function_kwargs={})
+tf.transpose(metrics), imports='import os;import tensorflow_datasets as tfds;import shutil;import tensorflow_compression as tfc;import tensorflow as tf;import matplotlib.pyplot as plt', function_to_run='tf.transpose(*args)', method_object=None, object_signature=None, function_args=[eval('metrics')], function_kwargs={})
 sizes /= 1024
 zip_sizes /= 1024
 (fig, (axl, axr)) = plt.subplots(1, 2, sharey=True, figsize=(10, 4))
@@ -393,7 +397,7 @@ def decompress_layer(layer):
         return CustomConv2D.copy(layer)
     return type(layer).from_config(layer.get_config())
 decompressed_classifier = custom_method(
-tf.keras.models.clone_model(compressed_classifier, clone_function=decompress_layer), imports='import tensorflow_datasets as tfds;import tensorflow_compression as tfc;import matplotlib.pyplot as plt;import shutil;import os;import tensorflow as tf', function_to_run='tf.keras.models.clone_model(*args, **kwargs)', method_object=None, object_signature=None, function_args=[eval('compressed_classifier')], function_kwargs={'clone_function': eval('decompress_layer')})
+tf.keras.models.clone_model(compressed_classifier, clone_function=decompress_layer), imports='import os;import tensorflow_datasets as tfds;import shutil;import tensorflow_compression as tfc;import tensorflow as tf;import matplotlib.pyplot as plt', function_to_run='tf.keras.models.clone_model(*args, **kwargs)', method_object=None, object_signature=None, function_args=[eval('compressed_classifier')], function_kwargs={'clone_function': eval('decompress_layer')})
 decompressed_accuracy = train_model(decompressed_classifier, training_dataset, validation_dataset, epochs=1)
 print(f'Accuracy of the compressed classifier: {compressed_accuracy:0.4f}')
 print(f'Accuracy of the decompressed classifier after one more epoch of training: {decompressed_accuracy:0.4f}')
@@ -405,7 +409,7 @@ def decompress_layer_with_penalty(layer):
         return CompressibleConv2D.copy(layer, regularizer=regularizer)
     return type(layer).from_config(layer.get_config())
 decompressed_classifier = custom_method(
-tf.keras.models.clone_model(compressed_classifier, clone_function=decompress_layer_with_penalty), imports='import tensorflow_datasets as tfds;import tensorflow_compression as tfc;import matplotlib.pyplot as plt;import shutil;import os;import tensorflow as tf', function_to_run='tf.keras.models.clone_model(*args, **kwargs)', method_object=None, object_signature=None, function_args=[eval('compressed_classifier')], function_kwargs={'clone_function': eval('decompress_layer_with_penalty')})
+tf.keras.models.clone_model(compressed_classifier, clone_function=decompress_layer_with_penalty), imports='import os;import tensorflow_datasets as tfds;import shutil;import tensorflow_compression as tfc;import tensorflow as tf;import matplotlib.pyplot as plt', function_to_run='tf.keras.models.clone_model(*args, **kwargs)', method_object=None, object_signature=None, function_args=[eval('compressed_classifier')], function_kwargs={'clone_function': eval('decompress_layer_with_penalty')})
 decompressed_accuracy = train_model(decompressed_classifier, training_dataset, validation_dataset, epochs=1)
 print(f'Accuracy of the compressed classifier: {compressed_accuracy:0.4f}')
 print(f'Accuracy of the decompressed classifier after one more epoch of training: {decompressed_accuracy:0.4f}')

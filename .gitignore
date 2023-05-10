@@ -31,3 +31,7 @@ tool/server/out/*
 # package
 *.egg-info
 build
+
+tool/server/flickr8k/*
+tool/server/datasets/*
+tool/server/test_data/*

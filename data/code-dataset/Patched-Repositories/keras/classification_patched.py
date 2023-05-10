@@ -42,14 +42,18 @@ for i in range(25):
     plt.xlabel(class_names[train_labels[i]])
 plt.show()
 model = custom_method(
-tf.keras.Sequential([tf.keras.layers.Flatten(input_shape=(28, 28)), tf.keras.layers.Dense(128, activation='relu'), tf.keras.layers.Dense(10)]), imports='import numpy as np;import matplotlib.pyplot as plt;import tensorflow as tf', function_to_run='tf.keras.Sequential(*args)', method_object=None, object_signature=None, function_args=[eval("[\n    tf.keras.layers.Flatten(input_shape=(28, 28)),\n    tf.keras.layers.Dense(128, activation='relu'),\n    tf.keras.layers.Dense(10)\n]")], function_kwargs={})
-model.compile(optimizer='adam', loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True), metrics=['accuracy'])
-model.fit(train_images, train_labels, epochs=10)
-(test_loss, test_acc) = model.evaluate(test_images, test_labels, verbose=2)
+tf.keras.Sequential([tf.keras.layers.Flatten(input_shape=(28, 28)), tf.keras.layers.Dense(128, activation='relu'), tf.keras.layers.Dense(10)]), imports='import matplotlib.pyplot as plt;import tensorflow as tf;import numpy as np', function_to_run='tf.keras.Sequential(*args)', method_object=None, object_signature=None, function_args=[eval("[\n    tf.keras.layers.Flatten(input_shape=(28, 28)),\n    tf.keras.layers.Dense(128, activation='relu'),\n    tf.keras.layers.Dense(10)\n]")], function_kwargs={})
+custom_method(
+model.compile(optimizer='adam', loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True), metrics=['accuracy']), imports='import matplotlib.pyplot as plt;import tensorflow as tf;import numpy as np', function_to_run='obj.compile(**kwargs)', method_object=eval('model'), object_signature=None, function_args=[], function_kwargs={'optimizer': eval("'adam'"), 'loss': eval('tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True)'), 'metrics': eval("['accuracy']")}, custom_class=None)
+custom_method(
+model.fit(train_images, train_labels, epochs=10), imports='import matplotlib.pyplot as plt;import tensorflow as tf;import numpy as np', function_to_run='obj.fit(*args, **kwargs)', method_object=eval('model'), object_signature=None, function_args=[eval('train_images'), eval('train_labels')], function_kwargs={'epochs': eval('10')}, custom_class=None)
+(test_loss, test_acc) = custom_method(
+model.evaluate(test_images, test_labels, verbose=2), imports='import matplotlib.pyplot as plt;import tensorflow as tf;import numpy as np', function_to_run='obj.evaluate(*args, **kwargs)', method_object=eval('model'), object_signature=None, function_args=[eval('test_images'), eval('test_labels')], function_kwargs={'verbose': eval('2')}, custom_class=None)
 print('\nTest accuracy:', test_acc)
 probability_model = custom_method(
-tf.keras.Sequential([model, tf.keras.layers.Softmax()]), imports='import numpy as np;import matplotlib.pyplot as plt;import tensorflow as tf', function_to_run='tf.keras.Sequential(*args)', method_object=None, object_signature=None, function_args=[eval('[model, \n                                         tf.keras.layers.Softmax()]')], function_kwargs={})
-predictions = probability_model.predict(test_images)
+tf.keras.Sequential([model, tf.keras.layers.Softmax()]), imports='import matplotlib.pyplot as plt;import tensorflow as tf;import numpy as np', function_to_run='tf.keras.Sequential(*args)', method_object=None, object_signature=None, function_args=[eval('[model, \n                                         tf.keras.layers.Softmax()]')], function_kwargs={})
+predictions = custom_method(
+probability_model.predict(test_images), imports='import matplotlib.pyplot as plt;import tensorflow as tf;import numpy as np', function_to_run='obj.predict(*args)', method_object=eval('probability_model'), object_signature=None, function_args=[eval('test_images')], function_kwargs={}, custom_class=None)
 predictions[0]
 np.argmax(predictions[0])
 test_labels[0]
@@ -106,7 +110,8 @@ img = test_images[1]
 print(img.shape)
 img = np.expand_dims(img, 0)
 print(img.shape)
-predictions_single = probability_model.predict(img)
+predictions_single = custom_method(
+probability_model.predict(img), imports='import matplotlib.pyplot as plt;import tensorflow as tf;import numpy as np', function_to_run='obj.predict(*args)', method_object=eval('probability_model'), object_signature=None, function_args=[eval('img')], function_kwargs={}, custom_class=None)
 print(predictions_single)
 plot_value_array(1, predictions_single[0], test_labels)
 _ = plt.xticks(range(10), class_names, rotation=45)

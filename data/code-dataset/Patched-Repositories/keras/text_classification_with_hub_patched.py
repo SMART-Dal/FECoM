@@ -30,13 +30,20 @@ embedding = 'https://tfhub.dev/google/nnlm-en-dim50/2'
 hub_layer = hub.KerasLayer(embedding, input_shape=[], dtype=tf.string, trainable=True)
 hub_layer(train_examples_batch[:3])
 model = custom_method(
-tf.keras.Sequential(), imports='import numpy as np;import tensorflow_datasets as tfds;import os;import tensorflow_hub as hub;import tensorflow as tf', function_to_run='tf.keras.Sequential()', method_object=None, object_signature=None, function_args=[], function_kwargs={})
-model.add(hub_layer)
-model.add(tf.keras.layers.Dense(16, activation='relu'))
-model.add(tf.keras.layers.Dense(1))
-model.summary()
-model.compile(optimizer='adam', loss=tf.keras.losses.BinaryCrossentropy(from_logits=True), metrics=['accuracy'])
-history = model.fit(train_data.shuffle(10000).batch(512), epochs=10, validation_data=validation_data.batch(512), verbose=1)
-results = model.evaluate(test_data.batch(512), verbose=2)
+tf.keras.Sequential(), imports='import tensorflow_hub as hub;import tensorflow as tf;import numpy as np;import tensorflow_datasets as tfds;import os', function_to_run='tf.keras.Sequential()', method_object=None, object_signature=None, function_args=[], function_kwargs={})
+custom_method(
+model.add(hub_layer), imports='import tensorflow_hub as hub;import tensorflow as tf;import numpy as np;import tensorflow_datasets as tfds;import os', function_to_run='obj.add(*args)', method_object=eval('model'), object_signature=None, function_args=[eval('hub_layer')], function_kwargs={}, custom_class=None)
+custom_method(
+model.add(tf.keras.layers.Dense(16, activation='relu')), imports='import tensorflow_hub as hub;import tensorflow as tf;import numpy as np;import tensorflow_datasets as tfds;import os', function_to_run='obj.add(*args)', method_object=eval('model'), object_signature=None, function_args=[eval("tf.keras.layers.Dense(16, activation='relu')")], function_kwargs={}, custom_class=None)
+custom_method(
+model.add(tf.keras.layers.Dense(1)), imports='import tensorflow_hub as hub;import tensorflow as tf;import numpy as np;import tensorflow_datasets as tfds;import os', function_to_run='obj.add(*args)', method_object=eval('model'), object_signature=None, function_args=[eval('tf.keras.layers.Dense(1)')], function_kwargs={}, custom_class=None)
+custom_method(
+model.summary(), imports='import tensorflow_hub as hub;import tensorflow as tf;import numpy as np;import tensorflow_datasets as tfds;import os', function_to_run='obj.summary()', method_object=eval('model'), object_signature=None, function_args=[], function_kwargs={}, custom_class=None)
+custom_method(
+model.compile(optimizer='adam', loss=tf.keras.losses.BinaryCrossentropy(from_logits=True), metrics=['accuracy']), imports='import tensorflow_hub as hub;import tensorflow as tf;import numpy as np;import tensorflow_datasets as tfds;import os', function_to_run='obj.compile(**kwargs)', method_object=eval('model'), object_signature=None, function_args=[], function_kwargs={'optimizer': eval("'adam'"), 'loss': eval('tf.keras.losses.BinaryCrossentropy(from_logits=True)'), 'metrics': eval("['accuracy']")}, custom_class=None)
+history = custom_method(
+model.fit(train_data.shuffle(10000).batch(512), epochs=10, validation_data=validation_data.batch(512), verbose=1), imports='import tensorflow_hub as hub;import tensorflow as tf;import numpy as np;import tensorflow_datasets as tfds;import os', function_to_run='obj.fit(*args, **kwargs)', method_object=eval('model'), object_signature=None, function_args=[eval('train_data.shuffle(10000).batch(512)')], function_kwargs={'epochs': eval('10'), 'validation_data': eval('validation_data.batch(512)'), 'verbose': eval('1')}, custom_class=None)
+results = custom_method(
+model.evaluate(test_data.batch(512), verbose=2), imports='import tensorflow_hub as hub;import tensorflow as tf;import numpy as np;import tensorflow_datasets as tfds;import os', function_to_run='obj.evaluate(*args, **kwargs)', method_object=eval('model'), object_signature=None, function_args=[eval('test_data.batch(512)')], function_kwargs={'verbose': eval('2')}, custom_class=None)
 for (name, value) in zip(model.metrics_names, results):
     print('%s: %.3f' % (name, value))

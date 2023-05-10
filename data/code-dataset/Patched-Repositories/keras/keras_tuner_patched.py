@@ -24,12 +24,16 @@ img_test = img_test.astype('float32') / 255.0
 def model_builder(hp):
     model = custom_method(
     keras.Sequential(), imports='from tensorflow import keras;import tensorflow as tf;import keras_tuner as kt', function_to_run='keras.Sequential()', method_object=None, object_signature=None, function_args=[], function_kwargs={})
-    model.add(keras.layers.Flatten(input_shape=(28, 28)))
+    custom_method(
+    model.add(keras.layers.Flatten(input_shape=(28, 28))), imports='from tensorflow import keras;import tensorflow as tf;import keras_tuner as kt', function_to_run='obj.add(*args)', method_object=eval('model'), object_signature=None, function_args=[eval('keras.layers.Flatten(input_shape=(28, 28))')], function_kwargs={}, custom_class=None)
     hp_units = hp.Int('units', min_value=32, max_value=512, step=32)
-    model.add(keras.layers.Dense(units=hp_units, activation='relu'))
-    model.add(keras.layers.Dense(10))
+    custom_method(
+    model.add(keras.layers.Dense(units=hp_units, activation='relu')), imports='from tensorflow import keras;import tensorflow as tf;import keras_tuner as kt', function_to_run='obj.add(*args)', method_object=eval('model'), object_signature=None, function_args=[eval("keras.layers.Dense(units=hp_units, activation='relu')")], function_kwargs={}, custom_class=None)
+    custom_method(
+    model.add(keras.layers.Dense(10)), imports='from tensorflow import keras;import tensorflow as tf;import keras_tuner as kt', function_to_run='obj.add(*args)', method_object=eval('model'), object_signature=None, function_args=[eval('keras.layers.Dense(10)')], function_kwargs={}, custom_class=None)
     hp_learning_rate = hp.Choice('learning_rate', values=[0.01, 0.001, 0.0001])
-    model.compile(optimizer=keras.optimizers.Adam(learning_rate=hp_learning_rate), loss=keras.losses.SparseCategoricalCrossentropy(from_logits=True), metrics=['accuracy'])
+    custom_method(
+    model.compile(optimizer=keras.optimizers.Adam(learning_rate=hp_learning_rate), loss=keras.losses.SparseCategoricalCrossentropy(from_logits=True), metrics=['accuracy']), imports='from tensorflow import keras;import tensorflow as tf;import keras_tuner as kt', function_to_run='obj.compile(**kwargs)', method_object=eval('model'), object_signature=None, function_args=[], function_kwargs={'optimizer': eval('keras.optimizers.Adam(learning_rate=hp_learning_rate)'), 'loss': eval('keras.losses.SparseCategoricalCrossentropy(from_logits=True)'), 'metrics': eval("['accuracy']")}, custom_class=None)
     return model
 tuner = kt.Hyperband(model_builder, objective='val_accuracy', max_epochs=10, factor=3, directory='my_dir', project_name='intro_to_kt')
 stop_early = custom_method(
@@ -38,7 +42,8 @@ tuner.search(img_train, label_train, epochs=50, validation_split=0.2, callbacks=
 best_hps = tuner.get_best_hyperparameters(num_trials=1)[0]
 print(f"\nThe hyperparameter search is complete. The optimal number of units in the first densely-connected\nlayer is {best_hps.get('units')} and the optimal learning rate for the optimizer\nis {best_hps.get('learning_rate')}.\n")
 model = tuner.hypermodel.build(best_hps)
-history = model.fit(img_train, label_train, epochs=50, validation_split=0.2)
+history = custom_method(
+model.fit(img_train, label_train, epochs=50, validation_split=0.2), imports='from tensorflow import keras;import tensorflow as tf;import keras_tuner as kt', function_to_run='obj.fit(*args, **kwargs)', method_object=eval('model'), object_signature=None, function_args=[eval('img_train'), eval('label_train')], function_kwargs={'epochs': eval('50'), 'validation_split': eval('0.2')}, custom_class=None)
 val_acc_per_epoch = history.history['val_accuracy']
 best_epoch = val_acc_per_epoch.index(max(val_acc_per_epoch)) + 1
 print('Best epoch: %d' % (best_epoch,))
