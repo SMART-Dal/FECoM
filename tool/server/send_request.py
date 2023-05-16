@@ -83,7 +83,16 @@ def send_request_with_func_details(function_details: FunctionDetails, experiment
             # raise TimeoutError(str(deserialised_response["error"]) + "\nYou can find the energy data in ./" + error_file)
         # catch unauthorized error if authentication fails
         elif run_resp.status_code == 401:
-            raise RuntimeError(run_resp.content)
+            error_data = {
+                "experiment_file_path": str(experiment_file_path),
+                "function_to_run": function_details.function_to_run,
+                "error": run_resp.content.decode('utf-8')
+            }
+            error_file = "failed_function_calls_error.json"
+            with open(error_file, 'w') as f:
+                json.dump(error_data, f)
+            # raise RuntimeError(run_resp.content)
+            return run_resp.content
         else:
             print("Successful Server response: " + str(run_resp.status_code))
             # Success, break out of the loop and continue with the rest of the code
