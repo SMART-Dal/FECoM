@@ -16,7 +16,6 @@ EXPERIMENT_FILE_PATH = EXPERIMENT_DIR / 'method-level' / experiment_project / f'
 
 def custom_method(func, imports: str, function_to_run: str, method_object=None, object_signature=None, function_args: list=None, function_kwargs: dict=None, custom_class=None):
     result = send_request(imports=imports, function_to_run=function_to_run, function_args=function_args, function_kwargs=function_kwargs, max_wait_secs=MAX_WAIT_S, wait_after_run_secs=WAIT_AFTER_RUN_S, method_object=method_object, object_signature=object_signature, custom_class=custom_class, experiment_file_path=EXPERIMENT_FILE_PATH)
-    return func
 np.set_printoptions(precision=3, suppress=True)
 import tensorflow as tf
 from tensorflow import keras
@@ -41,10 +40,10 @@ test_features = test_dataset.copy()
 train_labels = train_features.pop('MPG')
 test_labels = test_features.pop('MPG')
 train_dataset.describe().transpose()[['mean', 'std']]
-normalizer = custom_method(
-tf.keras.layers.Normalization(axis=-1), imports='import seaborn as sns;import pandas as pd;from tensorflow.keras import layers;from tensorflow import keras;import numpy as np;import tensorflow as tf;import matplotlib.pyplot as plt', function_to_run='tf.keras.layers.Normalization(**kwargs)', method_object=None, object_signature=None, function_args=[], function_kwargs={'axis': eval('-1')})
-custom_method(
-normalizer.adapt(np.array(train_features)), imports='import seaborn as sns;import pandas as pd;from tensorflow.keras import layers;from tensorflow import keras;import numpy as np;import tensorflow as tf;import matplotlib.pyplot as plt', function_to_run='obj.adapt(*args)', method_object=eval('normalizer'), object_signature=None, function_args=[eval('np.array(train_features)')], function_kwargs={}, custom_class=None)
+custom_method(imports='from tensorflow.keras import layers;import matplotlib.pyplot as plt;import pandas as pd;import tensorflow as tf;import numpy as np;import seaborn as sns;from tensorflow import keras', function_to_run='tf.keras.layers.Normalization(**kwargs)', method_object=None, object_signature=None, function_args=[], function_kwargs={'axis': eval('-1')})
+normalizer = tf.keras.layers.Normalization(axis=-1)
+custom_method(imports='from tensorflow.keras import layers;import matplotlib.pyplot as plt;import pandas as pd;import tensorflow as tf;import numpy as np;import seaborn as sns;from tensorflow import keras', function_to_run='obj.adapt(*args)', method_object=eval('normalizer'), object_signature=None, function_args=[eval('np.array(train_features)')], function_kwargs={}, custom_class=None)
+normalizer.adapt(np.array(train_features))
 print(normalizer.mean.numpy())
 first = np.array(train_features[:1])
 with np.printoptions(precision=2, suppress=True):
@@ -52,20 +51,20 @@ with np.printoptions(precision=2, suppress=True):
     print()
     print('Normalized:', normalizer(first).numpy())
 horsepower = np.array(train_features['Horsepower'])
-horsepower_normalizer = custom_method(
-layers.Normalization(input_shape=[1], axis=None), imports='import seaborn as sns;import pandas as pd;from tensorflow.keras import layers;from tensorflow import keras;import numpy as np;import tensorflow as tf;import matplotlib.pyplot as plt', function_to_run='layers.Normalization(**kwargs)', method_object=None, object_signature=None, function_args=[], function_kwargs={'input_shape': eval('[1,]'), 'axis': eval('None')})
-custom_method(
-horsepower_normalizer.adapt(horsepower), imports='import seaborn as sns;import pandas as pd;from tensorflow.keras import layers;from tensorflow import keras;import numpy as np;import tensorflow as tf;import matplotlib.pyplot as plt', function_to_run='obj.adapt(*args)', method_object=eval('horsepower_normalizer'), object_signature=None, function_args=[eval('horsepower')], function_kwargs={}, custom_class=None)
-horsepower_model = custom_method(
-tf.keras.Sequential([horsepower_normalizer, layers.Dense(units=1)]), imports='import seaborn as sns;import pandas as pd;from tensorflow.keras import layers;from tensorflow import keras;import numpy as np;import tensorflow as tf;import matplotlib.pyplot as plt', function_to_run='tf.keras.Sequential(*args)', method_object=None, object_signature=None, function_args=[eval('[\n    horsepower_normalizer,\n    layers.Dense(units=1)\n]')], function_kwargs={})
-custom_method(
-horsepower_model.summary(), imports='import seaborn as sns;import pandas as pd;from tensorflow.keras import layers;from tensorflow import keras;import numpy as np;import tensorflow as tf;import matplotlib.pyplot as plt', function_to_run='obj.summary()', method_object=eval('horsepower_model'), object_signature=None, function_args=[], function_kwargs={}, custom_class=None)
-custom_method(
-horsepower_model.predict(horsepower[:10]), imports='import seaborn as sns;import pandas as pd;from tensorflow.keras import layers;from tensorflow import keras;import numpy as np;import tensorflow as tf;import matplotlib.pyplot as plt', function_to_run='obj.predict(*args)', method_object=eval('horsepower_model'), object_signature=None, function_args=[eval('horsepower[:10]')], function_kwargs={}, custom_class=None)
-custom_method(
-horsepower_model.compile(optimizer=tf.keras.optimizers.Adam(learning_rate=0.1), loss='mean_absolute_error'), imports='import seaborn as sns;import pandas as pd;from tensorflow.keras import layers;from tensorflow import keras;import numpy as np;import tensorflow as tf;import matplotlib.pyplot as plt', function_to_run='obj.compile(**kwargs)', method_object=eval('horsepower_model'), object_signature=None, function_args=[], function_kwargs={'optimizer': eval('tf.keras.optimizers.Adam(learning_rate=0.1)'), 'loss': eval("'mean_absolute_error'")}, custom_class=None)
-history = custom_method(
-horsepower_model.fit(train_features['Horsepower'], train_labels, epochs=100, verbose=0, validation_split=0.2), imports='import seaborn as sns;import pandas as pd;from tensorflow.keras import layers;from tensorflow import keras;import numpy as np;import tensorflow as tf;import matplotlib.pyplot as plt', function_to_run='obj.fit(*args, **kwargs)', method_object=eval('horsepower_model'), object_signature=None, function_args=[eval("train_features['Horsepower']"), eval('train_labels')], function_kwargs={'epochs': eval('100'), 'verbose': eval('0'), 'validation_split': eval('0.2')}, custom_class=None)
+custom_method(imports='from tensorflow.keras import layers;import matplotlib.pyplot as plt;import pandas as pd;import tensorflow as tf;import numpy as np;import seaborn as sns;from tensorflow import keras', function_to_run='layers.Normalization(**kwargs)', method_object=None, object_signature=None, function_args=[], function_kwargs={'input_shape': eval('[1,]'), 'axis': eval('None')})
+horsepower_normalizer = layers.Normalization(input_shape=[1], axis=None)
+custom_method(imports='from tensorflow.keras import layers;import matplotlib.pyplot as plt;import pandas as pd;import tensorflow as tf;import numpy as np;import seaborn as sns;from tensorflow import keras', function_to_run='obj.adapt(*args)', method_object=eval('horsepower_normalizer'), object_signature=None, function_args=[eval('horsepower')], function_kwargs={}, custom_class=None)
+horsepower_normalizer.adapt(horsepower)
+custom_method(imports='from tensorflow.keras import layers;import matplotlib.pyplot as plt;import pandas as pd;import tensorflow as tf;import numpy as np;import seaborn as sns;from tensorflow import keras', function_to_run='tf.keras.Sequential(*args)', method_object=None, object_signature=None, function_args=[eval('[\n    horsepower_normalizer,\n    layers.Dense(units=1)\n]')], function_kwargs={})
+horsepower_model = tf.keras.Sequential([horsepower_normalizer, layers.Dense(units=1)])
+custom_method(imports='from tensorflow.keras import layers;import matplotlib.pyplot as plt;import pandas as pd;import tensorflow as tf;import numpy as np;import seaborn as sns;from tensorflow import keras', function_to_run='obj.summary()', method_object=eval('horsepower_model'), object_signature=None, function_args=[], function_kwargs={}, custom_class=None)
+horsepower_model.summary()
+custom_method(imports='from tensorflow.keras import layers;import matplotlib.pyplot as plt;import pandas as pd;import tensorflow as tf;import numpy as np;import seaborn as sns;from tensorflow import keras', function_to_run='obj.predict(*args)', method_object=eval('horsepower_model'), object_signature=None, function_args=[eval('horsepower[:10]')], function_kwargs={}, custom_class=None)
+horsepower_model.predict(horsepower[:10])
+custom_method(imports='from tensorflow.keras import layers;import matplotlib.pyplot as plt;import pandas as pd;import tensorflow as tf;import numpy as np;import seaborn as sns;from tensorflow import keras', function_to_run='obj.compile(**kwargs)', method_object=eval('horsepower_model'), object_signature=None, function_args=[], function_kwargs={'optimizer': eval('tf.keras.optimizers.Adam(learning_rate=0.1)'), 'loss': eval("'mean_absolute_error'")}, custom_class=None)
+horsepower_model.compile(optimizer=tf.keras.optimizers.Adam(learning_rate=0.1), loss='mean_absolute_error')
+custom_method(imports='from tensorflow.keras import layers;import matplotlib.pyplot as plt;import pandas as pd;import tensorflow as tf;import numpy as np;import seaborn as sns;from tensorflow import keras', function_to_run='obj.fit(*args, **kwargs)', method_object=eval('horsepower_model'), object_signature=None, function_args=[eval("train_features['Horsepower']"), eval('train_labels')], function_kwargs={'epochs': eval('100'), 'verbose': eval('0'), 'validation_split': eval('0.2')}, custom_class=None)
+history = horsepower_model.fit(train_features['Horsepower'], train_labels, epochs=100, verbose=0, validation_split=0.2)
 hist = pd.DataFrame(history.history)
 hist['epoch'] = history.epoch
 hist.tail()
@@ -80,12 +79,12 @@ def plot_loss(history):
     plt.grid(True)
 plot_loss(history)
 test_results = {}
-test_results['horsepower_model'] = custom_method(
-horsepower_model.evaluate(test_features['Horsepower'], test_labels, verbose=0), imports='import seaborn as sns;import pandas as pd;from tensorflow.keras import layers;from tensorflow import keras;import numpy as np;import tensorflow as tf;import matplotlib.pyplot as plt', function_to_run='obj.evaluate(*args, **kwargs)', method_object=eval('horsepower_model'), object_signature=None, function_args=[eval("test_features['Horsepower']"), eval('test_labels')], function_kwargs={'verbose': eval('0')}, custom_class=None)
-x = custom_method(
-tf.linspace(0.0, 250, 251), imports='import seaborn as sns;import pandas as pd;from tensorflow.keras import layers;from tensorflow import keras;import numpy as np;import tensorflow as tf;import matplotlib.pyplot as plt', function_to_run='tf.linspace(*args)', method_object=None, object_signature=None, function_args=[eval('0.0'), eval('250'), eval('251')], function_kwargs={})
-y = custom_method(
-horsepower_model.predict(x), imports='import seaborn as sns;import pandas as pd;from tensorflow.keras import layers;from tensorflow import keras;import numpy as np;import tensorflow as tf;import matplotlib.pyplot as plt', function_to_run='obj.predict(*args)', method_object=eval('horsepower_model'), object_signature=None, function_args=[eval('x')], function_kwargs={}, custom_class=None)
+custom_method(imports='from tensorflow.keras import layers;import matplotlib.pyplot as plt;import pandas as pd;import tensorflow as tf;import numpy as np;import seaborn as sns;from tensorflow import keras', function_to_run='obj.evaluate(*args, **kwargs)', method_object=eval('horsepower_model'), object_signature=None, function_args=[eval("test_features['Horsepower']"), eval('test_labels')], function_kwargs={'verbose': eval('0')}, custom_class=None)
+test_results['horsepower_model'] = horsepower_model.evaluate(test_features['Horsepower'], test_labels, verbose=0)
+custom_method(imports='from tensorflow.keras import layers;import matplotlib.pyplot as plt;import pandas as pd;import tensorflow as tf;import numpy as np;import seaborn as sns;from tensorflow import keras', function_to_run='tf.linspace(*args)', method_object=None, object_signature=None, function_args=[eval('0.0'), eval('250'), eval('251')], function_kwargs={})
+x = tf.linspace(0.0, 250, 251)
+custom_method(imports='from tensorflow.keras import layers;import matplotlib.pyplot as plt;import pandas as pd;import tensorflow as tf;import numpy as np;import seaborn as sns;from tensorflow import keras', function_to_run='obj.predict(*args)', method_object=eval('horsepower_model'), object_signature=None, function_args=[eval('x')], function_kwargs={}, custom_class=None)
+y = horsepower_model.predict(x)
 
 def plot_horsepower(x, y):
     plt.scatter(train_features['Horsepower'], train_labels, label='Data')
@@ -94,31 +93,31 @@ def plot_horsepower(x, y):
     plt.ylabel('MPG')
     plt.legend()
 plot_horsepower(x, y)
-linear_model = custom_method(
-tf.keras.Sequential([normalizer, layers.Dense(units=1)]), imports='import seaborn as sns;import pandas as pd;from tensorflow.keras import layers;from tensorflow import keras;import numpy as np;import tensorflow as tf;import matplotlib.pyplot as plt', function_to_run='tf.keras.Sequential(*args)', method_object=None, object_signature=None, function_args=[eval('[\n    normalizer,\n    layers.Dense(units=1)\n]')], function_kwargs={})
-custom_method(
-linear_model.predict(train_features[:10]), imports='import seaborn as sns;import pandas as pd;from tensorflow.keras import layers;from tensorflow import keras;import numpy as np;import tensorflow as tf;import matplotlib.pyplot as plt', function_to_run='obj.predict(*args)', method_object=eval('linear_model'), object_signature=None, function_args=[eval('train_features[:10]')], function_kwargs={}, custom_class=None)
+custom_method(imports='from tensorflow.keras import layers;import matplotlib.pyplot as plt;import pandas as pd;import tensorflow as tf;import numpy as np;import seaborn as sns;from tensorflow import keras', function_to_run='tf.keras.Sequential(*args)', method_object=None, object_signature=None, function_args=[eval('[\n    normalizer,\n    layers.Dense(units=1)\n]')], function_kwargs={})
+linear_model = tf.keras.Sequential([normalizer, layers.Dense(units=1)])
+custom_method(imports='from tensorflow.keras import layers;import matplotlib.pyplot as plt;import pandas as pd;import tensorflow as tf;import numpy as np;import seaborn as sns;from tensorflow import keras', function_to_run='obj.predict(*args)', method_object=eval('linear_model'), object_signature=None, function_args=[eval('train_features[:10]')], function_kwargs={}, custom_class=None)
+linear_model.predict(train_features[:10])
 linear_model.layers[1].kernel
-custom_method(
-linear_model.compile(optimizer=tf.keras.optimizers.Adam(learning_rate=0.1), loss='mean_absolute_error'), imports='import seaborn as sns;import pandas as pd;from tensorflow.keras import layers;from tensorflow import keras;import numpy as np;import tensorflow as tf;import matplotlib.pyplot as plt', function_to_run='obj.compile(**kwargs)', method_object=eval('linear_model'), object_signature=None, function_args=[], function_kwargs={'optimizer': eval('tf.keras.optimizers.Adam(learning_rate=0.1)'), 'loss': eval("'mean_absolute_error'")}, custom_class=None)
-history = custom_method(
-linear_model.fit(train_features, train_labels, epochs=100, verbose=0, validation_split=0.2), imports='import seaborn as sns;import pandas as pd;from tensorflow.keras import layers;from tensorflow import keras;import numpy as np;import tensorflow as tf;import matplotlib.pyplot as plt', function_to_run='obj.fit(*args, **kwargs)', method_object=eval('linear_model'), object_signature=None, function_args=[eval('train_features'), eval('train_labels')], function_kwargs={'epochs': eval('100'), 'verbose': eval('0'), 'validation_split': eval('0.2')}, custom_class=None)
+custom_method(imports='from tensorflow.keras import layers;import matplotlib.pyplot as plt;import pandas as pd;import tensorflow as tf;import numpy as np;import seaborn as sns;from tensorflow import keras', function_to_run='obj.compile(**kwargs)', method_object=eval('linear_model'), object_signature=None, function_args=[], function_kwargs={'optimizer': eval('tf.keras.optimizers.Adam(learning_rate=0.1)'), 'loss': eval("'mean_absolute_error'")}, custom_class=None)
+linear_model.compile(optimizer=tf.keras.optimizers.Adam(learning_rate=0.1), loss='mean_absolute_error')
+custom_method(imports='from tensorflow.keras import layers;import matplotlib.pyplot as plt;import pandas as pd;import tensorflow as tf;import numpy as np;import seaborn as sns;from tensorflow import keras', function_to_run='obj.fit(*args, **kwargs)', method_object=eval('linear_model'), object_signature=None, function_args=[eval('train_features'), eval('train_labels')], function_kwargs={'epochs': eval('100'), 'verbose': eval('0'), 'validation_split': eval('0.2')}, custom_class=None)
+history = linear_model.fit(train_features, train_labels, epochs=100, verbose=0, validation_split=0.2)
 plot_loss(history)
-test_results['linear_model'] = custom_method(
-linear_model.evaluate(test_features, test_labels, verbose=0), imports='import seaborn as sns;import pandas as pd;from tensorflow.keras import layers;from tensorflow import keras;import numpy as np;import tensorflow as tf;import matplotlib.pyplot as plt', function_to_run='obj.evaluate(*args, **kwargs)', method_object=eval('linear_model'), object_signature=None, function_args=[eval('test_features'), eval('test_labels')], function_kwargs={'verbose': eval('0')}, custom_class=None)
+custom_method(imports='from tensorflow.keras import layers;import matplotlib.pyplot as plt;import pandas as pd;import tensorflow as tf;import numpy as np;import seaborn as sns;from tensorflow import keras', function_to_run='obj.evaluate(*args, **kwargs)', method_object=eval('linear_model'), object_signature=None, function_args=[eval('test_features'), eval('test_labels')], function_kwargs={'verbose': eval('0')}, custom_class=None)
+test_results['linear_model'] = linear_model.evaluate(test_features, test_labels, verbose=0)
 
 def build_and_compile_model(norm):
-    model = custom_method(
-    keras.Sequential([norm, layers.Dense(64, activation='relu'), layers.Dense(64, activation='relu'), layers.Dense(1)]), imports='import seaborn as sns;import pandas as pd;from tensorflow.keras import layers;from tensorflow import keras;import numpy as np;import tensorflow as tf;import matplotlib.pyplot as plt', function_to_run='keras.Sequential(*args)', method_object=None, object_signature=None, function_args=[eval("[\n      norm,\n      layers.Dense(64, activation='relu'),\n      layers.Dense(64, activation='relu'),\n      layers.Dense(1)\n  ]")], function_kwargs={})
-    custom_method(
-    model.compile(loss='mean_absolute_error', optimizer=tf.keras.optimizers.Adam(0.001)), imports='import seaborn as sns;import pandas as pd;from tensorflow.keras import layers;from tensorflow import keras;import numpy as np;import tensorflow as tf;import matplotlib.pyplot as plt', function_to_run='obj.compile(**kwargs)', method_object=eval('model'), object_signature=None, function_args=[], function_kwargs={'loss': eval("'mean_absolute_error'"), 'optimizer': eval('tf.keras.optimizers.Adam(0.001)')}, custom_class=None)
+    custom_method(imports='from tensorflow.keras import layers;import matplotlib.pyplot as plt;import pandas as pd;import tensorflow as tf;import numpy as np;import seaborn as sns;from tensorflow import keras', function_to_run='keras.Sequential(*args)', method_object=None, object_signature=None, function_args=[eval("[\n      norm,\n      layers.Dense(64, activation='relu'),\n      layers.Dense(64, activation='relu'),\n      layers.Dense(1)\n  ]")], function_kwargs={})
+    model = keras.Sequential([norm, layers.Dense(64, activation='relu'), layers.Dense(64, activation='relu'), layers.Dense(1)])
+    custom_method(imports='from tensorflow.keras import layers;import matplotlib.pyplot as plt;import pandas as pd;import tensorflow as tf;import numpy as np;import seaborn as sns;from tensorflow import keras', function_to_run='obj.compile(**kwargs)', method_object=eval('model'), object_signature=None, function_args=[], function_kwargs={'loss': eval("'mean_absolute_error'"), 'optimizer': eval('tf.keras.optimizers.Adam(0.001)')}, custom_class=None)
+    model.compile(loss='mean_absolute_error', optimizer=tf.keras.optimizers.Adam(0.001))
     return model
 dnn_horsepower_model = build_and_compile_model(horsepower_normalizer)
 dnn_horsepower_model.summary()
 history = dnn_horsepower_model.fit(train_features['Horsepower'], train_labels, validation_split=0.2, verbose=0, epochs=100)
 plot_loss(history)
-x = custom_method(
-tf.linspace(0.0, 250, 251), imports='import seaborn as sns;import pandas as pd;from tensorflow.keras import layers;from tensorflow import keras;import numpy as np;import tensorflow as tf;import matplotlib.pyplot as plt', function_to_run='tf.linspace(*args)', method_object=None, object_signature=None, function_args=[eval('0.0'), eval('250'), eval('251')], function_kwargs={})
+custom_method(imports='from tensorflow.keras import layers;import matplotlib.pyplot as plt;import pandas as pd;import tensorflow as tf;import numpy as np;import seaborn as sns;from tensorflow import keras', function_to_run='tf.linspace(*args)', method_object=None, object_signature=None, function_args=[eval('0.0'), eval('250'), eval('251')], function_kwargs={})
+x = tf.linspace(0.0, 250, 251)
 y = dnn_horsepower_model.predict(x)
 plot_horsepower(x, y)
 test_results['dnn_horsepower_model'] = dnn_horsepower_model.evaluate(test_features['Horsepower'], test_labels, verbose=0)
@@ -142,8 +141,8 @@ plt.hist(error, bins=25)
 plt.xlabel('Prediction Error [MPG]')
 _ = plt.ylabel('Count')
 dnn_model.save('dnn_model')
-reloaded = custom_method(
-tf.keras.models.load_model('dnn_model'), imports='import seaborn as sns;import pandas as pd;from tensorflow.keras import layers;from tensorflow import keras;import numpy as np;import tensorflow as tf;import matplotlib.pyplot as plt', function_to_run='tf.keras.models.load_model(*args)', method_object=None, object_signature=None, function_args=[eval("'dnn_model'")], function_kwargs={})
-test_results['reloaded'] = custom_method(
-reloaded.evaluate(test_features, test_labels, verbose=0), imports='import seaborn as sns;import pandas as pd;from tensorflow.keras import layers;from tensorflow import keras;import numpy as np;import tensorflow as tf;import matplotlib.pyplot as plt', function_to_run='obj.evaluate(*args, **kwargs)', method_object=eval('reloaded'), object_signature=None, function_args=[eval('test_features'), eval('test_labels')], function_kwargs={'verbose': eval('0')}, custom_class=None)
+custom_method(imports='from tensorflow.keras import layers;import matplotlib.pyplot as plt;import pandas as pd;import tensorflow as tf;import numpy as np;import seaborn as sns;from tensorflow import keras', function_to_run='tf.keras.models.load_model(*args)', method_object=None, object_signature=None, function_args=[eval("'dnn_model'")], function_kwargs={})
+reloaded = tf.keras.models.load_model('dnn_model')
+custom_method(imports='from tensorflow.keras import layers;import matplotlib.pyplot as plt;import pandas as pd;import tensorflow as tf;import numpy as np;import seaborn as sns;from tensorflow import keras', function_to_run='obj.evaluate(*args, **kwargs)', method_object=eval('reloaded'), object_signature=None, function_args=[eval('test_features'), eval('test_labels')], function_kwargs={'verbose': eval('0')}, custom_class=None)
+test_results['reloaded'] = reloaded.evaluate(test_features, test_labels, verbose=0)
 pd.DataFrame(test_results, index=['Mean absolute error [MPG]']).T

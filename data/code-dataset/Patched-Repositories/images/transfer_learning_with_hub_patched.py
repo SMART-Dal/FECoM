@@ -19,60 +19,59 @@ EXPERIMENT_FILE_PATH = EXPERIMENT_DIR / 'method-level' / experiment_project / f'
 
 def custom_method(func, imports: str, function_to_run: str, method_object=None, object_signature=None, function_args: list=None, function_kwargs: dict=None, custom_class=None):
     result = send_request(imports=imports, function_to_run=function_to_run, function_args=function_args, function_kwargs=function_kwargs, max_wait_secs=MAX_WAIT_S, wait_after_run_secs=WAIT_AFTER_RUN_S, method_object=method_object, object_signature=object_signature, custom_class=custom_class, experiment_file_path=EXPERIMENT_FILE_PATH)
-    return func
 mobilenet_v2 = 'https://tfhub.dev/google/tf2-preview/mobilenet_v2/classification/4'
 inception_v3 = 'https://tfhub.dev/google/imagenet/inception_v3/classification/5'
 classifier_model = mobilenet_v2
 IMAGE_SHAPE = (224, 224)
-classifier = custom_method(
-tf.keras.Sequential([hub.KerasLayer(classifier_model, input_shape=IMAGE_SHAPE + (3,))]), imports='import datetime;import matplotlib.pylab as plt;import tensorflow_hub as hub;import PIL.Image as Image;import numpy as np;import time;import tensorflow as tf', function_to_run='tf.keras.Sequential(*args)', method_object=None, object_signature=None, function_args=[eval('[\n    hub.KerasLayer(classifier_model, input_shape=IMAGE_SHAPE+(3,))\n]')], function_kwargs={})
-grace_hopper = custom_method(
-tf.keras.utils.get_file('image.jpg', 'https://storage.googleapis.com/download.tensorflow.org/example_images/grace_hopper.jpg'), imports='import datetime;import matplotlib.pylab as plt;import tensorflow_hub as hub;import PIL.Image as Image;import numpy as np;import time;import tensorflow as tf', function_to_run='tf.keras.utils.get_file(*args)', method_object=None, object_signature=None, function_args=[eval("'image.jpg'"), eval("'https://storage.googleapis.com/download.tensorflow.org/example_images/grace_hopper.jpg'")], function_kwargs={})
+custom_method(imports='import datetime;import matplotlib.pylab as plt;import time;import tensorflow as tf;import tensorflow_hub as hub;import numpy as np;import PIL.Image as Image', function_to_run='tf.keras.Sequential(*args)', method_object=None, object_signature=None, function_args=[eval('[\n    hub.KerasLayer(classifier_model, input_shape=IMAGE_SHAPE+(3,))\n]')], function_kwargs={})
+classifier = tf.keras.Sequential([hub.KerasLayer(classifier_model, input_shape=IMAGE_SHAPE + (3,))])
+custom_method(imports='import datetime;import matplotlib.pylab as plt;import time;import tensorflow as tf;import tensorflow_hub as hub;import numpy as np;import PIL.Image as Image', function_to_run='tf.keras.utils.get_file(*args)', method_object=None, object_signature=None, function_args=[eval("'image.jpg'"), eval("'https://storage.googleapis.com/download.tensorflow.org/example_images/grace_hopper.jpg'")], function_kwargs={})
+grace_hopper = tf.keras.utils.get_file('image.jpg', 'https://storage.googleapis.com/download.tensorflow.org/example_images/grace_hopper.jpg')
 grace_hopper = Image.open(grace_hopper).resize(IMAGE_SHAPE)
 grace_hopper
 grace_hopper = np.array(grace_hopper) / 255.0
 grace_hopper.shape
-result = custom_method(
-classifier.predict(grace_hopper[np.newaxis, ...]), imports='import datetime;import matplotlib.pylab as plt;import tensorflow_hub as hub;import PIL.Image as Image;import numpy as np;import time;import tensorflow as tf', function_to_run='obj.predict(*args)', method_object=eval('classifier'), object_signature=None, function_args=[eval('grace_hopper[np.newaxis, ...]')], function_kwargs={}, custom_class=None)
+custom_method(imports='import datetime;import matplotlib.pylab as plt;import time;import tensorflow as tf;import tensorflow_hub as hub;import numpy as np;import PIL.Image as Image', function_to_run='obj.predict(*args)', method_object=eval('classifier'), object_signature=None, function_args=[eval('grace_hopper[np.newaxis, ...]')], function_kwargs={}, custom_class=None)
+result = classifier.predict(grace_hopper[np.newaxis, ...])
 result.shape
-predicted_class = custom_method(
-tf.math.argmax(result[0], axis=-1), imports='import datetime;import matplotlib.pylab as plt;import tensorflow_hub as hub;import PIL.Image as Image;import numpy as np;import time;import tensorflow as tf', function_to_run='tf.math.argmax(*args, **kwargs)', method_object=None, object_signature=None, function_args=[eval('result[0]')], function_kwargs={'axis': eval('-1')})
+custom_method(imports='import datetime;import matplotlib.pylab as plt;import time;import tensorflow as tf;import tensorflow_hub as hub;import numpy as np;import PIL.Image as Image', function_to_run='tf.math.argmax(*args, **kwargs)', method_object=None, object_signature=None, function_args=[eval('result[0]')], function_kwargs={'axis': eval('-1')})
+predicted_class = tf.math.argmax(result[0], axis=-1)
 predicted_class
-labels_path = custom_method(
-tf.keras.utils.get_file('ImageNetLabels.txt', 'https://storage.googleapis.com/download.tensorflow.org/data/ImageNetLabels.txt'), imports='import datetime;import matplotlib.pylab as plt;import tensorflow_hub as hub;import PIL.Image as Image;import numpy as np;import time;import tensorflow as tf', function_to_run='tf.keras.utils.get_file(*args)', method_object=None, object_signature=None, function_args=[eval("'ImageNetLabels.txt'"), eval("'https://storage.googleapis.com/download.tensorflow.org/data/ImageNetLabels.txt'")], function_kwargs={})
+custom_method(imports='import datetime;import matplotlib.pylab as plt;import time;import tensorflow as tf;import tensorflow_hub as hub;import numpy as np;import PIL.Image as Image', function_to_run='tf.keras.utils.get_file(*args)', method_object=None, object_signature=None, function_args=[eval("'ImageNetLabels.txt'"), eval("'https://storage.googleapis.com/download.tensorflow.org/data/ImageNetLabels.txt'")], function_kwargs={})
+labels_path = tf.keras.utils.get_file('ImageNetLabels.txt', 'https://storage.googleapis.com/download.tensorflow.org/data/ImageNetLabels.txt')
 imagenet_labels = np.array(open(labels_path).read().splitlines())
 plt.imshow(grace_hopper)
 plt.axis('off')
 predicted_class_name = imagenet_labels[predicted_class]
 _ = plt.title('Prediction: ' + predicted_class_name.title())
-data_root = custom_method(
-tf.keras.utils.get_file('flower_photos', 'https://storage.googleapis.com/download.tensorflow.org/example_images/flower_photos.tgz', untar=True), imports='import datetime;import matplotlib.pylab as plt;import tensorflow_hub as hub;import PIL.Image as Image;import numpy as np;import time;import tensorflow as tf', function_to_run='tf.keras.utils.get_file(*args, **kwargs)', method_object=None, object_signature=None, function_args=[eval("'flower_photos'"), eval("'https://storage.googleapis.com/download.tensorflow.org/example_images/flower_photos.tgz'")], function_kwargs={'untar': eval('True')})
+custom_method(imports='import datetime;import matplotlib.pylab as plt;import time;import tensorflow as tf;import tensorflow_hub as hub;import numpy as np;import PIL.Image as Image', function_to_run='tf.keras.utils.get_file(*args, **kwargs)', method_object=None, object_signature=None, function_args=[eval("'flower_photos'"), eval("'https://storage.googleapis.com/download.tensorflow.org/example_images/flower_photos.tgz'")], function_kwargs={'untar': eval('True')})
+data_root = tf.keras.utils.get_file('flower_photos', 'https://storage.googleapis.com/download.tensorflow.org/example_images/flower_photos.tgz', untar=True)
 batch_size = 32
 img_height = 224
 img_width = 224
-train_ds = custom_method(
-tf.keras.utils.image_dataset_from_directory(str(data_root), validation_split=0.2, subset='training', seed=123, image_size=(img_height, img_width), batch_size=batch_size), imports='import datetime;import matplotlib.pylab as plt;import tensorflow_hub as hub;import PIL.Image as Image;import numpy as np;import time;import tensorflow as tf', function_to_run='tf.keras.utils.image_dataset_from_directory(*args, **kwargs)', method_object=None, object_signature=None, function_args=[eval('str(data_root)')], function_kwargs={'validation_split': eval('0.2'), 'subset': eval('"training"'), 'seed': eval('123'), 'image_size': eval('(img_height, img_width)'), 'batch_size': eval('batch_size')})
-val_ds = custom_method(
-tf.keras.utils.image_dataset_from_directory(str(data_root), validation_split=0.2, subset='validation', seed=123, image_size=(img_height, img_width), batch_size=batch_size), imports='import datetime;import matplotlib.pylab as plt;import tensorflow_hub as hub;import PIL.Image as Image;import numpy as np;import time;import tensorflow as tf', function_to_run='tf.keras.utils.image_dataset_from_directory(*args, **kwargs)', method_object=None, object_signature=None, function_args=[eval('str(data_root)')], function_kwargs={'validation_split': eval('0.2'), 'subset': eval('"validation"'), 'seed': eval('123'), 'image_size': eval('(img_height, img_width)'), 'batch_size': eval('batch_size')})
+custom_method(imports='import datetime;import matplotlib.pylab as plt;import time;import tensorflow as tf;import tensorflow_hub as hub;import numpy as np;import PIL.Image as Image', function_to_run='tf.keras.utils.image_dataset_from_directory(*args, **kwargs)', method_object=None, object_signature=None, function_args=[eval('str(data_root)')], function_kwargs={'validation_split': eval('0.2'), 'subset': eval('"training"'), 'seed': eval('123'), 'image_size': eval('(img_height, img_width)'), 'batch_size': eval('batch_size')})
+train_ds = tf.keras.utils.image_dataset_from_directory(str(data_root), validation_split=0.2, subset='training', seed=123, image_size=(img_height, img_width), batch_size=batch_size)
+custom_method(imports='import datetime;import matplotlib.pylab as plt;import time;import tensorflow as tf;import tensorflow_hub as hub;import numpy as np;import PIL.Image as Image', function_to_run='tf.keras.utils.image_dataset_from_directory(*args, **kwargs)', method_object=None, object_signature=None, function_args=[eval('str(data_root)')], function_kwargs={'validation_split': eval('0.2'), 'subset': eval('"validation"'), 'seed': eval('123'), 'image_size': eval('(img_height, img_width)'), 'batch_size': eval('batch_size')})
+val_ds = tf.keras.utils.image_dataset_from_directory(str(data_root), validation_split=0.2, subset='validation', seed=123, image_size=(img_height, img_width), batch_size=batch_size)
 class_names = np.array(train_ds.class_names)
 print(class_names)
-normalization_layer = custom_method(
-tf.keras.layers.Rescaling(1.0 / 255), imports='import datetime;import matplotlib.pylab as plt;import tensorflow_hub as hub;import PIL.Image as Image;import numpy as np;import time;import tensorflow as tf', function_to_run='tf.keras.layers.Rescaling(*args)', method_object=None, object_signature=None, function_args=[eval('1./255')], function_kwargs={})
-train_ds = custom_method(
-train_ds.map(lambda x, y: (normalization_layer(x), y)), imports='import datetime;import matplotlib.pylab as plt;import tensorflow_hub as hub;import PIL.Image as Image;import numpy as np;import time;import tensorflow as tf', function_to_run='obj.map(*args)', method_object=eval('train_ds'), object_signature=None, function_args=[eval('lambda x, y: (normalization_layer(x), y)')], function_kwargs={}, custom_class=None)
-val_ds = custom_method(
-val_ds.map(lambda x, y: (normalization_layer(x), y)), imports='import datetime;import matplotlib.pylab as plt;import tensorflow_hub as hub;import PIL.Image as Image;import numpy as np;import time;import tensorflow as tf', function_to_run='obj.map(*args)', method_object=eval('val_ds'), object_signature=None, function_args=[eval('lambda x, y: (normalization_layer(x), y)')], function_kwargs={}, custom_class=None)
+custom_method(imports='import datetime;import matplotlib.pylab as plt;import time;import tensorflow as tf;import tensorflow_hub as hub;import numpy as np;import PIL.Image as Image', function_to_run='tf.keras.layers.Rescaling(*args)', method_object=None, object_signature=None, function_args=[eval('1./255')], function_kwargs={})
+normalization_layer = tf.keras.layers.Rescaling(1.0 / 255)
+custom_method(imports='import datetime;import matplotlib.pylab as plt;import time;import tensorflow as tf;import tensorflow_hub as hub;import numpy as np;import PIL.Image as Image', function_to_run='obj.map(*args)', method_object=eval('train_ds'), object_signature=None, function_args=[eval('lambda x, y: (normalization_layer(x), y)')], function_kwargs={}, custom_class=None)
+train_ds = train_ds.map(lambda x, y: (normalization_layer(x), y))
+custom_method(imports='import datetime;import matplotlib.pylab as plt;import time;import tensorflow as tf;import tensorflow_hub as hub;import numpy as np;import PIL.Image as Image', function_to_run='obj.map(*args)', method_object=eval('val_ds'), object_signature=None, function_args=[eval('lambda x, y: (normalization_layer(x), y)')], function_kwargs={}, custom_class=None)
+val_ds = val_ds.map(lambda x, y: (normalization_layer(x), y))
 AUTOTUNE = tf.data.AUTOTUNE
-train_ds = custom_method(
-train_ds.cache().prefetch(buffer_size=AUTOTUNE), imports='import datetime;import matplotlib.pylab as plt;import tensorflow_hub as hub;import PIL.Image as Image;import numpy as np;import time;import tensorflow as tf', function_to_run='obj.cache().prefetch(**kwargs)', method_object=eval('train_ds'), object_signature=None, function_args=[], function_kwargs={'buffer_size': eval('AUTOTUNE')}, custom_class=None)
-val_ds = custom_method(
-val_ds.cache().prefetch(buffer_size=AUTOTUNE), imports='import datetime;import matplotlib.pylab as plt;import tensorflow_hub as hub;import PIL.Image as Image;import numpy as np;import time;import tensorflow as tf', function_to_run='obj.cache().prefetch(**kwargs)', method_object=eval('val_ds'), object_signature=None, function_args=[], function_kwargs={'buffer_size': eval('AUTOTUNE')}, custom_class=None)
+custom_method(imports='import datetime;import matplotlib.pylab as plt;import time;import tensorflow as tf;import tensorflow_hub as hub;import numpy as np;import PIL.Image as Image', function_to_run='obj.cache().prefetch(**kwargs)', method_object=eval('train_ds'), object_signature=None, function_args=[], function_kwargs={'buffer_size': eval('AUTOTUNE')}, custom_class=None)
+train_ds = train_ds.cache().prefetch(buffer_size=AUTOTUNE)
+custom_method(imports='import datetime;import matplotlib.pylab as plt;import time;import tensorflow as tf;import tensorflow_hub as hub;import numpy as np;import PIL.Image as Image', function_to_run='obj.cache().prefetch(**kwargs)', method_object=eval('val_ds'), object_signature=None, function_args=[], function_kwargs={'buffer_size': eval('AUTOTUNE')}, custom_class=None)
+val_ds = val_ds.cache().prefetch(buffer_size=AUTOTUNE)
 for (image_batch, labels_batch) in train_ds:
     print(image_batch.shape)
     print(labels_batch.shape)
     break
-result_batch = custom_method(
-classifier.predict(train_ds), imports='import datetime;import matplotlib.pylab as plt;import tensorflow_hub as hub;import PIL.Image as Image;import numpy as np;import time;import tensorflow as tf', function_to_run='obj.predict(*args)', method_object=eval('classifier'), object_signature=None, function_args=[eval('train_ds')], function_kwargs={}, custom_class=None)
+custom_method(imports='import datetime;import matplotlib.pylab as plt;import time;import tensorflow as tf;import tensorflow_hub as hub;import numpy as np;import PIL.Image as Image', function_to_run='obj.predict(*args)', method_object=eval('classifier'), object_signature=None, function_args=[eval('train_ds')], function_kwargs={}, custom_class=None)
+result_batch = classifier.predict(train_ds)
 predicted_class_names = imagenet_labels[tf.math.argmax(result_batch, axis=-1)]
 predicted_class_names
 plt.figure(figsize=(10, 9))
@@ -90,25 +89,25 @@ feature_extractor_layer = hub.KerasLayer(feature_extractor_model, input_shape=(2
 feature_batch = feature_extractor_layer(image_batch)
 print(feature_batch.shape)
 num_classes = len(class_names)
-model = custom_method(
-tf.keras.Sequential([feature_extractor_layer, tf.keras.layers.Dense(num_classes)]), imports='import datetime;import matplotlib.pylab as plt;import tensorflow_hub as hub;import PIL.Image as Image;import numpy as np;import time;import tensorflow as tf', function_to_run='tf.keras.Sequential(*args)', method_object=None, object_signature=None, function_args=[eval('[\n  feature_extractor_layer,\n  tf.keras.layers.Dense(num_classes)\n]')], function_kwargs={})
-custom_method(
-model.summary(), imports='import datetime;import matplotlib.pylab as plt;import tensorflow_hub as hub;import PIL.Image as Image;import numpy as np;import time;import tensorflow as tf', function_to_run='obj.summary()', method_object=eval('model'), object_signature=None, function_args=[], function_kwargs={}, custom_class=None)
-predictions = custom_method(
-model(image_batch), imports='import datetime;import matplotlib.pylab as plt;import tensorflow_hub as hub;import PIL.Image as Image;import numpy as np;import time;import tensorflow as tf', function_to_run='obj(*args)', method_object=eval('model'), object_signature=None, function_args=[eval('image_batch')], function_kwargs={}, custom_class=None)
+custom_method(imports='import datetime;import matplotlib.pylab as plt;import time;import tensorflow as tf;import tensorflow_hub as hub;import numpy as np;import PIL.Image as Image', function_to_run='tf.keras.Sequential(*args)', method_object=None, object_signature=None, function_args=[eval('[\n  feature_extractor_layer,\n  tf.keras.layers.Dense(num_classes)\n]')], function_kwargs={})
+model = tf.keras.Sequential([feature_extractor_layer, tf.keras.layers.Dense(num_classes)])
+custom_method(imports='import datetime;import matplotlib.pylab as plt;import time;import tensorflow as tf;import tensorflow_hub as hub;import numpy as np;import PIL.Image as Image', function_to_run='obj.summary()', method_object=eval('model'), object_signature=None, function_args=[], function_kwargs={}, custom_class=None)
+model.summary()
+custom_method(imports='import datetime;import matplotlib.pylab as plt;import time;import tensorflow as tf;import tensorflow_hub as hub;import numpy as np;import PIL.Image as Image', function_to_run='obj(*args)', method_object=eval('model'), object_signature=None, function_args=[eval('image_batch')], function_kwargs={}, custom_class=None)
+predictions = model(image_batch)
 predictions.shape
-custom_method(
-model.compile(optimizer=tf.keras.optimizers.Adam(), loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True), metrics=['acc']), imports='import datetime;import matplotlib.pylab as plt;import tensorflow_hub as hub;import PIL.Image as Image;import numpy as np;import time;import tensorflow as tf', function_to_run='obj.compile(**kwargs)', method_object=eval('model'), object_signature=None, function_args=[], function_kwargs={'optimizer': eval('tf.keras.optimizers.Adam()'), 'loss': eval('tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True)'), 'metrics': eval("['acc']")}, custom_class=None)
+custom_method(imports='import datetime;import matplotlib.pylab as plt;import time;import tensorflow as tf;import tensorflow_hub as hub;import numpy as np;import PIL.Image as Image', function_to_run='obj.compile(**kwargs)', method_object=eval('model'), object_signature=None, function_args=[], function_kwargs={'optimizer': eval('tf.keras.optimizers.Adam()'), 'loss': eval('tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True)'), 'metrics': eval("['acc']")}, custom_class=None)
+model.compile(optimizer=tf.keras.optimizers.Adam(), loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True), metrics=['acc'])
 log_dir = 'logs/fit/' + datetime.datetime.now().strftime('%Y%m%d-%H%M%S')
-tensorboard_callback = custom_method(
-tf.keras.callbacks.TensorBoard(log_dir=log_dir, histogram_freq=1), imports='import datetime;import matplotlib.pylab as plt;import tensorflow_hub as hub;import PIL.Image as Image;import numpy as np;import time;import tensorflow as tf', function_to_run='tf.keras.callbacks.TensorBoard(**kwargs)', method_object=None, object_signature=None, function_args=[], function_kwargs={'log_dir': eval('log_dir'), 'histogram_freq': eval('1')})
+custom_method(imports='import datetime;import matplotlib.pylab as plt;import time;import tensorflow as tf;import tensorflow_hub as hub;import numpy as np;import PIL.Image as Image', function_to_run='tf.keras.callbacks.TensorBoard(**kwargs)', method_object=None, object_signature=None, function_args=[], function_kwargs={'log_dir': eval('log_dir'), 'histogram_freq': eval('1')})
+tensorboard_callback = tf.keras.callbacks.TensorBoard(log_dir=log_dir, histogram_freq=1)
 NUM_EPOCHS = 10
-history = custom_method(
-model.fit(train_ds, validation_data=val_ds, epochs=NUM_EPOCHS, callbacks=tensorboard_callback), imports='import datetime;import matplotlib.pylab as plt;import tensorflow_hub as hub;import PIL.Image as Image;import numpy as np;import time;import tensorflow as tf', function_to_run='obj.fit(*args, **kwargs)', method_object=eval('model'), object_signature=None, function_args=[eval('train_ds')], function_kwargs={'validation_data': eval('val_ds'), 'epochs': eval('NUM_EPOCHS'), 'callbacks': eval('tensorboard_callback')}, custom_class=None)
-predicted_batch = custom_method(
-model.predict(image_batch), imports='import datetime;import matplotlib.pylab as plt;import tensorflow_hub as hub;import PIL.Image as Image;import numpy as np;import time;import tensorflow as tf', function_to_run='obj.predict(*args)', method_object=eval('model'), object_signature=None, function_args=[eval('image_batch')], function_kwargs={}, custom_class=None)
-predicted_id = custom_method(
-tf.math.argmax(predicted_batch, axis=-1), imports='import datetime;import matplotlib.pylab as plt;import tensorflow_hub as hub;import PIL.Image as Image;import numpy as np;import time;import tensorflow as tf', function_to_run='tf.math.argmax(*args, **kwargs)', method_object=None, object_signature=None, function_args=[eval('predicted_batch')], function_kwargs={'axis': eval('-1')})
+custom_method(imports='import datetime;import matplotlib.pylab as plt;import time;import tensorflow as tf;import tensorflow_hub as hub;import numpy as np;import PIL.Image as Image', function_to_run='obj.fit(*args, **kwargs)', method_object=eval('model'), object_signature=None, function_args=[eval('train_ds')], function_kwargs={'validation_data': eval('val_ds'), 'epochs': eval('NUM_EPOCHS'), 'callbacks': eval('tensorboard_callback')}, custom_class=None)
+history = model.fit(train_ds, validation_data=val_ds, epochs=NUM_EPOCHS, callbacks=tensorboard_callback)
+custom_method(imports='import datetime;import matplotlib.pylab as plt;import time;import tensorflow as tf;import tensorflow_hub as hub;import numpy as np;import PIL.Image as Image', function_to_run='obj.predict(*args)', method_object=eval('model'), object_signature=None, function_args=[eval('image_batch')], function_kwargs={}, custom_class=None)
+predicted_batch = model.predict(image_batch)
+custom_method(imports='import datetime;import matplotlib.pylab as plt;import time;import tensorflow as tf;import tensorflow_hub as hub;import numpy as np;import PIL.Image as Image', function_to_run='tf.math.argmax(*args, **kwargs)', method_object=None, object_signature=None, function_args=[eval('predicted_batch')], function_kwargs={'axis': eval('-1')})
+predicted_id = tf.math.argmax(predicted_batch, axis=-1)
 predicted_label_batch = class_names[predicted_id]
 print(predicted_label_batch)
 plt.figure(figsize=(10, 9))
@@ -121,18 +120,18 @@ for n in range(30):
 _ = plt.suptitle('Model predictions')
 t = time.time()
 export_path = '/tmp/saved_models/{}'.format(int(t))
-custom_method(
-model.save(export_path), imports='import datetime;import matplotlib.pylab as plt;import tensorflow_hub as hub;import PIL.Image as Image;import numpy as np;import time;import tensorflow as tf', function_to_run='obj.save(*args)', method_object=eval('model'), object_signature=None, function_args=[eval('export_path')], function_kwargs={}, custom_class=None)
+custom_method(imports='import datetime;import matplotlib.pylab as plt;import time;import tensorflow as tf;import tensorflow_hub as hub;import numpy as np;import PIL.Image as Image', function_to_run='obj.save(*args)', method_object=eval('model'), object_signature=None, function_args=[eval('export_path')], function_kwargs={}, custom_class=None)
+model.save(export_path)
 export_path
-reloaded = custom_method(
-tf.keras.models.load_model(export_path), imports='import datetime;import matplotlib.pylab as plt;import tensorflow_hub as hub;import PIL.Image as Image;import numpy as np;import time;import tensorflow as tf', function_to_run='tf.keras.models.load_model(*args)', method_object=None, object_signature=None, function_args=[eval('export_path')], function_kwargs={})
-result_batch = custom_method(
-model.predict(image_batch), imports='import datetime;import matplotlib.pylab as plt;import tensorflow_hub as hub;import PIL.Image as Image;import numpy as np;import time;import tensorflow as tf', function_to_run='obj.predict(*args)', method_object=eval('model'), object_signature=None, function_args=[eval('image_batch')], function_kwargs={}, custom_class=None)
-reloaded_result_batch = custom_method(
-reloaded.predict(image_batch), imports='import datetime;import matplotlib.pylab as plt;import tensorflow_hub as hub;import PIL.Image as Image;import numpy as np;import time;import tensorflow as tf', function_to_run='obj.predict(*args)', method_object=eval('reloaded'), object_signature=None, function_args=[eval('image_batch')], function_kwargs={}, custom_class=None)
+custom_method(imports='import datetime;import matplotlib.pylab as plt;import time;import tensorflow as tf;import tensorflow_hub as hub;import numpy as np;import PIL.Image as Image', function_to_run='tf.keras.models.load_model(*args)', method_object=None, object_signature=None, function_args=[eval('export_path')], function_kwargs={})
+reloaded = tf.keras.models.load_model(export_path)
+custom_method(imports='import datetime;import matplotlib.pylab as plt;import time;import tensorflow as tf;import tensorflow_hub as hub;import numpy as np;import PIL.Image as Image', function_to_run='obj.predict(*args)', method_object=eval('model'), object_signature=None, function_args=[eval('image_batch')], function_kwargs={}, custom_class=None)
+result_batch = model.predict(image_batch)
+custom_method(imports='import datetime;import matplotlib.pylab as plt;import time;import tensorflow as tf;import tensorflow_hub as hub;import numpy as np;import PIL.Image as Image', function_to_run='obj.predict(*args)', method_object=eval('reloaded'), object_signature=None, function_args=[eval('image_batch')], function_kwargs={}, custom_class=None)
+reloaded_result_batch = reloaded.predict(image_batch)
 abs(reloaded_result_batch - result_batch).max()
-reloaded_predicted_id = custom_method(
-tf.math.argmax(reloaded_result_batch, axis=-1), imports='import datetime;import matplotlib.pylab as plt;import tensorflow_hub as hub;import PIL.Image as Image;import numpy as np;import time;import tensorflow as tf', function_to_run='tf.math.argmax(*args, **kwargs)', method_object=None, object_signature=None, function_args=[eval('reloaded_result_batch')], function_kwargs={'axis': eval('-1')})
+custom_method(imports='import datetime;import matplotlib.pylab as plt;import time;import tensorflow as tf;import tensorflow_hub as hub;import numpy as np;import PIL.Image as Image', function_to_run='tf.math.argmax(*args, **kwargs)', method_object=None, object_signature=None, function_args=[eval('reloaded_result_batch')], function_kwargs={'axis': eval('-1')})
+reloaded_predicted_id = tf.math.argmax(reloaded_result_batch, axis=-1)
 reloaded_predicted_label_batch = class_names[reloaded_predicted_id]
 print(reloaded_predicted_label_batch)
 plt.figure(figsize=(10, 9))

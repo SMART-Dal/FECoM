@@ -1,11 +1,11 @@
 Traceback (most recent call last):
-  File "/home/saurabh/code-energy-consumption/tool/client/script_patcher.py", line 447, in <module>
+  File "/net/fs-v2.cs.lan/export/grad/srajput/GreenAI-extension/tool/client/script_patcher.py", line 490, in <module>
     main()
-  File "/home/saurabh/code-energy-consumption/tool/client/script_patcher.py", line 29, in main
+  File "/net/fs-v2.cs.lan/export/grad/srajput/GreenAI-extension/tool/client/script_patcher.py", line 31, in main
     tree = ast.parse(sourceCode)
-  File "/home/saurabh/miniconda3/lib/python3.10/ast.py", line 50, in parse
+  File "/users/grad/srajput/miniconda3/envs/tf2/lib/python3.9/ast.py", line 50, in parse
     return compile(source, filename, mode, flags,
-  File "<unknown>", line 141
-    print('Epoch: %d, accuracy: %f, train_loss: %f.'
-          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-SyntaxError: invalid syntax. Perhaps you forgot a comma?
+  File "<unknown>", line 143
+    train_accuracy.reset_states()
+    ^
+SyntaxError: invalid syntax

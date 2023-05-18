@@ -26,7 +26,6 @@ EXPERIMENT_FILE_PATH = EXPERIMENT_DIR / 'method-level' / experiment_project / f'
 
 def custom_method(func, imports: str, function_to_run: str, method_object=None, object_signature=None, function_args: list=None, function_kwargs: dict=None, custom_class=None):
     result = send_request(imports=imports, function_to_run=function_to_run, function_args=function_args, function_kwargs=function_kwargs, max_wait_secs=MAX_WAIT_S, wait_after_run_secs=WAIT_AFTER_RUN_S, method_object=method_object, object_signature=object_signature, custom_class=custom_class, experiment_file_path=EXPERIMENT_FILE_PATH)
-    return func
 
 def list_files_per_class(zip_url):
     """
@@ -157,10 +156,10 @@ def format_frames(frame, output_size):
     Return:
       Formatted frame with padding of specified output size.
   """
-    frame = custom_method(
-    tf.image.convert_image_dtype(frame, tf.float32), imports='import random;import tensorflow as tf;import keras;import einops;import collections;import pathlib;import tqdm;import seaborn as sns;import numpy as np;import itertools;from keras import layers;import cv2;import remotezip as rz;import matplotlib.pyplot as plt', function_to_run='tf.image.convert_image_dtype(*args)', method_object=None, object_signature=None, function_args=[eval('frame'), eval('tf.float32')], function_kwargs={})
-    frame = custom_method(
-    tf.image.resize_with_pad(frame, *output_size), imports='import random;import tensorflow as tf;import keras;import einops;import collections;import pathlib;import tqdm;import seaborn as sns;import numpy as np;import itertools;from keras import layers;import cv2;import remotezip as rz;import matplotlib.pyplot as plt', function_to_run='tf.image.resize_with_pad(*args)', method_object=None, object_signature=None, function_args=[eval('frame'), eval('*output_size')], function_kwargs={})
+    custom_method(imports='import seaborn as sns;import keras;import numpy as np;import cv2;import itertools;import matplotlib.pyplot as plt;import pathlib;import tensorflow as tf;import tqdm;from keras import layers;import random;import einops;import collections;import remotezip as rz', function_to_run='tf.image.convert_image_dtype(*args)', method_object=None, object_signature=None, function_args=[eval('frame'), eval('tf.float32')], function_kwargs={})
+    frame = tf.image.convert_image_dtype(frame, tf.float32)
+    custom_method(imports='import seaborn as sns;import keras;import numpy as np;import cv2;import itertools;import matplotlib.pyplot as plt;import pathlib;import tensorflow as tf;import tqdm;from keras import layers;import random;import einops;import collections;import remotezip as rz', function_to_run='tf.image.resize_with_pad(*args)', method_object=None, object_signature=None, function_args=[eval('frame'), eval('*output_size')], function_kwargs={})
+    frame = tf.image.resize_with_pad(frame, *output_size)
     return frame
 
 def frames_from_video_file(video_path, n_frames, output_size=(224, 224), frame_step=15):
@@ -235,18 +234,18 @@ subset_paths = download_ufc_101_subset(URL, num_classes=10, splits={'train': 30,
 n_frames = 10
 batch_size = 8
 output_signature = (tf.TensorSpec(shape=(None, None, None, 3), dtype=tf.float32), tf.TensorSpec(shape=(), dtype=tf.int16))
-train_ds = custom_method(
-tf.data.Dataset.from_generator(FrameGenerator(subset_paths['train'], n_frames, training=True), output_signature=output_signature), imports='import random;import tensorflow as tf;import keras;import einops;import collections;import pathlib;import tqdm;import seaborn as sns;import numpy as np;import itertools;from keras import layers;import cv2;import remotezip as rz;import matplotlib.pyplot as plt', function_to_run='tf.data.Dataset.from_generator(*args, **kwargs)', method_object=None, object_signature=None, function_args=[eval("FrameGenerator(subset_paths['train'], n_frames, training=True)")], function_kwargs={'output_signature': eval('output_signature')})
-train_ds = custom_method(
-train_ds.batch(batch_size), imports='import random;import tensorflow as tf;import keras;import einops;import collections;import pathlib;import tqdm;import seaborn as sns;import numpy as np;import itertools;from keras import layers;import cv2;import remotezip as rz;import matplotlib.pyplot as plt', function_to_run='obj.batch(*args)', method_object=eval('train_ds'), object_signature=None, function_args=[eval('batch_size')], function_kwargs={}, custom_class=None)
-val_ds = custom_method(
-tf.data.Dataset.from_generator(FrameGenerator(subset_paths['val'], n_frames), output_signature=output_signature), imports='import random;import tensorflow as tf;import keras;import einops;import collections;import pathlib;import tqdm;import seaborn as sns;import numpy as np;import itertools;from keras import layers;import cv2;import remotezip as rz;import matplotlib.pyplot as plt', function_to_run='tf.data.Dataset.from_generator(*args, **kwargs)', method_object=None, object_signature=None, function_args=[eval("FrameGenerator(subset_paths['val'], n_frames)")], function_kwargs={'output_signature': eval('output_signature')})
-val_ds = custom_method(
-val_ds.batch(batch_size), imports='import random;import tensorflow as tf;import keras;import einops;import collections;import pathlib;import tqdm;import seaborn as sns;import numpy as np;import itertools;from keras import layers;import cv2;import remotezip as rz;import matplotlib.pyplot as plt', function_to_run='obj.batch(*args)', method_object=eval('val_ds'), object_signature=None, function_args=[eval('batch_size')], function_kwargs={}, custom_class=None)
-test_ds = custom_method(
-tf.data.Dataset.from_generator(FrameGenerator(subset_paths['test'], n_frames), output_signature=output_signature), imports='import random;import tensorflow as tf;import keras;import einops;import collections;import pathlib;import tqdm;import seaborn as sns;import numpy as np;import itertools;from keras import layers;import cv2;import remotezip as rz;import matplotlib.pyplot as plt', function_to_run='tf.data.Dataset.from_generator(*args, **kwargs)', method_object=None, object_signature=None, function_args=[eval("FrameGenerator(subset_paths['test'], n_frames)")], function_kwargs={'output_signature': eval('output_signature')})
-test_ds = custom_method(
-test_ds.batch(batch_size), imports='import random;import tensorflow as tf;import keras;import einops;import collections;import pathlib;import tqdm;import seaborn as sns;import numpy as np;import itertools;from keras import layers;import cv2;import remotezip as rz;import matplotlib.pyplot as plt', function_to_run='obj.batch(*args)', method_object=eval('test_ds'), object_signature=None, function_args=[eval('batch_size')], function_kwargs={}, custom_class=None)
+custom_method(imports='import seaborn as sns;import keras;import numpy as np;import cv2;import itertools;import matplotlib.pyplot as plt;import pathlib;import tensorflow as tf;import tqdm;from keras import layers;import random;import einops;import collections;import remotezip as rz', function_to_run='tf.data.Dataset.from_generator(*args, **kwargs)', method_object=None, object_signature=None, function_args=[eval("FrameGenerator(subset_paths['train'], n_frames, training=True)")], function_kwargs={'output_signature': eval('output_signature')})
+train_ds = tf.data.Dataset.from_generator(FrameGenerator(subset_paths['train'], n_frames, training=True), output_signature=output_signature)
+custom_method(imports='import seaborn as sns;import keras;import numpy as np;import cv2;import itertools;import matplotlib.pyplot as plt;import pathlib;import tensorflow as tf;import tqdm;from keras import layers;import random;import einops;import collections;import remotezip as rz', function_to_run='obj.batch(*args)', method_object=eval('train_ds'), object_signature=None, function_args=[eval('batch_size')], function_kwargs={}, custom_class=None)
+train_ds = train_ds.batch(batch_size)
+custom_method(imports='import seaborn as sns;import keras;import numpy as np;import cv2;import itertools;import matplotlib.pyplot as plt;import pathlib;import tensorflow as tf;import tqdm;from keras import layers;import random;import einops;import collections;import remotezip as rz', function_to_run='tf.data.Dataset.from_generator(*args, **kwargs)', method_object=None, object_signature=None, function_args=[eval("FrameGenerator(subset_paths['val'], n_frames)")], function_kwargs={'output_signature': eval('output_signature')})
+val_ds = tf.data.Dataset.from_generator(FrameGenerator(subset_paths['val'], n_frames), output_signature=output_signature)
+custom_method(imports='import seaborn as sns;import keras;import numpy as np;import cv2;import itertools;import matplotlib.pyplot as plt;import pathlib;import tensorflow as tf;import tqdm;from keras import layers;import random;import einops;import collections;import remotezip as rz', function_to_run='obj.batch(*args)', method_object=eval('val_ds'), object_signature=None, function_args=[eval('batch_size')], function_kwargs={}, custom_class=None)
+val_ds = val_ds.batch(batch_size)
+custom_method(imports='import seaborn as sns;import keras;import numpy as np;import cv2;import itertools;import matplotlib.pyplot as plt;import pathlib;import tensorflow as tf;import tqdm;from keras import layers;import random;import einops;import collections;import remotezip as rz', function_to_run='tf.data.Dataset.from_generator(*args, **kwargs)', method_object=None, object_signature=None, function_args=[eval("FrameGenerator(subset_paths['test'], n_frames)")], function_kwargs={'output_signature': eval('output_signature')})
+test_ds = tf.data.Dataset.from_generator(FrameGenerator(subset_paths['test'], n_frames), output_signature=output_signature)
+custom_method(imports='import seaborn as sns;import keras;import numpy as np;import cv2;import itertools;import matplotlib.pyplot as plt;import pathlib;import tensorflow as tf;import tqdm;from keras import layers;import random;import einops;import collections;import remotezip as rz', function_to_run='obj.batch(*args)', method_object=eval('test_ds'), object_signature=None, function_args=[eval('batch_size')], function_kwargs={}, custom_class=None)
+test_ds = test_ds.batch(batch_size)
 HEIGHT = 224
 WIDTH = 224
 
@@ -387,17 +386,17 @@ def get_actual_predicted_labels(dataset):
   """
     actual = [labels for (_, labels) in dataset.unbatch()]
     predicted = model.predict(dataset)
-    actual = custom_method(
-    tf.stack(actual, axis=0), imports='import random;import tensorflow as tf;import keras;import einops;import collections;import pathlib;import tqdm;import seaborn as sns;import numpy as np;import itertools;from keras import layers;import cv2;import remotezip as rz;import matplotlib.pyplot as plt', function_to_run='tf.stack(*args, **kwargs)', method_object=None, object_signature=None, function_args=[eval('actual')], function_kwargs={'axis': eval('0')})
-    predicted = custom_method(
-    tf.concat(predicted, axis=0), imports='import random;import tensorflow as tf;import keras;import einops;import collections;import pathlib;import tqdm;import seaborn as sns;import numpy as np;import itertools;from keras import layers;import cv2;import remotezip as rz;import matplotlib.pyplot as plt', function_to_run='tf.concat(*args, **kwargs)', method_object=None, object_signature=None, function_args=[eval('predicted')], function_kwargs={'axis': eval('0')})
-    predicted = custom_method(
-    tf.argmax(predicted, axis=1), imports='import random;import tensorflow as tf;import keras;import einops;import collections;import pathlib;import tqdm;import seaborn as sns;import numpy as np;import itertools;from keras import layers;import cv2;import remotezip as rz;import matplotlib.pyplot as plt', function_to_run='tf.argmax(*args, **kwargs)', method_object=None, object_signature=None, function_args=[eval('predicted')], function_kwargs={'axis': eval('1')})
+    custom_method(imports='import seaborn as sns;import keras;import numpy as np;import cv2;import itertools;import matplotlib.pyplot as plt;import pathlib;import tensorflow as tf;import tqdm;from keras import layers;import random;import einops;import collections;import remotezip as rz', function_to_run='tf.stack(*args, **kwargs)', method_object=None, object_signature=None, function_args=[eval('actual')], function_kwargs={'axis': eval('0')})
+    actual = tf.stack(actual, axis=0)
+    custom_method(imports='import seaborn as sns;import keras;import numpy as np;import cv2;import itertools;import matplotlib.pyplot as plt;import pathlib;import tensorflow as tf;import tqdm;from keras import layers;import random;import einops;import collections;import remotezip as rz', function_to_run='tf.concat(*args, **kwargs)', method_object=None, object_signature=None, function_args=[eval('predicted')], function_kwargs={'axis': eval('0')})
+    predicted = tf.concat(predicted, axis=0)
+    custom_method(imports='import seaborn as sns;import keras;import numpy as np;import cv2;import itertools;import matplotlib.pyplot as plt;import pathlib;import tensorflow as tf;import tqdm;from keras import layers;import random;import einops;import collections;import remotezip as rz', function_to_run='tf.argmax(*args, **kwargs)', method_object=None, object_signature=None, function_args=[eval('predicted')], function_kwargs={'axis': eval('1')})
+    predicted = tf.argmax(predicted, axis=1)
     return (actual, predicted)
 
 def plot_confusion_matrix(actual, predicted, labels, ds_type):
-    cm = custom_method(
-    tf.math.confusion_matrix(actual, predicted), imports='import random;import tensorflow as tf;import keras;import einops;import collections;import pathlib;import tqdm;import seaborn as sns;import numpy as np;import itertools;from keras import layers;import cv2;import remotezip as rz;import matplotlib.pyplot as plt', function_to_run='tf.math.confusion_matrix(*args)', method_object=None, object_signature=None, function_args=[eval('actual'), eval('predicted')], function_kwargs={})
+    custom_method(imports='import seaborn as sns;import keras;import numpy as np;import cv2;import itertools;import matplotlib.pyplot as plt;import pathlib;import tensorflow as tf;import tqdm;from keras import layers;import random;import einops;import collections;import remotezip as rz', function_to_run='tf.math.confusion_matrix(*args)', method_object=None, object_signature=None, function_args=[eval('actual'), eval('predicted')], function_kwargs={})
+    cm = tf.math.confusion_matrix(actual, predicted)
     ax = sns.heatmap(cm, annot=True, fmt='g')
     sns.set(rc={'figure.figsize': (12, 12)})
     sns.set(font_scale=1.4)
@@ -428,8 +427,8 @@ def calculate_classification_metrics(y_actual, y_pred, labels):
     Return:
       Precision and recall measures.
   """
-    cm = custom_method(
-    tf.math.confusion_matrix(y_actual, y_pred), imports='import random;import tensorflow as tf;import keras;import einops;import collections;import pathlib;import tqdm;import seaborn as sns;import numpy as np;import itertools;from keras import layers;import cv2;import remotezip as rz;import matplotlib.pyplot as plt', function_to_run='tf.math.confusion_matrix(*args)', method_object=None, object_signature=None, function_args=[eval('y_actual'), eval('y_pred')], function_kwargs={})
+    custom_method(imports='import seaborn as sns;import keras;import numpy as np;import cv2;import itertools;import matplotlib.pyplot as plt;import pathlib;import tensorflow as tf;import tqdm;from keras import layers;import random;import einops;import collections;import remotezip as rz', function_to_run='tf.math.confusion_matrix(*args)', method_object=None, object_signature=None, function_args=[eval('y_actual'), eval('y_pred')], function_kwargs={})
+    cm = tf.math.confusion_matrix(y_actual, y_pred)
     tp = np.diag(cm)
     precision = dict()
     recall = dict()

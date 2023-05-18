@@ -14,7 +14,6 @@ EXPERIMENT_FILE_PATH = EXPERIMENT_DIR / 'method-level' / experiment_project / f'
 
 def custom_method(func, imports: str, function_to_run: str, method_object=None, object_signature=None, function_args: list=None, function_kwargs: dict=None, custom_class=None):
     result = send_request(imports=imports, function_to_run=function_to_run, function_args=function_args, function_kwargs=function_kwargs, max_wait_secs=MAX_WAIT_S, wait_after_run_secs=WAIT_AFTER_RUN_S, method_object=method_object, object_signature=object_signature, custom_class=custom_class, experiment_file_path=EXPERIMENT_FILE_PATH)
-    return func
 os.environ['TFHUB_MODEL_LOAD_FORMAT'] = 'COMPRESSED'
 import IPython.display as display
 import matplotlib.pyplot as plt
@@ -33,34 +32,34 @@ def tensor_to_image(tensor):
         assert tensor.shape[0] == 1
         tensor = tensor[0]
     return PIL.Image.fromarray(tensor)
-content_path = custom_method(
-tf.keras.utils.get_file('YellowLabradorLooking_new.jpg', 'https://storage.googleapis.com/download.tensorflow.org/example_images/YellowLabradorLooking_new.jpg'), imports='import tensorflow_hub as hub;import matplotlib as mpl;import tensorflow as tf;import matplotlib.pyplot as plt;import numpy as np;import os;import PIL.Image;import functools;import IPython.display as display;import time;from google.colab import files', function_to_run='tf.keras.utils.get_file(*args)', method_object=None, object_signature=None, function_args=[eval("'YellowLabradorLooking_new.jpg'"), eval("'https://storage.googleapis.com/download.tensorflow.org/example_images/YellowLabradorLooking_new.jpg'")], function_kwargs={})
-style_path = custom_method(
-tf.keras.utils.get_file('kandinsky5.jpg', 'https://storage.googleapis.com/download.tensorflow.org/example_images/Vassily_Kandinsky%2C_1913_-_Composition_7.jpg'), imports='import tensorflow_hub as hub;import matplotlib as mpl;import tensorflow as tf;import matplotlib.pyplot as plt;import numpy as np;import os;import PIL.Image;import functools;import IPython.display as display;import time;from google.colab import files', function_to_run='tf.keras.utils.get_file(*args)', method_object=None, object_signature=None, function_args=[eval("'kandinsky5.jpg'"), eval("'https://storage.googleapis.com/download.tensorflow.org/example_images/Vassily_Kandinsky%2C_1913_-_Composition_7.jpg'")], function_kwargs={})
+custom_method(imports='import os;import tensorflow_hub as hub;import PIL.Image;from google.colab import files;import functools;import tensorflow as tf;import matplotlib as mpl;import numpy as np;import time;import IPython.display as display;import matplotlib.pyplot as plt', function_to_run='tf.keras.utils.get_file(*args)', method_object=None, object_signature=None, function_args=[eval("'YellowLabradorLooking_new.jpg'"), eval("'https://storage.googleapis.com/download.tensorflow.org/example_images/YellowLabradorLooking_new.jpg'")], function_kwargs={})
+content_path = tf.keras.utils.get_file('YellowLabradorLooking_new.jpg', 'https://storage.googleapis.com/download.tensorflow.org/example_images/YellowLabradorLooking_new.jpg')
+custom_method(imports='import os;import tensorflow_hub as hub;import PIL.Image;from google.colab import files;import functools;import tensorflow as tf;import matplotlib as mpl;import numpy as np;import time;import IPython.display as display;import matplotlib.pyplot as plt', function_to_run='tf.keras.utils.get_file(*args)', method_object=None, object_signature=None, function_args=[eval("'kandinsky5.jpg'"), eval("'https://storage.googleapis.com/download.tensorflow.org/example_images/Vassily_Kandinsky%2C_1913_-_Composition_7.jpg'")], function_kwargs={})
+style_path = tf.keras.utils.get_file('kandinsky5.jpg', 'https://storage.googleapis.com/download.tensorflow.org/example_images/Vassily_Kandinsky%2C_1913_-_Composition_7.jpg')
 
 def load_img(path_to_img):
     max_dim = 512
-    img = custom_method(
-    tf.io.read_file(path_to_img), imports='import tensorflow_hub as hub;import matplotlib as mpl;import tensorflow as tf;import matplotlib.pyplot as plt;import numpy as np;import os;import PIL.Image;import functools;import IPython.display as display;import time;from google.colab import files', function_to_run='tf.io.read_file(*args)', method_object=None, object_signature=None, function_args=[eval('path_to_img')], function_kwargs={})
-    img = custom_method(
-    tf.image.decode_image(img, channels=3), imports='import tensorflow_hub as hub;import matplotlib as mpl;import tensorflow as tf;import matplotlib.pyplot as plt;import numpy as np;import os;import PIL.Image;import functools;import IPython.display as display;import time;from google.colab import files', function_to_run='tf.image.decode_image(*args, **kwargs)', method_object=None, object_signature=None, function_args=[eval('img')], function_kwargs={'channels': eval('3')})
-    img = custom_method(
-    tf.image.convert_image_dtype(img, tf.float32), imports='import tensorflow_hub as hub;import matplotlib as mpl;import tensorflow as tf;import matplotlib.pyplot as plt;import numpy as np;import os;import PIL.Image;import functools;import IPython.display as display;import time;from google.colab import files', function_to_run='tf.image.convert_image_dtype(*args)', method_object=None, object_signature=None, function_args=[eval('img'), eval('tf.float32')], function_kwargs={})
-    shape = custom_method(
-    tf.cast(tf.shape(img)[:-1], tf.float32), imports='import tensorflow_hub as hub;import matplotlib as mpl;import tensorflow as tf;import matplotlib.pyplot as plt;import numpy as np;import os;import PIL.Image;import functools;import IPython.display as display;import time;from google.colab import files', function_to_run='tf.cast(*args)', method_object=None, object_signature=None, function_args=[eval('tf.shape(img)[:-1]'), eval('tf.float32')], function_kwargs={})
+    custom_method(imports='import os;import tensorflow_hub as hub;import PIL.Image;from google.colab import files;import functools;import tensorflow as tf;import matplotlib as mpl;import numpy as np;import time;import IPython.display as display;import matplotlib.pyplot as plt', function_to_run='tf.io.read_file(*args)', method_object=None, object_signature=None, function_args=[eval('path_to_img')], function_kwargs={})
+    img = tf.io.read_file(path_to_img)
+    custom_method(imports='import os;import tensorflow_hub as hub;import PIL.Image;from google.colab import files;import functools;import tensorflow as tf;import matplotlib as mpl;import numpy as np;import time;import IPython.display as display;import matplotlib.pyplot as plt', function_to_run='tf.image.decode_image(*args, **kwargs)', method_object=None, object_signature=None, function_args=[eval('img')], function_kwargs={'channels': eval('3')})
+    img = tf.image.decode_image(img, channels=3)
+    custom_method(imports='import os;import tensorflow_hub as hub;import PIL.Image;from google.colab import files;import functools;import tensorflow as tf;import matplotlib as mpl;import numpy as np;import time;import IPython.display as display;import matplotlib.pyplot as plt', function_to_run='tf.image.convert_image_dtype(*args)', method_object=None, object_signature=None, function_args=[eval('img'), eval('tf.float32')], function_kwargs={})
+    img = tf.image.convert_image_dtype(img, tf.float32)
+    custom_method(imports='import os;import tensorflow_hub as hub;import PIL.Image;from google.colab import files;import functools;import tensorflow as tf;import matplotlib as mpl;import numpy as np;import time;import IPython.display as display;import matplotlib.pyplot as plt', function_to_run='tf.cast(*args)', method_object=None, object_signature=None, function_args=[eval('tf.shape(img)[:-1]'), eval('tf.float32')], function_kwargs={})
+    shape = tf.cast(tf.shape(img)[:-1], tf.float32)
     long_dim = max(shape)
     scale = max_dim / long_dim
-    new_shape = custom_method(
-    tf.cast(shape * scale, tf.int32), imports='import tensorflow_hub as hub;import matplotlib as mpl;import tensorflow as tf;import matplotlib.pyplot as plt;import numpy as np;import os;import PIL.Image;import functools;import IPython.display as display;import time;from google.colab import files', function_to_run='tf.cast(*args)', method_object=None, object_signature=None, function_args=[eval('shape * scale'), eval('tf.int32')], function_kwargs={})
-    img = custom_method(
-    tf.image.resize(img, new_shape), imports='import tensorflow_hub as hub;import matplotlib as mpl;import tensorflow as tf;import matplotlib.pyplot as plt;import numpy as np;import os;import PIL.Image;import functools;import IPython.display as display;import time;from google.colab import files', function_to_run='tf.image.resize(*args)', method_object=None, object_signature=None, function_args=[eval('img'), eval('new_shape')], function_kwargs={})
+    custom_method(imports='import os;import tensorflow_hub as hub;import PIL.Image;from google.colab import files;import functools;import tensorflow as tf;import matplotlib as mpl;import numpy as np;import time;import IPython.display as display;import matplotlib.pyplot as plt', function_to_run='tf.cast(*args)', method_object=None, object_signature=None, function_args=[eval('shape * scale'), eval('tf.int32')], function_kwargs={})
+    new_shape = tf.cast(shape * scale, tf.int32)
+    custom_method(imports='import os;import tensorflow_hub as hub;import PIL.Image;from google.colab import files;import functools;import tensorflow as tf;import matplotlib as mpl;import numpy as np;import time;import IPython.display as display;import matplotlib.pyplot as plt', function_to_run='tf.image.resize(*args)', method_object=None, object_signature=None, function_args=[eval('img'), eval('new_shape')], function_kwargs={})
+    img = tf.image.resize(img, new_shape)
     img = img[tf.newaxis, :]
     return img
 
 def imshow(image, title=None):
     if len(image.shape) > 3:
-        image = custom_method(
-        tf.squeeze(image, axis=0), imports='import tensorflow_hub as hub;import matplotlib as mpl;import tensorflow as tf;import matplotlib.pyplot as plt;import numpy as np;import os;import PIL.Image;import functools;import IPython.display as display;import time;from google.colab import files', function_to_run='tf.squeeze(*args, **kwargs)', method_object=None, object_signature=None, function_args=[eval('image')], function_kwargs={'axis': eval('0')})
+        custom_method(imports='import os;import tensorflow_hub as hub;import PIL.Image;from google.colab import files;import functools;import tensorflow as tf;import matplotlib as mpl;import numpy as np;import time;import IPython.display as display;import matplotlib.pyplot as plt', function_to_run='tf.squeeze(*args, **kwargs)', method_object=None, object_signature=None, function_args=[eval('image')], function_kwargs={'axis': eval('0')})
+        image = tf.squeeze(image, axis=0)
     plt.imshow(image)
     if title:
         plt.title(title)
@@ -74,19 +73,19 @@ import tensorflow_hub as hub
 hub_model = hub.load('https://tfhub.dev/google/magenta/arbitrary-image-stylization-v1-256/2')
 stylized_image = hub_model(tf.constant(content_image), tf.constant(style_image))[0]
 tensor_to_image(stylized_image)
-x = custom_method(
-tf.keras.applications.vgg19.preprocess_input(content_image * 255), imports='import tensorflow_hub as hub;import matplotlib as mpl;import tensorflow as tf;import matplotlib.pyplot as plt;import numpy as np;import os;import PIL.Image;import functools;import IPython.display as display;import time;from google.colab import files', function_to_run='tf.keras.applications.vgg19.preprocess_input(*args)', method_object=None, object_signature=None, function_args=[eval('content_image*255')], function_kwargs={})
-x = custom_method(
-tf.image.resize(x, (224, 224)), imports='import tensorflow_hub as hub;import matplotlib as mpl;import tensorflow as tf;import matplotlib.pyplot as plt;import numpy as np;import os;import PIL.Image;import functools;import IPython.display as display;import time;from google.colab import files', function_to_run='tf.image.resize(*args)', method_object=None, object_signature=None, function_args=[eval('x'), eval('(224, 224)')], function_kwargs={})
-vgg = custom_method(
-tf.keras.applications.VGG19(include_top=True, weights='imagenet'), imports='import tensorflow_hub as hub;import matplotlib as mpl;import tensorflow as tf;import matplotlib.pyplot as plt;import numpy as np;import os;import PIL.Image;import functools;import IPython.display as display;import time;from google.colab import files', function_to_run='tf.keras.applications.VGG19(**kwargs)', method_object=None, object_signature=None, function_args=[], function_kwargs={'include_top': eval('True'), 'weights': eval("'imagenet'")})
-prediction_probabilities = custom_method(
-vgg(x), imports='import tensorflow_hub as hub;import matplotlib as mpl;import tensorflow as tf;import matplotlib.pyplot as plt;import numpy as np;import os;import PIL.Image;import functools;import IPython.display as display;import time;from google.colab import files', function_to_run='obj(*args)', method_object=eval('vgg'), object_signature=None, function_args=[eval('x')], function_kwargs={}, custom_class=None)
+custom_method(imports='import os;import tensorflow_hub as hub;import PIL.Image;from google.colab import files;import functools;import tensorflow as tf;import matplotlib as mpl;import numpy as np;import time;import IPython.display as display;import matplotlib.pyplot as plt', function_to_run='tf.keras.applications.vgg19.preprocess_input(*args)', method_object=None, object_signature=None, function_args=[eval('content_image*255')], function_kwargs={})
+x = tf.keras.applications.vgg19.preprocess_input(content_image * 255)
+custom_method(imports='import os;import tensorflow_hub as hub;import PIL.Image;from google.colab import files;import functools;import tensorflow as tf;import matplotlib as mpl;import numpy as np;import time;import IPython.display as display;import matplotlib.pyplot as plt', function_to_run='tf.image.resize(*args)', method_object=None, object_signature=None, function_args=[eval('x'), eval('(224, 224)')], function_kwargs={})
+x = tf.image.resize(x, (224, 224))
+custom_method(imports='import os;import tensorflow_hub as hub;import PIL.Image;from google.colab import files;import functools;import tensorflow as tf;import matplotlib as mpl;import numpy as np;import time;import IPython.display as display;import matplotlib.pyplot as plt', function_to_run='tf.keras.applications.VGG19(**kwargs)', method_object=None, object_signature=None, function_args=[], function_kwargs={'include_top': eval('True'), 'weights': eval("'imagenet'")})
+vgg = tf.keras.applications.VGG19(include_top=True, weights='imagenet')
+custom_method(imports='import os;import tensorflow_hub as hub;import PIL.Image;from google.colab import files;import functools;import tensorflow as tf;import matplotlib as mpl;import numpy as np;import time;import IPython.display as display;import matplotlib.pyplot as plt', function_to_run='obj(*args)', method_object=eval('vgg'), object_signature=None, function_args=[eval('x')], function_kwargs={}, custom_class=None)
+prediction_probabilities = vgg(x)
 prediction_probabilities.shape
 predicted_top_5 = tf.keras.applications.vgg19.decode_predictions(prediction_probabilities.numpy())[0]
 [(class_name, prob) for (number, class_name, prob) in predicted_top_5]
-vgg = custom_method(
-tf.keras.applications.VGG19(include_top=False, weights='imagenet'), imports='import tensorflow_hub as hub;import matplotlib as mpl;import tensorflow as tf;import matplotlib.pyplot as plt;import numpy as np;import os;import PIL.Image;import functools;import IPython.display as display;import time;from google.colab import files', function_to_run='tf.keras.applications.VGG19(**kwargs)', method_object=None, object_signature=None, function_args=[], function_kwargs={'include_top': eval('False'), 'weights': eval("'imagenet'")})
+custom_method(imports='import os;import tensorflow_hub as hub;import PIL.Image;from google.colab import files;import functools;import tensorflow as tf;import matplotlib as mpl;import numpy as np;import time;import IPython.display as display;import matplotlib.pyplot as plt', function_to_run='tf.keras.applications.VGG19(**kwargs)', method_object=None, object_signature=None, function_args=[], function_kwargs={'include_top': eval('False'), 'weights': eval("'imagenet'")})
+vgg = tf.keras.applications.VGG19(include_top=False, weights='imagenet')
 print()
 for layer in vgg.layers:
     print(layer.name)
@@ -97,12 +96,12 @@ num_style_layers = len(style_layers)
 
 def vgg_layers(layer_names):
     """ Creates a VGG model that returns a list of intermediate output values."""
-    vgg = custom_method(
-    tf.keras.applications.VGG19(include_top=False, weights='imagenet'), imports='import tensorflow_hub as hub;import matplotlib as mpl;import tensorflow as tf;import matplotlib.pyplot as plt;import numpy as np;import os;import PIL.Image;import functools;import IPython.display as display;import time;from google.colab import files', function_to_run='tf.keras.applications.VGG19(**kwargs)', method_object=None, object_signature=None, function_args=[], function_kwargs={'include_top': eval('False'), 'weights': eval("'imagenet'")})
+    custom_method(imports='import os;import tensorflow_hub as hub;import PIL.Image;from google.colab import files;import functools;import tensorflow as tf;import matplotlib as mpl;import numpy as np;import time;import IPython.display as display;import matplotlib.pyplot as plt', function_to_run='tf.keras.applications.VGG19(**kwargs)', method_object=None, object_signature=None, function_args=[], function_kwargs={'include_top': eval('False'), 'weights': eval("'imagenet'")})
+    vgg = tf.keras.applications.VGG19(include_top=False, weights='imagenet')
     vgg.trainable = False
     outputs = [vgg.get_layer(name).output for name in layer_names]
-    model = custom_method(
-    tf.keras.Model([vgg.input], outputs), imports='import tensorflow_hub as hub;import matplotlib as mpl;import tensorflow as tf;import matplotlib.pyplot as plt;import numpy as np;import os;import PIL.Image;import functools;import IPython.display as display;import time;from google.colab import files', function_to_run='tf.keras.Model(*args)', method_object=None, object_signature=None, function_args=[eval('[vgg.input]'), eval('outputs')], function_kwargs={})
+    custom_method(imports='import os;import tensorflow_hub as hub;import PIL.Image;from google.colab import files;import functools;import tensorflow as tf;import matplotlib as mpl;import numpy as np;import time;import IPython.display as display;import matplotlib.pyplot as plt', function_to_run='tf.keras.Model(*args)', method_object=None, object_signature=None, function_args=[eval('[vgg.input]'), eval('outputs')], function_kwargs={})
+    model = tf.keras.Model([vgg.input], outputs)
     return model
 style_extractor = vgg_layers(style_layers)
 style_outputs = style_extractor(style_image * 255)
@@ -115,12 +114,12 @@ for (name, output) in zip(style_layers, style_outputs):
     print()
 
 def gram_matrix(input_tensor):
-    result = custom_method(
-    tf.linalg.einsum('bijc,bijd->bcd', input_tensor, input_tensor), imports='import tensorflow_hub as hub;import matplotlib as mpl;import tensorflow as tf;import matplotlib.pyplot as plt;import numpy as np;import os;import PIL.Image;import functools;import IPython.display as display;import time;from google.colab import files', function_to_run='tf.linalg.einsum(*args)', method_object=None, object_signature=None, function_args=[eval("'bijc,bijd->bcd'"), eval('input_tensor'), eval('input_tensor')], function_kwargs={})
-    input_shape = custom_method(
-    tf.shape(input_tensor), imports='import tensorflow_hub as hub;import matplotlib as mpl;import tensorflow as tf;import matplotlib.pyplot as plt;import numpy as np;import os;import PIL.Image;import functools;import IPython.display as display;import time;from google.colab import files', function_to_run='tf.shape(*args)', method_object=None, object_signature=None, function_args=[eval('input_tensor')], function_kwargs={})
-    num_locations = custom_method(
-    tf.cast(input_shape[1] * input_shape[2], tf.float32), imports='import tensorflow_hub as hub;import matplotlib as mpl;import tensorflow as tf;import matplotlib.pyplot as plt;import numpy as np;import os;import PIL.Image;import functools;import IPython.display as display;import time;from google.colab import files', function_to_run='tf.cast(*args)', method_object=None, object_signature=None, function_args=[eval('input_shape[1]*input_shape[2]'), eval('tf.float32')], function_kwargs={})
+    custom_method(imports='import os;import tensorflow_hub as hub;import PIL.Image;from google.colab import files;import functools;import tensorflow as tf;import matplotlib as mpl;import numpy as np;import time;import IPython.display as display;import matplotlib.pyplot as plt', function_to_run='tf.linalg.einsum(*args)', method_object=None, object_signature=None, function_args=[eval("'bijc,bijd->bcd'"), eval('input_tensor'), eval('input_tensor')], function_kwargs={})
+    result = tf.linalg.einsum('bijc,bijd->bcd', input_tensor, input_tensor)
+    custom_method(imports='import os;import tensorflow_hub as hub;import PIL.Image;from google.colab import files;import functools;import tensorflow as tf;import matplotlib as mpl;import numpy as np;import time;import IPython.display as display;import matplotlib.pyplot as plt', function_to_run='tf.shape(*args)', method_object=None, object_signature=None, function_args=[eval('input_tensor')], function_kwargs={})
+    input_shape = tf.shape(input_tensor)
+    custom_method(imports='import os;import tensorflow_hub as hub;import PIL.Image;from google.colab import files;import functools;import tensorflow as tf;import matplotlib as mpl;import numpy as np;import time;import IPython.display as display;import matplotlib.pyplot as plt', function_to_run='tf.cast(*args)', method_object=None, object_signature=None, function_args=[eval('input_shape[1]*input_shape[2]'), eval('tf.float32')], function_kwargs={})
+    num_locations = tf.cast(input_shape[1] * input_shape[2], tf.float32)
     return result / num_locations
 
 class StyleContentModel(tf.keras.models.Model):
@@ -136,8 +135,8 @@ class StyleContentModel(tf.keras.models.Model):
     def call(self, inputs):
         """Expects float input in [0,1]"""
         inputs = inputs * 255.0
-        preprocessed_input = custom_method(
-        tf.keras.applications.vgg19.preprocess_input(inputs), imports='import tensorflow_hub as hub;import matplotlib as mpl;import tensorflow as tf;import matplotlib.pyplot as plt;import numpy as np;import os;import PIL.Image;import functools;import IPython.display as display;import time;from google.colab import files', function_to_run='tf.keras.applications.vgg19.preprocess_input(*args)', method_object=None, object_signature=None, function_args=[eval('inputs')], function_kwargs={})
+        custom_method(imports='import os;import tensorflow_hub as hub;import PIL.Image;from google.colab import files;import functools;import tensorflow as tf;import matplotlib as mpl;import numpy as np;import time;import IPython.display as display;import matplotlib.pyplot as plt', function_to_run='tf.keras.applications.vgg19.preprocess_input(*args)', method_object=None, object_signature=None, function_args=[eval('inputs')], function_kwargs={})
+        preprocessed_input = tf.keras.applications.vgg19.preprocess_input(inputs)
         outputs = self.vgg(preprocessed_input)
         (style_outputs, content_outputs) = (outputs[:self.num_style_layers], outputs[self.num_style_layers:])
         style_outputs = [gram_matrix(style_output) for style_output in style_outputs]
@@ -145,8 +144,8 @@ class StyleContentModel(tf.keras.models.Model):
         style_dict = {style_name: value for (style_name, value) in zip(self.style_layers, style_outputs)}
         return {'content': content_dict, 'style': style_dict}
 extractor = StyleContentModel(style_layers, content_layers)
-results = custom_method(
-extractor(tf.constant(content_image)), imports='import tensorflow_hub as hub;import matplotlib as mpl;import tensorflow as tf;import matplotlib.pyplot as plt;import numpy as np;import os;import PIL.Image;import functools;import IPython.display as display;import time;from google.colab import files', function_to_run='obj(*args)', method_object=eval('extractor'), object_signature=None, function_args=[eval('tf.constant(content_image)')], function_kwargs={}, custom_class='class StyleContentModel(tf.keras.models.Model):\n  def __init__(self, style_layers, content_layers):\n    super(StyleContentModel, self).__init__()\n    self.vgg = vgg_layers(style_layers + content_layers)\n    self.style_layers = style_layers\n    self.content_layers = content_layers\n    self.num_style_layers = len(style_layers)\n    self.vgg.trainable = False\n\n  def call(self, inputs):\n    "Expects float input in [0,1]"\n    inputs = inputs*255.0\n    preprocessed_input = tf.keras.applications.vgg19.preprocess_input(inputs)\n    outputs = self.vgg(preprocessed_input)\n    style_outputs, content_outputs = (outputs[:self.num_style_layers],\n                                      outputs[self.num_style_layers:])\n\n    style_outputs = [gram_matrix(style_output)\n                     for style_output in style_outputs]\n\n    content_dict = {content_name: value\n                    for content_name, value\n                    in zip(self.content_layers, content_outputs)}\n\n    style_dict = {style_name: value\n                  for style_name, value\n                  in zip(self.style_layers, style_outputs)}\n\n    return {\'content\': content_dict, \'style\': style_dict}')
+custom_method(imports='import os;import tensorflow_hub as hub;import PIL.Image;from google.colab import files;import functools;import tensorflow as tf;import matplotlib as mpl;import numpy as np;import time;import IPython.display as display;import matplotlib.pyplot as plt', function_to_run='obj(*args)', method_object=eval('extractor'), object_signature=None, function_args=[eval('tf.constant(content_image)')], function_kwargs={}, custom_class='class StyleContentModel(tf.keras.models.Model):\n  def __init__(self, style_layers, content_layers):\n    super(StyleContentModel, self).__init__()\n    self.vgg = vgg_layers(style_layers + content_layers)\n    self.style_layers = style_layers\n    self.content_layers = content_layers\n    self.num_style_layers = len(style_layers)\n    self.vgg.trainable = False\n\n  def call(self, inputs):\n    "Expects float input in [0,1]"\n    inputs = inputs*255.0\n    preprocessed_input = tf.keras.applications.vgg19.preprocess_input(inputs)\n    outputs = self.vgg(preprocessed_input)\n    style_outputs, content_outputs = (outputs[:self.num_style_layers],\n                                      outputs[self.num_style_layers:])\n\n    style_outputs = [gram_matrix(style_output)\n                     for style_output in style_outputs]\n\n    content_dict = {content_name: value\n                    for content_name, value\n                    in zip(self.content_layers, content_outputs)}\n\n    style_dict = {style_name: value\n                  for style_name, value\n                  in zip(self.style_layers, style_outputs)}\n\n    return {\'content\': content_dict, \'style\': style_dict}')
+results = extractor(tf.constant(content_image))
 print('Styles:')
 for (name, output) in sorted(results['style'].items()):
     print('  ', name)
@@ -164,42 +163,39 @@ for (name, output) in sorted(results['content'].items()):
     print('    mean: ', output.numpy().mean())
 style_targets = extractor(style_image)['style']
 content_targets = extractor(content_image)['content']
-image = custom_method(
-tf.Variable(content_image), imports='import tensorflow_hub as hub;import matplotlib as mpl;import tensorflow as tf;import matplotlib.pyplot as plt;import numpy as np;import os;import PIL.Image;import functools;import IPython.display as display;import time;from google.colab import files', function_to_run='tf.Variable(*args)', method_object=None, object_signature=None, function_args=[eval('content_image')], function_kwargs={})
+custom_method(imports='import os;import tensorflow_hub as hub;import PIL.Image;from google.colab import files;import functools;import tensorflow as tf;import matplotlib as mpl;import numpy as np;import time;import IPython.display as display;import matplotlib.pyplot as plt', function_to_run='tf.Variable(*args)', method_object=None, object_signature=None, function_args=[eval('content_image')], function_kwargs={})
+image = tf.Variable(content_image)
 
 def clip_0_1(image):
-    return custom_method(
-    tf.clip_by_value(image, clip_value_min=0.0, clip_value_max=1.0), imports='import tensorflow_hub as hub;import matplotlib as mpl;import tensorflow as tf;import matplotlib.pyplot as plt;import numpy as np;import os;import PIL.Image;import functools;import IPython.display as display;import time;from google.colab import files', function_to_run='tf.clip_by_value(*args, **kwargs)', method_object=None, object_signature=None, function_args=[eval('image')], function_kwargs={'clip_value_min': eval('0.0'), 'clip_value_max': eval('1.0')})
-opt = custom_method(
-tf.keras.optimizers.Adam(learning_rate=0.02, beta_1=0.99, epsilon=0.1), imports='import tensorflow_hub as hub;import matplotlib as mpl;import tensorflow as tf;import matplotlib.pyplot as plt;import numpy as np;import os;import PIL.Image;import functools;import IPython.display as display;import time;from google.colab import files', function_to_run='tf.keras.optimizers.Adam(**kwargs)', method_object=None, object_signature=None, function_args=[], function_kwargs={'learning_rate': eval('0.02'), 'beta_1': eval('0.99'), 'epsilon': eval('1e-1')})
+    return tf.clip_by_value(image, clip_value_min=0.0, clip_value_max=1.0)
+custom_method(imports='import os;import tensorflow_hub as hub;import PIL.Image;from google.colab import files;import functools;import tensorflow as tf;import matplotlib as mpl;import numpy as np;import time;import IPython.display as display;import matplotlib.pyplot as plt', function_to_run='tf.keras.optimizers.Adam(**kwargs)', method_object=None, object_signature=None, function_args=[], function_kwargs={'learning_rate': eval('0.02'), 'beta_1': eval('0.99'), 'epsilon': eval('1e-1')})
+opt = tf.keras.optimizers.Adam(learning_rate=0.02, beta_1=0.99, epsilon=0.1)
 style_weight = 0.01
 content_weight = 10000.0
 
 def style_content_loss(outputs):
     style_outputs = outputs['style']
     content_outputs = outputs['content']
-    style_loss = custom_method(
-    tf.add_n([tf.reduce_mean((style_outputs[name] - style_targets[name]) ** 2) for name in style_outputs.keys()]), imports='import tensorflow_hub as hub;import matplotlib as mpl;import tensorflow as tf;import matplotlib.pyplot as plt;import numpy as np;import os;import PIL.Image;import functools;import IPython.display as display;import time;from google.colab import files', function_to_run='tf.add_n(*args)', method_object=None, object_signature=None, function_args=[eval('[tf.reduce_mean((style_outputs[name]-style_targets[name])**2) \n                           for name in style_outputs.keys()]')], function_kwargs={})
+    custom_method(imports='import os;import tensorflow_hub as hub;import PIL.Image;from google.colab import files;import functools;import tensorflow as tf;import matplotlib as mpl;import numpy as np;import time;import IPython.display as display;import matplotlib.pyplot as plt', function_to_run='tf.add_n(*args)', method_object=None, object_signature=None, function_args=[eval('[tf.reduce_mean((style_outputs[name]-style_targets[name])**2) \n                           for name in style_outputs.keys()]')], function_kwargs={})
+    style_loss = tf.add_n([tf.reduce_mean((style_outputs[name] - style_targets[name]) ** 2) for name in style_outputs.keys()])
     style_loss *= style_weight / num_style_layers
-    content_loss = custom_method(
-    tf.add_n([tf.reduce_mean((content_outputs[name] - content_targets[name]) ** 2) for name in content_outputs.keys()]), imports='import tensorflow_hub as hub;import matplotlib as mpl;import tensorflow as tf;import matplotlib.pyplot as plt;import numpy as np;import os;import PIL.Image;import functools;import IPython.display as display;import time;from google.colab import files', function_to_run='tf.add_n(*args)', method_object=None, object_signature=None, function_args=[eval('[tf.reduce_mean((content_outputs[name]-content_targets[name])**2) \n                             for name in content_outputs.keys()]')], function_kwargs={})
+    custom_method(imports='import os;import tensorflow_hub as hub;import PIL.Image;from google.colab import files;import functools;import tensorflow as tf;import matplotlib as mpl;import numpy as np;import time;import IPython.display as display;import matplotlib.pyplot as plt', function_to_run='tf.add_n(*args)', method_object=None, object_signature=None, function_args=[eval('[tf.reduce_mean((content_outputs[name]-content_targets[name])**2) \n                             for name in content_outputs.keys()]')], function_kwargs={})
+    content_loss = tf.add_n([tf.reduce_mean((content_outputs[name] - content_targets[name]) ** 2) for name in content_outputs.keys()])
     content_loss *= content_weight / num_content_layers
     loss = style_loss + content_loss
     return loss
 
-@custom_method(
-tf.function(), imports='import tensorflow_hub as hub;import matplotlib as mpl;import tensorflow as tf;import matplotlib.pyplot as plt;import numpy as np;import os;import PIL.Image;import functools;import IPython.display as display;import time;from google.colab import files', function_to_run='tf.function()', method_object=None, object_signature=None, function_args=[], function_kwargs={})
+@tf.function()
 def train_step(image):
-    with custom_method(
-    tf.GradientTape(), imports='import tensorflow_hub as hub;import matplotlib as mpl;import tensorflow as tf;import matplotlib.pyplot as plt;import numpy as np;import os;import PIL.Image;import functools;import IPython.display as display;import time;from google.colab import files', function_to_run='tf.GradientTape()', method_object=None, object_signature=None, function_args=[], function_kwargs={}) as tape:
-        outputs = custom_method(
-        extractor(image), imports='import tensorflow_hub as hub;import matplotlib as mpl;import tensorflow as tf;import matplotlib.pyplot as plt;import numpy as np;import os;import PIL.Image;import functools;import IPython.display as display;import time;from google.colab import files', function_to_run='obj(*args)', method_object=eval('extractor'), object_signature=None, function_args=[eval('image')], function_kwargs={}, custom_class='class StyleContentModel(tf.keras.models.Model):\n  def __init__(self, style_layers, content_layers):\n    super(StyleContentModel, self).__init__()\n    self.vgg = vgg_layers(style_layers + content_layers)\n    self.style_layers = style_layers\n    self.content_layers = content_layers\n    self.num_style_layers = len(style_layers)\n    self.vgg.trainable = False\n\n  def call(self, inputs):\n    "Expects float input in [0,1]"\n    inputs = inputs*255.0\n    preprocessed_input = tf.keras.applications.vgg19.preprocess_input(inputs)\n    outputs = self.vgg(preprocessed_input)\n    style_outputs, content_outputs = (outputs[:self.num_style_layers],\n                                      outputs[self.num_style_layers:])\n\n    style_outputs = [gram_matrix(style_output)\n                     for style_output in style_outputs]\n\n    content_dict = {content_name: value\n                    for content_name, value\n                    in zip(self.content_layers, content_outputs)}\n\n    style_dict = {style_name: value\n                  for style_name, value\n                  in zip(self.style_layers, style_outputs)}\n\n    return {\'content\': content_dict, \'style\': style_dict}')
+    with tf.GradientTape() as tape:
+        custom_method(imports='import os;import tensorflow_hub as hub;import PIL.Image;from google.colab import files;import functools;import tensorflow as tf;import matplotlib as mpl;import numpy as np;import time;import IPython.display as display;import matplotlib.pyplot as plt', function_to_run='obj(*args)', method_object=eval('extractor'), object_signature=None, function_args=[eval('image')], function_kwargs={}, custom_class='class StyleContentModel(tf.keras.models.Model):\n  def __init__(self, style_layers, content_layers):\n    super(StyleContentModel, self).__init__()\n    self.vgg = vgg_layers(style_layers + content_layers)\n    self.style_layers = style_layers\n    self.content_layers = content_layers\n    self.num_style_layers = len(style_layers)\n    self.vgg.trainable = False\n\n  def call(self, inputs):\n    "Expects float input in [0,1]"\n    inputs = inputs*255.0\n    preprocessed_input = tf.keras.applications.vgg19.preprocess_input(inputs)\n    outputs = self.vgg(preprocessed_input)\n    style_outputs, content_outputs = (outputs[:self.num_style_layers],\n                                      outputs[self.num_style_layers:])\n\n    style_outputs = [gram_matrix(style_output)\n                     for style_output in style_outputs]\n\n    content_dict = {content_name: value\n                    for content_name, value\n                    in zip(self.content_layers, content_outputs)}\n\n    style_dict = {style_name: value\n                  for style_name, value\n                  in zip(self.style_layers, style_outputs)}\n\n    return {\'content\': content_dict, \'style\': style_dict}')
+        outputs = extractor(image)
         loss = style_content_loss(outputs)
     grad = tape.gradient(loss, image)
-    custom_method(
-    opt.apply_gradients([(grad, image)]), imports='import tensorflow_hub as hub;import matplotlib as mpl;import tensorflow as tf;import matplotlib.pyplot as plt;import numpy as np;import os;import PIL.Image;import functools;import IPython.display as display;import time;from google.colab import files', function_to_run='obj.apply_gradients(*args)', method_object=eval('opt'), object_signature=None, function_args=[eval('[(grad, image)]')], function_kwargs={}, custom_class=None)
-    custom_method(
-    image.assign(clip_0_1(image)), imports='import tensorflow_hub as hub;import matplotlib as mpl;import tensorflow as tf;import matplotlib.pyplot as plt;import numpy as np;import os;import PIL.Image;import functools;import IPython.display as display;import time;from google.colab import files', function_to_run='obj.assign(*args)', method_object=eval('image'), object_signature=None, function_args=[eval('clip_0_1(image)')], function_kwargs={}, custom_class=None)
+    custom_method(imports='import os;import tensorflow_hub as hub;import PIL.Image;from google.colab import files;import functools;import tensorflow as tf;import matplotlib as mpl;import numpy as np;import time;import IPython.display as display;import matplotlib.pyplot as plt', function_to_run='obj.apply_gradients(*args)', method_object=eval('opt'), object_signature=None, function_args=[eval('[(grad, image)]')], function_kwargs={}, custom_class=None)
+    opt.apply_gradients([(grad, image)])
+    custom_method(imports='import os;import tensorflow_hub as hub;import PIL.Image;from google.colab import files;import functools;import tensorflow as tf;import matplotlib as mpl;import numpy as np;import time;import IPython.display as display;import matplotlib.pyplot as plt', function_to_run='obj.assign(*args)', method_object=eval('image'), object_signature=None, function_args=[eval('clip_0_1(image)')], function_kwargs={}, custom_class=None)
+    image.assign(clip_0_1(image))
 train_step(image)
 train_step(image)
 train_step(image)
@@ -236,8 +232,8 @@ imshow(clip_0_1(2 * y_deltas + 0.5), 'Horizontal Deltas: Styled')
 plt.subplot(2, 2, 4)
 imshow(clip_0_1(2 * x_deltas + 0.5), 'Vertical Deltas: Styled')
 plt.figure(figsize=(14, 10))
-sobel = custom_method(
-tf.image.sobel_edges(content_image), imports='import tensorflow_hub as hub;import matplotlib as mpl;import tensorflow as tf;import matplotlib.pyplot as plt;import numpy as np;import os;import PIL.Image;import functools;import IPython.display as display;import time;from google.colab import files', function_to_run='tf.image.sobel_edges(*args)', method_object=None, object_signature=None, function_args=[eval('content_image')], function_kwargs={})
+custom_method(imports='import os;import tensorflow_hub as hub;import PIL.Image;from google.colab import files;import functools;import tensorflow as tf;import matplotlib as mpl;import numpy as np;import time;import IPython.display as display;import matplotlib.pyplot as plt', function_to_run='tf.image.sobel_edges(*args)', method_object=None, object_signature=None, function_args=[eval('content_image')], function_kwargs={})
+sobel = tf.image.sobel_edges(content_image)
 plt.subplot(1, 2, 1)
 imshow(clip_0_1(sobel[..., 0] / 4 + 0.5), 'Horizontal Sobel-edges')
 plt.subplot(1, 2, 2)
@@ -245,33 +241,28 @@ imshow(clip_0_1(sobel[..., 1] / 4 + 0.5), 'Vertical Sobel-edges')
 
 def total_variation_loss(image):
     (x_deltas, y_deltas) = high_pass_x_y(image)
-    return custom_method(
-    tf.reduce_sum(tf.abs(x_deltas)), imports='import tensorflow_hub as hub;import matplotlib as mpl;import tensorflow as tf;import matplotlib.pyplot as plt;import numpy as np;import os;import PIL.Image;import functools;import IPython.display as display;import time;from google.colab import files', function_to_run='tf.reduce_sum(*args)', method_object=None, object_signature=None, function_args=[eval('tf.abs(x_deltas)')], function_kwargs={}) + custom_method(
-    tf.reduce_sum(tf.abs(y_deltas)), imports='import tensorflow_hub as hub;import matplotlib as mpl;import tensorflow as tf;import matplotlib.pyplot as plt;import numpy as np;import os;import PIL.Image;import functools;import IPython.display as display;import time;from google.colab import files', function_to_run='tf.reduce_sum(*args)', method_object=None, object_signature=None, function_args=[eval('tf.abs(y_deltas)')], function_kwargs={})
+    return tf.reduce_sum(tf.abs(x_deltas)) + tf.reduce_sum(tf.abs(y_deltas))
 total_variation_loss(image).numpy()
-custom_method(
-tf.image.total_variation(image).numpy(), imports='import tensorflow_hub as hub;import matplotlib as mpl;import tensorflow as tf;import matplotlib.pyplot as plt;import numpy as np;import os;import PIL.Image;import functools;import IPython.display as display;import time;from google.colab import files', function_to_run='tf.image.total_variation(image).numpy()', method_object=None, object_signature=None, function_args=[], function_kwargs={})
+custom_method(imports='import os;import tensorflow_hub as hub;import PIL.Image;from google.colab import files;import functools;import tensorflow as tf;import matplotlib as mpl;import numpy as np;import time;import IPython.display as display;import matplotlib.pyplot as plt', function_to_run='tf.image.total_variation(image).numpy()', method_object=None, object_signature=None, function_args=[], function_kwargs={})
+tf.image.total_variation(image).numpy()
 total_variation_weight = 30
 
-@custom_method(
-tf.function(), imports='import tensorflow_hub as hub;import matplotlib as mpl;import tensorflow as tf;import matplotlib.pyplot as plt;import numpy as np;import os;import PIL.Image;import functools;import IPython.display as display;import time;from google.colab import files', function_to_run='tf.function()', method_object=None, object_signature=None, function_args=[], function_kwargs={})
+@tf.function()
 def train_step(image):
-    with custom_method(
-    tf.GradientTape(), imports='import tensorflow_hub as hub;import matplotlib as mpl;import tensorflow as tf;import matplotlib.pyplot as plt;import numpy as np;import os;import PIL.Image;import functools;import IPython.display as display;import time;from google.colab import files', function_to_run='tf.GradientTape()', method_object=None, object_signature=None, function_args=[], function_kwargs={}) as tape:
-        outputs = custom_method(
-        extractor(image), imports='import tensorflow_hub as hub;import matplotlib as mpl;import tensorflow as tf;import matplotlib.pyplot as plt;import numpy as np;import os;import PIL.Image;import functools;import IPython.display as display;import time;from google.colab import files', function_to_run='obj(*args)', method_object=eval('extractor'), object_signature=None, function_args=[eval('image')], function_kwargs={}, custom_class='class StyleContentModel(tf.keras.models.Model):\n  def __init__(self, style_layers, content_layers):\n    super(StyleContentModel, self).__init__()\n    self.vgg = vgg_layers(style_layers + content_layers)\n    self.style_layers = style_layers\n    self.content_layers = content_layers\n    self.num_style_layers = len(style_layers)\n    self.vgg.trainable = False\n\n  def call(self, inputs):\n    "Expects float input in [0,1]"\n    inputs = inputs*255.0\n    preprocessed_input = tf.keras.applications.vgg19.preprocess_input(inputs)\n    outputs = self.vgg(preprocessed_input)\n    style_outputs, content_outputs = (outputs[:self.num_style_layers],\n                                      outputs[self.num_style_layers:])\n\n    style_outputs = [gram_matrix(style_output)\n                     for style_output in style_outputs]\n\n    content_dict = {content_name: value\n                    for content_name, value\n                    in zip(self.content_layers, content_outputs)}\n\n    style_dict = {style_name: value\n                  for style_name, value\n                  in zip(self.style_layers, style_outputs)}\n\n    return {\'content\': content_dict, \'style\': style_dict}')
+    with tf.GradientTape() as tape:
+        custom_method(imports='import os;import tensorflow_hub as hub;import PIL.Image;from google.colab import files;import functools;import tensorflow as tf;import matplotlib as mpl;import numpy as np;import time;import IPython.display as display;import matplotlib.pyplot as plt', function_to_run='obj(*args)', method_object=eval('extractor'), object_signature=None, function_args=[eval('image')], function_kwargs={}, custom_class='class StyleContentModel(tf.keras.models.Model):\n  def __init__(self, style_layers, content_layers):\n    super(StyleContentModel, self).__init__()\n    self.vgg = vgg_layers(style_layers + content_layers)\n    self.style_layers = style_layers\n    self.content_layers = content_layers\n    self.num_style_layers = len(style_layers)\n    self.vgg.trainable = False\n\n  def call(self, inputs):\n    "Expects float input in [0,1]"\n    inputs = inputs*255.0\n    preprocessed_input = tf.keras.applications.vgg19.preprocess_input(inputs)\n    outputs = self.vgg(preprocessed_input)\n    style_outputs, content_outputs = (outputs[:self.num_style_layers],\n                                      outputs[self.num_style_layers:])\n\n    style_outputs = [gram_matrix(style_output)\n                     for style_output in style_outputs]\n\n    content_dict = {content_name: value\n                    for content_name, value\n                    in zip(self.content_layers, content_outputs)}\n\n    style_dict = {style_name: value\n                  for style_name, value\n                  in zip(self.style_layers, style_outputs)}\n\n    return {\'content\': content_dict, \'style\': style_dict}')
+        outputs = extractor(image)
         loss = style_content_loss(outputs)
-        loss += total_variation_weight * custom_method(
-        tf.image.total_variation(image), imports='import tensorflow_hub as hub;import matplotlib as mpl;import tensorflow as tf;import matplotlib.pyplot as plt;import numpy as np;import os;import PIL.Image;import functools;import IPython.display as display;import time;from google.colab import files', function_to_run='tf.image.total_variation(*args)', method_object=None, object_signature=None, function_args=[eval('image')], function_kwargs={})
+        loss += total_variation_weight * tf.image.total_variation(image)
     grad = tape.gradient(loss, image)
-    custom_method(
-    opt.apply_gradients([(grad, image)]), imports='import tensorflow_hub as hub;import matplotlib as mpl;import tensorflow as tf;import matplotlib.pyplot as plt;import numpy as np;import os;import PIL.Image;import functools;import IPython.display as display;import time;from google.colab import files', function_to_run='obj.apply_gradients(*args)', method_object=eval('opt'), object_signature=None, function_args=[eval('[(grad, image)]')], function_kwargs={}, custom_class=None)
-    custom_method(
-    image.assign(clip_0_1(image)), imports='import tensorflow_hub as hub;import matplotlib as mpl;import tensorflow as tf;import matplotlib.pyplot as plt;import numpy as np;import os;import PIL.Image;import functools;import IPython.display as display;import time;from google.colab import files', function_to_run='obj.assign(*args)', method_object=eval('image'), object_signature=None, function_args=[eval('clip_0_1(image)')], function_kwargs={}, custom_class=None)
-opt = custom_method(
-tf.keras.optimizers.Adam(learning_rate=0.02, beta_1=0.99, epsilon=0.1), imports='import tensorflow_hub as hub;import matplotlib as mpl;import tensorflow as tf;import matplotlib.pyplot as plt;import numpy as np;import os;import PIL.Image;import functools;import IPython.display as display;import time;from google.colab import files', function_to_run='tf.keras.optimizers.Adam(**kwargs)', method_object=None, object_signature=None, function_args=[], function_kwargs={'learning_rate': eval('0.02'), 'beta_1': eval('0.99'), 'epsilon': eval('1e-1')})
-image = custom_method(
-tf.Variable(content_image), imports='import tensorflow_hub as hub;import matplotlib as mpl;import tensorflow as tf;import matplotlib.pyplot as plt;import numpy as np;import os;import PIL.Image;import functools;import IPython.display as display;import time;from google.colab import files', function_to_run='tf.Variable(*args)', method_object=None, object_signature=None, function_args=[eval('content_image')], function_kwargs={})
+    custom_method(imports='import os;import tensorflow_hub as hub;import PIL.Image;from google.colab import files;import functools;import tensorflow as tf;import matplotlib as mpl;import numpy as np;import time;import IPython.display as display;import matplotlib.pyplot as plt', function_to_run='obj.apply_gradients(*args)', method_object=eval('opt'), object_signature=None, function_args=[eval('[(grad, image)]')], function_kwargs={}, custom_class=None)
+    opt.apply_gradients([(grad, image)])
+    custom_method(imports='import os;import tensorflow_hub as hub;import PIL.Image;from google.colab import files;import functools;import tensorflow as tf;import matplotlib as mpl;import numpy as np;import time;import IPython.display as display;import matplotlib.pyplot as plt', function_to_run='obj.assign(*args)', method_object=eval('image'), object_signature=None, function_args=[eval('clip_0_1(image)')], function_kwargs={}, custom_class=None)
+    image.assign(clip_0_1(image))
+custom_method(imports='import os;import tensorflow_hub as hub;import PIL.Image;from google.colab import files;import functools;import tensorflow as tf;import matplotlib as mpl;import numpy as np;import time;import IPython.display as display;import matplotlib.pyplot as plt', function_to_run='tf.keras.optimizers.Adam(**kwargs)', method_object=None, object_signature=None, function_args=[], function_kwargs={'learning_rate': eval('0.02'), 'beta_1': eval('0.99'), 'epsilon': eval('1e-1')})
+opt = tf.keras.optimizers.Adam(learning_rate=0.02, beta_1=0.99, epsilon=0.1)
+custom_method(imports='import os;import tensorflow_hub as hub;import PIL.Image;from google.colab import files;import functools;import tensorflow as tf;import matplotlib as mpl;import numpy as np;import time;import IPython.display as display;import matplotlib.pyplot as plt', function_to_run='tf.Variable(*args)', method_object=None, object_signature=None, function_args=[eval('content_image')], function_kwargs={})
+image = tf.Variable(content_image)
 import time
 start = time.time()
 epochs = 10
