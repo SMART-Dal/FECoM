@@ -83,16 +83,17 @@ def send_request_with_func_details(function_details: FunctionDetails, experiment
             # raise TimeoutError(str(deserialised_response["error"]) + "\nYou can find the energy data in ./" + error_file)
         # catch unauthorized error if authentication fails
         elif run_resp.status_code == 401:
-            error_data = {
-                "experiment_file_path": str(experiment_file_path),
-                "function_to_run": function_details.function_to_run,
-                "error": run_resp.content.decode('utf-8')
-            }
-            error_file = "failed_function_calls_error.json"
-            with open(error_file, 'w') as f:
-                json.dump(error_data, f)
-            # raise RuntimeError(run_resp.content)
-            return run_resp.content
+            # error_data = {
+            #     "experiment_file_path": str(experiment_file_path),
+            #     "function_to_run": function_details.function_to_run,
+            #     "error": run_resp.content.decode('utf-8')
+            # }
+            # error_file = "failed_function_calls_error.json"
+            # with open(error_file, 'w') as f:
+            #     json.dump(error_data, f)
+                
+            # return run_resp.content
+            raise RuntimeError(run_resp.content)
         else:
             print("Successful Server response: " + str(run_resp.status_code))
             # Success, break out of the loop and continue with the rest of the code
@@ -115,23 +116,43 @@ def send_request(imports: str, function_to_run: str, function_args: list = None,
     Send a request to execute any function to the server and return specified data.
     If return_result=False, the returned object is JSON of the format specified in this directory's README.md
     """ 
-
-    function_details = build_function_details(
-        imports,
-        function_to_run,
-        function_args,
-        function_kwargs,
-        max_wait_secs,
-        wait_after_run_secs,
-        return_result,
-        method_object,
-        object_signature,
-        custom_class,
-        exec_not_eval
-    )
-    return send_request_with_func_details(
-        function_details=function_details,
-        experiment_file_path=experiment_file_path,
-        username=username,
-        password=password
-    )
+    try:
+        function_details = build_function_details(
+            imports,
+            function_to_run,
+            function_args,
+            function_kwargs,
+            max_wait_secs,
+            wait_after_run_secs,
+            return_result,
+            method_object,
+            object_signature,
+            custom_class,
+            exec_not_eval
+        )
+        return send_request_with_func_details(
+            function_details=function_details,
+            experiment_file_path=experiment_file_path,
+            username=username,
+            password=password
+        )
+    except Exception as e:
+        error_message = str(e)
+        error_data = {
+            "error_message": error_message,
+            "function_to_run": function_to_run
+        }
+        if experiment_file_path:
+            error_file_path = experiment_file_path.parent / "excluded_calls.json"
+            if error_file_path.exists():
+                with open(error_file_path, "r") as f:
+                    existing_data = json.load(f)
+            else:
+                existing_data = []
+             
+            # Check if the error_data already exists in the existing_data list
+            if error_data not in existing_data:
+                existing_data.append(error_data)
+            
+            with open(error_file_path, "w") as f:
+                json.dump(existing_data, f)

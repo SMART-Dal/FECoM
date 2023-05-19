@@ -15,7 +15,7 @@ experiment_number = sys.argv[1]
 experiment_project = sys.argv[2]
 EXPERIMENT_FILE_PATH = EXPERIMENT_DIR / 'method-level' / experiment_project / f'experiment-{experiment_number}.json'
 
-def custom_method(func, imports: str, function_to_run: str, method_object=None, object_signature=None, function_args: list=None, function_kwargs: dict=None, custom_class=None):
+def custom_method(imports: str, function_to_run: str, method_object=None, object_signature=None, function_args: list=None, function_kwargs: dict=None, custom_class=None):
     result = send_request(imports=imports, function_to_run=function_to_run, function_args=function_args, function_kwargs=function_kwargs, max_wait_secs=MAX_WAIT_S, wait_after_run_secs=WAIT_AFTER_RUN_S, method_object=method_object, object_signature=object_signature, custom_class=custom_class, experiment_file_path=EXPERIMENT_FILE_PATH)
 (dataset, info) = tfds.load('oxford_iiit_pet:3.*.*', with_info=True)
 
@@ -25,9 +25,9 @@ def normalize(input_image, input_mask):
     return (input_image, input_mask)
 
 def load_image(datapoint):
-    custom_method(imports='import tensorflow as tf;from IPython.display import clear_output;import matplotlib.pyplot as plt;import tensorflow_datasets as tfds;from tensorflow_examples.models.pix2pix import pix2pix', function_to_run='tf.image.resize(*args)', method_object=None, object_signature=None, function_args=[eval("datapoint['image']"), eval('(128, 128)')], function_kwargs={})
+    custom_method(imports='import tensorflow as tf;import tensorflow_datasets as tfds;import matplotlib.pyplot as plt;from tensorflow_examples.models.pix2pix import pix2pix;from IPython.display import clear_output', function_to_run='tf.image.resize(*args)', method_object=None, object_signature=None, function_args=[eval("datapoint['image']"), eval('(128, 128)')], function_kwargs={})
     input_image = tf.image.resize(datapoint['image'], (128, 128))
-    custom_method(imports='import tensorflow as tf;from IPython.display import clear_output;import matplotlib.pyplot as plt;import tensorflow_datasets as tfds;from tensorflow_examples.models.pix2pix import pix2pix', function_to_run='tf.image.resize(*args, **kwargs)', method_object=None, object_signature=None, function_args=[eval("datapoint['segmentation_mask']"), eval('(128, 128)')], function_kwargs={'method': eval('tf.image.ResizeMethod.NEAREST_NEIGHBOR')})
+    custom_method(imports='import tensorflow as tf;import tensorflow_datasets as tfds;import matplotlib.pyplot as plt;from tensorflow_examples.models.pix2pix import pix2pix;from IPython.display import clear_output', function_to_run='tf.image.resize(*args, **kwargs)', method_object=None, object_signature=None, function_args=[eval("datapoint['segmentation_mask']"), eval('(128, 128)')], function_kwargs={'method': eval('tf.image.ResizeMethod.NEAREST_NEIGHBOR')})
     input_mask = tf.image.resize(datapoint['segmentation_mask'], (128, 128), method=tf.image.ResizeMethod.NEAREST_NEIGHBOR)
     (input_image, input_mask) = normalize(input_image, input_mask)
     return (input_image, input_mask)
@@ -42,9 +42,9 @@ class Augment(tf.keras.layers.Layer):
 
     def __init__(self, seed=42):
         super().__init__()
-        custom_method(imports='import tensorflow as tf;from IPython.display import clear_output;import matplotlib.pyplot as plt;import tensorflow_datasets as tfds;from tensorflow_examples.models.pix2pix import pix2pix', function_to_run='tf.keras.layers.RandomFlip(**kwargs)', method_object=None, object_signature=None, function_args=[], function_kwargs={'mode': eval('"horizontal"'), 'seed': eval('seed')})
+        custom_method(imports='import tensorflow as tf;import tensorflow_datasets as tfds;import matplotlib.pyplot as plt;from tensorflow_examples.models.pix2pix import pix2pix;from IPython.display import clear_output', function_to_run='tf.keras.layers.RandomFlip(**kwargs)', method_object=None, object_signature=None, function_args=[], function_kwargs={'mode': eval('"horizontal"'), 'seed': eval('seed')})
         self.augment_inputs = tf.keras.layers.RandomFlip(mode='horizontal', seed=seed)
-        custom_method(imports='import tensorflow as tf;from IPython.display import clear_output;import matplotlib.pyplot as plt;import tensorflow_datasets as tfds;from tensorflow_examples.models.pix2pix import pix2pix', function_to_run='tf.keras.layers.RandomFlip(**kwargs)', method_object=None, object_signature=None, function_args=[], function_kwargs={'mode': eval('"horizontal"'), 'seed': eval('seed')})
+        custom_method(imports='import tensorflow as tf;import tensorflow_datasets as tfds;import matplotlib.pyplot as plt;from tensorflow_examples.models.pix2pix import pix2pix;from IPython.display import clear_output', function_to_run='tf.keras.layers.RandomFlip(**kwargs)', method_object=None, object_signature=None, function_args=[], function_kwargs={'mode': eval('"horizontal"'), 'seed': eval('seed')})
         self.augment_labels = tf.keras.layers.RandomFlip(mode='horizontal', seed=seed)
 
     def call(self, inputs, labels):
@@ -66,41 +66,41 @@ def display(display_list):
 for (images, masks) in train_batches.take(2):
     (sample_image, sample_mask) = (images[0], masks[0])
     display([sample_image, sample_mask])
-custom_method(imports='import tensorflow as tf;from IPython.display import clear_output;import matplotlib.pyplot as plt;import tensorflow_datasets as tfds;from tensorflow_examples.models.pix2pix import pix2pix', function_to_run='tf.keras.applications.MobileNetV2(**kwargs)', method_object=None, object_signature=None, function_args=[], function_kwargs={'input_shape': eval('[128, 128, 3]'), 'include_top': eval('False')})
+custom_method(imports='import tensorflow as tf;import tensorflow_datasets as tfds;import matplotlib.pyplot as plt;from tensorflow_examples.models.pix2pix import pix2pix;from IPython.display import clear_output', function_to_run='tf.keras.applications.MobileNetV2(**kwargs)', method_object=None, object_signature=None, function_args=[], function_kwargs={'input_shape': eval('[128, 128, 3]'), 'include_top': eval('False')})
 base_model = tf.keras.applications.MobileNetV2(input_shape=[128, 128, 3], include_top=False)
 layer_names = ['block_1_expand_relu', 'block_3_expand_relu', 'block_6_expand_relu', 'block_13_expand_relu', 'block_16_project']
 base_model_outputs = [base_model.get_layer(name).output for name in layer_names]
-custom_method(imports='import tensorflow as tf;from IPython.display import clear_output;import matplotlib.pyplot as plt;import tensorflow_datasets as tfds;from tensorflow_examples.models.pix2pix import pix2pix', function_to_run='tf.keras.Model(**kwargs)', method_object=None, object_signature=None, function_args=[], function_kwargs={'inputs': eval('base_model.input'), 'outputs': eval('base_model_outputs')})
+custom_method(imports='import tensorflow as tf;import tensorflow_datasets as tfds;import matplotlib.pyplot as plt;from tensorflow_examples.models.pix2pix import pix2pix;from IPython.display import clear_output', function_to_run='tf.keras.Model(**kwargs)', method_object=None, object_signature=None, function_args=[], function_kwargs={'inputs': eval('base_model.input'), 'outputs': eval('base_model_outputs')})
 down_stack = tf.keras.Model(inputs=base_model.input, outputs=base_model_outputs)
 down_stack.trainable = False
 up_stack = [pix2pix.upsample(512, 3), pix2pix.upsample(256, 3), pix2pix.upsample(128, 3), pix2pix.upsample(64, 3)]
 
 def unet_model(output_channels: int):
-    custom_method(imports='import tensorflow as tf;from IPython.display import clear_output;import matplotlib.pyplot as plt;import tensorflow_datasets as tfds;from tensorflow_examples.models.pix2pix import pix2pix', function_to_run='tf.keras.layers.Input(**kwargs)', method_object=None, object_signature=None, function_args=[], function_kwargs={'shape': eval('[128, 128, 3]')})
+    custom_method(imports='import tensorflow as tf;import tensorflow_datasets as tfds;import matplotlib.pyplot as plt;from tensorflow_examples.models.pix2pix import pix2pix;from IPython.display import clear_output', function_to_run='tf.keras.layers.Input(**kwargs)', method_object=None, object_signature=None, function_args=[], function_kwargs={'shape': eval('[128, 128, 3]')})
     inputs = tf.keras.layers.Input(shape=[128, 128, 3])
-    custom_method(imports='import tensorflow as tf;from IPython.display import clear_output;import matplotlib.pyplot as plt;import tensorflow_datasets as tfds;from tensorflow_examples.models.pix2pix import pix2pix', function_to_run='obj(*args)', method_object=eval('down_stack'), object_signature=None, function_args=[eval('inputs')], function_kwargs={}, custom_class=None)
+    custom_method(imports='import tensorflow as tf;import tensorflow_datasets as tfds;import matplotlib.pyplot as plt;from tensorflow_examples.models.pix2pix import pix2pix;from IPython.display import clear_output', function_to_run='obj(*args)', method_object=eval('down_stack'), object_signature=None, function_args=[eval('inputs')], function_kwargs={}, custom_class=None)
     skips = down_stack(inputs)
     x = skips[-1]
     skips = reversed(skips[:-1])
     for (up, skip) in zip(up_stack, skips):
         x = up(x)
-        custom_method(imports='import tensorflow as tf;from IPython.display import clear_output;import matplotlib.pyplot as plt;import tensorflow_datasets as tfds;from tensorflow_examples.models.pix2pix import pix2pix', function_to_run='tf.keras.layers.Concatenate()', method_object=None, object_signature=None, function_args=[], function_kwargs={})
+        custom_method(imports='import tensorflow as tf;import tensorflow_datasets as tfds;import matplotlib.pyplot as plt;from tensorflow_examples.models.pix2pix import pix2pix;from IPython.display import clear_output', function_to_run='tf.keras.layers.Concatenate()', method_object=None, object_signature=None, function_args=[], function_kwargs={})
         concat = tf.keras.layers.Concatenate()
-        custom_method(imports='import tensorflow as tf;from IPython.display import clear_output;import matplotlib.pyplot as plt;import tensorflow_datasets as tfds;from tensorflow_examples.models.pix2pix import pix2pix', function_to_run='obj(*args)', method_object=eval('concat'), object_signature=None, function_args=[eval('[x, skip]')], function_kwargs={}, custom_class=None)
+        custom_method(imports='import tensorflow as tf;import tensorflow_datasets as tfds;import matplotlib.pyplot as plt;from tensorflow_examples.models.pix2pix import pix2pix;from IPython.display import clear_output', function_to_run='obj(*args)', method_object=eval('concat'), object_signature=None, function_args=[eval('[x, skip]')], function_kwargs={}, custom_class=None)
         x = concat([x, skip])
-    custom_method(imports='import tensorflow as tf;from IPython.display import clear_output;import matplotlib.pyplot as plt;import tensorflow_datasets as tfds;from tensorflow_examples.models.pix2pix import pix2pix', function_to_run='tf.keras.layers.Conv2DTranspose(**kwargs)', method_object=None, object_signature=None, function_args=[], function_kwargs={'filters': eval('output_channels'), 'kernel_size': eval('3'), 'strides': eval('2'), 'padding': eval("'same'")})
+    custom_method(imports='import tensorflow as tf;import tensorflow_datasets as tfds;import matplotlib.pyplot as plt;from tensorflow_examples.models.pix2pix import pix2pix;from IPython.display import clear_output', function_to_run='tf.keras.layers.Conv2DTranspose(**kwargs)', method_object=None, object_signature=None, function_args=[], function_kwargs={'filters': eval('output_channels'), 'kernel_size': eval('3'), 'strides': eval('2'), 'padding': eval("'same'")})
     last = tf.keras.layers.Conv2DTranspose(filters=output_channels, kernel_size=3, strides=2, padding='same')
-    custom_method(imports='import tensorflow as tf;from IPython.display import clear_output;import matplotlib.pyplot as plt;import tensorflow_datasets as tfds;from tensorflow_examples.models.pix2pix import pix2pix', function_to_run='obj(*args)', method_object=eval('last'), object_signature=None, function_args=[eval('x')], function_kwargs={}, custom_class=None)
+    custom_method(imports='import tensorflow as tf;import tensorflow_datasets as tfds;import matplotlib.pyplot as plt;from tensorflow_examples.models.pix2pix import pix2pix;from IPython.display import clear_output', function_to_run='obj(*args)', method_object=eval('last'), object_signature=None, function_args=[eval('x')], function_kwargs={}, custom_class=None)
     x = last(x)
     return tf.keras.Model(inputs=inputs, outputs=x)
 OUTPUT_CLASSES = 3
 model = unet_model(output_channels=OUTPUT_CLASSES)
 model.compile(optimizer='adam', loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True), metrics=['accuracy'])
-custom_method(imports='import tensorflow as tf;from IPython.display import clear_output;import matplotlib.pyplot as plt;import tensorflow_datasets as tfds;from tensorflow_examples.models.pix2pix import pix2pix', function_to_run='tf.keras.utils.plot_model(*args, **kwargs)', method_object=None, object_signature=None, function_args=[eval('model')], function_kwargs={'show_shapes': eval('True')})
+custom_method(imports='import tensorflow as tf;import tensorflow_datasets as tfds;import matplotlib.pyplot as plt;from tensorflow_examples.models.pix2pix import pix2pix;from IPython.display import clear_output', function_to_run='tf.keras.utils.plot_model(*args, **kwargs)', method_object=None, object_signature=None, function_args=[eval('model')], function_kwargs={'show_shapes': eval('True')})
 tf.keras.utils.plot_model(model, show_shapes=True)
 
 def create_mask(pred_mask):
-    custom_method(imports='import tensorflow as tf;from IPython.display import clear_output;import matplotlib.pyplot as plt;import tensorflow_datasets as tfds;from tensorflow_examples.models.pix2pix import pix2pix', function_to_run='tf.math.argmax(*args, **kwargs)', method_object=None, object_signature=None, function_args=[eval('pred_mask')], function_kwargs={'axis': eval('-1')})
+    custom_method(imports='import tensorflow as tf;import tensorflow_datasets as tfds;import matplotlib.pyplot as plt;from tensorflow_examples.models.pix2pix import pix2pix;from IPython.display import clear_output', function_to_run='tf.math.argmax(*args, **kwargs)', method_object=None, object_signature=None, function_args=[eval('pred_mask')], function_kwargs={'axis': eval('-1')})
     pred_mask = tf.math.argmax(pred_mask, axis=-1)
     pred_mask = pred_mask[..., tf.newaxis]
     return pred_mask[0]
@@ -144,16 +144,16 @@ except Exception as e:
 label = [0, 0]
 prediction = [[-3.0, 0], [-3, 0]]
 sample_weight = [1, 10]
-custom_method(imports='import tensorflow as tf;from IPython.display import clear_output;import matplotlib.pyplot as plt;import tensorflow_datasets as tfds;from tensorflow_examples.models.pix2pix import pix2pix', function_to_run='tf.keras.losses.SparseCategoricalCrossentropy(**kwargs)', method_object=None, object_signature=None, function_args=[], function_kwargs={'from_logits': eval('True'), 'reduction': eval('tf.keras.losses.Reduction.NONE')})
+custom_method(imports='import tensorflow as tf;import tensorflow_datasets as tfds;import matplotlib.pyplot as plt;from tensorflow_examples.models.pix2pix import pix2pix;from IPython.display import clear_output', function_to_run='tf.keras.losses.SparseCategoricalCrossentropy(**kwargs)', method_object=None, object_signature=None, function_args=[], function_kwargs={'from_logits': eval('True'), 'reduction': eval('tf.keras.losses.Reduction.NONE')})
 loss = tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True, reduction=tf.keras.losses.Reduction.NONE)
-custom_method(imports='import tensorflow as tf;from IPython.display import clear_output;import matplotlib.pyplot as plt;import tensorflow_datasets as tfds;from tensorflow_examples.models.pix2pix import pix2pix', function_to_run='obj(label, prediction, sample_weight).numpy()', method_object=eval('loss'), object_signature=None, function_args=[], function_kwargs={}, custom_class=None)
+custom_method(imports='import tensorflow as tf;import tensorflow_datasets as tfds;import matplotlib.pyplot as plt;from tensorflow_examples.models.pix2pix import pix2pix;from IPython.display import clear_output', function_to_run='obj(label, prediction, sample_weight).numpy()', method_object=eval('loss'), object_signature=None, function_args=[], function_kwargs={}, custom_class=None)
 loss(label, prediction, sample_weight).numpy()
 
 def add_sample_weights(image, label):
-    custom_method(imports='import tensorflow as tf;from IPython.display import clear_output;import matplotlib.pyplot as plt;import tensorflow_datasets as tfds;from tensorflow_examples.models.pix2pix import pix2pix', function_to_run='tf.constant(*args)', method_object=None, object_signature=None, function_args=[eval('[2.0, 2.0, 1.0]')], function_kwargs={})
+    custom_method(imports='import tensorflow as tf;import tensorflow_datasets as tfds;import matplotlib.pyplot as plt;from tensorflow_examples.models.pix2pix import pix2pix;from IPython.display import clear_output', function_to_run='tf.constant(*args)', method_object=None, object_signature=None, function_args=[eval('[2.0, 2.0, 1.0]')], function_kwargs={})
     class_weights = tf.constant([2.0, 2.0, 1.0])
     class_weights = class_weights / tf.reduce_sum(class_weights)
-    custom_method(imports='import tensorflow as tf;from IPython.display import clear_output;import matplotlib.pyplot as plt;import tensorflow_datasets as tfds;from tensorflow_examples.models.pix2pix import pix2pix', function_to_run='tf.gather(*args, **kwargs)', method_object=None, object_signature=None, function_args=[eval('class_weights')], function_kwargs={'indices': eval('tf.cast(label, tf.int32)')})
+    custom_method(imports='import tensorflow as tf;import tensorflow_datasets as tfds;import matplotlib.pyplot as plt;from tensorflow_examples.models.pix2pix import pix2pix;from IPython.display import clear_output', function_to_run='tf.gather(*args, **kwargs)', method_object=None, object_signature=None, function_args=[eval('class_weights')], function_kwargs={'indices': eval('tf.cast(label, tf.int32)')})
     sample_weights = tf.gather(class_weights, indices=tf.cast(label, tf.int32))
     return (image, label, sample_weights)
 train_batches.map(add_sample_weights).element_spec

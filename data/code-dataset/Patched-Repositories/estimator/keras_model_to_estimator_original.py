@@ -11,6 +11,7 @@ model.compile(loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=Tru
               optimizer='adam')
 model.summary()
 def input_fn():
+  import tensorflow_datasets as tfds
   split = tfds.Split.TRAIN
   dataset = tfds.load('iris', split=split, as_supervised=True)
   dataset = dataset.map(lambda features, labels: ({'dense_input':features}, labels))

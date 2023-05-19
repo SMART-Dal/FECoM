@@ -1,3 +1,4 @@
+from _ast import Expr
 import ast
 from ast import literal_eval
 from pprint import pprint
@@ -7,6 +8,7 @@ import inspect
 import copy
 import json
 import argparse
+from typing import Any
 
 parser = argparse.ArgumentParser()
 parser.add_argument('input_files', type=argparse.FileType('r'))
@@ -27,6 +29,9 @@ def main():
     global args
     sourceCode = args.input_files.read()
     tree = ast.parse(sourceCode)
+    # print('+'*100)
+    # print(ast.dump(tree, indent=4))
+    # print('_'*100)
 
     #Step2: Extract list of libraries and aliases for energy calculation
     analyzer = Analyzer()
@@ -80,7 +85,11 @@ def main():
         tree.body.insert(first_non_import, cm_node)
 
     # print('+'*100)
-    # print(ast.dump(tree, indent=4))
+    # import traceback
+    # try:
+    #     print(ast.dump(tree, indent=4))
+    # except:
+    #     traceback.print_exc()
     # print('_'*100)
 
     #Step6: Unparse and convert AST to final code
@@ -176,24 +185,60 @@ class TransformCall(ast.NodeTransformer):
             # print("Unsupported value type")
             return None
 
+    # def visit_Assign(self, node):
+    #     target = node.targets[0]
+    #     self.objectname = self.get_target_id(target)
+    #     classname = self.get_func_name(node.value)
+    #     if classname and classname in list(requiredClassDefs.keys()):
+    #         requiredObjClassMapping[self.objectname] = classname
+    #         requiredObjectsSignature[self.objectname] = ast.get_source_segment(sourceCode, node.value)
+        
+    #     if isinstance(node.value, ast.Call):
+    #          node.value = self.visit_Call(node.value)
+            
+    #     return node
+
     def visit_Assign(self, node):
         target = node.targets[0]
         self.objectname = self.get_target_id(target)
         classname = self.get_func_name(node.value)
+        modified_node = None  # Initialize modified_node as None
+
         if classname and classname in list(requiredClassDefs.keys()):
             requiredObjClassMapping[self.objectname] = classname
             requiredObjectsSignature[self.objectname] = ast.get_source_segment(sourceCode, node.value)
-        
+
         if isinstance(node.value, ast.Call):
-            node.value = self.visit_Call(node.value)
+            modified_node = self.custom_Call(node.value)
+        
+        if modified_node and modified_node != node.value:
+            # block = ast.Module(body=[ast.Expr(value=modified_node), node])
+            # ast.fix_missing_locations(block)
+            # print("modified_node_type", type(modified_node))
+            # return [modified_node[0], node]
+            return [ast.Expr(value=modified_node[0]), node]
+
         return node
 
-    def visit_Call(self, node):
+
+    def visit_Expr(self, node):
+        # print("visit_Expr", ast.dump(node))
+        if isinstance(node.value, ast.Call):
+            modified_node = None  # Initialize modified_node as None
+            modified_node = self.custom_Call(node.value)
+            if modified_node and modified_node != node.value:
+                return [ast.Expr(value=modified_node[0]), node]
+        return node
+    
+    def custom_Call(self, node):
         callvisitor = FuncCallVisitor()
         callvisitor.visit(node.func)
+        callvisitor_list = callvisitor.get_name_list()
+        # print("callvisitor_list", ast.dump(node))
 
         if(any(lib in callvisitor.get_name_list() for lib in requiredAlias)):
             dummyNode=copy.deepcopy(node)
+            unmodified_node = copy.deepcopy(node)
             dummyNode.args.clear()
             dummyNode.keywords.clear()
             argList = [ast.get_source_segment(sourceCode, a) for a in node.args]
@@ -204,7 +249,7 @@ class TransformCall(ast.NodeTransformer):
                 dummyNode.keywords.append(ast.Name(id='**kwargs', ctx=ast.Load()))
 
             new_node = ast.Call(func=ast.Name(id='custom_method', ctx=ast.Load()),
-                                args=[ast.Expr(node)],
+                                args=[],
                                 keywords=[
                                     ast.keyword(
                                         arg='imports',
@@ -242,17 +287,12 @@ class TransformCall(ast.NodeTransformer):
                                         ],
                                         starargs=None, kwargs=None
                                 )
+            
             ast.copy_location(new_node, node)
             ast.fix_missing_locations(new_node)
-            return new_node
-
-        callvisitor_list = callvisitor.get_name_list()
-        # print("callvisitor_list", callvisitor_list)
-        # print("callvisitor_list[0]", callvisitor_list[0])
-        # print("requiredObjects", requiredObjects)
-        # print("requiredObjClassMapping", requiredObjClassMapping.get(callvisitor_list[0]))
-        # print("requiredClassDefs", list(requiredClassDefs.keys()))
-        if(callvisitor_list and (callvisitor_list[0] in requiredObjects) and (requiredObjClassMapping.get(callvisitor_list[0]) in list(requiredClassDefs.keys()))):
+            # return [ast.Expr(value=new_node), ast.Expr(value=node)]
+            return [new_node, node]
+        elif(callvisitor_list and (callvisitor_list[0] in requiredObjects) and (requiredObjClassMapping.get(callvisitor_list[0]) in list(requiredClassDefs.keys()))):
             
             dummyNode=copy.deepcopy(node)
             dummyNode.args.clear()
@@ -264,7 +304,7 @@ class TransformCall(ast.NodeTransformer):
             if(node.keywords):
                 dummyNode.keywords.append(ast.Name(id='**kwargs', ctx=ast.Load()))
             new_node = ast.Call(func=ast.Name(id='custom_method', ctx=ast.Load()),
-                                args=[ast.Expr(node)],
+                                args=[],
                                 keywords=[
                                     ast.keyword(
                                         arg='imports',
@@ -312,10 +352,9 @@ class TransformCall(ast.NodeTransformer):
                                 )
             ast.copy_location(new_node, node)
             ast.fix_missing_locations(new_node)
-            return new_node
-        
-
-        if(callvisitor_list and (callvisitor_list[0] in requiredObjects)):
+            # return [ast.Expr(value=new_node), ast.Expr(value=node)]
+            return [new_node, node]
+        elif(callvisitor_list and (callvisitor_list[0] in requiredObjects)):
             
             dummyNode=copy.deepcopy(node)
             dummyNode.args.clear()
@@ -327,7 +366,7 @@ class TransformCall(ast.NodeTransformer):
             if(node.keywords):
                 dummyNode.keywords.append(ast.Name(id='**kwargs', ctx=ast.Load()))
             new_node = ast.Call(func=ast.Name(id='custom_method', ctx=ast.Load()),
-                                args=[ast.Expr(node)],
+                                args=[],
                                 keywords=[
                                     ast.keyword(
                                         arg='imports',
@@ -375,7 +414,11 @@ class TransformCall(ast.NodeTransformer):
                                 )
             ast.copy_location(new_node, node)
             ast.fix_missing_locations(new_node)
-            return new_node
+            # print("new_node",ast.dump(new_node))
+            # print("new_node_type",type(new_node))
+            # return [ast.Expr(value=new_node), ast.Expr(value=node)]
+            return [new_node, node]
+            
 
         return node
 
