@@ -29,6 +29,7 @@ from tool.server.server_config import CPU_STD_TO_MEAN, RAM_STD_TO_MEAN, GPU_STD_
 from tool.server.server_config import WAIT_PER_STABLE_CHECK_LOOP_S, CHECK_LAST_N_POINTS, STABLE_CHECK_TOLERANCE, CPU_TEMPERATURE_INTERVAL_S, MEASUREMENT_INTERVAL_S
 from tool.server.function_details import FunctionDetails # shown unused but still required since this is the class used for sending function details to the server
 from tool.server.measurement_parse import parse_nvidia_smi, parse_perf, parse_cpu_temperature
+from tool.server.utilities import custom_print
 
 from tool.experiment.experiments import ExperimentKinds
 
@@ -40,8 +41,7 @@ logging.basicConfig(filename='flask.log', level=logging.DEBUG,
                     format='%(asctime)s %(levelname)s %(name)s %(message)s')
 
 def print_server(message: str):
-    time_stamp = datetime.now().strftime("%H:%M:%S")
-    print(f"[SERVER] [{time_stamp}] " + message)
+    custom_print("server", message)
 
 """
 Authentication

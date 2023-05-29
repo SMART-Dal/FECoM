@@ -1,4 +1,5 @@
 from pathlib import Path
+from tool.client.client_config import PROJECT_PATH
 
 """
 SERVER URL, PORT & DEBUG CONFIG
@@ -76,7 +77,10 @@ MEASUREMENT_INTERVAL_S = MEASUREMENT_INTERVAL_MS / 1000
 # if you want to use this in another package, you could
 # - use os.path.dirname(os.path.abspath(__file__)) to get your current file's absolute path
 # - use a relative path from your current file
-energy_data_dir = Path("out")
+# (!) Change this accordingly (!)
+# if you want to use local execution, provide a path that starts from the PROJECT_PATH (from client_config)
+energy_data_dir = PROJECT_PATH / "tool/server/out" # local execution
+# energy_data_dir = Path("out") # server execution
 PERF_FILE = energy_data_dir/"perf.txt"
 NVIDIA_SMI_FILE = energy_data_dir/"nvidia_smi.txt"
 # store start times here

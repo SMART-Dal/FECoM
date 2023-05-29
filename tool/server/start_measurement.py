@@ -2,6 +2,9 @@
 Start the server application together with perf & nvidia-smi
 by running this python module.
 
+When running with the -l option, it does not start the server 
+(local execution mode)
+
 This has the same effect as running bash energy_measurement.sh,
 but is more useful for gathering precise start/end times of perf
 & nvidia-smi, which helps to synchronise time measurements with
@@ -13,17 +16,17 @@ from pathlib import Path
 import shlex
 import atexit
 import time
-from datetime import datetime
 import os
+import sys
 
 from tool.server.idle_stats import calc_ratios_from_data
 from tool.server.server_config import MEASUREMENT_INTERVAL_MS, CPU_FILE_SEPARATOR
 from tool.server.server_config import NVIDIA_SMI_FILE, PERF_FILE, SERVER_MODULE, START_TIMES_FILE, EXECUTION_LOG_FILE, CPU_TEMPERATURE_MODULE
 from tool.server.server_config import CHECK_LAST_N_POINTS, CPU_STD_TO_MEAN, RAM_STD_TO_MEAN, GPU_STD_TO_MEAN, STABLE_CHECK_TOLERANCE
+from tool.server.utilities import custom_print
 
 def print_main(message: str):
-    time_stamp = datetime.now().strftime("%H:%M:%S")
-    print(f"[MAIN] [{time_stamp}] " + message)
+    custom_print("main", message)
 
 def quit_process(process: Popen, message: str, print_func):
     process.terminate()
@@ -184,13 +187,21 @@ if __name__ == "__main__":
     atexit.register(print_main, "Successfully terminated the server application")
     
     # (1) Start the server & energy measurement programs (perf stat & nvidia-smi).
+    
+    # do not start the server if running in local execution mode
+    if len(sys.argv) > 1:
+        if sys.argv[1] == "-l":
+            print_main("Running in LOCAL mode")
+    else: 
+        print_main("Running in SERVER mode")
+        server_start_time = start_server()
+    
     # Keep a reference to perf stat & nvidia-smi such that they can be terminated by the program.
-    server_start_time = start_server()
     perf_stat, nvidia_smi = start_measurements(server_start_time)
 
-    # (2) Create the server execution log file which keeps track of the functions executed.
+    # (2) Create the execution log file which keeps track of the functions executed.
     # Initialise previous_execution with the initial contents of the file.
-    previous_execution = f"START_SERVER;{server_start_time};Functions executed on the server are logged in this file\n"
+    previous_execution = f"START_MEASUREMENTS;{server_start_time};Functions executed are logged in this file\n"
     with open(EXECUTION_LOG_FILE, 'w') as f:
         f.write("function_executed;time_stamp;server_status_code\n")
         f.write(previous_execution)

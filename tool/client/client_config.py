@@ -5,31 +5,24 @@ CLIENT CONFIG
 """
 
 # (!) add your own data path here (!)
-# change this to the absolute path on your machine before running anything in Patched-Repositories
+# change this to the absolute path to the top-level project directory on your machine
+# before running anything in Patched-Repositories
 # data_path_saurabh = Path('/home/srajput/projects/def-tusharma/srajput/GreenAI-extension/data/')
-data_path_saurabh = Path('/home/saurabh/code-energy-consumption/data/')
-data_path_tim = Path('/home/timw/GreenAI-extension/data/')
+project_path_saurabh = Path('/home/saurabh/code-energy-consumption/')
+project_path_tim = Path('/Users/tim.widmayer/UCL_local/GreenAI-extension/')
+project_path_tim_compute_canada = Path('/home/timw/GreenAI-extension/')
 
-energy_dataset = 'energy-dataset/'
-
-# energy dataset directories
-energy_dir_saurabh = data_path_saurabh / energy_dataset
-energy_dir_tim = data_path_tim / energy_dataset
+# (!) Change this to the relevant path variable (!)
+PROJECT_PATH = project_path_tim
 
 # EXPERIMENT_TAG = 'experiment-1' (deprecated)
 
 # directory where to store data, an Experiment will append to this the experiment kind
 # (e.g. project-level) and after that the subdirectory structure will be equivalent to the code dataset
-EXPERIMENT_DIR = energy_dir_saurabh
-
-code_dataset = Path('code-dataset/Patched-Repositories')
-
-# code dataset directories
-code_dir_saurabh = data_path_saurabh / code_dataset
-code_dir_tim = data_path_tim / code_dataset
+EXPERIMENT_DIR = PROJECT_PATH / Path('/data/energy-dataset/')
 
 # directory where to find patched code
-CODE_DIR = code_dir_saurabh
+CODE_DIR = PROJECT_PATH / Path('/data/code-dataset/Patched-Repositories')
 
 PATCHING_SCRIPT_PATH = Path('script_patcher.py')
 code_dataset_path = Path('../../data/code-dataset')
