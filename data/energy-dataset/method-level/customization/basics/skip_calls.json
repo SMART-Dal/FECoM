@@ -1,0 +1,1 @@
+[{"function_to_run": "tf.linalg.matmul(*args)", "function_args": [[[1]], [[2, 3]]], "function_kwargs": {}}, {"function_to_run": "tf.random.uniform(*args)", "function_args": [[3, 3]], "function_kwargs": {}}, {"function_to_run": "tf.random.uniform(*args)", "function_args": [[1000, 1000]], "function_kwargs": {}}]
