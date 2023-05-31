@@ -39,7 +39,7 @@ CHECK_LAST_N_POINTS = 20
 
 # relative tolerance for difference between stable stdev/mean ratio and current ratios as measured by the server
 # e.g. 0.1 would mean allowing a ratio that's 10% higher than the stable stdev/mean ratio
-STABLE_CHECK_TOLERANCE = 0.5
+STABLE_CHECK_TOLERANCE = 0
 
 # average (mean) standard deviations and means for stable energy data for 20 values in a row from, generated with replication/settings_calculation.stdev_mean_ratios()
 # Do not change these between experiments!
@@ -92,7 +92,7 @@ EXECUTION_LOG_FILE = energy_data_dir/"execution_log.txt"
 """
 TEMPERATURE MEASUREMENT CONFIG
 """
-CPU_TEMPERATURE_MODULE = "cpu_temperature.py"
+CPU_TEMPERATURE_MODULE = PROJECT_PATH / "tool/server/cpu_temperature.py"
 # set cpu temperature measurement interval for sensors in seconds
 # the actual interval will be a few milliseconds greater, due to processing time
 CPU_TEMPERATURE_INTERVAL_S = 1

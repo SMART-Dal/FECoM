@@ -7,8 +7,8 @@ from pathlib import Path
 from tool.server.server_config import URL, DEBUG
 from tool.server.function_details import FunctionDetails, build_function_details
 
-# TODO maybe requires some refactoring
-def store_response(response, experiment_file_path: Path):
+# TODO is_dict is a temporary fix to experiment with local_execution
+def store_response(response, experiment_file_path: Path, is_dict = False):
     # send_request give experiment_file_path a default value of None for testing purposes. But should be overwritten if want to save response.
     if experiment_file_path is None:
         raise FileNotFoundError("Experiment File Path is None, but was expected to be a valid Path.")
@@ -34,7 +34,10 @@ def store_response(response, experiment_file_path: Path):
 
     if response:
         try:
-            data = json.loads(response)
+            if not is_dict:
+                data = json.loads(response)
+            else:
+                data = response
             existing_data.append(data)
             if DEBUG:
                 print("Data loaded from response")

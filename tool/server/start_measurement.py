@@ -176,8 +176,7 @@ def print_stdev_mean_ratios(wait_until_printing_stats: int):
     CPU stdev/mean ratio: {cpu_std_mean} (current) vs {CPU_STD_TO_MEAN} (config) vs {CPU_STD_TO_MEAN * (1 + STABLE_CHECK_TOLERANCE)} (config + tolerance)
     RAM stdev/mean ratio: {ram_std_mean} (current) vs {RAM_STD_TO_MEAN} (config) vs {RAM_STD_TO_MEAN * (1 + STABLE_CHECK_TOLERANCE)} (config + tolerance)
     GPU stdev/mean ratio: {gpu_std_mean} (current) vs {GPU_STD_TO_MEAN} (config) vs {GPU_STD_TO_MEAN * (1 + STABLE_CHECK_TOLERANCE)} (config + tolerance)
-    If the current ratios are significantly larger than the config ones, there might
-    be an excess number of background processes running.
+    If the current ratios are significantly larger than the config ones, there might be an excess number of background processes running.
     """
     )
 
@@ -192,6 +191,9 @@ if __name__ == "__main__":
     if len(sys.argv) > 1:
         if sys.argv[1] == "-l":
             print_main("Running in LOCAL mode")
+            server_start_time = 0
+        else:
+            raise ValueError("Expected -l option for local execution or no option.")
     else: 
         print_main("Running in SERVER mode")
         server_start_time = start_server()

@@ -212,7 +212,7 @@ def after_execution(
     with open(EXECUTION_LOG_FILE, 'a') as f:
         f.write(f"{function_to_run};{time.time_ns()}")
 
-    store_response(results, experiment_file_path)
+    store_response(results, experiment_file_path, is_dict=True)
 
 
 
