@@ -7,13 +7,18 @@ import time
 import pickle
 import atexit
 import json
+from pathlib import Path
 
 from tool.server.utilities import custom_print
 from tool.server.start_measurement import start_sensors, quit_process, unregister_and_quit_process
 from tool.server.send_request import store_response
+from tool.server.function_details import FunctionDetails, build_function_details
 
 # TODO these methods should potentially be refactored into a new module
 from tool.server.flask_server import run_check_loop, server_is_stable_check, temperature_is_low_check, get_current_times, get_energy_data, get_cpu_temperature_data
+
+# TODO these two settings should be moved to server_config
+from tool.client.client_config import MAX_WAIT_S, WAIT_AFTER_RUN_S
 
 from tool.server.server_config import DEBUG
 # stable state constants
@@ -30,7 +35,7 @@ def print_local(message: str):
 
 
 
-def prepare_state(max_wait_secs: int):
+def prepare_state():
     """
     Ensure the server is in the right state before starting execution
     """
@@ -46,15 +51,15 @@ def prepare_state(max_wait_secs: int):
 
     # (2a) check that temperatures are below threshold, then quit the CPU temperature measurement process
     begin_temperature_check_time = time.time_ns()
-    if not run_check_loop(True, max_wait_secs, WAIT_PER_STABLE_CHECK_LOOP_S, "low temperature", temperature_is_low_check, CHECK_LAST_N_POINTS, CPU_MAXIMUM_TEMPERATURE, GPU_MAXIMUM_TEMPERATURE):
+    if not run_check_loop(True, MAX_WAIT_S, WAIT_PER_STABLE_CHECK_LOOP_S, "low temperature", temperature_is_low_check, CHECK_LAST_N_POINTS, CPU_MAXIMUM_TEMPERATURE, GPU_MAXIMUM_TEMPERATURE):
         unregister_and_quit_process(sensors, "sensors")
-        raise TimeoutError(f"CPU could not cool down to {CPU_MAXIMUM_TEMPERATURE} within {max_wait_secs} seconds")
+        raise TimeoutError(f"CPU could not cool down to {CPU_MAXIMUM_TEMPERATURE} within {MAX_WAIT_S} seconds")
     unregister_and_quit_process(sensors, "sensors")
 
     # (2b) check that the CPU, RAM and GPU energy consumption is stable
     begin_stable_check_time = time.time_ns()
-    if not run_check_loop(False, max_wait_secs, WAIT_PER_STABLE_CHECK_LOOP_S, "stable state", server_is_stable_check, CHECK_LAST_N_POINTS, STABLE_CHECK_TOLERANCE):
-        raise TimeoutError(f"Server could not reach a stable state within {max_wait_secs} seconds")
+    if not run_check_loop(False, MAX_WAIT_S, WAIT_PER_STABLE_CHECK_LOOP_S, "stable state", server_is_stable_check, CHECK_LAST_N_POINTS, STABLE_CHECK_TOLERANCE):
+        raise TimeoutError(f"Server could not reach a stable state within {MAX_WAIT_S} seconds")
 
     # (3) evaluate the function. Get the start & end times from the files and also save their exact values.
     # TODO potentially correct here for the small time offset created by fetching the times for the files. We can use the server times for this.
@@ -65,43 +70,11 @@ def prepare_state(max_wait_secs: int):
     return start_time_perf, start_time_nvidia, start_time_server, begin_stable_check_time, begin_temperature_check_time
 
 
-def format_request(results, function_to_run, args, kwargs, method_object, object_signature, experiment_file_path, project_level: bool = False):
-    # (4) The function has executed successfully. Now add size data and format the return dictionary
-    # to be in the format {function_signature: results}
-    results["input_sizes"] = {
-        "args_size": len(pickle.dumps(args)) if args is not None else None,
-        "kwargs_size": len(pickle.dumps(kwargs)) if kwargs is not None else None,
-        "object_size": len(pickle.dumps(method_object)) if method_object is not None else None
-    }
-
-    if project_level:
-        # if this option is enabled, we don't execute a single function, so use project-level as key instead
-        # to avoid having a multiline code string as the dict key
-        results = {ExperimentKinds.PROJECT_LEVEL.value: results}
-    else:
-        # if the function executed is a method run on an object (first condition),
-        # check if an object signature was sent with the request (second condition),
-        # if yes, remove obj and prepend it to the call: e.g. obj.fit() becomes tf.keras.Sequential.fit()
-        if (method_object is not None) and (object_signature is not None):
-            results = {object_signature + function_to_run[3:]: results}
-        else:
-            results = {function_to_run: results}
-        
-    # (6) Write the method details to the execution log file with a time stamp (to keep entries unique) and status
-    # This triggers the reload of perf & nvidia-smi, clearing the energy data from the execution of this function
-    # (see start_measurement.py for implementation of this process) 
-    with open(EXECUTION_LOG_FILE, 'a') as f:
-        f.write(f"{function_to_run};{time.time_ns()}")
-    
-
-    store_response(results, experiment_file_path)
-
-
 """
 Core functions
 """
 
-def before_execution(max_wait_secs, wait_after_run_secs):
+def before_execution():
     """
     Insert directly before the function call in the script.
     """
@@ -110,7 +83,7 @@ def before_execution(max_wait_secs, wait_after_run_secs):
         try:
             print_local("Waiting before running function for 10 seconds.")
             time.sleep(10)
-            start_time_perf, start_time_nvidia, start_time_server, begin_stable_check_time, begin_temperature_check_time = prepare_state(max_wait_secs, wait_after_run_secs)
+            start_time_perf, start_time_nvidia, start_time_server, begin_stable_check_time, begin_temperature_check_time = prepare_state()
             print_local("Successfully reached stable state")
             break
         except TimeoutError as e:
@@ -120,15 +93,22 @@ def before_execution(max_wait_secs, wait_after_run_secs):
             time.sleep(30)
             continue  # retry reaching stable state
     
-    return start_time_perf, start_time_nvidia, start_time_server, begin_stable_check_time, begin_temperature_check_time
+    start_times = {
+        "start_time_perf": start_time_perf,
+        "start_time_nvidia": start_time_nvidia,
+        "start_time_server": start_time_server,
+        "begin_stable_check_time": begin_stable_check_time,
+        "begin_temperature_check_time": begin_temperature_check_time
+
+    }
+    return start_times
 
 
 # TODO add default values, and test this method
 def after_execution(
-        function_to_run, args, kwargs, max_wait_secs, wait_after_run_secs, method_object,
-        object_signature, experiment_file_path, project_level,
-        start_time_perf, start_time_nvidia, start_time_server,
-        begin_stable_check_time, begin_temperature_check_time):
+        start_times: dict, experiment_file_path: str, function_to_run: str,
+        function_args: list = None, function_kwargs: dict = None,
+        method_object: str = None, object_signature: str = None, project_level: bool = False):
     """
     Insert directly after the function call in the script.
 
@@ -144,16 +124,19 @@ def after_execution(
 
     # (4) Wait some specified amount of time to measure potentially elevated energy consumption after the function has terminated
     if DEBUG:
-        print_local(f"waiting idle for {wait_after_run_secs} seconds after function execution")
-    if wait_after_run_secs > 0:
-        time.sleep(wait_after_run_secs)
+        print_local(f"waiting idle for {WAIT_AFTER_RUN_S} seconds after function execution")
+    if WAIT_AFTER_RUN_S > 0:
+        time.sleep(WAIT_AFTER_RUN_S)
+    
+    if DEBUG:
+        print_local(f"Performed {function_to_run[:100]} on input and will now save energy data.")
 
     # (5) get the energy data & gather all start and end times
     energy_data, df_gpu = get_energy_data()
     cpu_temperatures = get_cpu_temperature_data()
 
     # "normalise" nvidia-smi start/end times such that the first value in the gpu energy data has timestamp 0
-    start_time_nvidia_normalised = start_time_nvidia - df_gpu["timestamp"].iloc[0]
+    start_time_nvidia_normalised = start_times["start_time_nvidia"] - df_gpu["timestamp"].iloc[0]
     end_time_nvidia_normalised = end_time_nvidia - df_gpu["timestamp"].iloc[0]
 
     # get the start times generated by start_measurement.py
@@ -165,22 +148,22 @@ def after_execution(
 
     times = {
         "initial_start_time_server": initial_start_time_server,
-        "start_time_server": start_time_server,
+        "start_time_server": start_times["start_time_server"],
         "end_time_server": end_time_server,
-        "start_time_perf": start_time_perf, 
+        "start_time_perf": start_times["start_time_perf"], 
         "end_time_perf": end_time_perf,
         "sys_start_time_perf": sys_start_time_perf,
         "start_time_nvidia": start_time_nvidia_normalised,
         "end_time_nvidia": end_time_nvidia_normalised,
         "sys_start_time_nvidia": sys_start_time_nvidia,
-        "begin_stable_check_time": begin_stable_check_time,
-        "begin_temperature_check_time": begin_temperature_check_time
+        "begin_stable_check_time": start_times["begin_stable_check_time"],
+        "begin_temperature_check_time": start_times["begin_temperature_check_time"]
     }
 
     # (6) collect all relevant settings
     settings = {
-        "max_wait_s": max_wait_secs,
-        "wait_after_run_s": wait_after_run_secs,
+        "max_wait_s": MAX_WAIT_S,
+        "wait_after_run_s": WAIT_AFTER_RUN_S,
         "wait_per_stable_check_loop_s": WAIT_PER_STABLE_CHECK_LOOP_S,
         "tolerance": STABLE_CHECK_TOLERANCE,
         "measurement_interval_s": MEASUREMENT_INTERVAL_S,
@@ -193,23 +176,76 @@ def after_execution(
         "cpu_temperature_interval_s": CPU_TEMPERATURE_INTERVAL_S
     }
 
+    # (4) The function has executed successfully. Now add size data and format the return dictionary
+    # to be in the format {function_signature: results}
+    input_sizes = {
+        "args_size": len(pickle.dumps(function_args)) if function_args is not None else None,
+        "kwargs_size": len(pickle.dumps(function_kwargs)) if function_kwargs is not None else None,
+        "object_size": len(pickle.dumps(method_object)) if method_object is not None else None
+    }
+
     # (7) return the energy data, times, temperatures and settings
-    return_dict = {
+    results = {
         "energy_data": energy_data,
         "times": times,
         "cpu_temperatures": cpu_temperatures,
-        "settings": settings
+        "settings": settings,
+        "input_sizes": input_sizes
     }
-
-
-    if DEBUG:
-        print_local(f"Performed {function_to_run[:100]} on input and will now return energy data.")
     
-    format_request(return_dict, function_to_run, args, kwargs,
-                   method_object, object_signature, experiment_file_path,
-                   project_level)
+    if project_level:
+        # if this option is enabled, we don't execute a single function, so use project-level as key instead
+        # to avoid having a multiline code string as the dict key
+        results = {ExperimentKinds.PROJECT_LEVEL.value: results}
+    else:
+        # if the function executed is a method run on an object (first condition),
+        # check if an object signature is available (second condition),
+        # if yes, remove obj and prepend it to the call: e.g. obj.fit() becomes tf.keras.Sequential.fit()
+        if (method_object is not None) and (object_signature is not None):
+            results = {object_signature + function_to_run[3:]: results}
+        else:
+            results = {function_to_run: results}
+        
+    # (6) Write the method details to the execution log file with a time stamp (to keep entries unique)
+    # This triggers the reload of perf & nvidia-smi, clearing the energy data from the execution of this function
+    # (see tool.server.start_measurement for the implementation of this process) 
+    with open(EXECUTION_LOG_FILE, 'a') as f:
+        f.write(f"{function_to_run};{time.time_ns()}")
 
+    store_response(results, experiment_file_path)
 
 
 
     # TODO continue by figuring out file handling, then test with manual patching
+
+
+
+
+"""
+Attempt to write a new custom method that does local execution.
+But this would mean all methods are run twice on the same machine, which
+will likely introduce unnecessary noise & other problems.
+"""
+# from tool.client.client_config import EXPERIMENT_DIR, MAX_WAIT_S, WAIT_AFTER_RUN_S
+# import sys
+# experiment_number = sys.argv[1]
+# experiment_project = sys.argv[2]
+# EXPERIMENT_FILE_PATH = EXPERIMENT_DIR / 'method-level' / experiment_project / f'experiment-{experiment_number}.json'
+
+# # adheres to the same interface as send_request_with_function_details
+# def custom_method(imports: str, function_to_run: str, method_object=None,
+#                   object_signature=None, function_args: list=None,
+#                   function_kwargs: dict=None, custom_class=None):
+#     function_details = build_function_details(
+#             imports = imports,
+#             function_to_run = function_to_run,
+#             function_args = function_args,
+#             function_kwargs = function_kwargs,
+#             max_wait_secs = MAX_WAIT_S,
+#             wait_after_run_secs = WAIT_AFTER_RUN_S,
+#             method_object = method_object,
+#             object_signature = object_signature
+#         )
+#     result = run_local(function_details, experiment_file_path=EXPERIMENT_FILE_PATH)
+
+# def run_local(function_details: FunctionDetails, experiment_file_path: Path = None):
