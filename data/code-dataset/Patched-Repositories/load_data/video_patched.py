@@ -16,16 +16,46 @@ import os
 from pathlib import Path
 import dill as pickle
 import sys
+import numpy as np
 from tool.client.client_config import EXPERIMENT_DIR, MAX_WAIT_S, WAIT_AFTER_RUN_S
 from tool.server.send_request import send_request
 from tool.server.function_details import FunctionDetails
+import json
 current_path = os.path.abspath(__file__)
 experiment_number = sys.argv[1]
 experiment_project = sys.argv[2]
 EXPERIMENT_FILE_PATH = EXPERIMENT_DIR / 'method-level' / experiment_project / f'experiment-{experiment_number}.json'
+skip_calls_file_path = EXPERIMENT_FILE_PATH.parent / 'skip_calls.json'
+if skip_calls_file_path.exists():
+    with open(skip_calls_file_path, 'r') as f:
+        skip_calls = json.load(f)
+else:
+    skip_calls = []
+    with open(skip_calls_file_path, 'w') as f:
+        json.dump(skip_calls, f)
 
 def custom_method(imports: str, function_to_run: str, method_object=None, object_signature=None, function_args: list=None, function_kwargs: dict=None, custom_class=None):
+    if skip_calls is not None and any((call['function_to_run'] == function_to_run and np.array_equal(call['function_args'], function_args) and (call['function_kwargs'] == function_kwargs) for call in skip_calls)):
+        print('skipping call: ', function_to_run)
+        return
     result = send_request(imports=imports, function_to_run=function_to_run, function_args=function_args, function_kwargs=function_kwargs, max_wait_secs=MAX_WAIT_S, wait_after_run_secs=WAIT_AFTER_RUN_S, method_object=method_object, object_signature=object_signature, custom_class=custom_class, experiment_file_path=EXPERIMENT_FILE_PATH)
+    if result is not None and isinstance(result, dict) and (len(result) == 1):
+        energy_data = next(iter(result.values()))
+        if skip_calls is not None and 'start_time_perf' in energy_data['times'] and ('end_time_perf' in energy_data['times']) and ('start_time_nvidia' in energy_data['times']) and ('end_time_nvidia' in energy_data['times']) and (energy_data['times']['start_time_perf'] == energy_data['times']['end_time_perf']) and (energy_data['times']['start_time_nvidia'] == energy_data['times']['end_time_nvidia']):
+            call_to_skip = {'function_to_run': function_to_run, 'function_args': function_args, 'function_kwargs': function_kwargs}
+            try:
+                json.dumps(call_to_skip)
+                if call_to_skip not in skip_calls:
+                    skip_calls.append(call_to_skip)
+                    with open(skip_calls_file_path, 'w') as f:
+                        json.dump(skip_calls, f)
+                    print('skipping call added, current list is: ', skip_calls)
+                else:
+                    print('Skipping call already exists.')
+            except TypeError:
+                print('Ignore: Skipping call is not JSON serializable, skipping append and dump.')
+    else:
+        print('Invalid dictionary object or does not have one key-value pair.')
 URL = 'https://storage.googleapis.com/thumos14_files/UCF101_videos.zip'
 
 def list_files_from_zip_url(zip_url):
@@ -184,9 +214,9 @@ def format_frames(frame, output_size):
     Return:
       Formatted frame with padding of specified output size.
   """
-    custom_method(imports='import numpy as np;from tensorflow_docs.vis import embed;import remotezip as rz;import imageio;import tensorflow as tf;import collections;import os;import tqdm;import pathlib;from IPython import display;import cv2;from urllib import request;import random;import itertools', function_to_run='tf.image.convert_image_dtype(*args)', method_object=None, object_signature=None, function_args=[eval('frame'), eval('tf.float32')], function_kwargs={})
+    custom_method(imports='import random;import itertools;import pathlib;import numpy as np;import imageio;from urllib import request;from tensorflow_docs.vis import embed;from IPython import display;import remotezip as rz;import tensorflow as tf;import collections;import tqdm;import cv2;import os', function_to_run='tf.image.convert_image_dtype(*args)', method_object=None, object_signature=None, function_args=[eval('frame'), eval('tf.float32')], function_kwargs={})
     frame = tf.image.convert_image_dtype(frame, tf.float32)
-    custom_method(imports='import numpy as np;from tensorflow_docs.vis import embed;import remotezip as rz;import imageio;import tensorflow as tf;import collections;import os;import tqdm;import pathlib;from IPython import display;import cv2;from urllib import request;import random;import itertools', function_to_run='tf.image.resize_with_pad(*args)', method_object=None, object_signature=None, function_args=[eval('frame'), eval('*output_size')], function_kwargs={})
+    custom_method(imports='import random;import itertools;import pathlib;import numpy as np;import imageio;from urllib import request;from tensorflow_docs.vis import embed;from IPython import display;import remotezip as rz;import tensorflow as tf;import collections;import tqdm;import cv2;import os', function_to_run='tf.image.resize_with_pad(*args)', method_object=None, object_signature=None, function_args=[eval('frame'), eval('*output_size')], function_kwargs={})
     frame = tf.image.resize_with_pad(frame, *output_size)
     return frame
 
@@ -272,11 +302,11 @@ fg = FrameGenerator(subset_paths['train'], 10, training=True)
 print(f'Shape: {frames.shape}')
 print(f'Label: {label}')
 output_signature = (tf.TensorSpec(shape=(None, None, None, 3), dtype=tf.float32), tf.TensorSpec(shape=(), dtype=tf.int16))
-custom_method(imports='import numpy as np;from tensorflow_docs.vis import embed;import remotezip as rz;import imageio;import tensorflow as tf;import collections;import os;import tqdm;import pathlib;from IPython import display;import cv2;from urllib import request;import random;import itertools', function_to_run='tf.data.Dataset.from_generator(*args, **kwargs)', method_object=None, object_signature=None, function_args=[eval("FrameGenerator(subset_paths['train'], 10, training=True)")], function_kwargs={'output_signature': eval('output_signature')})
+custom_method(imports='import random;import itertools;import pathlib;import numpy as np;import imageio;from urllib import request;from tensorflow_docs.vis import embed;from IPython import display;import remotezip as rz;import tensorflow as tf;import collections;import tqdm;import cv2;import os', function_to_run='tf.data.Dataset.from_generator(*args, **kwargs)', method_object=None, object_signature=None, function_args=[eval("FrameGenerator(subset_paths['train'], 10, training=True)")], function_kwargs={'output_signature': eval('output_signature')})
 train_ds = tf.data.Dataset.from_generator(FrameGenerator(subset_paths['train'], 10, training=True), output_signature=output_signature)
 for (frames, labels) in train_ds.take(10):
     print(labels)
-custom_method(imports='import numpy as np;from tensorflow_docs.vis import embed;import remotezip as rz;import imageio;import tensorflow as tf;import collections;import os;import tqdm;import pathlib;from IPython import display;import cv2;from urllib import request;import random;import itertools', function_to_run='tf.data.Dataset.from_generator(*args, **kwargs)', method_object=None, object_signature=None, function_args=[eval("FrameGenerator(subset_paths['val'], 10)")], function_kwargs={'output_signature': eval('output_signature')})
+custom_method(imports='import random;import itertools;import pathlib;import numpy as np;import imageio;from urllib import request;from tensorflow_docs.vis import embed;from IPython import display;import remotezip as rz;import tensorflow as tf;import collections;import tqdm;import cv2;import os', function_to_run='tf.data.Dataset.from_generator(*args, **kwargs)', method_object=None, object_signature=None, function_args=[eval("FrameGenerator(subset_paths['val'], 10)")], function_kwargs={'output_signature': eval('output_signature')})
 val_ds = tf.data.Dataset.from_generator(FrameGenerator(subset_paths['val'], 10), output_signature=output_signature)
 (train_frames, train_labels) = next(iter(train_ds))
 print(f'Shape of training set of frames: {train_frames.shape}')
@@ -285,13 +315,13 @@ print(f'Shape of training labels: {train_labels.shape}')
 print(f'Shape of validation set of frames: {val_frames.shape}')
 print(f'Shape of validation labels: {val_labels.shape}')
 AUTOTUNE = tf.data.AUTOTUNE
-custom_method(imports='import numpy as np;from tensorflow_docs.vis import embed;import remotezip as rz;import imageio;import tensorflow as tf;import collections;import os;import tqdm;import pathlib;from IPython import display;import cv2;from urllib import request;import random;import itertools', function_to_run='obj.cache().shuffle(1000).prefetch(**kwargs)', method_object=eval('train_ds'), object_signature=None, function_args=[], function_kwargs={'buffer_size': eval('AUTOTUNE')}, custom_class=None)
+custom_method(imports='import random;import itertools;import pathlib;import numpy as np;import imageio;from urllib import request;from tensorflow_docs.vis import embed;from IPython import display;import remotezip as rz;import tensorflow as tf;import collections;import tqdm;import cv2;import os', function_to_run='obj.cache().shuffle(1000).prefetch(**kwargs)', method_object=eval('train_ds'), object_signature=None, function_args=[], function_kwargs={'buffer_size': eval('AUTOTUNE')}, custom_class=None)
 train_ds = train_ds.cache().shuffle(1000).prefetch(buffer_size=AUTOTUNE)
-custom_method(imports='import numpy as np;from tensorflow_docs.vis import embed;import remotezip as rz;import imageio;import tensorflow as tf;import collections;import os;import tqdm;import pathlib;from IPython import display;import cv2;from urllib import request;import random;import itertools', function_to_run='obj.cache().shuffle(1000).prefetch(**kwargs)', method_object=eval('val_ds'), object_signature=None, function_args=[], function_kwargs={'buffer_size': eval('AUTOTUNE')}, custom_class=None)
+custom_method(imports='import random;import itertools;import pathlib;import numpy as np;import imageio;from urllib import request;from tensorflow_docs.vis import embed;from IPython import display;import remotezip as rz;import tensorflow as tf;import collections;import tqdm;import cv2;import os', function_to_run='obj.cache().shuffle(1000).prefetch(**kwargs)', method_object=eval('val_ds'), object_signature=None, function_args=[], function_kwargs={'buffer_size': eval('AUTOTUNE')}, custom_class=None)
 val_ds = val_ds.cache().shuffle(1000).prefetch(buffer_size=AUTOTUNE)
-custom_method(imports='import numpy as np;from tensorflow_docs.vis import embed;import remotezip as rz;import imageio;import tensorflow as tf;import collections;import os;import tqdm;import pathlib;from IPython import display;import cv2;from urllib import request;import random;import itertools', function_to_run='obj.batch(*args)', method_object=eval('train_ds'), object_signature=None, function_args=[eval('2')], function_kwargs={}, custom_class=None)
+custom_method(imports='import random;import itertools;import pathlib;import numpy as np;import imageio;from urllib import request;from tensorflow_docs.vis import embed;from IPython import display;import remotezip as rz;import tensorflow as tf;import collections;import tqdm;import cv2;import os', function_to_run='obj.batch(*args)', method_object=eval('train_ds'), object_signature=None, function_args=[eval('2')], function_kwargs={}, custom_class=None)
 train_ds = train_ds.batch(2)
-custom_method(imports='import numpy as np;from tensorflow_docs.vis import embed;import remotezip as rz;import imageio;import tensorflow as tf;import collections;import os;import tqdm;import pathlib;from IPython import display;import cv2;from urllib import request;import random;import itertools', function_to_run='obj.batch(*args)', method_object=eval('val_ds'), object_signature=None, function_args=[eval('2')], function_kwargs={}, custom_class=None)
+custom_method(imports='import random;import itertools;import pathlib;import numpy as np;import imageio;from urllib import request;from tensorflow_docs.vis import embed;from IPython import display;import remotezip as rz;import tensorflow as tf;import collections;import tqdm;import cv2;import os', function_to_run='obj.batch(*args)', method_object=eval('val_ds'), object_signature=None, function_args=[eval('2')], function_kwargs={}, custom_class=None)
 val_ds = val_ds.batch(2)
 (train_frames, train_labels) = next(iter(train_ds))
 print(f'Shape of training set of frames: {train_frames.shape}')
@@ -299,12 +329,12 @@ print(f'Shape of training labels: {train_labels.shape}')
 (val_frames, val_labels) = next(iter(val_ds))
 print(f'Shape of validation set of frames: {val_frames.shape}')
 print(f'Shape of validation labels: {val_labels.shape}')
-custom_method(imports='import numpy as np;from tensorflow_docs.vis import embed;import remotezip as rz;import imageio;import tensorflow as tf;import collections;import os;import tqdm;import pathlib;from IPython import display;import cv2;from urllib import request;import random;import itertools', function_to_run='tf.keras.applications.EfficientNetB0(**kwargs)', method_object=None, object_signature=None, function_args=[], function_kwargs={'include_top': eval('False')})
+custom_method(imports='import random;import itertools;import pathlib;import numpy as np;import imageio;from urllib import request;from tensorflow_docs.vis import embed;from IPython import display;import remotezip as rz;import tensorflow as tf;import collections;import tqdm;import cv2;import os', function_to_run='tf.keras.applications.EfficientNetB0(**kwargs)', method_object=None, object_signature=None, function_args=[], function_kwargs={'include_top': eval('False')})
 net = tf.keras.applications.EfficientNetB0(include_top=False)
 net.trainable = False
-custom_method(imports='import numpy as np;from tensorflow_docs.vis import embed;import remotezip as rz;import imageio;import tensorflow as tf;import collections;import os;import tqdm;import pathlib;from IPython import display;import cv2;from urllib import request;import random;import itertools', function_to_run='tf.keras.Sequential(*args)', method_object=None, object_signature=None, function_args=[eval('[\n    tf.keras.layers.Rescaling(scale=255),\n    tf.keras.layers.TimeDistributed(net),\n    tf.keras.layers.Dense(10),\n    tf.keras.layers.GlobalAveragePooling3D()\n]')], function_kwargs={})
+custom_method(imports='import random;import itertools;import pathlib;import numpy as np;import imageio;from urllib import request;from tensorflow_docs.vis import embed;from IPython import display;import remotezip as rz;import tensorflow as tf;import collections;import tqdm;import cv2;import os', function_to_run='tf.keras.Sequential(*args)', method_object=None, object_signature=None, function_args=[eval('[\n    tf.keras.layers.Rescaling(scale=255),\n    tf.keras.layers.TimeDistributed(net),\n    tf.keras.layers.Dense(10),\n    tf.keras.layers.GlobalAveragePooling3D()\n]')], function_kwargs={})
 model = tf.keras.Sequential([tf.keras.layers.Rescaling(scale=255), tf.keras.layers.TimeDistributed(net), tf.keras.layers.Dense(10), tf.keras.layers.GlobalAveragePooling3D()])
-custom_method(imports='import numpy as np;from tensorflow_docs.vis import embed;import remotezip as rz;import imageio;import tensorflow as tf;import collections;import os;import tqdm;import pathlib;from IPython import display;import cv2;from urllib import request;import random;import itertools', function_to_run='obj.compile(**kwargs)', method_object=eval('model'), object_signature=None, function_args=[], function_kwargs={'optimizer': eval("'adam'"), 'loss': eval('tf.keras.losses.SparseCategoricalCrossentropy(from_logits = True)'), 'metrics': eval("['accuracy']")}, custom_class=None)
+custom_method(imports='import random;import itertools;import pathlib;import numpy as np;import imageio;from urllib import request;from tensorflow_docs.vis import embed;from IPython import display;import remotezip as rz;import tensorflow as tf;import collections;import tqdm;import cv2;import os', function_to_run='obj.compile(**kwargs)', method_object=eval('model'), object_signature=None, function_args=[], function_kwargs={'optimizer': eval("'adam'"), 'loss': eval('tf.keras.losses.SparseCategoricalCrossentropy(from_logits = True)'), 'metrics': eval("['accuracy']")}, custom_class=None)
 model.compile(optimizer='adam', loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True), metrics=['accuracy'])
-custom_method(imports='import numpy as np;from tensorflow_docs.vis import embed;import remotezip as rz;import imageio;import tensorflow as tf;import collections;import os;import tqdm;import pathlib;from IPython import display;import cv2;from urllib import request;import random;import itertools', function_to_run='obj.fit(*args, **kwargs)', method_object=eval('model'), object_signature=None, function_args=[eval('train_ds')], function_kwargs={'epochs': eval('10'), 'validation_data': eval('val_ds'), 'callbacks': eval("tf.keras.callbacks.EarlyStopping(patience = 2, monitor = 'val_loss')")}, custom_class=None)
+custom_method(imports='import random;import itertools;import pathlib;import numpy as np;import imageio;from urllib import request;from tensorflow_docs.vis import embed;from IPython import display;import remotezip as rz;import tensorflow as tf;import collections;import tqdm;import cv2;import os', function_to_run='obj.fit(*args, **kwargs)', method_object=eval('model'), object_signature=None, function_args=[eval('train_ds')], function_kwargs={'epochs': eval('10'), 'validation_data': eval('val_ds'), 'callbacks': eval("tf.keras.callbacks.EarlyStopping(patience = 2, monitor = 'val_loss')")}, custom_class=None)
 model.fit(train_ds, epochs=10, validation_data=val_ds, callbacks=tf.keras.callbacks.EarlyStopping(patience=2, monitor='val_loss'))

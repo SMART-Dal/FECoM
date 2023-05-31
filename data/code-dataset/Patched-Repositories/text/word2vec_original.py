@@ -190,9 +190,3 @@ for index, word in enumerate(vocab):
   out_m.write(word + "\n")
 out_v.close()
 out_m.close()
-try:
-  from google.colab import files
-  files.download('vectors.tsv')
-  files.download('metadata.tsv')
-except Exception:
-  pass

@@ -9,19 +9,49 @@ import os
 from pathlib import Path
 import dill as pickle
 import sys
+import numpy as np
 from tool.client.client_config import EXPERIMENT_DIR, MAX_WAIT_S, WAIT_AFTER_RUN_S
 from tool.server.send_request import send_request
 from tool.server.function_details import FunctionDetails
+import json
 current_path = os.path.abspath(__file__)
 experiment_number = sys.argv[1]
 experiment_project = sys.argv[2]
 EXPERIMENT_FILE_PATH = EXPERIMENT_DIR / 'method-level' / experiment_project / f'experiment-{experiment_number}.json'
+skip_calls_file_path = EXPERIMENT_FILE_PATH.parent / 'skip_calls.json'
+if skip_calls_file_path.exists():
+    with open(skip_calls_file_path, 'r') as f:
+        skip_calls = json.load(f)
+else:
+    skip_calls = []
+    with open(skip_calls_file_path, 'w') as f:
+        json.dump(skip_calls, f)
 
 def custom_method(imports: str, function_to_run: str, method_object=None, object_signature=None, function_args: list=None, function_kwargs: dict=None, custom_class=None):
+    if skip_calls is not None and any((call['function_to_run'] == function_to_run and np.array_equal(call['function_args'], function_args) and (call['function_kwargs'] == function_kwargs) for call in skip_calls)):
+        print('skipping call: ', function_to_run)
+        return
     result = send_request(imports=imports, function_to_run=function_to_run, function_args=function_args, function_kwargs=function_kwargs, max_wait_secs=MAX_WAIT_S, wait_after_run_secs=WAIT_AFTER_RUN_S, method_object=method_object, object_signature=object_signature, custom_class=custom_class, experiment_file_path=EXPERIMENT_FILE_PATH)
+    if result is not None and isinstance(result, dict) and (len(result) == 1):
+        energy_data = next(iter(result.values()))
+        if skip_calls is not None and 'start_time_perf' in energy_data['times'] and ('end_time_perf' in energy_data['times']) and ('start_time_nvidia' in energy_data['times']) and ('end_time_nvidia' in energy_data['times']) and (energy_data['times']['start_time_perf'] == energy_data['times']['end_time_perf']) and (energy_data['times']['start_time_nvidia'] == energy_data['times']['end_time_nvidia']):
+            call_to_skip = {'function_to_run': function_to_run, 'function_args': function_args, 'function_kwargs': function_kwargs}
+            try:
+                json.dumps(call_to_skip)
+                if call_to_skip not in skip_calls:
+                    skip_calls.append(call_to_skip)
+                    with open(skip_calls_file_path, 'w') as f:
+                        json.dump(skip_calls, f)
+                    print('skipping call added, current list is: ', skip_calls)
+                else:
+                    print('Skipping call already exists.')
+            except TypeError:
+                print('Ignore: Skipping call is not JSON serializable, skipping append and dump.')
+    else:
+        print('Invalid dictionary object or does not have one key-value pair.')
 dataset_url = 'http://storage.googleapis.com/download.tensorflow.org/data/petfinder-mini.zip'
 csv_file = 'datasets/petfinder-mini/petfinder-mini.csv'
-custom_method(imports='from tensorflow import feature_column;import pathlib;import pandas as pd;from tensorflow.keras import layers;from sklearn.model_selection import train_test_split;import numpy as np;import tensorflow as tf', function_to_run='tf.keras.utils.get_file(*args, **kwargs)', method_object=None, object_signature=None, function_args=[eval("'petfinder_mini.zip'"), eval('dataset_url')], function_kwargs={'extract': eval('True'), 'cache_dir': eval("'.'")})
+custom_method(imports='import numpy as np;import tensorflow as tf;from tensorflow.keras import layers;from tensorflow import feature_column;from sklearn.model_selection import train_test_split;import pandas as pd;import pathlib', function_to_run='tf.keras.utils.get_file(*args, **kwargs)', method_object=None, object_signature=None, function_args=[eval("'petfinder_mini.zip'"), eval('dataset_url')], function_kwargs={'extract': eval('True'), 'cache_dir': eval("'.'")})
 tf.keras.utils.get_file('petfinder_mini.zip', dataset_url, extract=True, cache_dir='.')
 dataframe = pd.read_csv(csv_file)
 dataframe.head()
@@ -36,12 +66,12 @@ print(len(test), 'test examples')
 def df_to_dataset(dataframe, shuffle=True, batch_size=32):
     dataframe = dataframe.copy()
     labels = dataframe.pop('target')
-    custom_method(imports='from tensorflow import feature_column;import pathlib;import pandas as pd;from tensorflow.keras import layers;from sklearn.model_selection import train_test_split;import numpy as np;import tensorflow as tf', function_to_run='tf.data.Dataset.from_tensor_slices(*args)', method_object=None, object_signature=None, function_args=[eval('(dict(dataframe), labels)')], function_kwargs={})
+    custom_method(imports='import numpy as np;import tensorflow as tf;from tensorflow.keras import layers;from tensorflow import feature_column;from sklearn.model_selection import train_test_split;import pandas as pd;import pathlib', function_to_run='tf.data.Dataset.from_tensor_slices(*args)', method_object=None, object_signature=None, function_args=[eval('(dict(dataframe), labels)')], function_kwargs={})
     ds = tf.data.Dataset.from_tensor_slices((dict(dataframe), labels))
     if shuffle:
-        custom_method(imports='from tensorflow import feature_column;import pathlib;import pandas as pd;from tensorflow.keras import layers;from sklearn.model_selection import train_test_split;import numpy as np;import tensorflow as tf', function_to_run='obj.shuffle(**kwargs)', method_object=eval('ds'), object_signature=None, function_args=[], function_kwargs={'buffer_size': eval('len(dataframe)')}, custom_class=None)
+        custom_method(imports='import numpy as np;import tensorflow as tf;from tensorflow.keras import layers;from tensorflow import feature_column;from sklearn.model_selection import train_test_split;import pandas as pd;import pathlib', function_to_run='obj.shuffle(**kwargs)', method_object=eval('ds'), object_signature=None, function_args=[], function_kwargs={'buffer_size': eval('len(dataframe)')}, custom_class=None)
         ds = ds.shuffle(buffer_size=len(dataframe))
-    custom_method(imports='from tensorflow import feature_column;import pathlib;import pandas as pd;from tensorflow.keras import layers;from sklearn.model_selection import train_test_split;import numpy as np;import tensorflow as tf', function_to_run='obj.batch(*args)', method_object=eval('ds'), object_signature=None, function_args=[eval('batch_size')], function_kwargs={}, custom_class=None)
+    custom_method(imports='import numpy as np;import tensorflow as tf;from tensorflow.keras import layers;from tensorflow import feature_column;from sklearn.model_selection import train_test_split;import pandas as pd;import pathlib', function_to_run='obj.batch(*args)', method_object=eval('ds'), object_signature=None, function_args=[eval('batch_size')], function_kwargs={}, custom_class=None)
     ds = ds.batch(batch_size)
     return ds
 batch_size = 5
@@ -55,68 +85,68 @@ for (feature_batch, label_batch) in train_ds.take(1):
 example_batch = next(iter(train_ds))[0]
 
 def demo(feature_column):
-    custom_method(imports='from tensorflow import feature_column;import pathlib;import pandas as pd;from tensorflow.keras import layers;from sklearn.model_selection import train_test_split;import numpy as np;import tensorflow as tf', function_to_run='layers.DenseFeatures(*args)', method_object=None, object_signature=None, function_args=[eval('feature_column')], function_kwargs={})
+    custom_method(imports='import numpy as np;import tensorflow as tf;from tensorflow.keras import layers;from tensorflow import feature_column;from sklearn.model_selection import train_test_split;import pandas as pd;import pathlib', function_to_run='layers.DenseFeatures(*args)', method_object=None, object_signature=None, function_args=[eval('feature_column')], function_kwargs={})
     feature_layer = layers.DenseFeatures(feature_column)
     print(feature_layer(example_batch).numpy())
-custom_method(imports='from tensorflow import feature_column;import pathlib;import pandas as pd;from tensorflow.keras import layers;from sklearn.model_selection import train_test_split;import numpy as np;import tensorflow as tf', function_to_run='feature_column.numeric_column(*args)', method_object=None, object_signature=None, function_args=[eval("'PhotoAmt'")], function_kwargs={})
+custom_method(imports='import numpy as np;import tensorflow as tf;from tensorflow.keras import layers;from tensorflow import feature_column;from sklearn.model_selection import train_test_split;import pandas as pd;import pathlib', function_to_run='feature_column.numeric_column(*args)', method_object=None, object_signature=None, function_args=[eval("'PhotoAmt'")], function_kwargs={})
 photo_count = feature_column.numeric_column('PhotoAmt')
 demo(photo_count)
-custom_method(imports='from tensorflow import feature_column;import pathlib;import pandas as pd;from tensorflow.keras import layers;from sklearn.model_selection import train_test_split;import numpy as np;import tensorflow as tf', function_to_run='feature_column.numeric_column(*args)', method_object=None, object_signature=None, function_args=[eval("'Age'")], function_kwargs={})
+custom_method(imports='import numpy as np;import tensorflow as tf;from tensorflow.keras import layers;from tensorflow import feature_column;from sklearn.model_selection import train_test_split;import pandas as pd;import pathlib', function_to_run='feature_column.numeric_column(*args)', method_object=None, object_signature=None, function_args=[eval("'Age'")], function_kwargs={})
 age = feature_column.numeric_column('Age')
-custom_method(imports='from tensorflow import feature_column;import pathlib;import pandas as pd;from tensorflow.keras import layers;from sklearn.model_selection import train_test_split;import numpy as np;import tensorflow as tf', function_to_run='feature_column.bucketized_column(*args, **kwargs)', method_object=None, object_signature=None, function_args=[eval('age')], function_kwargs={'boundaries': eval('[1, 3, 5]')})
+custom_method(imports='import numpy as np;import tensorflow as tf;from tensorflow.keras import layers;from tensorflow import feature_column;from sklearn.model_selection import train_test_split;import pandas as pd;import pathlib', function_to_run='feature_column.bucketized_column(*args, **kwargs)', method_object=None, object_signature=None, function_args=[eval('age')], function_kwargs={'boundaries': eval('[1, 3, 5]')})
 age_buckets = feature_column.bucketized_column(age, boundaries=[1, 3, 5])
 demo(age_buckets)
-custom_method(imports='from tensorflow import feature_column;import pathlib;import pandas as pd;from tensorflow.keras import layers;from sklearn.model_selection import train_test_split;import numpy as np;import tensorflow as tf', function_to_run='feature_column.categorical_column_with_vocabulary_list(*args)', method_object=None, object_signature=None, function_args=[eval("'Type'"), eval("['Cat', 'Dog']")], function_kwargs={})
+custom_method(imports='import numpy as np;import tensorflow as tf;from tensorflow.keras import layers;from tensorflow import feature_column;from sklearn.model_selection import train_test_split;import pandas as pd;import pathlib', function_to_run='feature_column.categorical_column_with_vocabulary_list(*args)', method_object=None, object_signature=None, function_args=[eval("'Type'"), eval("['Cat', 'Dog']")], function_kwargs={})
 animal_type = feature_column.categorical_column_with_vocabulary_list('Type', ['Cat', 'Dog'])
-custom_method(imports='from tensorflow import feature_column;import pathlib;import pandas as pd;from tensorflow.keras import layers;from sklearn.model_selection import train_test_split;import numpy as np;import tensorflow as tf', function_to_run='feature_column.indicator_column(*args)', method_object=None, object_signature=None, function_args=[eval('animal_type')], function_kwargs={})
+custom_method(imports='import numpy as np;import tensorflow as tf;from tensorflow.keras import layers;from tensorflow import feature_column;from sklearn.model_selection import train_test_split;import pandas as pd;import pathlib', function_to_run='feature_column.indicator_column(*args)', method_object=None, object_signature=None, function_args=[eval('animal_type')], function_kwargs={})
 animal_type_one_hot = feature_column.indicator_column(animal_type)
 demo(animal_type_one_hot)
-custom_method(imports='from tensorflow import feature_column;import pathlib;import pandas as pd;from tensorflow.keras import layers;from sklearn.model_selection import train_test_split;import numpy as np;import tensorflow as tf', function_to_run='feature_column.categorical_column_with_vocabulary_list(*args)', method_object=None, object_signature=None, function_args=[eval("'Breed1'"), eval('dataframe.Breed1.unique()')], function_kwargs={})
+custom_method(imports='import numpy as np;import tensorflow as tf;from tensorflow.keras import layers;from tensorflow import feature_column;from sklearn.model_selection import train_test_split;import pandas as pd;import pathlib', function_to_run='feature_column.categorical_column_with_vocabulary_list(*args)', method_object=None, object_signature=None, function_args=[eval("'Breed1'"), eval('dataframe.Breed1.unique()')], function_kwargs={})
 breed1 = feature_column.categorical_column_with_vocabulary_list('Breed1', dataframe.Breed1.unique())
-custom_method(imports='from tensorflow import feature_column;import pathlib;import pandas as pd;from tensorflow.keras import layers;from sklearn.model_selection import train_test_split;import numpy as np;import tensorflow as tf', function_to_run='feature_column.embedding_column(*args, **kwargs)', method_object=None, object_signature=None, function_args=[eval('breed1')], function_kwargs={'dimension': eval('8')})
+custom_method(imports='import numpy as np;import tensorflow as tf;from tensorflow.keras import layers;from tensorflow import feature_column;from sklearn.model_selection import train_test_split;import pandas as pd;import pathlib', function_to_run='feature_column.embedding_column(*args, **kwargs)', method_object=None, object_signature=None, function_args=[eval('breed1')], function_kwargs={'dimension': eval('8')})
 breed1_embedding = feature_column.embedding_column(breed1, dimension=8)
 demo(breed1_embedding)
-custom_method(imports='from tensorflow import feature_column;import pathlib;import pandas as pd;from tensorflow.keras import layers;from sklearn.model_selection import train_test_split;import numpy as np;import tensorflow as tf', function_to_run='feature_column.categorical_column_with_hash_bucket(*args, **kwargs)', method_object=None, object_signature=None, function_args=[eval("'Breed1'")], function_kwargs={'hash_bucket_size': eval('10')})
+custom_method(imports='import numpy as np;import tensorflow as tf;from tensorflow.keras import layers;from tensorflow import feature_column;from sklearn.model_selection import train_test_split;import pandas as pd;import pathlib', function_to_run='feature_column.categorical_column_with_hash_bucket(*args, **kwargs)', method_object=None, object_signature=None, function_args=[eval("'Breed1'")], function_kwargs={'hash_bucket_size': eval('10')})
 breed1_hashed = feature_column.categorical_column_with_hash_bucket('Breed1', hash_bucket_size=10)
 demo(feature_column.indicator_column(breed1_hashed))
-custom_method(imports='from tensorflow import feature_column;import pathlib;import pandas as pd;from tensorflow.keras import layers;from sklearn.model_selection import train_test_split;import numpy as np;import tensorflow as tf', function_to_run='feature_column.crossed_column(*args, **kwargs)', method_object=None, object_signature=None, function_args=[eval('[age_buckets, animal_type]')], function_kwargs={'hash_bucket_size': eval('10')})
+custom_method(imports='import numpy as np;import tensorflow as tf;from tensorflow.keras import layers;from tensorflow import feature_column;from sklearn.model_selection import train_test_split;import pandas as pd;import pathlib', function_to_run='feature_column.crossed_column(*args, **kwargs)', method_object=None, object_signature=None, function_args=[eval('[age_buckets, animal_type]')], function_kwargs={'hash_bucket_size': eval('10')})
 crossed_feature = feature_column.crossed_column([age_buckets, animal_type], hash_bucket_size=10)
 demo(feature_column.indicator_column(crossed_feature))
 feature_columns = []
 for header in ['PhotoAmt', 'Fee', 'Age']:
     feature_columns.append(feature_column.numeric_column(header))
-custom_method(imports='from tensorflow import feature_column;import pathlib;import pandas as pd;from tensorflow.keras import layers;from sklearn.model_selection import train_test_split;import numpy as np;import tensorflow as tf', function_to_run='feature_column.numeric_column(*args)', method_object=None, object_signature=None, function_args=[eval("'Age'")], function_kwargs={})
+custom_method(imports='import numpy as np;import tensorflow as tf;from tensorflow.keras import layers;from tensorflow import feature_column;from sklearn.model_selection import train_test_split;import pandas as pd;import pathlib', function_to_run='feature_column.numeric_column(*args)', method_object=None, object_signature=None, function_args=[eval("'Age'")], function_kwargs={})
 age = feature_column.numeric_column('Age')
-custom_method(imports='from tensorflow import feature_column;import pathlib;import pandas as pd;from tensorflow.keras import layers;from sklearn.model_selection import train_test_split;import numpy as np;import tensorflow as tf', function_to_run='feature_column.bucketized_column(*args, **kwargs)', method_object=None, object_signature=None, function_args=[eval('age')], function_kwargs={'boundaries': eval('[1, 2, 3, 4, 5]')})
+custom_method(imports='import numpy as np;import tensorflow as tf;from tensorflow.keras import layers;from tensorflow import feature_column;from sklearn.model_selection import train_test_split;import pandas as pd;import pathlib', function_to_run='feature_column.bucketized_column(*args, **kwargs)', method_object=None, object_signature=None, function_args=[eval('age')], function_kwargs={'boundaries': eval('[1, 2, 3, 4, 5]')})
 age_buckets = feature_column.bucketized_column(age, boundaries=[1, 2, 3, 4, 5])
 feature_columns.append(age_buckets)
 indicator_column_names = ['Type', 'Color1', 'Color2', 'Gender', 'MaturitySize', 'FurLength', 'Vaccinated', 'Sterilized', 'Health']
 for col_name in indicator_column_names:
-    custom_method(imports='from tensorflow import feature_column;import pathlib;import pandas as pd;from tensorflow.keras import layers;from sklearn.model_selection import train_test_split;import numpy as np;import tensorflow as tf', function_to_run='feature_column.categorical_column_with_vocabulary_list(*args)', method_object=None, object_signature=None, function_args=[eval('col_name'), eval('dataframe[col_name].unique()')], function_kwargs={})
+    custom_method(imports='import numpy as np;import tensorflow as tf;from tensorflow.keras import layers;from tensorflow import feature_column;from sklearn.model_selection import train_test_split;import pandas as pd;import pathlib', function_to_run='feature_column.categorical_column_with_vocabulary_list(*args)', method_object=None, object_signature=None, function_args=[eval('col_name'), eval('dataframe[col_name].unique()')], function_kwargs={})
     categorical_column = feature_column.categorical_column_with_vocabulary_list(col_name, dataframe[col_name].unique())
-    custom_method(imports='from tensorflow import feature_column;import pathlib;import pandas as pd;from tensorflow.keras import layers;from sklearn.model_selection import train_test_split;import numpy as np;import tensorflow as tf', function_to_run='feature_column.indicator_column(*args)', method_object=None, object_signature=None, function_args=[eval('categorical_column')], function_kwargs={})
+    custom_method(imports='import numpy as np;import tensorflow as tf;from tensorflow.keras import layers;from tensorflow import feature_column;from sklearn.model_selection import train_test_split;import pandas as pd;import pathlib', function_to_run='feature_column.indicator_column(*args)', method_object=None, object_signature=None, function_args=[eval('categorical_column')], function_kwargs={})
     indicator_column = feature_column.indicator_column(categorical_column)
     feature_columns.append(indicator_column)
-custom_method(imports='from tensorflow import feature_column;import pathlib;import pandas as pd;from tensorflow.keras import layers;from sklearn.model_selection import train_test_split;import numpy as np;import tensorflow as tf', function_to_run='feature_column.categorical_column_with_vocabulary_list(*args)', method_object=None, object_signature=None, function_args=[eval("'Breed1'"), eval('dataframe.Breed1.unique()')], function_kwargs={})
+custom_method(imports='import numpy as np;import tensorflow as tf;from tensorflow.keras import layers;from tensorflow import feature_column;from sklearn.model_selection import train_test_split;import pandas as pd;import pathlib', function_to_run='feature_column.categorical_column_with_vocabulary_list(*args)', method_object=None, object_signature=None, function_args=[eval("'Breed1'"), eval('dataframe.Breed1.unique()')], function_kwargs={})
 breed1 = feature_column.categorical_column_with_vocabulary_list('Breed1', dataframe.Breed1.unique())
-custom_method(imports='from tensorflow import feature_column;import pathlib;import pandas as pd;from tensorflow.keras import layers;from sklearn.model_selection import train_test_split;import numpy as np;import tensorflow as tf', function_to_run='feature_column.embedding_column(*args, **kwargs)', method_object=None, object_signature=None, function_args=[eval('breed1')], function_kwargs={'dimension': eval('8')})
+custom_method(imports='import numpy as np;import tensorflow as tf;from tensorflow.keras import layers;from tensorflow import feature_column;from sklearn.model_selection import train_test_split;import pandas as pd;import pathlib', function_to_run='feature_column.embedding_column(*args, **kwargs)', method_object=None, object_signature=None, function_args=[eval('breed1')], function_kwargs={'dimension': eval('8')})
 breed1_embedding = feature_column.embedding_column(breed1, dimension=8)
 feature_columns.append(breed1_embedding)
-custom_method(imports='from tensorflow import feature_column;import pathlib;import pandas as pd;from tensorflow.keras import layers;from sklearn.model_selection import train_test_split;import numpy as np;import tensorflow as tf', function_to_run='feature_column.crossed_column(*args, **kwargs)', method_object=None, object_signature=None, function_args=[eval('[age_buckets, animal_type]')], function_kwargs={'hash_bucket_size': eval('100')})
+custom_method(imports='import numpy as np;import tensorflow as tf;from tensorflow.keras import layers;from tensorflow import feature_column;from sklearn.model_selection import train_test_split;import pandas as pd;import pathlib', function_to_run='feature_column.crossed_column(*args, **kwargs)', method_object=None, object_signature=None, function_args=[eval('[age_buckets, animal_type]')], function_kwargs={'hash_bucket_size': eval('100')})
 age_type_feature = feature_column.crossed_column([age_buckets, animal_type], hash_bucket_size=100)
 feature_columns.append(feature_column.indicator_column(age_type_feature))
-custom_method(imports='from tensorflow import feature_column;import pathlib;import pandas as pd;from tensorflow.keras import layers;from sklearn.model_selection import train_test_split;import numpy as np;import tensorflow as tf', function_to_run='tf.keras.layers.DenseFeatures(*args)', method_object=None, object_signature=None, function_args=[eval('feature_columns')], function_kwargs={})
+custom_method(imports='import numpy as np;import tensorflow as tf;from tensorflow.keras import layers;from tensorflow import feature_column;from sklearn.model_selection import train_test_split;import pandas as pd;import pathlib', function_to_run='tf.keras.layers.DenseFeatures(*args)', method_object=None, object_signature=None, function_args=[eval('feature_columns')], function_kwargs={})
 feature_layer = tf.keras.layers.DenseFeatures(feature_columns)
 batch_size = 32
 train_ds = df_to_dataset(train, batch_size=batch_size)
 val_ds = df_to_dataset(val, shuffle=False, batch_size=batch_size)
 test_ds = df_to_dataset(test, shuffle=False, batch_size=batch_size)
-custom_method(imports='from tensorflow import feature_column;import pathlib;import pandas as pd;from tensorflow.keras import layers;from sklearn.model_selection import train_test_split;import numpy as np;import tensorflow as tf', function_to_run='tf.keras.Sequential(*args)', method_object=None, object_signature=None, function_args=[eval("[\n  feature_layer,\n  layers.Dense(128, activation='relu'),\n  layers.Dense(128, activation='relu'),\n  layers.Dropout(.1),\n  layers.Dense(1)\n]")], function_kwargs={})
+custom_method(imports='import numpy as np;import tensorflow as tf;from tensorflow.keras import layers;from tensorflow import feature_column;from sklearn.model_selection import train_test_split;import pandas as pd;import pathlib', function_to_run='tf.keras.Sequential(*args)', method_object=None, object_signature=None, function_args=[eval("[\n  feature_layer,\n  layers.Dense(128, activation='relu'),\n  layers.Dense(128, activation='relu'),\n  layers.Dropout(.1),\n  layers.Dense(1)\n]")], function_kwargs={})
 model = tf.keras.Sequential([feature_layer, layers.Dense(128, activation='relu'), layers.Dense(128, activation='relu'), layers.Dropout(0.1), layers.Dense(1)])
-custom_method(imports='from tensorflow import feature_column;import pathlib;import pandas as pd;from tensorflow.keras import layers;from sklearn.model_selection import train_test_split;import numpy as np;import tensorflow as tf', function_to_run='obj.compile(**kwargs)', method_object=eval('model'), object_signature=None, function_args=[], function_kwargs={'optimizer': eval("'adam'"), 'loss': eval('tf.keras.losses.BinaryCrossentropy(from_logits=True)'), 'metrics': eval("['accuracy']")}, custom_class=None)
+custom_method(imports='import numpy as np;import tensorflow as tf;from tensorflow.keras import layers;from tensorflow import feature_column;from sklearn.model_selection import train_test_split;import pandas as pd;import pathlib', function_to_run='obj.compile(**kwargs)', method_object=eval('model'), object_signature=None, function_args=[], function_kwargs={'optimizer': eval("'adam'"), 'loss': eval('tf.keras.losses.BinaryCrossentropy(from_logits=True)'), 'metrics': eval("['accuracy']")}, custom_class=None)
 model.compile(optimizer='adam', loss=tf.keras.losses.BinaryCrossentropy(from_logits=True), metrics=['accuracy'])
-custom_method(imports='from tensorflow import feature_column;import pathlib;import pandas as pd;from tensorflow.keras import layers;from sklearn.model_selection import train_test_split;import numpy as np;import tensorflow as tf', function_to_run='obj.fit(*args, **kwargs)', method_object=eval('model'), object_signature=None, function_args=[eval('train_ds')], function_kwargs={'validation_data': eval('val_ds'), 'epochs': eval('10')}, custom_class=None)
+custom_method(imports='import numpy as np;import tensorflow as tf;from tensorflow.keras import layers;from tensorflow import feature_column;from sklearn.model_selection import train_test_split;import pandas as pd;import pathlib', function_to_run='obj.fit(*args, **kwargs)', method_object=eval('model'), object_signature=None, function_args=[eval('train_ds')], function_kwargs={'validation_data': eval('val_ds'), 'epochs': eval('10')}, custom_class=None)
 model.fit(train_ds, validation_data=val_ds, epochs=10)
-custom_method(imports='from tensorflow import feature_column;import pathlib;import pandas as pd;from tensorflow.keras import layers;from sklearn.model_selection import train_test_split;import numpy as np;import tensorflow as tf', function_to_run='obj.evaluate(*args)', method_object=eval('model'), object_signature=None, function_args=[eval('test_ds')], function_kwargs={}, custom_class=None)
+custom_method(imports='import numpy as np;import tensorflow as tf;from tensorflow.keras import layers;from tensorflow import feature_column;from sklearn.model_selection import train_test_split;import pandas as pd;import pathlib', function_to_run='obj.evaluate(*args)', method_object=eval('model'), object_signature=None, function_args=[eval('test_ds')], function_kwargs={}, custom_class=None)
 (loss, accuracy) = model.evaluate(test_ds)
 print('Accuracy', accuracy)
