@@ -102,6 +102,20 @@ class MethodLevelExperiment(Experiment):
                 print(line, end='')  # Print error output to console
         return
 
+class MethodLevelLocalExperiment(Experiment):
+    def __init__(self, project: str, experiment_dir: Path, code_dir: Path):
+        super().__init__(ExperimentKinds.METHOD_LEVEL, project, experiment_dir)
+        self.__code_file = code_dir / f"{self.project}_patched_local.py" # only change from MethodLevelExperiment is the file name
+
+    def run(self, exp_number):
+        self.number = exp_number
+        with subprocess.Popen(['python', self.__code_file, str(self.number), str(self.project)], stdout=subprocess.PIPE, stderr=subprocess.PIPE, bufsize=1, universal_newlines=True) as p:
+            for line in p.stdout:
+                print(line, end='')
+            for line in p.stderr:
+                print(line, end='')  # Print error output to console
+        return
+
 
 class DataSizeExperiment(Experiment):
     # TODO make it clear that n_runs is the theoretical number of runs, which is smaller when start_at > 1
