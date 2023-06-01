@@ -56,7 +56,7 @@ after_execution_INSERTED_INTO_SCRIPT(
     # TODO: we don't really need this format anymore for local execution. It would simplify the code
     # to simply have the full function/method signature as function_to_run, here 'tf.keras.Sequential'
     function_to_run='tf.keras.Sequential(*args)',
-    function_args=[tf.keras.layers.Flatten(input_shape=(28, 28)), tf.keras.layers.Dense(128, activation='relu'), tf.keras.layers.Dense(10)]
+    function_args=[[tf.keras.layers.Flatten(input_shape=(28, 28)), tf.keras.layers.Dense(128, activation='relu'), tf.keras.layers.Dense(10)]]
 )
 # END NEW
 
