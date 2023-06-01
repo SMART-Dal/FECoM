@@ -7,50 +7,13 @@ from IPython.display import clear_output
 from six.moves import urllib
 import tensorflow.compat.v2.feature_column as fc
 import tensorflow as tf
-import os
-from pathlib import Path
-import dill as pickle
 import sys
-import numpy as np
-from tool.client.client_config import EXPERIMENT_DIR, MAX_WAIT_S, WAIT_AFTER_RUN_S
-from tool.server.send_request import send_request
-from tool.server.function_details import FunctionDetails
-import json
-current_path = os.path.abspath(__file__)
+from tool.client.client_config import EXPERIMENT_DIR
+from tool.server.local_execution import before_execution as before_execution_INSERTED_INTO_SCRIPT
+from tool.server.local_execution import after_execution as after_execution_INSERTED_INTO_SCRIPT
 experiment_number = sys.argv[1]
 experiment_project = sys.argv[2]
 EXPERIMENT_FILE_PATH = EXPERIMENT_DIR / 'method-level' / experiment_project / f'experiment-{experiment_number}.json'
-skip_calls_file_path = EXPERIMENT_FILE_PATH.parent / 'skip_calls.json'
-if skip_calls_file_path.exists():
-    with open(skip_calls_file_path, 'r') as f:
-        skip_calls = json.load(f)
-else:
-    skip_calls = []
-    with open(skip_calls_file_path, 'w') as f:
-        json.dump(skip_calls, f)
-
-def custom_method(imports: str, function_to_run: str, method_object=None, object_signature=None, function_args: list=None, function_kwargs: dict=None, custom_class=None):
-    if skip_calls is not None and any((call['function_to_run'] == function_to_run and np.array_equal(call['function_args'], function_args) and (call['function_kwargs'] == function_kwargs) for call in skip_calls)):
-        print('skipping call: ', function_to_run)
-        return
-    result = send_request(imports=imports, function_to_run=function_to_run, function_args=function_args, function_kwargs=function_kwargs, max_wait_secs=MAX_WAIT_S, wait_after_run_secs=WAIT_AFTER_RUN_S, method_object=method_object, object_signature=object_signature, custom_class=custom_class, experiment_file_path=EXPERIMENT_FILE_PATH)
-    if result is not None and isinstance(result, dict) and (len(result) == 1):
-        energy_data = next(iter(result.values()))
-        if skip_calls is not None and 'start_time_perf' in energy_data['times'] and ('end_time_perf' in energy_data['times']) and ('start_time_nvidia' in energy_data['times']) and ('end_time_nvidia' in energy_data['times']) and (energy_data['times']['start_time_perf'] == energy_data['times']['end_time_perf']) and (energy_data['times']['start_time_nvidia'] == energy_data['times']['end_time_nvidia']):
-            call_to_skip = {'function_to_run': function_to_run, 'function_args': function_args, 'function_kwargs': function_kwargs}
-            try:
-                json.dumps(call_to_skip)
-                if call_to_skip not in skip_calls:
-                    skip_calls.append(call_to_skip)
-                    with open(skip_calls_file_path, 'w') as f:
-                        json.dump(skip_calls, f)
-                    print('skipping call added, current list is: ', skip_calls)
-                else:
-                    print('Skipping call already exists.')
-            except TypeError:
-                print('Ignore: Skipping call is not JSON serializable, skipping append and dump.')
-    else:
-        print('Invalid dictionary object or does not have one key-value pair.')
 dftrain = pd.read_csv('https://storage.googleapis.com/tf-datasets/titanic/train.csv')
 dfeval = pd.read_csv('https://storage.googleapis.com/tf-datasets/titanic/eval.csv')
 y_train = dftrain.pop('survived')
@@ -74,13 +37,16 @@ for feature_name in NUMERIC_COLUMNS:
 def make_input_fn(data_df, label_df, num_epochs=10, shuffle=True, batch_size=32):
 
     def input_function():
-        custom_method(imports='import tensorflow.compat.v2.feature_column as fc;import numpy as np;import matplotlib.pyplot as plt;import tensorflow as tf;import os;import pandas as pd;from sklearn.metrics import roc_curve;from IPython.display import clear_output;from matplotlib import pyplot as plt;from six.moves import urllib;import sys', function_to_run='tf.data.Dataset.from_tensor_slices(*args)', method_object=None, object_signature=None, function_args=[eval('(dict(data_df), label_df)')], function_kwargs={})
+        start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
         ds = tf.data.Dataset.from_tensor_slices((dict(data_df), label_df))
+        after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.data.Dataset.from_tensor_slices(*args)', method_object=None, object_signature=None, function_args=[(dict(data_df), label_df)], function_kwargs={})
         if shuffle:
-            custom_method(imports='import tensorflow.compat.v2.feature_column as fc;import numpy as np;import matplotlib.pyplot as plt;import tensorflow as tf;import os;import pandas as pd;from sklearn.metrics import roc_curve;from IPython.display import clear_output;from matplotlib import pyplot as plt;from six.moves import urllib;import sys', function_to_run='obj.shuffle(*args)', method_object=eval('ds'), object_signature=None, function_args=[eval('1000')], function_kwargs={}, custom_class=None)
+            start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
             ds = ds.shuffle(1000)
-        custom_method(imports='import tensorflow.compat.v2.feature_column as fc;import numpy as np;import matplotlib.pyplot as plt;import tensorflow as tf;import os;import pandas as pd;from sklearn.metrics import roc_curve;from IPython.display import clear_output;from matplotlib import pyplot as plt;from six.moves import urllib;import sys', function_to_run='obj.batch(batch_size).repeat(*args)', method_object=eval('ds'), object_signature=None, function_args=[eval('num_epochs')], function_kwargs={}, custom_class=None)
+            after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='obj.shuffle(*args)', method_object=ds, object_signature=None, function_args=[1000], function_kwargs={})
+        start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
         ds = ds.batch(batch_size).repeat(num_epochs)
+        after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='obj.batch(batch_size).repeat(*args)', method_object=ds, object_signature=None, function_args=[num_epochs], function_kwargs={})
         return ds
     return input_function
 train_input_fn = make_input_fn(dftrain, y_train)
@@ -93,28 +59,37 @@ for (feature_batch, label_batch) in ds.take(1):
     print()
     print('A batch of Labels:', label_batch.numpy())
 age_column = feature_columns[7]
-custom_method(imports='import tensorflow.compat.v2.feature_column as fc;import numpy as np;import matplotlib.pyplot as plt;import tensorflow as tf;import os;import pandas as pd;from sklearn.metrics import roc_curve;from IPython.display import clear_output;from matplotlib import pyplot as plt;from six.moves import urllib;import sys', function_to_run='tf.keras.layers.DenseFeatures([age_column])(feature_batch).numpy()', method_object=None, object_signature=None, function_args=[], function_kwargs={})
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 tf.keras.layers.DenseFeatures([age_column])(feature_batch).numpy()
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.keras.layers.DenseFeatures([age_column])(feature_batch).numpy()', method_object=None, object_signature=None, function_args=[], function_kwargs={})
 gender_column = feature_columns[0]
-custom_method(imports='import tensorflow.compat.v2.feature_column as fc;import numpy as np;import matplotlib.pyplot as plt;import tensorflow as tf;import os;import pandas as pd;from sklearn.metrics import roc_curve;from IPython.display import clear_output;from matplotlib import pyplot as plt;from six.moves import urllib;import sys', function_to_run='tf.keras.layers.DenseFeatures([tf.feature_column.indicator_column(gender_column)])(feature_batch).numpy()', method_object=None, object_signature=None, function_args=[], function_kwargs={})
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 tf.keras.layers.DenseFeatures([tf.feature_column.indicator_column(gender_column)])(feature_batch).numpy()
-custom_method(imports='import tensorflow.compat.v2.feature_column as fc;import numpy as np;import matplotlib.pyplot as plt;import tensorflow as tf;import os;import pandas as pd;from sklearn.metrics import roc_curve;from IPython.display import clear_output;from matplotlib import pyplot as plt;from six.moves import urllib;import sys', function_to_run='tf.estimator.LinearClassifier(**kwargs)', method_object=None, object_signature=None, function_args=[], function_kwargs={'feature_columns': eval('feature_columns')})
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.keras.layers.DenseFeatures([tf.feature_column.indicator_column(gender_column)])(feature_batch).numpy()', method_object=None, object_signature=None, function_args=[], function_kwargs={})
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 linear_est = tf.estimator.LinearClassifier(feature_columns=feature_columns)
-custom_method(imports='import tensorflow.compat.v2.feature_column as fc;import numpy as np;import matplotlib.pyplot as plt;import tensorflow as tf;import os;import pandas as pd;from sklearn.metrics import roc_curve;from IPython.display import clear_output;from matplotlib import pyplot as plt;from six.moves import urllib;import sys', function_to_run='obj.train(*args)', method_object=eval('linear_est'), object_signature=None, function_args=[eval('train_input_fn')], function_kwargs={}, custom_class=None)
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.estimator.LinearClassifier(**kwargs)', method_object=None, object_signature=None, function_args=[], function_kwargs={'feature_columns': feature_columns})
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 linear_est.train(train_input_fn)
-custom_method(imports='import tensorflow.compat.v2.feature_column as fc;import numpy as np;import matplotlib.pyplot as plt;import tensorflow as tf;import os;import pandas as pd;from sklearn.metrics import roc_curve;from IPython.display import clear_output;from matplotlib import pyplot as plt;from six.moves import urllib;import sys', function_to_run='obj.evaluate(*args)', method_object=eval('linear_est'), object_signature=None, function_args=[eval('eval_input_fn')], function_kwargs={}, custom_class=None)
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='obj.train(*args)', method_object=linear_est, object_signature=None, function_args=[train_input_fn], function_kwargs={})
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 result = linear_est.evaluate(eval_input_fn)
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='obj.evaluate(*args)', method_object=linear_est, object_signature=None, function_args=[eval_input_fn], function_kwargs={})
 clear_output()
 print(result)
-custom_method(imports='import tensorflow.compat.v2.feature_column as fc;import numpy as np;import matplotlib.pyplot as plt;import tensorflow as tf;import os;import pandas as pd;from sklearn.metrics import roc_curve;from IPython.display import clear_output;from matplotlib import pyplot as plt;from six.moves import urllib;import sys', function_to_run='tf.feature_column.crossed_column(*args, **kwargs)', method_object=None, object_signature=None, function_args=[eval("['age', 'sex']")], function_kwargs={'hash_bucket_size': eval('100')})
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 age_x_gender = tf.feature_column.crossed_column(['age', 'sex'], hash_bucket_size=100)
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.feature_column.crossed_column(*args, **kwargs)', method_object=None, object_signature=None, function_args=[['age', 'sex']], function_kwargs={'hash_bucket_size': 100})
 derived_feature_columns = [age_x_gender]
-custom_method(imports='import tensorflow.compat.v2.feature_column as fc;import numpy as np;import matplotlib.pyplot as plt;import tensorflow as tf;import os;import pandas as pd;from sklearn.metrics import roc_curve;from IPython.display import clear_output;from matplotlib import pyplot as plt;from six.moves import urllib;import sys', function_to_run='tf.estimator.LinearClassifier(**kwargs)', method_object=None, object_signature=None, function_args=[], function_kwargs={'feature_columns': eval('feature_columns+derived_feature_columns')})
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 linear_est = tf.estimator.LinearClassifier(feature_columns=feature_columns + derived_feature_columns)
-custom_method(imports='import tensorflow.compat.v2.feature_column as fc;import numpy as np;import matplotlib.pyplot as plt;import tensorflow as tf;import os;import pandas as pd;from sklearn.metrics import roc_curve;from IPython.display import clear_output;from matplotlib import pyplot as plt;from six.moves import urllib;import sys', function_to_run='obj.train(*args)', method_object=eval('linear_est'), object_signature=None, function_args=[eval('train_input_fn')], function_kwargs={}, custom_class=None)
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.estimator.LinearClassifier(**kwargs)', method_object=None, object_signature=None, function_args=[], function_kwargs={'feature_columns': feature_columns + derived_feature_columns})
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 linear_est.train(train_input_fn)
-custom_method(imports='import tensorflow.compat.v2.feature_column as fc;import numpy as np;import matplotlib.pyplot as plt;import tensorflow as tf;import os;import pandas as pd;from sklearn.metrics import roc_curve;from IPython.display import clear_output;from matplotlib import pyplot as plt;from six.moves import urllib;import sys', function_to_run='obj.evaluate(*args)', method_object=eval('linear_est'), object_signature=None, function_args=[eval('eval_input_fn')], function_kwargs={}, custom_class=None)
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='obj.train(*args)', method_object=linear_est, object_signature=None, function_args=[train_input_fn], function_kwargs={})
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 result = linear_est.evaluate(eval_input_fn)
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='obj.evaluate(*args)', method_object=linear_est, object_signature=None, function_args=[eval_input_fn], function_kwargs={})
 clear_output()
 print(result)
 pred_dicts = list(linear_est.predict(eval_input_fn))

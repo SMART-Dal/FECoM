@@ -7,52 +7,16 @@ import PIL
 import tensorflow as tf
 import tensorflow_probability as tfp
 import time
-import os
-from pathlib import Path
-import dill as pickle
 import sys
-import numpy as np
-from tool.client.client_config import EXPERIMENT_DIR, MAX_WAIT_S, WAIT_AFTER_RUN_S
-from tool.server.send_request import send_request
-from tool.server.function_details import FunctionDetails
-import json
-current_path = os.path.abspath(__file__)
+from tool.client.client_config import EXPERIMENT_DIR
+from tool.server.local_execution import before_execution as before_execution_INSERTED_INTO_SCRIPT
+from tool.server.local_execution import after_execution as after_execution_INSERTED_INTO_SCRIPT
 experiment_number = sys.argv[1]
 experiment_project = sys.argv[2]
 EXPERIMENT_FILE_PATH = EXPERIMENT_DIR / 'method-level' / experiment_project / f'experiment-{experiment_number}.json'
-skip_calls_file_path = EXPERIMENT_FILE_PATH.parent / 'skip_calls.json'
-if skip_calls_file_path.exists():
-    with open(skip_calls_file_path, 'r') as f:
-        skip_calls = json.load(f)
-else:
-    skip_calls = []
-    with open(skip_calls_file_path, 'w') as f:
-        json.dump(skip_calls, f)
-
-def custom_method(imports: str, function_to_run: str, method_object=None, object_signature=None, function_args: list=None, function_kwargs: dict=None, custom_class=None):
-    if skip_calls is not None and any((call['function_to_run'] == function_to_run and np.array_equal(call['function_args'], function_args) and (call['function_kwargs'] == function_kwargs) for call in skip_calls)):
-        print('skipping call: ', function_to_run)
-        return
-    result = send_request(imports=imports, function_to_run=function_to_run, function_args=function_args, function_kwargs=function_kwargs, max_wait_secs=MAX_WAIT_S, wait_after_run_secs=WAIT_AFTER_RUN_S, method_object=method_object, object_signature=object_signature, custom_class=custom_class, experiment_file_path=EXPERIMENT_FILE_PATH)
-    if result is not None and isinstance(result, dict) and (len(result) == 1):
-        energy_data = next(iter(result.values()))
-        if skip_calls is not None and 'start_time_perf' in energy_data['times'] and ('end_time_perf' in energy_data['times']) and ('start_time_nvidia' in energy_data['times']) and ('end_time_nvidia' in energy_data['times']) and (energy_data['times']['start_time_perf'] == energy_data['times']['end_time_perf']) and (energy_data['times']['start_time_nvidia'] == energy_data['times']['end_time_nvidia']):
-            call_to_skip = {'function_to_run': function_to_run, 'function_args': function_args, 'function_kwargs': function_kwargs}
-            try:
-                json.dumps(call_to_skip)
-                if call_to_skip not in skip_calls:
-                    skip_calls.append(call_to_skip)
-                    with open(skip_calls_file_path, 'w') as f:
-                        json.dump(skip_calls, f)
-                    print('skipping call added, current list is: ', skip_calls)
-                else:
-                    print('Skipping call already exists.')
-            except TypeError:
-                print('Ignore: Skipping call is not JSON serializable, skipping append and dump.')
-    else:
-        print('Invalid dictionary object or does not have one key-value pair.')
-custom_method(imports='import imageio;import numpy as np;import matplotlib.pyplot as plt;from IPython import display;import PIL;import tensorflow_probability as tfp;import time;import tensorflow as tf;import glob;import tensorflow_docs.vis.embed as embed', function_to_run='tf.keras.datasets.mnist.load_data()', method_object=None, object_signature=None, function_args=[], function_kwargs={})
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 ((train_images, _), (test_images, _)) = tf.keras.datasets.mnist.load_data()
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.keras.datasets.mnist.load_data()', method_object=None, object_signature=None, function_args=[], function_kwargs={})
 
 def preprocess_images(images):
     images = images.reshape((images.shape[0], 28, 28, 1)) / 255.0
@@ -62,10 +26,12 @@ test_images = preprocess_images(test_images)
 train_size = 60000
 batch_size = 32
 test_size = 10000
-custom_method(imports='import imageio;import numpy as np;import matplotlib.pyplot as plt;from IPython import display;import PIL;import tensorflow_probability as tfp;import time;import tensorflow as tf;import glob;import tensorflow_docs.vis.embed as embed', function_to_run='tf.data.Dataset.from_tensor_slices(train_images).shuffle(train_size).batch(*args)', method_object=None, object_signature=None, function_args=[eval('batch_size')], function_kwargs={})
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 train_dataset = tf.data.Dataset.from_tensor_slices(train_images).shuffle(train_size).batch(batch_size)
-custom_method(imports='import imageio;import numpy as np;import matplotlib.pyplot as plt;from IPython import display;import PIL;import tensorflow_probability as tfp;import time;import tensorflow as tf;import glob;import tensorflow_docs.vis.embed as embed', function_to_run='tf.data.Dataset.from_tensor_slices(test_images).shuffle(test_size).batch(*args)', method_object=None, object_signature=None, function_args=[eval('batch_size')], function_kwargs={})
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.data.Dataset.from_tensor_slices(train_images).shuffle(train_size).batch(*args)', method_object=None, object_signature=None, function_args=[batch_size], function_kwargs={})
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 test_dataset = tf.data.Dataset.from_tensor_slices(test_images).shuffle(test_size).batch(batch_size)
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.data.Dataset.from_tensor_slices(test_images).shuffle(test_size).batch(*args)', method_object=None, object_signature=None, function_args=[batch_size], function_kwargs={})
 
 class CVAE(tf.keras.Model):
     """Convolutional variational autoencoder."""
@@ -73,52 +39,64 @@ class CVAE(tf.keras.Model):
     def __init__(self, latent_dim):
         super(CVAE, self).__init__()
         self.latent_dim = latent_dim
-        custom_method(imports='import imageio;import numpy as np;import matplotlib.pyplot as plt;from IPython import display;import PIL;import tensorflow_probability as tfp;import time;import tensorflow as tf;import glob;import tensorflow_docs.vis.embed as embed', function_to_run='tf.keras.Sequential(*args)', method_object=None, object_signature=None, function_args=[eval("[\n            tf.keras.layers.InputLayer(input_shape=(28, 28, 1)),\n            tf.keras.layers.Conv2D(\n                filters=32, kernel_size=3, strides=(2, 2), activation='relu'),\n            tf.keras.layers.Conv2D(\n                filters=64, kernel_size=3, strides=(2, 2), activation='relu'),\n            tf.keras.layers.Flatten(),\n            tf.keras.layers.Dense(latent_dim + latent_dim),\n        ]")], function_kwargs={})
+        start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
         self.encoder = tf.keras.Sequential([tf.keras.layers.InputLayer(input_shape=(28, 28, 1)), tf.keras.layers.Conv2D(filters=32, kernel_size=3, strides=(2, 2), activation='relu'), tf.keras.layers.Conv2D(filters=64, kernel_size=3, strides=(2, 2), activation='relu'), tf.keras.layers.Flatten(), tf.keras.layers.Dense(latent_dim + latent_dim)])
-        custom_method(imports='import imageio;import numpy as np;import matplotlib.pyplot as plt;from IPython import display;import PIL;import tensorflow_probability as tfp;import time;import tensorflow as tf;import glob;import tensorflow_docs.vis.embed as embed', function_to_run='tf.keras.Sequential(*args)', method_object=None, object_signature=None, function_args=[eval("[\n            tf.keras.layers.InputLayer(input_shape=(latent_dim,)),\n            tf.keras.layers.Dense(units=7*7*32, activation=tf.nn.relu),\n            tf.keras.layers.Reshape(target_shape=(7, 7, 32)),\n            tf.keras.layers.Conv2DTranspose(\n                filters=64, kernel_size=3, strides=2, padding='same',\n                activation='relu'),\n            tf.keras.layers.Conv2DTranspose(\n                filters=32, kernel_size=3, strides=2, padding='same',\n                activation='relu'),\n            tf.keras.layers.Conv2DTranspose(\n                filters=1, kernel_size=3, strides=1, padding='same'),\n        ]")], function_kwargs={})
+        after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.keras.Sequential(*args)', method_object=None, object_signature=None, function_args=[[tf.keras.layers.InputLayer(input_shape=(28, 28, 1)), tf.keras.layers.Conv2D(filters=32, kernel_size=3, strides=(2, 2), activation='relu'), tf.keras.layers.Conv2D(filters=64, kernel_size=3, strides=(2, 2), activation='relu'), tf.keras.layers.Flatten(), tf.keras.layers.Dense(latent_dim + latent_dim)]], function_kwargs={})
+        start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
         self.decoder = tf.keras.Sequential([tf.keras.layers.InputLayer(input_shape=(latent_dim,)), tf.keras.layers.Dense(units=7 * 7 * 32, activation=tf.nn.relu), tf.keras.layers.Reshape(target_shape=(7, 7, 32)), tf.keras.layers.Conv2DTranspose(filters=64, kernel_size=3, strides=2, padding='same', activation='relu'), tf.keras.layers.Conv2DTranspose(filters=32, kernel_size=3, strides=2, padding='same', activation='relu'), tf.keras.layers.Conv2DTranspose(filters=1, kernel_size=3, strides=1, padding='same')])
+        after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.keras.Sequential(*args)', method_object=None, object_signature=None, function_args=[[tf.keras.layers.InputLayer(input_shape=(latent_dim,)), tf.keras.layers.Dense(units=7 * 7 * 32, activation=tf.nn.relu), tf.keras.layers.Reshape(target_shape=(7, 7, 32)), tf.keras.layers.Conv2DTranspose(filters=64, kernel_size=3, strides=2, padding='same', activation='relu'), tf.keras.layers.Conv2DTranspose(filters=32, kernel_size=3, strides=2, padding='same', activation='relu'), tf.keras.layers.Conv2DTranspose(filters=1, kernel_size=3, strides=1, padding='same')]], function_kwargs={})
 
     @tf.function
     def sample(self, eps=None):
         if eps is None:
-            custom_method(imports='import imageio;import numpy as np;import matplotlib.pyplot as plt;from IPython import display;import PIL;import tensorflow_probability as tfp;import time;import tensorflow as tf;import glob;import tensorflow_docs.vis.embed as embed', function_to_run='tf.random.normal(**kwargs)', method_object=None, object_signature=None, function_args=[], function_kwargs={'shape': eval('(100, self.latent_dim)')})
+            start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
             eps = tf.random.normal(shape=(100, self.latent_dim))
+            after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.random.normal(**kwargs)', method_object=None, object_signature=None, function_args=[], function_kwargs={'shape': (100, self.latent_dim)})
         return self.decode(eps, apply_sigmoid=True)
 
     def encode(self, x):
-        custom_method(imports='import imageio;import numpy as np;import matplotlib.pyplot as plt;from IPython import display;import PIL;import tensorflow_probability as tfp;import time;import tensorflow as tf;import glob;import tensorflow_docs.vis.embed as embed', function_to_run='tf.split(*args, **kwargs)', method_object=None, object_signature=None, function_args=[eval('self.encoder(x)')], function_kwargs={'num_or_size_splits': eval('2'), 'axis': eval('1')})
+        start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
         (mean, logvar) = tf.split(self.encoder(x), num_or_size_splits=2, axis=1)
+        after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.split(*args, **kwargs)', method_object=None, object_signature=None, function_args=[self.encoder(x)], function_kwargs={'num_or_size_splits': 2, 'axis': 1})
         return (mean, logvar)
 
     def reparameterize(self, mean, logvar):
-        custom_method(imports='import imageio;import numpy as np;import matplotlib.pyplot as plt;from IPython import display;import PIL;import tensorflow_probability as tfp;import time;import tensorflow as tf;import glob;import tensorflow_docs.vis.embed as embed', function_to_run='tf.random.normal(**kwargs)', method_object=None, object_signature=None, function_args=[], function_kwargs={'shape': eval('mean.shape')})
+        start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
         eps = tf.random.normal(shape=mean.shape)
+        after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.random.normal(**kwargs)', method_object=None, object_signature=None, function_args=[], function_kwargs={'shape': mean.shape})
         return eps * tf.exp(logvar * 0.5) + mean
 
     def decode(self, z, apply_sigmoid=False):
         logits = self.decoder(z)
         if apply_sigmoid:
-            custom_method(imports='import imageio;import numpy as np;import matplotlib.pyplot as plt;from IPython import display;import PIL;import tensorflow_probability as tfp;import time;import tensorflow as tf;import glob;import tensorflow_docs.vis.embed as embed', function_to_run='tf.sigmoid(*args)', method_object=None, object_signature=None, function_args=[eval('logits')], function_kwargs={})
+            start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
             probs = tf.sigmoid(logits)
+            after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.sigmoid(*args)', method_object=None, object_signature=None, function_args=[logits], function_kwargs={})
             return probs
         return logits
-custom_method(imports='import imageio;import numpy as np;import matplotlib.pyplot as plt;from IPython import display;import PIL;import tensorflow_probability as tfp;import time;import tensorflow as tf;import glob;import tensorflow_docs.vis.embed as embed', function_to_run='tf.keras.optimizers.Adam(*args)', method_object=None, object_signature=None, function_args=[eval('1e-4')], function_kwargs={})
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 optimizer = tf.keras.optimizers.Adam(0.0001)
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.keras.optimizers.Adam(*args)', method_object=None, object_signature=None, function_args=[0.0001], function_kwargs={})
 
 def log_normal_pdf(sample, mean, logvar, raxis=1):
-    custom_method(imports='import imageio;import numpy as np;import matplotlib.pyplot as plt;from IPython import display;import PIL;import tensorflow_probability as tfp;import time;import tensorflow as tf;import glob;import tensorflow_docs.vis.embed as embed', function_to_run='tf.math.log(*args)', method_object=None, object_signature=None, function_args=[eval('2. * np.pi')], function_kwargs={})
+    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
     log2pi = tf.math.log(2.0 * np.pi)
+    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.math.log(*args)', method_object=None, object_signature=None, function_args=[2.0 * np.pi], function_kwargs={})
     return tf.reduce_sum(-0.5 * ((sample - mean) ** 2.0 * tf.exp(-logvar) + logvar + log2pi), axis=raxis)
 
 def compute_loss(model, x):
-    custom_method(imports='import imageio;import numpy as np;import matplotlib.pyplot as plt;from IPython import display;import PIL;import tensorflow_probability as tfp;import time;import tensorflow as tf;import glob;import tensorflow_docs.vis.embed as embed', function_to_run='obj.encode(*args)', method_object=eval('model'), object_signature=None, function_args=[eval('x')], function_kwargs={}, custom_class=None)
+    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
     (mean, logvar) = model.encode(x)
-    custom_method(imports='import imageio;import numpy as np;import matplotlib.pyplot as plt;from IPython import display;import PIL;import tensorflow_probability as tfp;import time;import tensorflow as tf;import glob;import tensorflow_docs.vis.embed as embed', function_to_run='obj.reparameterize(*args)', method_object=eval('model'), object_signature=None, function_args=[eval('mean'), eval('logvar')], function_kwargs={}, custom_class=None)
+    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='obj.encode(*args)', method_object=model, object_signature=None, function_args=[x], function_kwargs={})
+    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
     z = model.reparameterize(mean, logvar)
-    custom_method(imports='import imageio;import numpy as np;import matplotlib.pyplot as plt;from IPython import display;import PIL;import tensorflow_probability as tfp;import time;import tensorflow as tf;import glob;import tensorflow_docs.vis.embed as embed', function_to_run='obj.decode(*args)', method_object=eval('model'), object_signature=None, function_args=[eval('z')], function_kwargs={}, custom_class=None)
+    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='obj.reparameterize(*args)', method_object=model, object_signature=None, function_args=[mean, logvar], function_kwargs={})
+    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
     x_logit = model.decode(z)
-    custom_method(imports='import imageio;import numpy as np;import matplotlib.pyplot as plt;from IPython import display;import PIL;import tensorflow_probability as tfp;import time;import tensorflow as tf;import glob;import tensorflow_docs.vis.embed as embed', function_to_run='tf.nn.sigmoid_cross_entropy_with_logits(**kwargs)', method_object=None, object_signature=None, function_args=[], function_kwargs={'logits': eval('x_logit'), 'labels': eval('x')})
+    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='obj.decode(*args)', method_object=model, object_signature=None, function_args=[z], function_kwargs={})
+    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
     cross_ent = tf.nn.sigmoid_cross_entropy_with_logits(logits=x_logit, labels=x)
+    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.nn.sigmoid_cross_entropy_with_logits(**kwargs)', method_object=None, object_signature=None, function_args=[], function_kwargs={'logits': x_logit, 'labels': x})
     logpx_z = -tf.reduce_sum(cross_ent, axis=[1, 2, 3])
     logpz = log_normal_pdf(z, 0.0, 0.0)
     logqz_x = log_normal_pdf(z, mean, logvar)
@@ -134,22 +112,27 @@ def train_step(model, x, optimizer):
     with tf.GradientTape() as tape:
         loss = compute_loss(model, x)
     gradients = tape.gradient(loss, model.trainable_variables)
-    custom_method(imports='import imageio;import numpy as np;import matplotlib.pyplot as plt;from IPython import display;import PIL;import tensorflow_probability as tfp;import time;import tensorflow as tf;import glob;import tensorflow_docs.vis.embed as embed', function_to_run='obj.apply_gradients(*args)', method_object=eval('optimizer'), object_signature=None, function_args=[eval('zip(gradients, model.trainable_variables)')], function_kwargs={}, custom_class=None)
+    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
     optimizer.apply_gradients(zip(gradients, model.trainable_variables))
+    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='obj.apply_gradients(*args)', method_object=optimizer, object_signature=None, function_args=[zip(gradients, model.trainable_variables)], function_kwargs={})
 epochs = 10
 latent_dim = 2
 num_examples_to_generate = 16
-custom_method(imports='import imageio;import numpy as np;import matplotlib.pyplot as plt;from IPython import display;import PIL;import tensorflow_probability as tfp;import time;import tensorflow as tf;import glob;import tensorflow_docs.vis.embed as embed', function_to_run='tf.random.normal(**kwargs)', method_object=None, object_signature=None, function_args=[], function_kwargs={'shape': eval('[num_examples_to_generate, latent_dim]')})
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 random_vector_for_generation = tf.random.normal(shape=[num_examples_to_generate, latent_dim])
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.random.normal(**kwargs)', method_object=None, object_signature=None, function_args=[], function_kwargs={'shape': [num_examples_to_generate, latent_dim]})
 model = CVAE(latent_dim)
 
 def generate_and_save_images(model, epoch, test_sample):
-    custom_method(imports='import imageio;import numpy as np;import matplotlib.pyplot as plt;from IPython import display;import PIL;import tensorflow_probability as tfp;import time;import tensorflow as tf;import glob;import tensorflow_docs.vis.embed as embed', function_to_run='obj.encode(*args)', method_object=eval('model'), object_signature=None, function_args=[eval('test_sample')], function_kwargs={}, custom_class='class CVAE(tf.keras.Model):\n  """Convolutional variational autoencoder."""\n\n  def __init__(self, latent_dim):\n    super(CVAE, self).__init__()\n    self.latent_dim = latent_dim\n    self.encoder = tf.keras.Sequential(\n        [\n            tf.keras.layers.InputLayer(input_shape=(28, 28, 1)),\n            tf.keras.layers.Conv2D(\n                filters=32, kernel_size=3, strides=(2, 2), activation=\'relu\'),\n            tf.keras.layers.Conv2D(\n                filters=64, kernel_size=3, strides=(2, 2), activation=\'relu\'),\n            tf.keras.layers.Flatten(),\n            tf.keras.layers.Dense(latent_dim + latent_dim),\n        ]\n    )\n\n    self.decoder = tf.keras.Sequential(\n        [\n            tf.keras.layers.InputLayer(input_shape=(latent_dim,)),\n            tf.keras.layers.Dense(units=7*7*32, activation=tf.nn.relu),\n            tf.keras.layers.Reshape(target_shape=(7, 7, 32)),\n            tf.keras.layers.Conv2DTranspose(\n                filters=64, kernel_size=3, strides=2, padding=\'same\',\n                activation=\'relu\'),\n            tf.keras.layers.Conv2DTranspose(\n                filters=32, kernel_size=3, strides=2, padding=\'same\',\n                activation=\'relu\'),\n            tf.keras.layers.Conv2DTranspose(\n                filters=1, kernel_size=3, strides=1, padding=\'same\'),\n        ]\n    )\n\n  @tf.function\n  def sample(self, eps=None):\n    if eps is None:\n      eps = tf.random.normal(shape=(100, self.latent_dim))\n    return self.decode(eps, apply_sigmoid=True)\n\n  def encode(self, x):\n    mean, logvar = tf.split(self.encoder(x), num_or_size_splits=2, axis=1)\n    return mean, logvar\n\n  def reparameterize(self, mean, logvar):\n    eps = tf.random.normal(shape=mean.shape)\n    return eps * tf.exp(logvar * .5) + mean\n\n  def decode(self, z, apply_sigmoid=False):\n    logits = self.decoder(z)\n    if apply_sigmoid:\n      probs = tf.sigmoid(logits)\n      return probs\n    return logits')
+    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
     (mean, logvar) = model.encode(test_sample)
-    custom_method(imports='import imageio;import numpy as np;import matplotlib.pyplot as plt;from IPython import display;import PIL;import tensorflow_probability as tfp;import time;import tensorflow as tf;import glob;import tensorflow_docs.vis.embed as embed', function_to_run='obj.reparameterize(*args)', method_object=eval('model'), object_signature=None, function_args=[eval('mean'), eval('logvar')], function_kwargs={}, custom_class='class CVAE(tf.keras.Model):\n  """Convolutional variational autoencoder."""\n\n  def __init__(self, latent_dim):\n    super(CVAE, self).__init__()\n    self.latent_dim = latent_dim\n    self.encoder = tf.keras.Sequential(\n        [\n            tf.keras.layers.InputLayer(input_shape=(28, 28, 1)),\n            tf.keras.layers.Conv2D(\n                filters=32, kernel_size=3, strides=(2, 2), activation=\'relu\'),\n            tf.keras.layers.Conv2D(\n                filters=64, kernel_size=3, strides=(2, 2), activation=\'relu\'),\n            tf.keras.layers.Flatten(),\n            tf.keras.layers.Dense(latent_dim + latent_dim),\n        ]\n    )\n\n    self.decoder = tf.keras.Sequential(\n        [\n            tf.keras.layers.InputLayer(input_shape=(latent_dim,)),\n            tf.keras.layers.Dense(units=7*7*32, activation=tf.nn.relu),\n            tf.keras.layers.Reshape(target_shape=(7, 7, 32)),\n            tf.keras.layers.Conv2DTranspose(\n                filters=64, kernel_size=3, strides=2, padding=\'same\',\n                activation=\'relu\'),\n            tf.keras.layers.Conv2DTranspose(\n                filters=32, kernel_size=3, strides=2, padding=\'same\',\n                activation=\'relu\'),\n            tf.keras.layers.Conv2DTranspose(\n                filters=1, kernel_size=3, strides=1, padding=\'same\'),\n        ]\n    )\n\n  @tf.function\n  def sample(self, eps=None):\n    if eps is None:\n      eps = tf.random.normal(shape=(100, self.latent_dim))\n    return self.decode(eps, apply_sigmoid=True)\n\n  def encode(self, x):\n    mean, logvar = tf.split(self.encoder(x), num_or_size_splits=2, axis=1)\n    return mean, logvar\n\n  def reparameterize(self, mean, logvar):\n    eps = tf.random.normal(shape=mean.shape)\n    return eps * tf.exp(logvar * .5) + mean\n\n  def decode(self, z, apply_sigmoid=False):\n    logits = self.decoder(z)\n    if apply_sigmoid:\n      probs = tf.sigmoid(logits)\n      return probs\n    return logits')
+    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='obj.encode(*args)', method_object='model', object_signature=None, function_args=[test_sample], function_kwargs={})
+    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
     z = model.reparameterize(mean, logvar)
-    custom_method(imports='import imageio;import numpy as np;import matplotlib.pyplot as plt;from IPython import display;import PIL;import tensorflow_probability as tfp;import time;import tensorflow as tf;import glob;import tensorflow_docs.vis.embed as embed', function_to_run='obj.sample(*args)', method_object=eval('model'), object_signature=None, function_args=[eval('z')], function_kwargs={}, custom_class='class CVAE(tf.keras.Model):\n  """Convolutional variational autoencoder."""\n\n  def __init__(self, latent_dim):\n    super(CVAE, self).__init__()\n    self.latent_dim = latent_dim\n    self.encoder = tf.keras.Sequential(\n        [\n            tf.keras.layers.InputLayer(input_shape=(28, 28, 1)),\n            tf.keras.layers.Conv2D(\n                filters=32, kernel_size=3, strides=(2, 2), activation=\'relu\'),\n            tf.keras.layers.Conv2D(\n                filters=64, kernel_size=3, strides=(2, 2), activation=\'relu\'),\n            tf.keras.layers.Flatten(),\n            tf.keras.layers.Dense(latent_dim + latent_dim),\n        ]\n    )\n\n    self.decoder = tf.keras.Sequential(\n        [\n            tf.keras.layers.InputLayer(input_shape=(latent_dim,)),\n            tf.keras.layers.Dense(units=7*7*32, activation=tf.nn.relu),\n            tf.keras.layers.Reshape(target_shape=(7, 7, 32)),\n            tf.keras.layers.Conv2DTranspose(\n                filters=64, kernel_size=3, strides=2, padding=\'same\',\n                activation=\'relu\'),\n            tf.keras.layers.Conv2DTranspose(\n                filters=32, kernel_size=3, strides=2, padding=\'same\',\n                activation=\'relu\'),\n            tf.keras.layers.Conv2DTranspose(\n                filters=1, kernel_size=3, strides=1, padding=\'same\'),\n        ]\n    )\n\n  @tf.function\n  def sample(self, eps=None):\n    if eps is None:\n      eps = tf.random.normal(shape=(100, self.latent_dim))\n    return self.decode(eps, apply_sigmoid=True)\n\n  def encode(self, x):\n    mean, logvar = tf.split(self.encoder(x), num_or_size_splits=2, axis=1)\n    return mean, logvar\n\n  def reparameterize(self, mean, logvar):\n    eps = tf.random.normal(shape=mean.shape)\n    return eps * tf.exp(logvar * .5) + mean\n\n  def decode(self, z, apply_sigmoid=False):\n    logits = self.decoder(z)\n    if apply_sigmoid:\n      probs = tf.sigmoid(logits)\n      return probs\n    return logits')
+    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='obj.reparameterize(*args)', method_object='model', object_signature=None, function_args=[mean, logvar], function_kwargs={})
+    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
     predictions = model.sample(z)
+    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='obj.sample(*args)', method_object='model', object_signature=None, function_args=[z], function_kwargs={})
     fig = plt.figure(figsize=(4, 4))
     for i in range(predictions.shape[0]):
         plt.subplot(4, 4, i + 1)
@@ -166,11 +149,13 @@ for epoch in range(1, epochs + 1):
     for train_x in train_dataset:
         train_step(model, train_x, optimizer)
     end_time = time.time()
-    custom_method(imports='import imageio;import numpy as np;import matplotlib.pyplot as plt;from IPython import display;import PIL;import tensorflow_probability as tfp;import time;import tensorflow as tf;import glob;import tensorflow_docs.vis.embed as embed', function_to_run='tf.keras.metrics.Mean()', method_object=None, object_signature=None, function_args=[], function_kwargs={})
+    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
     loss = tf.keras.metrics.Mean()
+    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.keras.metrics.Mean()', method_object=None, object_signature=None, function_args=[], function_kwargs={})
     for test_x in test_dataset:
-        custom_method(imports='import imageio;import numpy as np;import matplotlib.pyplot as plt;from IPython import display;import PIL;import tensorflow_probability as tfp;import time;import tensorflow as tf;import glob;import tensorflow_docs.vis.embed as embed', function_to_run='obj(*args)', method_object=eval('loss'), object_signature=None, function_args=[eval('compute_loss(model, test_x)')], function_kwargs={}, custom_class=None)
+        start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
         loss(compute_loss(model, test_x))
+        after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='obj(*args)', method_object=loss, object_signature=None, function_args=[compute_loss(model, test_x)], function_kwargs={})
     elbo = -loss.result()
     display.clear_output(wait=False)
     print('Epoch: {}, Test set ELBO: {}, time elapse for current epoch: {}'.format(epoch, elbo, end_time - start_time))
@@ -203,12 +188,15 @@ def plot_latent_images(model, n, digit_size=28):
     for (i, yi) in enumerate(grid_x):
         for (j, xi) in enumerate(grid_y):
             z = np.array([[xi, yi]])
-            custom_method(imports='import imageio;import numpy as np;import matplotlib.pyplot as plt;from IPython import display;import PIL;import tensorflow_probability as tfp;import time;import tensorflow as tf;import glob;import tensorflow_docs.vis.embed as embed', function_to_run='obj.sample(*args)', method_object=eval('model'), object_signature=None, function_args=[eval('z')], function_kwargs={}, custom_class='class CVAE(tf.keras.Model):\n  """Convolutional variational autoencoder."""\n\n  def __init__(self, latent_dim):\n    super(CVAE, self).__init__()\n    self.latent_dim = latent_dim\n    self.encoder = tf.keras.Sequential(\n        [\n            tf.keras.layers.InputLayer(input_shape=(28, 28, 1)),\n            tf.keras.layers.Conv2D(\n                filters=32, kernel_size=3, strides=(2, 2), activation=\'relu\'),\n            tf.keras.layers.Conv2D(\n                filters=64, kernel_size=3, strides=(2, 2), activation=\'relu\'),\n            tf.keras.layers.Flatten(),\n            tf.keras.layers.Dense(latent_dim + latent_dim),\n        ]\n    )\n\n    self.decoder = tf.keras.Sequential(\n        [\n            tf.keras.layers.InputLayer(input_shape=(latent_dim,)),\n            tf.keras.layers.Dense(units=7*7*32, activation=tf.nn.relu),\n            tf.keras.layers.Reshape(target_shape=(7, 7, 32)),\n            tf.keras.layers.Conv2DTranspose(\n                filters=64, kernel_size=3, strides=2, padding=\'same\',\n                activation=\'relu\'),\n            tf.keras.layers.Conv2DTranspose(\n                filters=32, kernel_size=3, strides=2, padding=\'same\',\n                activation=\'relu\'),\n            tf.keras.layers.Conv2DTranspose(\n                filters=1, kernel_size=3, strides=1, padding=\'same\'),\n        ]\n    )\n\n  @tf.function\n  def sample(self, eps=None):\n    if eps is None:\n      eps = tf.random.normal(shape=(100, self.latent_dim))\n    return self.decode(eps, apply_sigmoid=True)\n\n  def encode(self, x):\n    mean, logvar = tf.split(self.encoder(x), num_or_size_splits=2, axis=1)\n    return mean, logvar\n\n  def reparameterize(self, mean, logvar):\n    eps = tf.random.normal(shape=mean.shape)\n    return eps * tf.exp(logvar * .5) + mean\n\n  def decode(self, z, apply_sigmoid=False):\n    logits = self.decoder(z)\n    if apply_sigmoid:\n      probs = tf.sigmoid(logits)\n      return probs\n    return logits')
+            start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
             x_decoded = model.sample(z)
-            custom_method(imports='import imageio;import numpy as np;import matplotlib.pyplot as plt;from IPython import display;import PIL;import tensorflow_probability as tfp;import time;import tensorflow as tf;import glob;import tensorflow_docs.vis.embed as embed', function_to_run='tf.reshape(*args)', method_object=None, object_signature=None, function_args=[eval('x_decoded[0]'), eval('(digit_size, digit_size)')], function_kwargs={})
+            after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='obj.sample(*args)', method_object='model', object_signature=None, function_args=[z], function_kwargs={})
+            start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
             digit = tf.reshape(x_decoded[0], (digit_size, digit_size))
-            custom_method(imports='import imageio;import numpy as np;import matplotlib.pyplot as plt;from IPython import display;import PIL;import tensorflow_probability as tfp;import time;import tensorflow as tf;import glob;import tensorflow_docs.vis.embed as embed', function_to_run='obj.numpy()', method_object=eval('digit'), object_signature=None, function_args=[], function_kwargs={}, custom_class=None)
+            after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.reshape(*args)', method_object=None, object_signature=None, function_args=[x_decoded[0], (digit_size, digit_size)], function_kwargs={})
+            start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
             image[i * digit_size:(i + 1) * digit_size, j * digit_size:(j + 1) * digit_size] = digit.numpy()
+            after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='obj.numpy()', method_object=digit, object_signature=None, function_args=[], function_kwargs={})
     plt.figure(figsize=(10, 10))
     plt.imshow(image, cmap='Greys_r')
     plt.axis('Off')

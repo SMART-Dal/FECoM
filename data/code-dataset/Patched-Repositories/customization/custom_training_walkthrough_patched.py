@@ -2,50 +2,13 @@ import os
 import tensorflow as tf
 import tensorflow_datasets as tfds
 import matplotlib.pyplot as plt
-import os
-from pathlib import Path
-import dill as pickle
 import sys
-import numpy as np
-from tool.client.client_config import EXPERIMENT_DIR, MAX_WAIT_S, WAIT_AFTER_RUN_S
-from tool.server.send_request import send_request
-from tool.server.function_details import FunctionDetails
-import json
-current_path = os.path.abspath(__file__)
+from tool.client.client_config import EXPERIMENT_DIR
+from tool.server.local_execution import before_execution as before_execution_INSERTED_INTO_SCRIPT
+from tool.server.local_execution import after_execution as after_execution_INSERTED_INTO_SCRIPT
 experiment_number = sys.argv[1]
 experiment_project = sys.argv[2]
 EXPERIMENT_FILE_PATH = EXPERIMENT_DIR / 'method-level' / experiment_project / f'experiment-{experiment_number}.json'
-skip_calls_file_path = EXPERIMENT_FILE_PATH.parent / 'skip_calls.json'
-if skip_calls_file_path.exists():
-    with open(skip_calls_file_path, 'r') as f:
-        skip_calls = json.load(f)
-else:
-    skip_calls = []
-    with open(skip_calls_file_path, 'w') as f:
-        json.dump(skip_calls, f)
-
-def custom_method(imports: str, function_to_run: str, method_object=None, object_signature=None, function_args: list=None, function_kwargs: dict=None, custom_class=None):
-    if skip_calls is not None and any((call['function_to_run'] == function_to_run and np.array_equal(call['function_args'], function_args) and (call['function_kwargs'] == function_kwargs) for call in skip_calls)):
-        print('skipping call: ', function_to_run)
-        return
-    result = send_request(imports=imports, function_to_run=function_to_run, function_args=function_args, function_kwargs=function_kwargs, max_wait_secs=MAX_WAIT_S, wait_after_run_secs=WAIT_AFTER_RUN_S, method_object=method_object, object_signature=object_signature, custom_class=custom_class, experiment_file_path=EXPERIMENT_FILE_PATH)
-    if result is not None and isinstance(result, dict) and (len(result) == 1):
-        energy_data = next(iter(result.values()))
-        if skip_calls is not None and 'start_time_perf' in energy_data['times'] and ('end_time_perf' in energy_data['times']) and ('start_time_nvidia' in energy_data['times']) and ('end_time_nvidia' in energy_data['times']) and (energy_data['times']['start_time_perf'] == energy_data['times']['end_time_perf']) and (energy_data['times']['start_time_nvidia'] == energy_data['times']['end_time_nvidia']):
-            call_to_skip = {'function_to_run': function_to_run, 'function_args': function_args, 'function_kwargs': function_kwargs}
-            try:
-                json.dumps(call_to_skip)
-                if call_to_skip not in skip_calls:
-                    skip_calls.append(call_to_skip)
-                    with open(skip_calls_file_path, 'w') as f:
-                        json.dump(skip_calls, f)
-                    print('skipping call added, current list is: ', skip_calls)
-                else:
-                    print('Skipping call already exists.')
-            except TypeError:
-                print('Ignore: Skipping call is not JSON serializable, skipping append and dump.')
-    else:
-        print('Invalid dictionary object or does not have one key-value pair.')
 print('TensorFlow version: {}'.format(tf.__version__))
 print('TensorFlow Datasets version: ', tfds.__version__)
 (ds_preview, info) = tfds.load('penguins/simple', split='train', with_info=True)
@@ -72,21 +35,26 @@ plt.scatter(features[:, 0], features[:, 2], c=labels, cmap='viridis')
 plt.xlabel('Body Mass')
 plt.ylabel('Culmen Length')
 plt.show()
-custom_method(imports='import matplotlib.pyplot as plt;import tensorflow_datasets as tfds;import os;import tensorflow as tf', function_to_run='tf.keras.Sequential(*args)', method_object=None, object_signature=None, function_args=[eval('[\n  tf.keras.layers.Dense(10, activation=tf.nn.relu, input_shape=(4,)),  # input shape required\n  tf.keras.layers.Dense(10, activation=tf.nn.relu),\n  tf.keras.layers.Dense(3)\n]')], function_kwargs={})
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 model = tf.keras.Sequential([tf.keras.layers.Dense(10, activation=tf.nn.relu, input_shape=(4,)), tf.keras.layers.Dense(10, activation=tf.nn.relu), tf.keras.layers.Dense(3)])
-custom_method(imports='import matplotlib.pyplot as plt;import tensorflow_datasets as tfds;import os;import tensorflow as tf', function_to_run='obj(*args)', method_object=eval('model'), object_signature=None, function_args=[eval('features')], function_kwargs={}, custom_class=None)
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.keras.Sequential(*args)', method_object=None, object_signature=None, function_args=[[tf.keras.layers.Dense(10, activation=tf.nn.relu, input_shape=(4,)), tf.keras.layers.Dense(10, activation=tf.nn.relu), tf.keras.layers.Dense(3)]], function_kwargs={})
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 predictions = model(features)
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='obj(*args)', method_object=model, object_signature=None, function_args=[features], function_kwargs={})
 predictions[:5]
-custom_method(imports='import matplotlib.pyplot as plt;import tensorflow_datasets as tfds;import os;import tensorflow as tf', function_to_run='tf.nn.softmax(*args)', method_object=None, object_signature=None, function_args=[eval('predictions[:5]')], function_kwargs={})
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 tf.nn.softmax(predictions[:5])
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.nn.softmax(*args)', method_object=None, object_signature=None, function_args=[predictions[:5]], function_kwargs={})
 print('Prediction: {}'.format(tf.math.argmax(predictions, axis=1)))
 print('    Labels: {}'.format(labels))
-custom_method(imports='import matplotlib.pyplot as plt;import tensorflow_datasets as tfds;import os;import tensorflow as tf', function_to_run='tf.keras.losses.SparseCategoricalCrossentropy(**kwargs)', method_object=None, object_signature=None, function_args=[], function_kwargs={'from_logits': eval('True')})
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 loss_object = tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True)
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.keras.losses.SparseCategoricalCrossentropy(**kwargs)', method_object=None, object_signature=None, function_args=[], function_kwargs={'from_logits': True})
 
 def loss(model, x, y, training):
-    custom_method(imports='import matplotlib.pyplot as plt;import tensorflow_datasets as tfds;import os;import tensorflow as tf', function_to_run='obj(*args, **kwargs)', method_object=eval('model'), object_signature=None, function_args=[eval('x')], function_kwargs={'training': eval('training')}, custom_class=None)
+    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
     y_ = model(x, training=training)
+    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='obj(*args, **kwargs)', method_object=model, object_signature=None, function_args=[x], function_kwargs={'training': training})
     return loss_object(y_true=y, y_pred=y_)
 l = loss(model, features, labels, training=False)
 print('Loss test: {}'.format(l))
@@ -95,29 +63,36 @@ def grad(model, inputs, targets):
     with tf.GradientTape() as tape:
         loss_value = loss(model, inputs, targets, training=True)
     return (loss_value, tape.gradient(loss_value, model.trainable_variables))
-custom_method(imports='import matplotlib.pyplot as plt;import tensorflow_datasets as tfds;import os;import tensorflow as tf', function_to_run='tf.keras.optimizers.SGD(**kwargs)', method_object=None, object_signature=None, function_args=[], function_kwargs={'learning_rate': eval('0.01')})
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 optimizer = tf.keras.optimizers.SGD(learning_rate=0.01)
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.keras.optimizers.SGD(**kwargs)', method_object=None, object_signature=None, function_args=[], function_kwargs={'learning_rate': 0.01})
 (loss_value, grads) = grad(model, features, labels)
 print('Step: {}, Initial Loss: {}'.format(optimizer.iterations.numpy(), loss_value.numpy()))
-custom_method(imports='import matplotlib.pyplot as plt;import tensorflow_datasets as tfds;import os;import tensorflow as tf', function_to_run='obj.apply_gradients(*args)', method_object=eval('optimizer'), object_signature=None, function_args=[eval('zip(grads, model.trainable_variables)')], function_kwargs={}, custom_class=None)
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 optimizer.apply_gradients(zip(grads, model.trainable_variables))
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='obj.apply_gradients(*args)', method_object=optimizer, object_signature=None, function_args=[zip(grads, model.trainable_variables)], function_kwargs={})
 print('Step: {},         Loss: {}'.format(optimizer.iterations.numpy(), loss(model, features, labels, training=True).numpy()))
 train_loss_results = []
 train_accuracy_results = []
 num_epochs = 201
 for epoch in range(num_epochs):
-    custom_method(imports='import matplotlib.pyplot as plt;import tensorflow_datasets as tfds;import os;import tensorflow as tf', function_to_run='tf.keras.metrics.Mean()', method_object=None, object_signature=None, function_args=[], function_kwargs={})
+    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
     epoch_loss_avg = tf.keras.metrics.Mean()
-    custom_method(imports='import matplotlib.pyplot as plt;import tensorflow_datasets as tfds;import os;import tensorflow as tf', function_to_run='tf.keras.metrics.SparseCategoricalAccuracy()', method_object=None, object_signature=None, function_args=[], function_kwargs={})
+    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.keras.metrics.Mean()', method_object=None, object_signature=None, function_args=[], function_kwargs={})
+    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
     epoch_accuracy = tf.keras.metrics.SparseCategoricalAccuracy()
+    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.keras.metrics.SparseCategoricalAccuracy()', method_object=None, object_signature=None, function_args=[], function_kwargs={})
     for (x, y) in ds_train_batch:
         (loss_value, grads) = grad(model, x, y)
-        custom_method(imports='import matplotlib.pyplot as plt;import tensorflow_datasets as tfds;import os;import tensorflow as tf', function_to_run='obj.apply_gradients(*args)', method_object=eval('optimizer'), object_signature=None, function_args=[eval('zip(grads, model.trainable_variables)')], function_kwargs={}, custom_class=None)
+        start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
         optimizer.apply_gradients(zip(grads, model.trainable_variables))
-        custom_method(imports='import matplotlib.pyplot as plt;import tensorflow_datasets as tfds;import os;import tensorflow as tf', function_to_run='obj.update_state(*args)', method_object=eval('epoch_loss_avg'), object_signature=None, function_args=[eval('loss_value')], function_kwargs={}, custom_class=None)
+        after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='obj.apply_gradients(*args)', method_object=optimizer, object_signature=None, function_args=[zip(grads, model.trainable_variables)], function_kwargs={})
+        start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
         epoch_loss_avg.update_state(loss_value)
-        custom_method(imports='import matplotlib.pyplot as plt;import tensorflow_datasets as tfds;import os;import tensorflow as tf', function_to_run='obj.update_state(*args)', method_object=eval('epoch_accuracy'), object_signature=None, function_args=[eval('y'), eval('model(x, training=True)')], function_kwargs={}, custom_class=None)
+        after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='obj.update_state(*args)', method_object=epoch_loss_avg, object_signature=None, function_args=[loss_value], function_kwargs={})
+        start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
         epoch_accuracy.update_state(y, model(x, training=True))
+        after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='obj.update_state(*args)', method_object=epoch_accuracy, object_signature=None, function_args=[y, model(x, training=True)], function_kwargs={})
     train_loss_results.append(epoch_loss_avg.result())
     train_accuracy_results.append(epoch_accuracy.result())
     if epoch % 50 == 0:
@@ -130,26 +105,34 @@ axes[1].set_ylabel('Accuracy', fontsize=14)
 axes[1].set_xlabel('Epoch', fontsize=14)
 axes[1].plot(train_accuracy_results)
 plt.show()
-custom_method(imports='import matplotlib.pyplot as plt;import tensorflow_datasets as tfds;import os;import tensorflow as tf', function_to_run='tf.keras.metrics.Accuracy()', method_object=None, object_signature=None, function_args=[], function_kwargs={})
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 test_accuracy = tf.keras.metrics.Accuracy()
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.keras.metrics.Accuracy()', method_object=None, object_signature=None, function_args=[], function_kwargs={})
 ds_test_batch = ds_test.batch(10)
 for (x, y) in ds_test_batch:
-    custom_method(imports='import matplotlib.pyplot as plt;import tensorflow_datasets as tfds;import os;import tensorflow as tf', function_to_run='obj(*args, **kwargs)', method_object=eval('model'), object_signature=None, function_args=[eval('x')], function_kwargs={'training': eval('False')}, custom_class=None)
+    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
     logits = model(x, training=False)
-    custom_method(imports='import matplotlib.pyplot as plt;import tensorflow_datasets as tfds;import os;import tensorflow as tf', function_to_run='tf.math.argmax(*args, **kwargs)', method_object=None, object_signature=None, function_args=[eval('logits')], function_kwargs={'axis': eval('1'), 'output_type': eval('tf.int64')})
+    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='obj(*args, **kwargs)', method_object=model, object_signature=None, function_args=[x], function_kwargs={'training': False})
+    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
     prediction = tf.math.argmax(logits, axis=1, output_type=tf.int64)
-    custom_method(imports='import matplotlib.pyplot as plt;import tensorflow_datasets as tfds;import os;import tensorflow as tf', function_to_run='obj(*args)', method_object=eval('test_accuracy'), object_signature=None, function_args=[eval('prediction'), eval('y')], function_kwargs={}, custom_class=None)
+    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.math.argmax(*args, **kwargs)', method_object=None, object_signature=None, function_args=[logits], function_kwargs={'axis': 1, 'output_type': tf.int64})
+    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
     test_accuracy(prediction, y)
+    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='obj(*args)', method_object=test_accuracy, object_signature=None, function_args=[prediction, y], function_kwargs={})
 print('Test set accuracy: {:.3%}'.format(test_accuracy.result()))
-custom_method(imports='import matplotlib.pyplot as plt;import tensorflow_datasets as tfds;import os;import tensorflow as tf', function_to_run='tf.stack(*args, **kwargs)', method_object=None, object_signature=None, function_args=[eval('[y,prediction]')], function_kwargs={'axis': eval('1')})
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 tf.stack([y, prediction], axis=1)
-custom_method(imports='import matplotlib.pyplot as plt;import tensorflow_datasets as tfds;import os;import tensorflow as tf', function_to_run='tf.convert_to_tensor(*args)', method_object=None, object_signature=None, function_args=[eval('[\n    [0.3, 0.8, 0.4, 0.5,],\n    [0.4, 0.1, 0.8, 0.5,],\n    [0.7, 0.9, 0.8, 0.4]\n]')], function_kwargs={})
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.stack(*args, **kwargs)', method_object=None, object_signature=None, function_args=[[y, prediction]], function_kwargs={'axis': 1})
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 predict_dataset = tf.convert_to_tensor([[0.3, 0.8, 0.4, 0.5], [0.4, 0.1, 0.8, 0.5], [0.7, 0.9, 0.8, 0.4]])
-custom_method(imports='import matplotlib.pyplot as plt;import tensorflow_datasets as tfds;import os;import tensorflow as tf', function_to_run='obj(*args, **kwargs)', method_object=eval('model'), object_signature=None, function_args=[eval('predict_dataset')], function_kwargs={'training': eval('False')}, custom_class=None)
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.convert_to_tensor(*args)', method_object=None, object_signature=None, function_args=[[[0.3, 0.8, 0.4, 0.5], [0.4, 0.1, 0.8, 0.5], [0.7, 0.9, 0.8, 0.4]]], function_kwargs={})
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 predictions = model(predict_dataset, training=False)
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='obj(*args, **kwargs)', method_object=model, object_signature=None, function_args=[predict_dataset], function_kwargs={'training': False})
 for (i, logits) in enumerate(predictions):
-    custom_method(imports='import matplotlib.pyplot as plt;import tensorflow_datasets as tfds;import os;import tensorflow as tf', function_to_run='tf.math.argmax(logits).numpy()', method_object=None, object_signature=None, function_args=[], function_kwargs={})
+    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
     class_idx = tf.math.argmax(logits).numpy()
+    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.math.argmax(logits).numpy()', method_object=None, object_signature=None, function_args=[], function_kwargs={})
     p = tf.nn.softmax(logits)[class_idx]
     name = class_names[class_idx]
     print('Example {} prediction: {} ({:4.1f}%)'.format(i, name, 100 * p))

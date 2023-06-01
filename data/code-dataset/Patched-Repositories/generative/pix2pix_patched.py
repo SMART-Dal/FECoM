@@ -5,78 +5,48 @@ import time
 import datetime
 from matplotlib import pyplot as plt
 from IPython import display
-import os
-from pathlib import Path
-import dill as pickle
 import sys
-import numpy as np
-from tool.client.client_config import EXPERIMENT_DIR, MAX_WAIT_S, WAIT_AFTER_RUN_S
-from tool.server.send_request import send_request
-from tool.server.function_details import FunctionDetails
-import json
-current_path = os.path.abspath(__file__)
+from tool.client.client_config import EXPERIMENT_DIR
+from tool.server.local_execution import before_execution as before_execution_INSERTED_INTO_SCRIPT
+from tool.server.local_execution import after_execution as after_execution_INSERTED_INTO_SCRIPT
 experiment_number = sys.argv[1]
 experiment_project = sys.argv[2]
 EXPERIMENT_FILE_PATH = EXPERIMENT_DIR / 'method-level' / experiment_project / f'experiment-{experiment_number}.json'
-skip_calls_file_path = EXPERIMENT_FILE_PATH.parent / 'skip_calls.json'
-if skip_calls_file_path.exists():
-    with open(skip_calls_file_path, 'r') as f:
-        skip_calls = json.load(f)
-else:
-    skip_calls = []
-    with open(skip_calls_file_path, 'w') as f:
-        json.dump(skip_calls, f)
-
-def custom_method(imports: str, function_to_run: str, method_object=None, object_signature=None, function_args: list=None, function_kwargs: dict=None, custom_class=None):
-    if skip_calls is not None and any((call['function_to_run'] == function_to_run and np.array_equal(call['function_args'], function_args) and (call['function_kwargs'] == function_kwargs) for call in skip_calls)):
-        print('skipping call: ', function_to_run)
-        return
-    result = send_request(imports=imports, function_to_run=function_to_run, function_args=function_args, function_kwargs=function_kwargs, max_wait_secs=MAX_WAIT_S, wait_after_run_secs=WAIT_AFTER_RUN_S, method_object=method_object, object_signature=object_signature, custom_class=custom_class, experiment_file_path=EXPERIMENT_FILE_PATH)
-    if result is not None and isinstance(result, dict) and (len(result) == 1):
-        energy_data = next(iter(result.values()))
-        if skip_calls is not None and 'start_time_perf' in energy_data['times'] and ('end_time_perf' in energy_data['times']) and ('start_time_nvidia' in energy_data['times']) and ('end_time_nvidia' in energy_data['times']) and (energy_data['times']['start_time_perf'] == energy_data['times']['end_time_perf']) and (energy_data['times']['start_time_nvidia'] == energy_data['times']['end_time_nvidia']):
-            call_to_skip = {'function_to_run': function_to_run, 'function_args': function_args, 'function_kwargs': function_kwargs}
-            try:
-                json.dumps(call_to_skip)
-                if call_to_skip not in skip_calls:
-                    skip_calls.append(call_to_skip)
-                    with open(skip_calls_file_path, 'w') as f:
-                        json.dump(skip_calls, f)
-                    print('skipping call added, current list is: ', skip_calls)
-                else:
-                    print('Skipping call already exists.')
-            except TypeError:
-                print('Ignore: Skipping call is not JSON serializable, skipping append and dump.')
-    else:
-        print('Invalid dictionary object or does not have one key-value pair.')
 dataset_name = 'facades'
 _URL = f'http://efrosgans.eecs.berkeley.edu/pix2pix/datasets/{dataset_name}.tar.gz'
-custom_method(imports='import pathlib;import datetime;import time;import tensorflow as tf;from matplotlib import pyplot as plt;from IPython import display;import os', function_to_run='tf.keras.utils.get_file(**kwargs)', method_object=None, object_signature=None, function_args=[], function_kwargs={'fname': eval('f"{dataset_name}.tar.gz"'), 'origin': eval('_URL'), 'extract': eval('True')})
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 path_to_zip = tf.keras.utils.get_file(fname=f'{dataset_name}.tar.gz', origin=_URL, extract=True)
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.keras.utils.get_file(**kwargs)', method_object=None, object_signature=None, function_args=[], function_kwargs={'fname': f'{dataset_name}.tar.gz', 'origin': _URL, 'extract': True})
 path_to_zip = pathlib.Path(path_to_zip)
 PATH = path_to_zip.parent / dataset_name
 list(PATH.parent.iterdir())
-custom_method(imports='import pathlib;import datetime;import time;import tensorflow as tf;from matplotlib import pyplot as plt;from IPython import display;import os', function_to_run='tf.io.read_file(*args)', method_object=None, object_signature=None, function_args=[eval("str(PATH / 'train/1.jpg')")], function_kwargs={})
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 sample_image = tf.io.read_file(str(PATH / 'train/1.jpg'))
-custom_method(imports='import pathlib;import datetime;import time;import tensorflow as tf;from matplotlib import pyplot as plt;from IPython import display;import os', function_to_run='tf.io.decode_jpeg(*args)', method_object=None, object_signature=None, function_args=[eval('sample_image')], function_kwargs={})
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.io.read_file(*args)', method_object=None, object_signature=None, function_args=[str(PATH / 'train/1.jpg')], function_kwargs={})
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 sample_image = tf.io.decode_jpeg(sample_image)
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.io.decode_jpeg(*args)', method_object=None, object_signature=None, function_args=[sample_image], function_kwargs={})
 print(sample_image.shape)
 plt.figure()
 plt.imshow(sample_image)
 
 def load(image_file):
-    custom_method(imports='import pathlib;import datetime;import time;import tensorflow as tf;from matplotlib import pyplot as plt;from IPython import display;import os', function_to_run='tf.io.read_file(*args)', method_object=None, object_signature=None, function_args=[eval('image_file')], function_kwargs={})
+    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
     image = tf.io.read_file(image_file)
-    custom_method(imports='import pathlib;import datetime;import time;import tensorflow as tf;from matplotlib import pyplot as plt;from IPython import display;import os', function_to_run='tf.io.decode_jpeg(*args)', method_object=None, object_signature=None, function_args=[eval('image')], function_kwargs={})
+    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.io.read_file(*args)', method_object=None, object_signature=None, function_args=[image_file], function_kwargs={})
+    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
     image = tf.io.decode_jpeg(image)
+    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.io.decode_jpeg(*args)', method_object=None, object_signature=None, function_args=[image], function_kwargs={})
     w = tf.shape(image)[1]
     w = w // 2
     input_image = image[:, w:, :]
     real_image = image[:, :w, :]
-    custom_method(imports='import pathlib;import datetime;import time;import tensorflow as tf;from matplotlib import pyplot as plt;from IPython import display;import os', function_to_run='tf.cast(*args)', method_object=None, object_signature=None, function_args=[eval('input_image'), eval('tf.float32')], function_kwargs={})
+    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
     input_image = tf.cast(input_image, tf.float32)
-    custom_method(imports='import pathlib;import datetime;import time;import tensorflow as tf;from matplotlib import pyplot as plt;from IPython import display;import os', function_to_run='tf.cast(*args)', method_object=None, object_signature=None, function_args=[eval('real_image'), eval('tf.float32')], function_kwargs={})
+    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.cast(*args)', method_object=None, object_signature=None, function_args=[input_image, tf.float32], function_kwargs={})
+    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
     real_image = tf.cast(real_image, tf.float32)
+    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.cast(*args)', method_object=None, object_signature=None, function_args=[real_image, tf.float32], function_kwargs={})
     return (input_image, real_image)
 (inp, re) = load(str(PATH / 'train/100.jpg'))
 plt.figure()
@@ -89,17 +59,21 @@ IMG_WIDTH = 256
 IMG_HEIGHT = 256
 
 def resize(input_image, real_image, height, width):
-    custom_method(imports='import pathlib;import datetime;import time;import tensorflow as tf;from matplotlib import pyplot as plt;from IPython import display;import os', function_to_run='tf.image.resize(*args, **kwargs)', method_object=None, object_signature=None, function_args=[eval('input_image'), eval('[height, width]')], function_kwargs={'method': eval('tf.image.ResizeMethod.NEAREST_NEIGHBOR')})
+    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
     input_image = tf.image.resize(input_image, [height, width], method=tf.image.ResizeMethod.NEAREST_NEIGHBOR)
-    custom_method(imports='import pathlib;import datetime;import time;import tensorflow as tf;from matplotlib import pyplot as plt;from IPython import display;import os', function_to_run='tf.image.resize(*args, **kwargs)', method_object=None, object_signature=None, function_args=[eval('real_image'), eval('[height, width]')], function_kwargs={'method': eval('tf.image.ResizeMethod.NEAREST_NEIGHBOR')})
+    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.image.resize(*args, **kwargs)', method_object=None, object_signature=None, function_args=[input_image, [height, width]], function_kwargs={'method': tf.image.ResizeMethod.NEAREST_NEIGHBOR})
+    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
     real_image = tf.image.resize(real_image, [height, width], method=tf.image.ResizeMethod.NEAREST_NEIGHBOR)
+    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.image.resize(*args, **kwargs)', method_object=None, object_signature=None, function_args=[real_image, [height, width]], function_kwargs={'method': tf.image.ResizeMethod.NEAREST_NEIGHBOR})
     return (input_image, real_image)
 
 def random_crop(input_image, real_image):
-    custom_method(imports='import pathlib;import datetime;import time;import tensorflow as tf;from matplotlib import pyplot as plt;from IPython import display;import os', function_to_run='tf.stack(*args, **kwargs)', method_object=None, object_signature=None, function_args=[eval('[input_image, real_image]')], function_kwargs={'axis': eval('0')})
+    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
     stacked_image = tf.stack([input_image, real_image], axis=0)
-    custom_method(imports='import pathlib;import datetime;import time;import tensorflow as tf;from matplotlib import pyplot as plt;from IPython import display;import os', function_to_run='tf.image.random_crop(*args, **kwargs)', method_object=None, object_signature=None, function_args=[eval('stacked_image')], function_kwargs={'size': eval('[2, IMG_HEIGHT, IMG_WIDTH, 3]')})
+    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.stack(*args, **kwargs)', method_object=None, object_signature=None, function_args=[[input_image, real_image]], function_kwargs={'axis': 0})
+    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
     cropped_image = tf.image.random_crop(stacked_image, size=[2, IMG_HEIGHT, IMG_WIDTH, 3])
+    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.image.random_crop(*args, **kwargs)', method_object=None, object_signature=None, function_args=[stacked_image], function_kwargs={'size': [2, IMG_HEIGHT, IMG_WIDTH, 3]})
     return (cropped_image[0], cropped_image[1])
 
 def normalize(input_image, real_image):
@@ -112,10 +86,12 @@ def random_jitter(input_image, real_image):
     (input_image, real_image) = resize(input_image, real_image, 286, 286)
     (input_image, real_image) = random_crop(input_image, real_image)
     if tf.random.uniform(()) > 0.5:
-        custom_method(imports='import pathlib;import datetime;import time;import tensorflow as tf;from matplotlib import pyplot as plt;from IPython import display;import os', function_to_run='tf.image.flip_left_right(*args)', method_object=None, object_signature=None, function_args=[eval('input_image')], function_kwargs={})
+        start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
         input_image = tf.image.flip_left_right(input_image)
-        custom_method(imports='import pathlib;import datetime;import time;import tensorflow as tf;from matplotlib import pyplot as plt;from IPython import display;import os', function_to_run='tf.image.flip_left_right(*args)', method_object=None, object_signature=None, function_args=[eval('real_image')], function_kwargs={})
+        after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.image.flip_left_right(*args)', method_object=None, object_signature=None, function_args=[input_image], function_kwargs={})
+        start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
         real_image = tf.image.flip_left_right(real_image)
+        after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.image.flip_left_right(*args)', method_object=None, object_signature=None, function_args=[real_image], function_kwargs={})
     return (input_image, real_image)
 plt.figure(figsize=(6, 6))
 for i in range(4):
@@ -136,71 +112,93 @@ def load_image_test(image_file):
     (input_image, real_image) = resize(input_image, real_image, IMG_HEIGHT, IMG_WIDTH)
     (input_image, real_image) = normalize(input_image, real_image)
     return (input_image, real_image)
-custom_method(imports='import pathlib;import datetime;import time;import tensorflow as tf;from matplotlib import pyplot as plt;from IPython import display;import os', function_to_run='tf.data.Dataset.list_files(*args)', method_object=None, object_signature=None, function_args=[eval("str(PATH / 'train/*.jpg')")], function_kwargs={})
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 train_dataset = tf.data.Dataset.list_files(str(PATH / 'train/*.jpg'))
-custom_method(imports='import pathlib;import datetime;import time;import tensorflow as tf;from matplotlib import pyplot as plt;from IPython import display;import os', function_to_run='obj.map(*args, **kwargs)', method_object=eval('train_dataset'), object_signature=None, function_args=[eval('load_image_train')], function_kwargs={'num_parallel_calls': eval('tf.data.AUTOTUNE')}, custom_class=None)
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.data.Dataset.list_files(*args)', method_object=None, object_signature=None, function_args=[str(PATH / 'train/*.jpg')], function_kwargs={})
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 train_dataset = train_dataset.map(load_image_train, num_parallel_calls=tf.data.AUTOTUNE)
-custom_method(imports='import pathlib;import datetime;import time;import tensorflow as tf;from matplotlib import pyplot as plt;from IPython import display;import os', function_to_run='obj.shuffle(*args)', method_object=eval('train_dataset'), object_signature=None, function_args=[eval('BUFFER_SIZE')], function_kwargs={}, custom_class=None)
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='obj.map(*args, **kwargs)', method_object=train_dataset, object_signature=None, function_args=[load_image_train], function_kwargs={'num_parallel_calls': tf.data.AUTOTUNE})
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 train_dataset = train_dataset.shuffle(BUFFER_SIZE)
-custom_method(imports='import pathlib;import datetime;import time;import tensorflow as tf;from matplotlib import pyplot as plt;from IPython import display;import os', function_to_run='obj.batch(*args)', method_object=eval('train_dataset'), object_signature=None, function_args=[eval('BATCH_SIZE')], function_kwargs={}, custom_class=None)
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='obj.shuffle(*args)', method_object=train_dataset, object_signature=None, function_args=[BUFFER_SIZE], function_kwargs={})
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 train_dataset = train_dataset.batch(BATCH_SIZE)
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='obj.batch(*args)', method_object=train_dataset, object_signature=None, function_args=[BATCH_SIZE], function_kwargs={})
 try:
-    custom_method(imports='import pathlib;import datetime;import time;import tensorflow as tf;from matplotlib import pyplot as plt;from IPython import display;import os', function_to_run='tf.data.Dataset.list_files(*args)', method_object=None, object_signature=None, function_args=[eval("str(PATH / 'test/*.jpg')")], function_kwargs={})
+    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
     test_dataset = tf.data.Dataset.list_files(str(PATH / 'test/*.jpg'))
+    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.data.Dataset.list_files(*args)', method_object=None, object_signature=None, function_args=[str(PATH / 'test/*.jpg')], function_kwargs={})
 except tf.errors.InvalidArgumentError:
-    custom_method(imports='import pathlib;import datetime;import time;import tensorflow as tf;from matplotlib import pyplot as plt;from IPython import display;import os', function_to_run='tf.data.Dataset.list_files(*args)', method_object=None, object_signature=None, function_args=[eval("str(PATH / 'val/*.jpg')")], function_kwargs={})
+    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
     test_dataset = tf.data.Dataset.list_files(str(PATH / 'val/*.jpg'))
-custom_method(imports='import pathlib;import datetime;import time;import tensorflow as tf;from matplotlib import pyplot as plt;from IPython import display;import os', function_to_run='obj.map(*args)', method_object=eval('test_dataset'), object_signature=None, function_args=[eval('load_image_test')], function_kwargs={}, custom_class=None)
+    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.data.Dataset.list_files(*args)', method_object=None, object_signature=None, function_args=[str(PATH / 'val/*.jpg')], function_kwargs={})
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 test_dataset = test_dataset.map(load_image_test)
-custom_method(imports='import pathlib;import datetime;import time;import tensorflow as tf;from matplotlib import pyplot as plt;from IPython import display;import os', function_to_run='obj.batch(*args)', method_object=eval('test_dataset'), object_signature=None, function_args=[eval('BATCH_SIZE')], function_kwargs={}, custom_class=None)
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='obj.map(*args)', method_object=test_dataset, object_signature=None, function_args=[load_image_test], function_kwargs={})
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 test_dataset = test_dataset.batch(BATCH_SIZE)
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='obj.batch(*args)', method_object=test_dataset, object_signature=None, function_args=[BATCH_SIZE], function_kwargs={})
 OUTPUT_CHANNELS = 3
 
 def downsample(filters, size, apply_batchnorm=True):
-    custom_method(imports='import pathlib;import datetime;import time;import tensorflow as tf;from matplotlib import pyplot as plt;from IPython import display;import os', function_to_run='tf.random_normal_initializer(*args)', method_object=None, object_signature=None, function_args=[eval('0.'), eval('0.02')], function_kwargs={})
+    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
     initializer = tf.random_normal_initializer(0.0, 0.02)
-    custom_method(imports='import pathlib;import datetime;import time;import tensorflow as tf;from matplotlib import pyplot as plt;from IPython import display;import os', function_to_run='tf.keras.Sequential()', method_object=None, object_signature=None, function_args=[], function_kwargs={})
+    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.random_normal_initializer(*args)', method_object=None, object_signature=None, function_args=[0.0, 0.02], function_kwargs={})
+    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
     result = tf.keras.Sequential()
-    custom_method(imports='import pathlib;import datetime;import time;import tensorflow as tf;from matplotlib import pyplot as plt;from IPython import display;import os', function_to_run='obj.add(*args)', method_object=eval('result'), object_signature=None, function_args=[eval("tf.keras.layers.Conv2D(filters, size, strides=2, padding='same',\n                             kernel_initializer=initializer, use_bias=False)")], function_kwargs={}, custom_class=None)
+    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.keras.Sequential()', method_object=None, object_signature=None, function_args=[], function_kwargs={})
+    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
     result.add(tf.keras.layers.Conv2D(filters, size, strides=2, padding='same', kernel_initializer=initializer, use_bias=False))
+    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='obj.add(*args)', method_object=result, object_signature=None, function_args=[tf.keras.layers.Conv2D(filters, size, strides=2, padding='same', kernel_initializer=initializer, use_bias=False)], function_kwargs={})
     if apply_batchnorm:
-        custom_method(imports='import pathlib;import datetime;import time;import tensorflow as tf;from matplotlib import pyplot as plt;from IPython import display;import os', function_to_run='obj.add(*args)', method_object=eval('result'), object_signature=None, function_args=[eval('tf.keras.layers.BatchNormalization()')], function_kwargs={}, custom_class=None)
+        start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
         result.add(tf.keras.layers.BatchNormalization())
-    custom_method(imports='import pathlib;import datetime;import time;import tensorflow as tf;from matplotlib import pyplot as plt;from IPython import display;import os', function_to_run='obj.add(*args)', method_object=eval('result'), object_signature=None, function_args=[eval('tf.keras.layers.LeakyReLU()')], function_kwargs={}, custom_class=None)
+        after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='obj.add(*args)', method_object=result, object_signature=None, function_args=[tf.keras.layers.BatchNormalization()], function_kwargs={})
+    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
     result.add(tf.keras.layers.LeakyReLU())
+    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='obj.add(*args)', method_object=result, object_signature=None, function_args=[tf.keras.layers.LeakyReLU()], function_kwargs={})
     return result
 down_model = downsample(3, 4)
 down_result = down_model(tf.expand_dims(inp, 0))
 print(down_result.shape)
 
 def upsample(filters, size, apply_dropout=False):
-    custom_method(imports='import pathlib;import datetime;import time;import tensorflow as tf;from matplotlib import pyplot as plt;from IPython import display;import os', function_to_run='tf.random_normal_initializer(*args)', method_object=None, object_signature=None, function_args=[eval('0.'), eval('0.02')], function_kwargs={})
+    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
     initializer = tf.random_normal_initializer(0.0, 0.02)
-    custom_method(imports='import pathlib;import datetime;import time;import tensorflow as tf;from matplotlib import pyplot as plt;from IPython import display;import os', function_to_run='tf.keras.Sequential()', method_object=None, object_signature=None, function_args=[], function_kwargs={})
+    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.random_normal_initializer(*args)', method_object=None, object_signature=None, function_args=[0.0, 0.02], function_kwargs={})
+    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
     result = tf.keras.Sequential()
-    custom_method(imports='import pathlib;import datetime;import time;import tensorflow as tf;from matplotlib import pyplot as plt;from IPython import display;import os', function_to_run='obj.add(*args)', method_object=eval('result'), object_signature=None, function_args=[eval("tf.keras.layers.Conv2DTranspose(filters, size, strides=2,\n                                    padding='same',\n                                    kernel_initializer=initializer,\n                                    use_bias=False)")], function_kwargs={}, custom_class=None)
+    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.keras.Sequential()', method_object=None, object_signature=None, function_args=[], function_kwargs={})
+    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
     result.add(tf.keras.layers.Conv2DTranspose(filters, size, strides=2, padding='same', kernel_initializer=initializer, use_bias=False))
-    custom_method(imports='import pathlib;import datetime;import time;import tensorflow as tf;from matplotlib import pyplot as plt;from IPython import display;import os', function_to_run='obj.add(*args)', method_object=eval('result'), object_signature=None, function_args=[eval('tf.keras.layers.BatchNormalization()')], function_kwargs={}, custom_class=None)
+    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='obj.add(*args)', method_object=result, object_signature=None, function_args=[tf.keras.layers.Conv2DTranspose(filters, size, strides=2, padding='same', kernel_initializer=initializer, use_bias=False)], function_kwargs={})
+    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
     result.add(tf.keras.layers.BatchNormalization())
+    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='obj.add(*args)', method_object=result, object_signature=None, function_args=[tf.keras.layers.BatchNormalization()], function_kwargs={})
     if apply_dropout:
-        custom_method(imports='import pathlib;import datetime;import time;import tensorflow as tf;from matplotlib import pyplot as plt;from IPython import display;import os', function_to_run='obj.add(*args)', method_object=eval('result'), object_signature=None, function_args=[eval('tf.keras.layers.Dropout(0.5)')], function_kwargs={}, custom_class=None)
+        start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
         result.add(tf.keras.layers.Dropout(0.5))
-    custom_method(imports='import pathlib;import datetime;import time;import tensorflow as tf;from matplotlib import pyplot as plt;from IPython import display;import os', function_to_run='obj.add(*args)', method_object=eval('result'), object_signature=None, function_args=[eval('tf.keras.layers.ReLU()')], function_kwargs={}, custom_class=None)
+        after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='obj.add(*args)', method_object=result, object_signature=None, function_args=[tf.keras.layers.Dropout(0.5)], function_kwargs={})
+    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
     result.add(tf.keras.layers.ReLU())
+    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='obj.add(*args)', method_object=result, object_signature=None, function_args=[tf.keras.layers.ReLU()], function_kwargs={})
     return result
 up_model = upsample(3, 4)
 up_result = up_model(down_result)
 print(up_result.shape)
 
 def Generator():
-    custom_method(imports='import pathlib;import datetime;import time;import tensorflow as tf;from matplotlib import pyplot as plt;from IPython import display;import os', function_to_run='tf.keras.layers.Input(**kwargs)', method_object=None, object_signature=None, function_args=[], function_kwargs={'shape': eval('[256, 256, 3]')})
+    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
     inputs = tf.keras.layers.Input(shape=[256, 256, 3])
+    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.keras.layers.Input(**kwargs)', method_object=None, object_signature=None, function_args=[], function_kwargs={'shape': [256, 256, 3]})
     down_stack = [downsample(64, 4, apply_batchnorm=False), downsample(128, 4), downsample(256, 4), downsample(512, 4), downsample(512, 4), downsample(512, 4), downsample(512, 4), downsample(512, 4)]
     up_stack = [upsample(512, 4, apply_dropout=True), upsample(512, 4, apply_dropout=True), upsample(512, 4, apply_dropout=True), upsample(512, 4), upsample(256, 4), upsample(128, 4), upsample(64, 4)]
-    custom_method(imports='import pathlib;import datetime;import time;import tensorflow as tf;from matplotlib import pyplot as plt;from IPython import display;import os', function_to_run='tf.random_normal_initializer(*args)', method_object=None, object_signature=None, function_args=[eval('0.'), eval('0.02')], function_kwargs={})
+    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
     initializer = tf.random_normal_initializer(0.0, 0.02)
-    custom_method(imports='import pathlib;import datetime;import time;import tensorflow as tf;from matplotlib import pyplot as plt;from IPython import display;import os', function_to_run='tf.keras.layers.Conv2DTranspose(*args, **kwargs)', method_object=None, object_signature=None, function_args=[eval('OUTPUT_CHANNELS'), eval('4')], function_kwargs={'strides': eval('2'), 'padding': eval("'same'"), 'kernel_initializer': eval('initializer'), 'activation': eval("'tanh'")})
+    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.random_normal_initializer(*args)', method_object=None, object_signature=None, function_args=[0.0, 0.02], function_kwargs={})
+    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
     last = tf.keras.layers.Conv2DTranspose(OUTPUT_CHANNELS, 4, strides=2, padding='same', kernel_initializer=initializer, activation='tanh')
+    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.keras.layers.Conv2DTranspose(*args, **kwargs)', method_object=None, object_signature=None, function_args=[OUTPUT_CHANNELS, 4], function_kwargs={'strides': 2, 'padding': 'same', 'kernel_initializer': initializer, 'activation': 'tanh'})
     x = inputs
     skips = []
     for down in down_stack:
@@ -209,75 +207,97 @@ def Generator():
     skips = reversed(skips[:-1])
     for (up, skip) in zip(up_stack, skips):
         x = up(x)
-        custom_method(imports='import pathlib;import datetime;import time;import tensorflow as tf;from matplotlib import pyplot as plt;from IPython import display;import os', function_to_run='tf.keras.layers.Concatenate()(*args)', method_object=None, object_signature=None, function_args=[eval('[x, skip]')], function_kwargs={})
+        start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
         x = tf.keras.layers.Concatenate()([x, skip])
-    custom_method(imports='import pathlib;import datetime;import time;import tensorflow as tf;from matplotlib import pyplot as plt;from IPython import display;import os', function_to_run='obj(*args)', method_object=eval('last'), object_signature=None, function_args=[eval('x')], function_kwargs={}, custom_class=None)
+        after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.keras.layers.Concatenate()(*args)', method_object=None, object_signature=None, function_args=[[x, skip]], function_kwargs={})
+    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
     x = last(x)
+    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='obj(*args)', method_object=last, object_signature=None, function_args=[x], function_kwargs={})
     return tf.keras.Model(inputs=inputs, outputs=x)
 generator = Generator()
-custom_method(imports='import pathlib;import datetime;import time;import tensorflow as tf;from matplotlib import pyplot as plt;from IPython import display;import os', function_to_run='tf.keras.utils.plot_model(*args, **kwargs)', method_object=None, object_signature=None, function_args=[eval('generator')], function_kwargs={'show_shapes': eval('True'), 'dpi': eval('64')})
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 tf.keras.utils.plot_model(generator, show_shapes=True, dpi=64)
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.keras.utils.plot_model(*args, **kwargs)', method_object=None, object_signature=None, function_args=[generator], function_kwargs={'show_shapes': True, 'dpi': 64})
 gen_output = generator(inp[tf.newaxis, ...], training=False)
 plt.imshow(gen_output[0, ...])
 LAMBDA = 100
-custom_method(imports='import pathlib;import datetime;import time;import tensorflow as tf;from matplotlib import pyplot as plt;from IPython import display;import os', function_to_run='tf.keras.losses.BinaryCrossentropy(**kwargs)', method_object=None, object_signature=None, function_args=[], function_kwargs={'from_logits': eval('True')})
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 loss_object = tf.keras.losses.BinaryCrossentropy(from_logits=True)
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.keras.losses.BinaryCrossentropy(**kwargs)', method_object=None, object_signature=None, function_args=[], function_kwargs={'from_logits': True})
 
 def generator_loss(disc_generated_output, gen_output, target):
-    custom_method(imports='import pathlib;import datetime;import time;import tensorflow as tf;from matplotlib import pyplot as plt;from IPython import display;import os', function_to_run='obj(*args)', method_object=eval('loss_object'), object_signature=None, function_args=[eval('tf.ones_like(disc_generated_output)'), eval('disc_generated_output')], function_kwargs={}, custom_class=None)
+    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
     gan_loss = loss_object(tf.ones_like(disc_generated_output), disc_generated_output)
-    custom_method(imports='import pathlib;import datetime;import time;import tensorflow as tf;from matplotlib import pyplot as plt;from IPython import display;import os', function_to_run='tf.reduce_mean(*args)', method_object=None, object_signature=None, function_args=[eval('tf.abs(target - gen_output)')], function_kwargs={})
+    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='obj(*args)', method_object=loss_object, object_signature=None, function_args=[tf.ones_like(disc_generated_output), disc_generated_output], function_kwargs={})
+    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
     l1_loss = tf.reduce_mean(tf.abs(target - gen_output))
+    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.reduce_mean(*args)', method_object=None, object_signature=None, function_args=[tf.abs(target - gen_output)], function_kwargs={})
     total_gen_loss = gan_loss + LAMBDA * l1_loss
     return (total_gen_loss, gan_loss, l1_loss)
 
 def Discriminator():
-    custom_method(imports='import pathlib;import datetime;import time;import tensorflow as tf;from matplotlib import pyplot as plt;from IPython import display;import os', function_to_run='tf.random_normal_initializer(*args)', method_object=None, object_signature=None, function_args=[eval('0.'), eval('0.02')], function_kwargs={})
+    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
     initializer = tf.random_normal_initializer(0.0, 0.02)
-    custom_method(imports='import pathlib;import datetime;import time;import tensorflow as tf;from matplotlib import pyplot as plt;from IPython import display;import os', function_to_run='tf.keras.layers.Input(**kwargs)', method_object=None, object_signature=None, function_args=[], function_kwargs={'shape': eval('[256, 256, 3]'), 'name': eval("'input_image'")})
+    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.random_normal_initializer(*args)', method_object=None, object_signature=None, function_args=[0.0, 0.02], function_kwargs={})
+    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
     inp = tf.keras.layers.Input(shape=[256, 256, 3], name='input_image')
-    custom_method(imports='import pathlib;import datetime;import time;import tensorflow as tf;from matplotlib import pyplot as plt;from IPython import display;import os', function_to_run='tf.keras.layers.Input(**kwargs)', method_object=None, object_signature=None, function_args=[], function_kwargs={'shape': eval('[256, 256, 3]'), 'name': eval("'target_image'")})
+    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.keras.layers.Input(**kwargs)', method_object=None, object_signature=None, function_args=[], function_kwargs={'shape': [256, 256, 3], 'name': 'input_image'})
+    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
     tar = tf.keras.layers.Input(shape=[256, 256, 3], name='target_image')
-    custom_method(imports='import pathlib;import datetime;import time;import tensorflow as tf;from matplotlib import pyplot as plt;from IPython import display;import os', function_to_run='tf.keras.layers.concatenate(*args)', method_object=None, object_signature=None, function_args=[eval('[inp, tar]')], function_kwargs={})
+    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.keras.layers.Input(**kwargs)', method_object=None, object_signature=None, function_args=[], function_kwargs={'shape': [256, 256, 3], 'name': 'target_image'})
+    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
     x = tf.keras.layers.concatenate([inp, tar])
+    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.keras.layers.concatenate(*args)', method_object=None, object_signature=None, function_args=[[inp, tar]], function_kwargs={})
     down1 = downsample(64, 4, False)(x)
     down2 = downsample(128, 4)(down1)
     down3 = downsample(256, 4)(down2)
-    custom_method(imports='import pathlib;import datetime;import time;import tensorflow as tf;from matplotlib import pyplot as plt;from IPython import display;import os', function_to_run='tf.keras.layers.ZeroPadding2D()(*args)', method_object=None, object_signature=None, function_args=[eval('down3')], function_kwargs={})
+    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
     zero_pad1 = tf.keras.layers.ZeroPadding2D()(down3)
-    custom_method(imports='import pathlib;import datetime;import time;import tensorflow as tf;from matplotlib import pyplot as plt;from IPython import display;import os', function_to_run='tf.keras.layers.Conv2D(512, 4, strides=1, kernel_initializer=initializer, use_bias=False)(*args)', method_object=None, object_signature=None, function_args=[eval('zero_pad1')], function_kwargs={})
+    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.keras.layers.ZeroPadding2D()(*args)', method_object=None, object_signature=None, function_args=[down3], function_kwargs={})
+    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
     conv = tf.keras.layers.Conv2D(512, 4, strides=1, kernel_initializer=initializer, use_bias=False)(zero_pad1)
-    custom_method(imports='import pathlib;import datetime;import time;import tensorflow as tf;from matplotlib import pyplot as plt;from IPython import display;import os', function_to_run='tf.keras.layers.BatchNormalization()(*args)', method_object=None, object_signature=None, function_args=[eval('conv')], function_kwargs={})
+    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.keras.layers.Conv2D(512, 4, strides=1, kernel_initializer=initializer, use_bias=False)(*args)', method_object=None, object_signature=None, function_args=[zero_pad1], function_kwargs={})
+    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
     batchnorm1 = tf.keras.layers.BatchNormalization()(conv)
-    custom_method(imports='import pathlib;import datetime;import time;import tensorflow as tf;from matplotlib import pyplot as plt;from IPython import display;import os', function_to_run='tf.keras.layers.LeakyReLU()(*args)', method_object=None, object_signature=None, function_args=[eval('batchnorm1')], function_kwargs={})
+    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.keras.layers.BatchNormalization()(*args)', method_object=None, object_signature=None, function_args=[conv], function_kwargs={})
+    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
     leaky_relu = tf.keras.layers.LeakyReLU()(batchnorm1)
-    custom_method(imports='import pathlib;import datetime;import time;import tensorflow as tf;from matplotlib import pyplot as plt;from IPython import display;import os', function_to_run='tf.keras.layers.ZeroPadding2D()(*args)', method_object=None, object_signature=None, function_args=[eval('leaky_relu')], function_kwargs={})
+    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.keras.layers.LeakyReLU()(*args)', method_object=None, object_signature=None, function_args=[batchnorm1], function_kwargs={})
+    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
     zero_pad2 = tf.keras.layers.ZeroPadding2D()(leaky_relu)
-    custom_method(imports='import pathlib;import datetime;import time;import tensorflow as tf;from matplotlib import pyplot as plt;from IPython import display;import os', function_to_run='tf.keras.layers.Conv2D(1, 4, strides=1, kernel_initializer=initializer)(*args)', method_object=None, object_signature=None, function_args=[eval('zero_pad2')], function_kwargs={})
+    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.keras.layers.ZeroPadding2D()(*args)', method_object=None, object_signature=None, function_args=[leaky_relu], function_kwargs={})
+    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
     last = tf.keras.layers.Conv2D(1, 4, strides=1, kernel_initializer=initializer)(zero_pad2)
+    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.keras.layers.Conv2D(1, 4, strides=1, kernel_initializer=initializer)(*args)', method_object=None, object_signature=None, function_args=[zero_pad2], function_kwargs={})
     return tf.keras.Model(inputs=[inp, tar], outputs=last)
 discriminator = Discriminator()
-custom_method(imports='import pathlib;import datetime;import time;import tensorflow as tf;from matplotlib import pyplot as plt;from IPython import display;import os', function_to_run='tf.keras.utils.plot_model(*args, **kwargs)', method_object=None, object_signature=None, function_args=[eval('discriminator')], function_kwargs={'show_shapes': eval('True'), 'dpi': eval('64')})
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 tf.keras.utils.plot_model(discriminator, show_shapes=True, dpi=64)
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.keras.utils.plot_model(*args, **kwargs)', method_object=None, object_signature=None, function_args=[discriminator], function_kwargs={'show_shapes': True, 'dpi': 64})
 disc_out = discriminator([inp[tf.newaxis, ...], gen_output], training=False)
 plt.imshow(disc_out[0, ..., -1], vmin=-20, vmax=20, cmap='RdBu_r')
 plt.colorbar()
 
 def discriminator_loss(disc_real_output, disc_generated_output):
-    custom_method(imports='import pathlib;import datetime;import time;import tensorflow as tf;from matplotlib import pyplot as plt;from IPython import display;import os', function_to_run='obj(*args)', method_object=eval('loss_object'), object_signature=None, function_args=[eval('tf.ones_like(disc_real_output)'), eval('disc_real_output')], function_kwargs={}, custom_class=None)
+    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
     real_loss = loss_object(tf.ones_like(disc_real_output), disc_real_output)
-    custom_method(imports='import pathlib;import datetime;import time;import tensorflow as tf;from matplotlib import pyplot as plt;from IPython import display;import os', function_to_run='obj(*args)', method_object=eval('loss_object'), object_signature=None, function_args=[eval('tf.zeros_like(disc_generated_output)'), eval('disc_generated_output')], function_kwargs={}, custom_class=None)
+    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='obj(*args)', method_object=loss_object, object_signature=None, function_args=[tf.ones_like(disc_real_output), disc_real_output], function_kwargs={})
+    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
     generated_loss = loss_object(tf.zeros_like(disc_generated_output), disc_generated_output)
+    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='obj(*args)', method_object=loss_object, object_signature=None, function_args=[tf.zeros_like(disc_generated_output), disc_generated_output], function_kwargs={})
     total_disc_loss = real_loss + generated_loss
     return total_disc_loss
-custom_method(imports='import pathlib;import datetime;import time;import tensorflow as tf;from matplotlib import pyplot as plt;from IPython import display;import os', function_to_run='tf.keras.optimizers.Adam(*args, **kwargs)', method_object=None, object_signature=None, function_args=[eval('2e-4')], function_kwargs={'beta_1': eval('0.5')})
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 generator_optimizer = tf.keras.optimizers.Adam(0.0002, beta_1=0.5)
-custom_method(imports='import pathlib;import datetime;import time;import tensorflow as tf;from matplotlib import pyplot as plt;from IPython import display;import os', function_to_run='tf.keras.optimizers.Adam(*args, **kwargs)', method_object=None, object_signature=None, function_args=[eval('2e-4')], function_kwargs={'beta_1': eval('0.5')})
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.keras.optimizers.Adam(*args, **kwargs)', method_object=None, object_signature=None, function_args=[0.0002], function_kwargs={'beta_1': 0.5})
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 discriminator_optimizer = tf.keras.optimizers.Adam(0.0002, beta_1=0.5)
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.keras.optimizers.Adam(*args, **kwargs)', method_object=None, object_signature=None, function_args=[0.0002], function_kwargs={'beta_1': 0.5})
 checkpoint_dir = './training_checkpoints'
 checkpoint_prefix = os.path.join(checkpoint_dir, 'ckpt')
-custom_method(imports='import pathlib;import datetime;import time;import tensorflow as tf;from matplotlib import pyplot as plt;from IPython import display;import os', function_to_run='tf.train.Checkpoint(**kwargs)', method_object=None, object_signature=None, function_args=[], function_kwargs={'generator_optimizer': eval('generator_optimizer'), 'discriminator_optimizer': eval('discriminator_optimizer'), 'generator': eval('generator'), 'discriminator': eval('discriminator')})
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 checkpoint = tf.train.Checkpoint(generator_optimizer=generator_optimizer, discriminator_optimizer=discriminator_optimizer, generator=generator, discriminator=discriminator)
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.train.Checkpoint(**kwargs)', method_object=None, object_signature=None, function_args=[], function_kwargs={'generator_optimizer': generator_optimizer, 'discriminator_optimizer': discriminator_optimizer, 'generator': generator, 'discriminator': discriminator})
 
 def generate_images(model, test_input, tar):
     prediction = model(test_input, training=True)
@@ -293,8 +313,9 @@ def generate_images(model, test_input, tar):
 for (example_input, example_target) in test_dataset.take(1):
     generate_images(generator, example_input, example_target)
 log_dir = 'logs/'
-custom_method(imports='import pathlib;import datetime;import time;import tensorflow as tf;from matplotlib import pyplot as plt;from IPython import display;import os', function_to_run='tf.summary.create_file_writer(*args)', method_object=None, object_signature=None, function_args=[eval('log_dir + "fit/" + datetime.datetime.now().strftime("%Y%m%d-%H%M%S")')], function_kwargs={})
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 summary_writer = tf.summary.create_file_writer(log_dir + 'fit/' + datetime.datetime.now().strftime('%Y%m%d-%H%M%S'))
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.summary.create_file_writer(*args)', method_object=None, object_signature=None, function_args=[log_dir + 'fit/' + datetime.datetime.now().strftime('%Y%m%d-%H%M%S')], function_kwargs={})
 
 @tf.function
 def train_step(input_image, target, step):
@@ -306,19 +327,25 @@ def train_step(input_image, target, step):
         disc_loss = discriminator_loss(disc_real_output, disc_generated_output)
     generator_gradients = gen_tape.gradient(gen_total_loss, generator.trainable_variables)
     discriminator_gradients = disc_tape.gradient(disc_loss, discriminator.trainable_variables)
-    custom_method(imports='import pathlib;import datetime;import time;import tensorflow as tf;from matplotlib import pyplot as plt;from IPython import display;import os', function_to_run='obj.apply_gradients(*args)', method_object=eval('generator_optimizer'), object_signature=None, function_args=[eval('zip(generator_gradients,\n                                          generator.trainable_variables)')], function_kwargs={}, custom_class=None)
+    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
     generator_optimizer.apply_gradients(zip(generator_gradients, generator.trainable_variables))
-    custom_method(imports='import pathlib;import datetime;import time;import tensorflow as tf;from matplotlib import pyplot as plt;from IPython import display;import os', function_to_run='obj.apply_gradients(*args)', method_object=eval('discriminator_optimizer'), object_signature=None, function_args=[eval('zip(discriminator_gradients,\n                                              discriminator.trainable_variables)')], function_kwargs={}, custom_class=None)
+    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='obj.apply_gradients(*args)', method_object=generator_optimizer, object_signature=None, function_args=[zip(generator_gradients, generator.trainable_variables)], function_kwargs={})
+    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
     discriminator_optimizer.apply_gradients(zip(discriminator_gradients, discriminator.trainable_variables))
+    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='obj.apply_gradients(*args)', method_object=discriminator_optimizer, object_signature=None, function_args=[zip(discriminator_gradients, discriminator.trainable_variables)], function_kwargs={})
     with summary_writer.as_default():
-        custom_method(imports='import pathlib;import datetime;import time;import tensorflow as tf;from matplotlib import pyplot as plt;from IPython import display;import os', function_to_run='tf.summary.scalar(*args, **kwargs)', method_object=None, object_signature=None, function_args=[eval("'gen_total_loss'"), eval('gen_total_loss')], function_kwargs={'step': eval('step//1000')})
+        start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
         tf.summary.scalar('gen_total_loss', gen_total_loss, step=step // 1000)
-        custom_method(imports='import pathlib;import datetime;import time;import tensorflow as tf;from matplotlib import pyplot as plt;from IPython import display;import os', function_to_run='tf.summary.scalar(*args, **kwargs)', method_object=None, object_signature=None, function_args=[eval("'gen_gan_loss'"), eval('gen_gan_loss')], function_kwargs={'step': eval('step//1000')})
+        after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.summary.scalar(*args, **kwargs)', method_object=None, object_signature=None, function_args=['gen_total_loss', gen_total_loss], function_kwargs={'step': step // 1000})
+        start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
         tf.summary.scalar('gen_gan_loss', gen_gan_loss, step=step // 1000)
-        custom_method(imports='import pathlib;import datetime;import time;import tensorflow as tf;from matplotlib import pyplot as plt;from IPython import display;import os', function_to_run='tf.summary.scalar(*args, **kwargs)', method_object=None, object_signature=None, function_args=[eval("'gen_l1_loss'"), eval('gen_l1_loss')], function_kwargs={'step': eval('step//1000')})
+        after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.summary.scalar(*args, **kwargs)', method_object=None, object_signature=None, function_args=['gen_gan_loss', gen_gan_loss], function_kwargs={'step': step // 1000})
+        start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
         tf.summary.scalar('gen_l1_loss', gen_l1_loss, step=step // 1000)
-        custom_method(imports='import pathlib;import datetime;import time;import tensorflow as tf;from matplotlib import pyplot as plt;from IPython import display;import os', function_to_run='tf.summary.scalar(*args, **kwargs)', method_object=None, object_signature=None, function_args=[eval("'disc_loss'"), eval('disc_loss')], function_kwargs={'step': eval('step//1000')})
+        after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.summary.scalar(*args, **kwargs)', method_object=None, object_signature=None, function_args=['gen_l1_loss', gen_l1_loss], function_kwargs={'step': step // 1000})
+        start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
         tf.summary.scalar('disc_loss', disc_loss, step=step // 1000)
+        after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.summary.scalar(*args, **kwargs)', method_object=None, object_signature=None, function_args=['disc_loss', disc_loss], function_kwargs={'step': step // 1000})
 
 def fit(train_ds, test_ds, steps):
     (example_input, example_target) = next(iter(test_ds.take(1)))
@@ -335,10 +362,12 @@ def fit(train_ds, test_ds, steps):
         if (step + 1) % 10 == 0:
             print('.', end='', flush=True)
         if (step + 1) % 5000 == 0:
-            custom_method(imports='import pathlib;import datetime;import time;import tensorflow as tf;from matplotlib import pyplot as plt;from IPython import display;import os', function_to_run='obj.save(**kwargs)', method_object=eval('checkpoint'), object_signature=None, function_args=[], function_kwargs={'file_prefix': eval('checkpoint_prefix')}, custom_class=None)
+            start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
             checkpoint.save(file_prefix=checkpoint_prefix)
+            after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='obj.save(**kwargs)', method_object=checkpoint, object_signature=None, function_args=[], function_kwargs={'file_prefix': checkpoint_prefix})
 fit(train_dataset, test_dataset, steps=40000)
-custom_method(imports='import pathlib;import datetime;import time;import tensorflow as tf;from matplotlib import pyplot as plt;from IPython import display;import os', function_to_run='obj.restore(*args)', method_object=eval('checkpoint'), object_signature=None, function_args=[eval('tf.train.latest_checkpoint(checkpoint_dir)')], function_kwargs={}, custom_class=None)
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 checkpoint.restore(tf.train.latest_checkpoint(checkpoint_dir))
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='obj.restore(*args)', method_object=checkpoint, object_signature=None, function_args=[tf.train.latest_checkpoint(checkpoint_dir)], function_kwargs={})
 for (inp, tar) in test_dataset.take(5):
     generate_images(generator, inp, tar)

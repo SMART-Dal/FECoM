@@ -11,59 +11,24 @@ import tensorflow as tf
 from IPython import display
 from matplotlib import pyplot as plt
 from typing import Dict, List, Optional, Sequence, Tuple
-import os
-from pathlib import Path
-import dill as pickle
 import sys
-import numpy as np
-from tool.client.client_config import EXPERIMENT_DIR, MAX_WAIT_S, WAIT_AFTER_RUN_S
-from tool.server.send_request import send_request
-from tool.server.function_details import FunctionDetails
-import json
-current_path = os.path.abspath(__file__)
+from tool.client.client_config import EXPERIMENT_DIR
+from tool.server.local_execution import before_execution as before_execution_INSERTED_INTO_SCRIPT
+from tool.server.local_execution import after_execution as after_execution_INSERTED_INTO_SCRIPT
 experiment_number = sys.argv[1]
 experiment_project = sys.argv[2]
 EXPERIMENT_FILE_PATH = EXPERIMENT_DIR / 'method-level' / experiment_project / f'experiment-{experiment_number}.json'
-skip_calls_file_path = EXPERIMENT_FILE_PATH.parent / 'skip_calls.json'
-if skip_calls_file_path.exists():
-    with open(skip_calls_file_path, 'r') as f:
-        skip_calls = json.load(f)
-else:
-    skip_calls = []
-    with open(skip_calls_file_path, 'w') as f:
-        json.dump(skip_calls, f)
-
-def custom_method(imports: str, function_to_run: str, method_object=None, object_signature=None, function_args: list=None, function_kwargs: dict=None, custom_class=None):
-    if skip_calls is not None and any((call['function_to_run'] == function_to_run and np.array_equal(call['function_args'], function_args) and (call['function_kwargs'] == function_kwargs) for call in skip_calls)):
-        print('skipping call: ', function_to_run)
-        return
-    result = send_request(imports=imports, function_to_run=function_to_run, function_args=function_args, function_kwargs=function_kwargs, max_wait_secs=MAX_WAIT_S, wait_after_run_secs=WAIT_AFTER_RUN_S, method_object=method_object, object_signature=object_signature, custom_class=custom_class, experiment_file_path=EXPERIMENT_FILE_PATH)
-    if result is not None and isinstance(result, dict) and (len(result) == 1):
-        energy_data = next(iter(result.values()))
-        if skip_calls is not None and 'start_time_perf' in energy_data['times'] and ('end_time_perf' in energy_data['times']) and ('start_time_nvidia' in energy_data['times']) and ('end_time_nvidia' in energy_data['times']) and (energy_data['times']['start_time_perf'] == energy_data['times']['end_time_perf']) and (energy_data['times']['start_time_nvidia'] == energy_data['times']['end_time_nvidia']):
-            call_to_skip = {'function_to_run': function_to_run, 'function_args': function_args, 'function_kwargs': function_kwargs}
-            try:
-                json.dumps(call_to_skip)
-                if call_to_skip not in skip_calls:
-                    skip_calls.append(call_to_skip)
-                    with open(skip_calls_file_path, 'w') as f:
-                        json.dump(skip_calls, f)
-                    print('skipping call added, current list is: ', skip_calls)
-                else:
-                    print('Skipping call already exists.')
-            except TypeError:
-                print('Ignore: Skipping call is not JSON serializable, skipping append and dump.')
-    else:
-        print('Invalid dictionary object or does not have one key-value pair.')
 seed = 42
-custom_method(imports='import collections;import numpy as np;import pathlib;import pandas as pd;import seaborn as sns;import datetime;import pretty_midi;import fluidsynth;from IPython import display;from matplotlib import pyplot as plt;from typing import Dict, List, Optional, Sequence, Tuple;import glob;import tensorflow as tf', function_to_run='tf.random.set_seed(*args)', method_object=None, object_signature=None, function_args=[eval('seed')], function_kwargs={})
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 tf.random.set_seed(seed)
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.random.set_seed(*args)', method_object=None, object_signature=None, function_args=[seed], function_kwargs={})
 np.random.seed(seed)
 _SAMPLING_RATE = 16000
 data_dir = pathlib.Path('data/maestro-v2.0.0')
 if not data_dir.exists():
-    custom_method(imports='import collections;import numpy as np;import pathlib;import pandas as pd;import seaborn as sns;import datetime;import pretty_midi;import fluidsynth;from IPython import display;from matplotlib import pyplot as plt;from typing import Dict, List, Optional, Sequence, Tuple;import glob;import tensorflow as tf', function_to_run='tf.keras.utils.get_file(*args, **kwargs)', method_object=None, object_signature=None, function_args=[eval("'maestro-v2.0.0-midi.zip'")], function_kwargs={'origin': eval("'https://storage.googleapis.com/magentadata/datasets/maestro/v2.0.0/maestro-v2.0.0-midi.zip'"), 'extract': eval('True'), 'cache_dir': eval("'.'"), 'cache_subdir': eval("'data'")})
+    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
     tf.keras.utils.get_file('maestro-v2.0.0-midi.zip', origin='https://storage.googleapis.com/magentadata/datasets/maestro/v2.0.0/maestro-v2.0.0-midi.zip', extract=True, cache_dir='.', cache_subdir='data')
+    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.keras.utils.get_file(*args, **kwargs)', method_object=None, object_signature=None, function_args=['maestro-v2.0.0-midi.zip'], function_kwargs={'origin': 'https://storage.googleapis.com/magentadata/datasets/maestro/v2.0.0/maestro-v2.0.0-midi.zip', 'extract': True, 'cache_dir': '.', 'cache_subdir': 'data'})
 filenames = glob.glob(str(data_dir / '**/*.mid*'))
 print('Number of files:', len(filenames))
 sample_file = filenames[1]
@@ -160,8 +125,9 @@ n_notes = len(all_notes)
 print('Number of notes parsed:', n_notes)
 key_order = ['pitch', 'step', 'duration']
 train_notes = np.stack([all_notes[key] for key in key_order], axis=1)
-custom_method(imports='import collections;import numpy as np;import pathlib;import pandas as pd;import seaborn as sns;import datetime;import pretty_midi;import fluidsynth;from IPython import display;from matplotlib import pyplot as plt;from typing import Dict, List, Optional, Sequence, Tuple;import glob;import tensorflow as tf', function_to_run='tf.data.Dataset.from_tensor_slices(*args)', method_object=None, object_signature=None, function_args=[eval('train_notes')], function_kwargs={})
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 notes_ds = tf.data.Dataset.from_tensor_slices(train_notes)
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.data.Dataset.from_tensor_slices(*args)', method_object=None, object_signature=None, function_args=[train_notes], function_kwargs={})
 notes_ds.element_spec
 
 def create_sequences(dataset: tf.data.Dataset, seq_length: int, vocab_size=128) -> tf.data.Dataset:
@@ -201,57 +167,75 @@ def mse_with_positive_pressure(y_true: tf.Tensor, y_pred: tf.Tensor):
     return tf.reduce_mean(mse + positive_pressure)
 input_shape = (seq_length, 3)
 learning_rate = 0.005
-custom_method(imports='import collections;import numpy as np;import pathlib;import pandas as pd;import seaborn as sns;import datetime;import pretty_midi;import fluidsynth;from IPython import display;from matplotlib import pyplot as plt;from typing import Dict, List, Optional, Sequence, Tuple;import glob;import tensorflow as tf', function_to_run='tf.keras.Input(*args)', method_object=None, object_signature=None, function_args=[eval('input_shape')], function_kwargs={})
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 inputs = tf.keras.Input(input_shape)
-custom_method(imports='import collections;import numpy as np;import pathlib;import pandas as pd;import seaborn as sns;import datetime;import pretty_midi;import fluidsynth;from IPython import display;from matplotlib import pyplot as plt;from typing import Dict, List, Optional, Sequence, Tuple;import glob;import tensorflow as tf', function_to_run='tf.keras.layers.LSTM(128)(*args)', method_object=None, object_signature=None, function_args=[eval('inputs')], function_kwargs={})
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.keras.Input(*args)', method_object=None, object_signature=None, function_args=[input_shape], function_kwargs={})
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 x = tf.keras.layers.LSTM(128)(inputs)
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.keras.layers.LSTM(128)(*args)', method_object=None, object_signature=None, function_args=[inputs], function_kwargs={})
 outputs = {'pitch': tf.keras.layers.Dense(128, name='pitch')(x), 'step': tf.keras.layers.Dense(1, name='step')(x), 'duration': tf.keras.layers.Dense(1, name='duration')(x)}
-custom_method(imports='import collections;import numpy as np;import pathlib;import pandas as pd;import seaborn as sns;import datetime;import pretty_midi;import fluidsynth;from IPython import display;from matplotlib import pyplot as plt;from typing import Dict, List, Optional, Sequence, Tuple;import glob;import tensorflow as tf', function_to_run='tf.keras.Model(*args)', method_object=None, object_signature=None, function_args=[eval('inputs'), eval('outputs')], function_kwargs={})
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 model = tf.keras.Model(inputs, outputs)
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.keras.Model(*args)', method_object=None, object_signature=None, function_args=[inputs, outputs], function_kwargs={})
 loss = {'pitch': tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True), 'step': mse_with_positive_pressure, 'duration': mse_with_positive_pressure}
-custom_method(imports='import collections;import numpy as np;import pathlib;import pandas as pd;import seaborn as sns;import datetime;import pretty_midi;import fluidsynth;from IPython import display;from matplotlib import pyplot as plt;from typing import Dict, List, Optional, Sequence, Tuple;import glob;import tensorflow as tf', function_to_run='tf.keras.optimizers.Adam(**kwargs)', method_object=None, object_signature=None, function_args=[], function_kwargs={'learning_rate': eval('learning_rate')})
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 optimizer = tf.keras.optimizers.Adam(learning_rate=learning_rate)
-custom_method(imports='import collections;import numpy as np;import pathlib;import pandas as pd;import seaborn as sns;import datetime;import pretty_midi;import fluidsynth;from IPython import display;from matplotlib import pyplot as plt;from typing import Dict, List, Optional, Sequence, Tuple;import glob;import tensorflow as tf', function_to_run='obj.compile(**kwargs)', method_object=eval('model'), object_signature=None, function_args=[], function_kwargs={'loss': eval('loss'), 'optimizer': eval('optimizer')}, custom_class=None)
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.keras.optimizers.Adam(**kwargs)', method_object=None, object_signature=None, function_args=[], function_kwargs={'learning_rate': learning_rate})
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 model.compile(loss=loss, optimizer=optimizer)
-custom_method(imports='import collections;import numpy as np;import pathlib;import pandas as pd;import seaborn as sns;import datetime;import pretty_midi;import fluidsynth;from IPython import display;from matplotlib import pyplot as plt;from typing import Dict, List, Optional, Sequence, Tuple;import glob;import tensorflow as tf', function_to_run='obj.summary()', method_object=eval('model'), object_signature=None, function_args=[], function_kwargs={}, custom_class=None)
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='obj.compile(**kwargs)', method_object=model, object_signature=None, function_args=[], function_kwargs={'loss': loss, 'optimizer': optimizer})
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 model.summary()
-custom_method(imports='import collections;import numpy as np;import pathlib;import pandas as pd;import seaborn as sns;import datetime;import pretty_midi;import fluidsynth;from IPython import display;from matplotlib import pyplot as plt;from typing import Dict, List, Optional, Sequence, Tuple;import glob;import tensorflow as tf', function_to_run='obj.evaluate(*args, **kwargs)', method_object=eval('model'), object_signature=None, function_args=[eval('train_ds')], function_kwargs={'return_dict': eval('True')}, custom_class=None)
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='obj.summary()', method_object=model, object_signature=None, function_args=[], function_kwargs={})
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 losses = model.evaluate(train_ds, return_dict=True)
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='obj.evaluate(*args, **kwargs)', method_object=model, object_signature=None, function_args=[train_ds], function_kwargs={'return_dict': True})
 losses
-custom_method(imports='import collections;import numpy as np;import pathlib;import pandas as pd;import seaborn as sns;import datetime;import pretty_midi;import fluidsynth;from IPython import display;from matplotlib import pyplot as plt;from typing import Dict, List, Optional, Sequence, Tuple;import glob;import tensorflow as tf', function_to_run='obj.compile(**kwargs)', method_object=eval('model'), object_signature=None, function_args=[], function_kwargs={'loss': eval('loss'), 'loss_weights': eval("{\n        'pitch': 0.05,\n        'step': 1.0,\n        'duration':1.0,\n    }"), 'optimizer': eval('optimizer')}, custom_class=None)
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 model.compile(loss=loss, loss_weights={'pitch': 0.05, 'step': 1.0, 'duration': 1.0}, optimizer=optimizer)
-custom_method(imports='import collections;import numpy as np;import pathlib;import pandas as pd;import seaborn as sns;import datetime;import pretty_midi;import fluidsynth;from IPython import display;from matplotlib import pyplot as plt;from typing import Dict, List, Optional, Sequence, Tuple;import glob;import tensorflow as tf', function_to_run='obj.evaluate(*args, **kwargs)', method_object=eval('model'), object_signature=None, function_args=[eval('train_ds')], function_kwargs={'return_dict': eval('True')}, custom_class=None)
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='obj.compile(**kwargs)', method_object=model, object_signature=None, function_args=[], function_kwargs={'loss': loss, 'loss_weights': {'pitch': 0.05, 'step': 1.0, 'duration': 1.0}, 'optimizer': optimizer})
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 model.evaluate(train_ds, return_dict=True)
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='obj.evaluate(*args, **kwargs)', method_object=model, object_signature=None, function_args=[train_ds], function_kwargs={'return_dict': True})
 callbacks = [tf.keras.callbacks.ModelCheckpoint(filepath='./training_checkpoints/ckpt_{epoch}', save_weights_only=True), tf.keras.callbacks.EarlyStopping(monitor='loss', patience=5, verbose=1, restore_best_weights=True)]
 epochs = 50
-custom_method(imports='import collections;import numpy as np;import pathlib;import pandas as pd;import seaborn as sns;import datetime;import pretty_midi;import fluidsynth;from IPython import display;from matplotlib import pyplot as plt;from typing import Dict, List, Optional, Sequence, Tuple;import glob;import tensorflow as tf', function_to_run='obj.fit(*args, **kwargs)', method_object=eval('model'), object_signature=None, function_args=[eval('train_ds')], function_kwargs={'epochs': eval('epochs'), 'callbacks': eval('callbacks')}, custom_class=None)
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 history = model.fit(train_ds, epochs=epochs, callbacks=callbacks)
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='obj.fit(*args, **kwargs)', method_object=model, object_signature=None, function_args=[train_ds], function_kwargs={'epochs': epochs, 'callbacks': callbacks})
 plt.plot(history.epoch, history.history['loss'], label='total loss')
 plt.show()
 
 def predict_next_note(notes: np.ndarray, keras_model: tf.keras.Model, temperature: float=1.0) -> int:
     """Generates a note IDs using a trained sequence model."""
     assert temperature > 0
-    custom_method(imports='import collections;import numpy as np;import pathlib;import pandas as pd;import seaborn as sns;import datetime;import pretty_midi;import fluidsynth;from IPython import display;from matplotlib import pyplot as plt;from typing import Dict, List, Optional, Sequence, Tuple;import glob;import tensorflow as tf', function_to_run='tf.expand_dims(*args)', method_object=None, object_signature=None, function_args=[eval('notes'), eval('0')], function_kwargs={})
+    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
     inputs = tf.expand_dims(notes, 0)
-    custom_method(imports='import collections;import numpy as np;import pathlib;import pandas as pd;import seaborn as sns;import datetime;import pretty_midi;import fluidsynth;from IPython import display;from matplotlib import pyplot as plt;from typing import Dict, List, Optional, Sequence, Tuple;import glob;import tensorflow as tf', function_to_run='obj.predict(*args)', method_object=eval('model'), object_signature=None, function_args=[eval('inputs')], function_kwargs={}, custom_class=None)
+    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.expand_dims(*args)', method_object=None, object_signature=None, function_args=[notes, 0], function_kwargs={})
+    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
     predictions = model.predict(inputs)
+    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='obj.predict(*args)', method_object=model, object_signature=None, function_args=[inputs], function_kwargs={})
     pitch_logits = predictions['pitch']
     step = predictions['step']
     duration = predictions['duration']
     pitch_logits /= temperature
-    custom_method(imports='import collections;import numpy as np;import pathlib;import pandas as pd;import seaborn as sns;import datetime;import pretty_midi;import fluidsynth;from IPython import display;from matplotlib import pyplot as plt;from typing import Dict, List, Optional, Sequence, Tuple;import glob;import tensorflow as tf', function_to_run='tf.random.categorical(*args, **kwargs)', method_object=None, object_signature=None, function_args=[eval('pitch_logits')], function_kwargs={'num_samples': eval('1')})
+    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
     pitch = tf.random.categorical(pitch_logits, num_samples=1)
-    custom_method(imports='import collections;import numpy as np;import pathlib;import pandas as pd;import seaborn as sns;import datetime;import pretty_midi;import fluidsynth;from IPython import display;from matplotlib import pyplot as plt;from typing import Dict, List, Optional, Sequence, Tuple;import glob;import tensorflow as tf', function_to_run='tf.squeeze(*args, **kwargs)', method_object=None, object_signature=None, function_args=[eval('pitch')], function_kwargs={'axis': eval('-1')})
+    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.random.categorical(*args, **kwargs)', method_object=None, object_signature=None, function_args=[pitch_logits], function_kwargs={'num_samples': 1})
+    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
     pitch = tf.squeeze(pitch, axis=-1)
-    custom_method(imports='import collections;import numpy as np;import pathlib;import pandas as pd;import seaborn as sns;import datetime;import pretty_midi;import fluidsynth;from IPython import display;from matplotlib import pyplot as plt;from typing import Dict, List, Optional, Sequence, Tuple;import glob;import tensorflow as tf', function_to_run='tf.squeeze(*args, **kwargs)', method_object=None, object_signature=None, function_args=[eval('duration')], function_kwargs={'axis': eval('-1')})
+    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.squeeze(*args, **kwargs)', method_object=None, object_signature=None, function_args=[pitch], function_kwargs={'axis': -1})
+    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
     duration = tf.squeeze(duration, axis=-1)
-    custom_method(imports='import collections;import numpy as np;import pathlib;import pandas as pd;import seaborn as sns;import datetime;import pretty_midi;import fluidsynth;from IPython import display;from matplotlib import pyplot as plt;from typing import Dict, List, Optional, Sequence, Tuple;import glob;import tensorflow as tf', function_to_run='tf.squeeze(*args, **kwargs)', method_object=None, object_signature=None, function_args=[eval('step')], function_kwargs={'axis': eval('-1')})
+    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.squeeze(*args, **kwargs)', method_object=None, object_signature=None, function_args=[duration], function_kwargs={'axis': -1})
+    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
     step = tf.squeeze(step, axis=-1)
-    custom_method(imports='import collections;import numpy as np;import pathlib;import pandas as pd;import seaborn as sns;import datetime;import pretty_midi;import fluidsynth;from IPython import display;from matplotlib import pyplot as plt;from typing import Dict, List, Optional, Sequence, Tuple;import glob;import tensorflow as tf', function_to_run='tf.maximum(*args)', method_object=None, object_signature=None, function_args=[eval('0'), eval('step')], function_kwargs={})
+    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.squeeze(*args, **kwargs)', method_object=None, object_signature=None, function_args=[step], function_kwargs={'axis': -1})
+    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
     step = tf.maximum(0, step)
-    custom_method(imports='import collections;import numpy as np;import pathlib;import pandas as pd;import seaborn as sns;import datetime;import pretty_midi;import fluidsynth;from IPython import display;from matplotlib import pyplot as plt;from typing import Dict, List, Optional, Sequence, Tuple;import glob;import tensorflow as tf', function_to_run='tf.maximum(*args)', method_object=None, object_signature=None, function_args=[eval('0'), eval('duration')], function_kwargs={})
+    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.maximum(*args)', method_object=None, object_signature=None, function_args=[0, step], function_kwargs={})
+    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
     duration = tf.maximum(0, duration)
+    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.maximum(*args)', method_object=None, object_signature=None, function_args=[0, duration], function_kwargs={})
     return (int(pitch), float(step), float(duration))
 temperature = 2.0
 num_predictions = 120

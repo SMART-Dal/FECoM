@@ -7,72 +7,39 @@ import tensorflow as tf
 from tensorflow.keras import layers
 from tensorflow.keras import models
 from IPython import display
-import os
-from pathlib import Path
-import dill as pickle
 import sys
-import numpy as np
-from tool.client.client_config import EXPERIMENT_DIR, MAX_WAIT_S, WAIT_AFTER_RUN_S
-from tool.server.send_request import send_request
-from tool.server.function_details import FunctionDetails
-import json
-current_path = os.path.abspath(__file__)
+from tool.client.client_config import EXPERIMENT_DIR
+from tool.server.local_execution import before_execution as before_execution_INSERTED_INTO_SCRIPT
+from tool.server.local_execution import after_execution as after_execution_INSERTED_INTO_SCRIPT
 experiment_number = sys.argv[1]
 experiment_project = sys.argv[2]
 EXPERIMENT_FILE_PATH = EXPERIMENT_DIR / 'method-level' / experiment_project / f'experiment-{experiment_number}.json'
-skip_calls_file_path = EXPERIMENT_FILE_PATH.parent / 'skip_calls.json'
-if skip_calls_file_path.exists():
-    with open(skip_calls_file_path, 'r') as f:
-        skip_calls = json.load(f)
-else:
-    skip_calls = []
-    with open(skip_calls_file_path, 'w') as f:
-        json.dump(skip_calls, f)
-
-def custom_method(imports: str, function_to_run: str, method_object=None, object_signature=None, function_args: list=None, function_kwargs: dict=None, custom_class=None):
-    if skip_calls is not None and any((call['function_to_run'] == function_to_run and np.array_equal(call['function_args'], function_args) and (call['function_kwargs'] == function_kwargs) for call in skip_calls)):
-        print('skipping call: ', function_to_run)
-        return
-    result = send_request(imports=imports, function_to_run=function_to_run, function_args=function_args, function_kwargs=function_kwargs, max_wait_secs=MAX_WAIT_S, wait_after_run_secs=WAIT_AFTER_RUN_S, method_object=method_object, object_signature=object_signature, custom_class=custom_class, experiment_file_path=EXPERIMENT_FILE_PATH)
-    if result is not None and isinstance(result, dict) and (len(result) == 1):
-        energy_data = next(iter(result.values()))
-        if skip_calls is not None and 'start_time_perf' in energy_data['times'] and ('end_time_perf' in energy_data['times']) and ('start_time_nvidia' in energy_data['times']) and ('end_time_nvidia' in energy_data['times']) and (energy_data['times']['start_time_perf'] == energy_data['times']['end_time_perf']) and (energy_data['times']['start_time_nvidia'] == energy_data['times']['end_time_nvidia']):
-            call_to_skip = {'function_to_run': function_to_run, 'function_args': function_args, 'function_kwargs': function_kwargs}
-            try:
-                json.dumps(call_to_skip)
-                if call_to_skip not in skip_calls:
-                    skip_calls.append(call_to_skip)
-                    with open(skip_calls_file_path, 'w') as f:
-                        json.dump(skip_calls, f)
-                    print('skipping call added, current list is: ', skip_calls)
-                else:
-                    print('Skipping call already exists.')
-            except TypeError:
-                print('Ignore: Skipping call is not JSON serializable, skipping append and dump.')
-    else:
-        print('Invalid dictionary object or does not have one key-value pair.')
 seed = 42
-custom_method(imports='from tensorflow.keras import layers;import numpy as np;import seaborn as sns;from tensorflow.keras import models;import pathlib;from IPython import display;import tensorflow as tf;import os;import matplotlib.pyplot as plt', function_to_run='tf.random.set_seed(*args)', method_object=None, object_signature=None, function_args=[eval('seed')], function_kwargs={})
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 tf.random.set_seed(seed)
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.random.set_seed(*args)', method_object=None, object_signature=None, function_args=[seed], function_kwargs={})
 np.random.seed(seed)
 DATASET_PATH = 'data/mini_speech_commands'
 data_dir = pathlib.Path(DATASET_PATH)
 if not data_dir.exists():
-    custom_method(imports='from tensorflow.keras import layers;import numpy as np;import seaborn as sns;from tensorflow.keras import models;import pathlib;from IPython import display;import tensorflow as tf;import os;import matplotlib.pyplot as plt', function_to_run='tf.keras.utils.get_file(*args, **kwargs)', method_object=None, object_signature=None, function_args=[eval("'mini_speech_commands.zip'")], function_kwargs={'origin': eval('"http://storage.googleapis.com/download.tensorflow.org/data/mini_speech_commands.zip"'), 'extract': eval('True'), 'cache_dir': eval("'.'"), 'cache_subdir': eval("'data'")})
+    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
     tf.keras.utils.get_file('mini_speech_commands.zip', origin='http://storage.googleapis.com/download.tensorflow.org/data/mini_speech_commands.zip', extract=True, cache_dir='.', cache_subdir='data')
+    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.keras.utils.get_file(*args, **kwargs)', method_object=None, object_signature=None, function_args=['mini_speech_commands.zip'], function_kwargs={'origin': 'http://storage.googleapis.com/download.tensorflow.org/data/mini_speech_commands.zip', 'extract': True, 'cache_dir': '.', 'cache_subdir': 'data'})
 commands = np.array(tf.io.gfile.listdir(str(data_dir)))
 commands = commands[(commands != 'README.md') & (commands != '.DS_Store')]
 print('Commands:', commands)
-custom_method(imports='from tensorflow.keras import layers;import numpy as np;import seaborn as sns;from tensorflow.keras import models;import pathlib;from IPython import display;import tensorflow as tf;import os;import matplotlib.pyplot as plt', function_to_run='tf.keras.utils.audio_dataset_from_directory(**kwargs)', method_object=None, object_signature=None, function_args=[], function_kwargs={'directory': eval('data_dir'), 'batch_size': eval('64'), 'validation_split': eval('0.2'), 'seed': eval('0'), 'output_sequence_length': eval('16000'), 'subset': eval("'both'")})
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 (train_ds, val_ds) = tf.keras.utils.audio_dataset_from_directory(directory=data_dir, batch_size=64, validation_split=0.2, seed=0, output_sequence_length=16000, subset='both')
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.keras.utils.audio_dataset_from_directory(**kwargs)', method_object=None, object_signature=None, function_args=[], function_kwargs={'directory': data_dir, 'batch_size': 64, 'validation_split': 0.2, 'seed': 0, 'output_sequence_length': 16000, 'subset': 'both'})
 label_names = np.array(train_ds.class_names)
 print()
 print('label names:', label_names)
 train_ds.element_spec
 
 def squeeze(audio, labels):
-    custom_method(imports='from tensorflow.keras import layers;import numpy as np;import seaborn as sns;from tensorflow.keras import models;import pathlib;from IPython import display;import tensorflow as tf;import os;import matplotlib.pyplot as plt', function_to_run='tf.squeeze(*args, **kwargs)', method_object=None, object_signature=None, function_args=[eval('audio')], function_kwargs={'axis': eval('-1')})
+    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
     audio = tf.squeeze(audio, axis=-1)
+    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.squeeze(*args, **kwargs)', method_object=None, object_signature=None, function_args=[audio], function_kwargs={'axis': -1})
     return (audio, labels)
 train_ds = train_ds.map(squeeze, tf.data.AUTOTUNE)
 val_ds = val_ds.map(squeeze, tf.data.AUTOTUNE)
@@ -95,10 +62,12 @@ for i in range(n):
     plt.ylim([-1.1, 1.1])
 
 def get_spectrogram(waveform):
-    custom_method(imports='from tensorflow.keras import layers;import numpy as np;import seaborn as sns;from tensorflow.keras import models;import pathlib;from IPython import display;import tensorflow as tf;import os;import matplotlib.pyplot as plt', function_to_run='tf.signal.stft(*args, **kwargs)', method_object=None, object_signature=None, function_args=[eval('waveform')], function_kwargs={'frame_length': eval('255'), 'frame_step': eval('128')})
+    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
     spectrogram = tf.signal.stft(waveform, frame_length=255, frame_step=128)
-    custom_method(imports='from tensorflow.keras import layers;import numpy as np;import seaborn as sns;from tensorflow.keras import models;import pathlib;from IPython import display;import tensorflow as tf;import os;import matplotlib.pyplot as plt', function_to_run='tf.abs(*args)', method_object=None, object_signature=None, function_args=[eval('spectrogram')], function_kwargs={})
+    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.signal.stft(*args, **kwargs)', method_object=None, object_signature=None, function_args=[waveform], function_kwargs={'frame_length': 255, 'frame_step': 128})
+    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
     spectrogram = tf.abs(spectrogram)
+    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.abs(*args)', method_object=None, object_signature=None, function_args=[spectrogram], function_kwargs={})
     spectrogram = spectrogram[..., tf.newaxis]
     return spectrogram
 for i in range(3):
@@ -155,19 +124,25 @@ test_spectrogram_ds = test_spectrogram_ds.cache().prefetch(tf.data.AUTOTUNE)
 input_shape = example_spectrograms.shape[1:]
 print('Input shape:', input_shape)
 num_labels = len(label_names)
-custom_method(imports='from tensorflow.keras import layers;import numpy as np;import seaborn as sns;from tensorflow.keras import models;import pathlib;from IPython import display;import tensorflow as tf;import os;import matplotlib.pyplot as plt', function_to_run='layers.Normalization()', method_object=None, object_signature=None, function_args=[], function_kwargs={})
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 norm_layer = layers.Normalization()
-custom_method(imports='from tensorflow.keras import layers;import numpy as np;import seaborn as sns;from tensorflow.keras import models;import pathlib;from IPython import display;import tensorflow as tf;import os;import matplotlib.pyplot as plt', function_to_run='obj.adapt(**kwargs)', method_object=eval('norm_layer'), object_signature=None, function_args=[], function_kwargs={'data': eval('train_spectrogram_ds.map(map_func=lambda spec, label: spec)')}, custom_class=None)
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='layers.Normalization()', method_object=None, object_signature=None, function_args=[], function_kwargs={})
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 norm_layer.adapt(data=train_spectrogram_ds.map(map_func=lambda spec, label: spec))
-custom_method(imports='from tensorflow.keras import layers;import numpy as np;import seaborn as sns;from tensorflow.keras import models;import pathlib;from IPython import display;import tensorflow as tf;import os;import matplotlib.pyplot as plt', function_to_run='models.Sequential(*args)', method_object=None, object_signature=None, function_args=[eval("[\n    layers.Input(shape=input_shape),\n    layers.Resizing(32, 32),\n    norm_layer,\n    layers.Conv2D(32, 3, activation='relu'),\n    layers.Conv2D(64, 3, activation='relu'),\n    layers.MaxPooling2D(),\n    layers.Dropout(0.25),\n    layers.Flatten(),\n    layers.Dense(128, activation='relu'),\n    layers.Dropout(0.5),\n    layers.Dense(num_labels),\n]")], function_kwargs={})
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='obj.adapt(**kwargs)', method_object=norm_layer, object_signature=None, function_args=[], function_kwargs={'data': train_spectrogram_ds.map(map_func=lambda spec, label: spec)})
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 model = models.Sequential([layers.Input(shape=input_shape), layers.Resizing(32, 32), norm_layer, layers.Conv2D(32, 3, activation='relu'), layers.Conv2D(64, 3, activation='relu'), layers.MaxPooling2D(), layers.Dropout(0.25), layers.Flatten(), layers.Dense(128, activation='relu'), layers.Dropout(0.5), layers.Dense(num_labels)])
-custom_method(imports='from tensorflow.keras import layers;import numpy as np;import seaborn as sns;from tensorflow.keras import models;import pathlib;from IPython import display;import tensorflow as tf;import os;import matplotlib.pyplot as plt', function_to_run='obj.summary()', method_object=eval('model'), object_signature=None, function_args=[], function_kwargs={}, custom_class=None)
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='models.Sequential(*args)', method_object=None, object_signature=None, function_args=[[layers.Input(shape=input_shape), layers.Resizing(32, 32), norm_layer, layers.Conv2D(32, 3, activation='relu'), layers.Conv2D(64, 3, activation='relu'), layers.MaxPooling2D(), layers.Dropout(0.25), layers.Flatten(), layers.Dense(128, activation='relu'), layers.Dropout(0.5), layers.Dense(num_labels)]], function_kwargs={})
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 model.summary()
-custom_method(imports='from tensorflow.keras import layers;import numpy as np;import seaborn as sns;from tensorflow.keras import models;import pathlib;from IPython import display;import tensorflow as tf;import os;import matplotlib.pyplot as plt', function_to_run='obj.compile(**kwargs)', method_object=eval('model'), object_signature=None, function_args=[], function_kwargs={'optimizer': eval('tf.keras.optimizers.Adam()'), 'loss': eval('tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True)'), 'metrics': eval("['accuracy']")}, custom_class=None)
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='obj.summary()', method_object=model, object_signature=None, function_args=[], function_kwargs={})
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 model.compile(optimizer=tf.keras.optimizers.Adam(), loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True), metrics=['accuracy'])
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='obj.compile(**kwargs)', method_object=model, object_signature=None, function_args=[], function_kwargs={'optimizer': tf.keras.optimizers.Adam(), 'loss': tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True), 'metrics': ['accuracy']})
 EPOCHS = 10
-custom_method(imports='from tensorflow.keras import layers;import numpy as np;import seaborn as sns;from tensorflow.keras import models;import pathlib;from IPython import display;import tensorflow as tf;import os;import matplotlib.pyplot as plt', function_to_run='obj.fit(*args, **kwargs)', method_object=eval('model'), object_signature=None, function_args=[eval('train_spectrogram_ds')], function_kwargs={'validation_data': eval('val_spectrogram_ds'), 'epochs': eval('EPOCHS'), 'callbacks': eval('tf.keras.callbacks.EarlyStopping(verbose=1, patience=2)')}, custom_class=None)
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 history = model.fit(train_spectrogram_ds, validation_data=val_spectrogram_ds, epochs=EPOCHS, callbacks=tf.keras.callbacks.EarlyStopping(verbose=1, patience=2))
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='obj.fit(*args, **kwargs)', method_object=model, object_signature=None, function_args=[train_spectrogram_ds], function_kwargs={'validation_data': val_spectrogram_ds, 'epochs': EPOCHS, 'callbacks': tf.keras.callbacks.EarlyStopping(verbose=1, patience=2)})
 metrics = history.history
 plt.figure(figsize=(16, 6))
 plt.subplot(1, 2, 1)
@@ -182,33 +157,42 @@ plt.legend(['accuracy', 'val_accuracy'])
 plt.ylim([0, 100])
 plt.xlabel('Epoch')
 plt.ylabel('Accuracy [%]')
-custom_method(imports='from tensorflow.keras import layers;import numpy as np;import seaborn as sns;from tensorflow.keras import models;import pathlib;from IPython import display;import tensorflow as tf;import os;import matplotlib.pyplot as plt', function_to_run='obj.evaluate(*args, **kwargs)', method_object=eval('model'), object_signature=None, function_args=[eval('test_spectrogram_ds')], function_kwargs={'return_dict': eval('True')}, custom_class=None)
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 model.evaluate(test_spectrogram_ds, return_dict=True)
-custom_method(imports='from tensorflow.keras import layers;import numpy as np;import seaborn as sns;from tensorflow.keras import models;import pathlib;from IPython import display;import tensorflow as tf;import os;import matplotlib.pyplot as plt', function_to_run='obj.predict(*args)', method_object=eval('model'), object_signature=None, function_args=[eval('test_spectrogram_ds')], function_kwargs={}, custom_class=None)
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='obj.evaluate(*args, **kwargs)', method_object=model, object_signature=None, function_args=[test_spectrogram_ds], function_kwargs={'return_dict': True})
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 y_pred = model.predict(test_spectrogram_ds)
-custom_method(imports='from tensorflow.keras import layers;import numpy as np;import seaborn as sns;from tensorflow.keras import models;import pathlib;from IPython import display;import tensorflow as tf;import os;import matplotlib.pyplot as plt', function_to_run='tf.argmax(*args, **kwargs)', method_object=None, object_signature=None, function_args=[eval('y_pred')], function_kwargs={'axis': eval('1')})
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='obj.predict(*args)', method_object=model, object_signature=None, function_args=[test_spectrogram_ds], function_kwargs={})
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 y_pred = tf.argmax(y_pred, axis=1)
-custom_method(imports='from tensorflow.keras import layers;import numpy as np;import seaborn as sns;from tensorflow.keras import models;import pathlib;from IPython import display;import tensorflow as tf;import os;import matplotlib.pyplot as plt', function_to_run='tf.concat(*args, **kwargs)', method_object=None, object_signature=None, function_args=[eval('list(test_spectrogram_ds.map(lambda s,lab: lab))')], function_kwargs={'axis': eval('0')})
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.argmax(*args, **kwargs)', method_object=None, object_signature=None, function_args=[y_pred], function_kwargs={'axis': 1})
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 y_true = tf.concat(list(test_spectrogram_ds.map(lambda s, lab: lab)), axis=0)
-custom_method(imports='from tensorflow.keras import layers;import numpy as np;import seaborn as sns;from tensorflow.keras import models;import pathlib;from IPython import display;import tensorflow as tf;import os;import matplotlib.pyplot as plt', function_to_run='tf.math.confusion_matrix(*args)', method_object=None, object_signature=None, function_args=[eval('y_true'), eval('y_pred')], function_kwargs={})
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.concat(*args, **kwargs)', method_object=None, object_signature=None, function_args=[list(test_spectrogram_ds.map(lambda s, lab: lab))], function_kwargs={'axis': 0})
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 confusion_mtx = tf.math.confusion_matrix(y_true, y_pred)
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.math.confusion_matrix(*args)', method_object=None, object_signature=None, function_args=[y_true, y_pred], function_kwargs={})
 plt.figure(figsize=(10, 8))
 sns.heatmap(confusion_mtx, xticklabels=label_names, yticklabels=label_names, annot=True, fmt='g')
 plt.xlabel('Prediction')
 plt.ylabel('Label')
 plt.show()
 x = data_dir / 'no/01bb6a2a_nohash_0.wav'
-custom_method(imports='from tensorflow.keras import layers;import numpy as np;import seaborn as sns;from tensorflow.keras import models;import pathlib;from IPython import display;import tensorflow as tf;import os;import matplotlib.pyplot as plt', function_to_run='tf.io.read_file(*args)', method_object=None, object_signature=None, function_args=[eval('str(x)')], function_kwargs={})
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 x = tf.io.read_file(str(x))
-custom_method(imports='from tensorflow.keras import layers;import numpy as np;import seaborn as sns;from tensorflow.keras import models;import pathlib;from IPython import display;import tensorflow as tf;import os;import matplotlib.pyplot as plt', function_to_run='tf.audio.decode_wav(*args, **kwargs)', method_object=None, object_signature=None, function_args=[eval('x')], function_kwargs={'desired_channels': eval('1'), 'desired_samples': eval('16000')})
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.io.read_file(*args)', method_object=None, object_signature=None, function_args=[str(x)], function_kwargs={})
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 (x, sample_rate) = tf.audio.decode_wav(x, desired_channels=1, desired_samples=16000)
-custom_method(imports='from tensorflow.keras import layers;import numpy as np;import seaborn as sns;from tensorflow.keras import models;import pathlib;from IPython import display;import tensorflow as tf;import os;import matplotlib.pyplot as plt', function_to_run='tf.squeeze(*args, **kwargs)', method_object=None, object_signature=None, function_args=[eval('x')], function_kwargs={'axis': eval('-1')})
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.audio.decode_wav(*args, **kwargs)', method_object=None, object_signature=None, function_args=[x], function_kwargs={'desired_channels': 1, 'desired_samples': 16000})
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 x = tf.squeeze(x, axis=-1)
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.squeeze(*args, **kwargs)', method_object=None, object_signature=None, function_args=[x], function_kwargs={'axis': -1})
 waveform = x
 x = get_spectrogram(x)
 x = x[tf.newaxis, ...]
-custom_method(imports='from tensorflow.keras import layers;import numpy as np;import seaborn as sns;from tensorflow.keras import models;import pathlib;from IPython import display;import tensorflow as tf;import os;import matplotlib.pyplot as plt', function_to_run='obj(*args)', method_object=eval('model'), object_signature=None, function_args=[eval('x')], function_kwargs={}, custom_class=None)
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 prediction = model(x)
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='obj(*args)', method_object=model, object_signature=None, function_args=[x], function_kwargs={})
 x_labels = ['no', 'yes', 'down', 'go', 'left', 'up', 'right', 'stop']
 plt.bar(x_labels, tf.nn.softmax(prediction[0]))
 plt.title('No')
@@ -225,26 +209,35 @@ class ExportModel(tf.Module):
     @tf.function
     def __call__(self, x):
         if x.dtype == tf.string:
-            custom_method(imports='from tensorflow.keras import layers;import numpy as np;import seaborn as sns;from tensorflow.keras import models;import pathlib;from IPython import display;import tensorflow as tf;import os;import matplotlib.pyplot as plt', function_to_run='tf.io.read_file(*args)', method_object=None, object_signature=None, function_args=[eval('x')], function_kwargs={})
+            start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
             x = tf.io.read_file(x)
-            custom_method(imports='from tensorflow.keras import layers;import numpy as np;import seaborn as sns;from tensorflow.keras import models;import pathlib;from IPython import display;import tensorflow as tf;import os;import matplotlib.pyplot as plt', function_to_run='tf.audio.decode_wav(*args, **kwargs)', method_object=None, object_signature=None, function_args=[eval('x')], function_kwargs={'desired_channels': eval('1'), 'desired_samples': eval('16000')})
+            after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.io.read_file(*args)', method_object=None, object_signature=None, function_args=[x], function_kwargs={})
+            start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
             (x, _) = tf.audio.decode_wav(x, desired_channels=1, desired_samples=16000)
-            custom_method(imports='from tensorflow.keras import layers;import numpy as np;import seaborn as sns;from tensorflow.keras import models;import pathlib;from IPython import display;import tensorflow as tf;import os;import matplotlib.pyplot as plt', function_to_run='tf.squeeze(*args, **kwargs)', method_object=None, object_signature=None, function_args=[eval('x')], function_kwargs={'axis': eval('-1')})
+            after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.audio.decode_wav(*args, **kwargs)', method_object=None, object_signature=None, function_args=[x], function_kwargs={'desired_channels': 1, 'desired_samples': 16000})
+            start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
             x = tf.squeeze(x, axis=-1)
+            after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.squeeze(*args, **kwargs)', method_object=None, object_signature=None, function_args=[x], function_kwargs={'axis': -1})
             x = x[tf.newaxis, :]
         x = get_spectrogram(x)
         result = self.model(x, training=False)
-        custom_method(imports='from tensorflow.keras import layers;import numpy as np;import seaborn as sns;from tensorflow.keras import models;import pathlib;from IPython import display;import tensorflow as tf;import os;import matplotlib.pyplot as plt', function_to_run='tf.argmax(*args, **kwargs)', method_object=None, object_signature=None, function_args=[eval('result')], function_kwargs={'axis': eval('-1')})
+        start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
         class_ids = tf.argmax(result, axis=-1)
-        custom_method(imports='from tensorflow.keras import layers;import numpy as np;import seaborn as sns;from tensorflow.keras import models;import pathlib;from IPython import display;import tensorflow as tf;import os;import matplotlib.pyplot as plt', function_to_run='tf.gather(*args)', method_object=None, object_signature=None, function_args=[eval('label_names'), eval('class_ids')], function_kwargs={})
+        after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.argmax(*args, **kwargs)', method_object=None, object_signature=None, function_args=[result], function_kwargs={'axis': -1})
+        start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
         class_names = tf.gather(label_names, class_ids)
+        after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.gather(*args)', method_object=None, object_signature=None, function_args=[label_names, class_ids], function_kwargs={})
         return {'predictions': result, 'class_ids': class_ids, 'class_names': class_names}
 export = ExportModel(model)
-custom_method(imports='from tensorflow.keras import layers;import numpy as np;import seaborn as sns;from tensorflow.keras import models;import pathlib;from IPython import display;import tensorflow as tf;import os;import matplotlib.pyplot as plt', function_to_run='obj(*args)', method_object=eval('export'), object_signature='ExportModel(model)', function_args=[eval("tf.constant(str(data_dir/'no/01bb6a2a_nohash_0.wav'))")], function_kwargs={}, custom_class="class ExportModel(tf.Module):\n  def __init__(self, model):\n    self.model = model\n\n    self.__call__.get_concrete_function(\n        x=tf.TensorSpec(shape=(), dtype=tf.string))\n    self.__call__.get_concrete_function(\n       x=tf.TensorSpec(shape=[None, 16000], dtype=tf.float32))\n\n\n  @tf.function\n  def __call__(self, x):\n    if x.dtype == tf.string:\n      x = tf.io.read_file(x)\n      x, _ = tf.audio.decode_wav(x, desired_channels=1, desired_samples=16000,)\n      x = tf.squeeze(x, axis=-1)\n      x = x[tf.newaxis, :]\n    \n    x = get_spectrogram(x)  \n    result = self.model(x, training=False)\n    \n    class_ids = tf.argmax(result, axis=-1)\n    class_names = tf.gather(label_names, class_ids)\n    return {'predictions':result,\n            'class_ids': class_ids,\n            'class_names': class_names}")
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 export(tf.constant(str(data_dir / 'no/01bb6a2a_nohash_0.wav')))
-custom_method(imports='from tensorflow.keras import layers;import numpy as np;import seaborn as sns;from tensorflow.keras import models;import pathlib;from IPython import display;import tensorflow as tf;import os;import matplotlib.pyplot as plt', function_to_run='tf.saved_model.save(*args)', method_object=None, object_signature=None, function_args=[eval('export'), eval('"saved"')], function_kwargs={})
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='obj(*args)', method_object='export', object_signature='ExportModel(model)', function_args=[tf.constant(str(data_dir / 'no/01bb6a2a_nohash_0.wav'))], function_kwargs={})
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 tf.saved_model.save(export, 'saved')
-custom_method(imports='from tensorflow.keras import layers;import numpy as np;import seaborn as sns;from tensorflow.keras import models;import pathlib;from IPython import display;import tensorflow as tf;import os;import matplotlib.pyplot as plt', function_to_run='tf.saved_model.load(*args)', method_object=None, object_signature=None, function_args=[eval('"saved"')], function_kwargs={})
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.saved_model.save(*args)', method_object=None, object_signature=None, function_args=[export, 'saved'], function_kwargs={})
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 imported = tf.saved_model.load('saved')
-custom_method(imports='from tensorflow.keras import layers;import numpy as np;import seaborn as sns;from tensorflow.keras import models;import pathlib;from IPython import display;import tensorflow as tf;import os;import matplotlib.pyplot as plt', function_to_run='obj(*args)', method_object=eval('imported'), object_signature=None, function_args=[eval('waveform[tf.newaxis, :]')], function_kwargs={}, custom_class=None)
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.saved_model.load(*args)', method_object=None, object_signature=None, function_args=['saved'], function_kwargs={})
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 imported(waveform[tf.newaxis, :])
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='obj(*args)', method_object=imported, object_signature=None, function_args=[waveform[tf.newaxis, :]], function_kwargs={})

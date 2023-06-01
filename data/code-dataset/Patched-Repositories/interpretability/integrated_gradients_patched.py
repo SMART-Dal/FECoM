@@ -2,60 +2,27 @@ import matplotlib.pylab as plt
 import numpy as np
 import tensorflow as tf
 import tensorflow_hub as hub
-import os
-from pathlib import Path
-import dill as pickle
 import sys
-import numpy as np
-from tool.client.client_config import EXPERIMENT_DIR, MAX_WAIT_S, WAIT_AFTER_RUN_S
-from tool.server.send_request import send_request
-from tool.server.function_details import FunctionDetails
-import json
-current_path = os.path.abspath(__file__)
+from tool.client.client_config import EXPERIMENT_DIR
+from tool.server.local_execution import before_execution as before_execution_INSERTED_INTO_SCRIPT
+from tool.server.local_execution import after_execution as after_execution_INSERTED_INTO_SCRIPT
 experiment_number = sys.argv[1]
 experiment_project = sys.argv[2]
 EXPERIMENT_FILE_PATH = EXPERIMENT_DIR / 'method-level' / experiment_project / f'experiment-{experiment_number}.json'
-skip_calls_file_path = EXPERIMENT_FILE_PATH.parent / 'skip_calls.json'
-if skip_calls_file_path.exists():
-    with open(skip_calls_file_path, 'r') as f:
-        skip_calls = json.load(f)
-else:
-    skip_calls = []
-    with open(skip_calls_file_path, 'w') as f:
-        json.dump(skip_calls, f)
-
-def custom_method(imports: str, function_to_run: str, method_object=None, object_signature=None, function_args: list=None, function_kwargs: dict=None, custom_class=None):
-    if skip_calls is not None and any((call['function_to_run'] == function_to_run and np.array_equal(call['function_args'], function_args) and (call['function_kwargs'] == function_kwargs) for call in skip_calls)):
-        print('skipping call: ', function_to_run)
-        return
-    result = send_request(imports=imports, function_to_run=function_to_run, function_args=function_args, function_kwargs=function_kwargs, max_wait_secs=MAX_WAIT_S, wait_after_run_secs=WAIT_AFTER_RUN_S, method_object=method_object, object_signature=object_signature, custom_class=custom_class, experiment_file_path=EXPERIMENT_FILE_PATH)
-    if result is not None and isinstance(result, dict) and (len(result) == 1):
-        energy_data = next(iter(result.values()))
-        if skip_calls is not None and 'start_time_perf' in energy_data['times'] and ('end_time_perf' in energy_data['times']) and ('start_time_nvidia' in energy_data['times']) and ('end_time_nvidia' in energy_data['times']) and (energy_data['times']['start_time_perf'] == energy_data['times']['end_time_perf']) and (energy_data['times']['start_time_nvidia'] == energy_data['times']['end_time_nvidia']):
-            call_to_skip = {'function_to_run': function_to_run, 'function_args': function_args, 'function_kwargs': function_kwargs}
-            try:
-                json.dumps(call_to_skip)
-                if call_to_skip not in skip_calls:
-                    skip_calls.append(call_to_skip)
-                    with open(skip_calls_file_path, 'w') as f:
-                        json.dump(skip_calls, f)
-                    print('skipping call added, current list is: ', skip_calls)
-                else:
-                    print('Skipping call already exists.')
-            except TypeError:
-                print('Ignore: Skipping call is not JSON serializable, skipping append and dump.')
-    else:
-        print('Invalid dictionary object or does not have one key-value pair.')
-custom_method(imports='import tensorflow as tf;import tensorflow_hub as hub;import numpy as np;import matplotlib.pylab as plt', function_to_run='tf.keras.Sequential(*args)', method_object=None, object_signature=None, function_args=[eval("[\n    hub.KerasLayer(\n        name='inception_v1',\n        handle='https://tfhub.dev/google/imagenet/inception_v1/classification/4',\n        trainable=False),\n]")], function_kwargs={})
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 model = tf.keras.Sequential([hub.KerasLayer(name='inception_v1', handle='https://tfhub.dev/google/imagenet/inception_v1/classification/4', trainable=False)])
-custom_method(imports='import tensorflow as tf;import tensorflow_hub as hub;import numpy as np;import matplotlib.pylab as plt', function_to_run='obj.build(*args)', method_object=eval('model'), object_signature=None, function_args=[eval('[None, 224, 224, 3]')], function_kwargs={}, custom_class=None)
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.keras.Sequential(*args)', method_object=None, object_signature=None, function_args=[[hub.KerasLayer(name='inception_v1', handle='https://tfhub.dev/google/imagenet/inception_v1/classification/4', trainable=False)]], function_kwargs={})
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 model.build([None, 224, 224, 3])
-custom_method(imports='import tensorflow as tf;import tensorflow_hub as hub;import numpy as np;import matplotlib.pylab as plt', function_to_run='obj.summary()', method_object=eval('model'), object_signature=None, function_args=[], function_kwargs={}, custom_class=None)
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='obj.build(*args)', method_object=model, object_signature=None, function_args=[[None, 224, 224, 3]], function_kwargs={})
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 model.summary()
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='obj.summary()', method_object=model, object_signature=None, function_args=[], function_kwargs={})
 
 def load_imagenet_labels(file_path):
-    custom_method(imports='import tensorflow as tf;import tensorflow_hub as hub;import numpy as np;import matplotlib.pylab as plt', function_to_run='tf.keras.utils.get_file(*args)', method_object=None, object_signature=None, function_args=[eval("'ImageNetLabels.txt'"), eval('file_path')], function_kwargs={})
+    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
     labels_file = tf.keras.utils.get_file('ImageNetLabels.txt', file_path)
+    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.keras.utils.get_file(*args)', method_object=None, object_signature=None, function_args=['ImageNetLabels.txt', file_path], function_kwargs={})
     with open(labels_file) as reader:
         f = reader.read()
         labels = f.splitlines()
@@ -63,14 +30,18 @@ def load_imagenet_labels(file_path):
 imagenet_labels = load_imagenet_labels('https://storage.googleapis.com/download.tensorflow.org/data/ImageNetLabels.txt')
 
 def read_image(file_name):
-    custom_method(imports='import tensorflow as tf;import tensorflow_hub as hub;import numpy as np;import matplotlib.pylab as plt', function_to_run='tf.io.read_file(*args)', method_object=None, object_signature=None, function_args=[eval('file_name')], function_kwargs={})
+    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
     image = tf.io.read_file(file_name)
-    custom_method(imports='import tensorflow as tf;import tensorflow_hub as hub;import numpy as np;import matplotlib.pylab as plt', function_to_run='tf.io.decode_jpeg(*args, **kwargs)', method_object=None, object_signature=None, function_args=[eval('image')], function_kwargs={'channels': eval('3')})
+    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.io.read_file(*args)', method_object=None, object_signature=None, function_args=[file_name], function_kwargs={})
+    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
     image = tf.io.decode_jpeg(image, channels=3)
-    custom_method(imports='import tensorflow as tf;import tensorflow_hub as hub;import numpy as np;import matplotlib.pylab as plt', function_to_run='tf.image.convert_image_dtype(*args)', method_object=None, object_signature=None, function_args=[eval('image'), eval('tf.float32')], function_kwargs={})
+    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.io.decode_jpeg(*args, **kwargs)', method_object=None, object_signature=None, function_args=[image], function_kwargs={'channels': 3})
+    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
     image = tf.image.convert_image_dtype(image, tf.float32)
-    custom_method(imports='import tensorflow as tf;import tensorflow_hub as hub;import numpy as np;import matplotlib.pylab as plt', function_to_run='tf.image.resize_with_pad(*args, **kwargs)', method_object=None, object_signature=None, function_args=[eval('image')], function_kwargs={'target_height': eval('224'), 'target_width': eval('224')})
+    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.image.convert_image_dtype(*args)', method_object=None, object_signature=None, function_args=[image, tf.float32], function_kwargs={})
+    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
     image = tf.image.resize_with_pad(image, target_height=224, target_width=224)
+    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.image.resize_with_pad(*args, **kwargs)', method_object=None, object_signature=None, function_args=[image], function_kwargs={'target_height': 224, 'target_width': 224})
     return image
 img_url = {'Fireboat': 'http://storage.googleapis.com/download.tensorflow.org/example_images/San_Francisco_fireboat_showing_off.jpg', 'Giant Panda': 'http://storage.googleapis.com/download.tensorflow.org/example_images/Giant_Panda_2.jpeg'}
 img_paths = {name: tf.keras.utils.get_file(name, url) for (name, url) in img_url.items()}
@@ -84,14 +55,18 @@ for (n, (name, img_tensors)) in enumerate(img_name_tensors.items()):
 plt.tight_layout()
 
 def top_k_predictions(img, k=3):
-    custom_method(imports='import tensorflow as tf;import tensorflow_hub as hub;import numpy as np;import matplotlib.pylab as plt', function_to_run='tf.expand_dims(*args)', method_object=None, object_signature=None, function_args=[eval('img'), eval('0')], function_kwargs={})
+    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
     image_batch = tf.expand_dims(img, 0)
-    custom_method(imports='import tensorflow as tf;import tensorflow_hub as hub;import numpy as np;import matplotlib.pylab as plt', function_to_run='obj(*args)', method_object=eval('model'), object_signature=None, function_args=[eval('image_batch')], function_kwargs={}, custom_class=None)
+    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.expand_dims(*args)', method_object=None, object_signature=None, function_args=[img, 0], function_kwargs={})
+    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
     predictions = model(image_batch)
-    custom_method(imports='import tensorflow as tf;import tensorflow_hub as hub;import numpy as np;import matplotlib.pylab as plt', function_to_run='tf.nn.softmax(*args, **kwargs)', method_object=None, object_signature=None, function_args=[eval('predictions')], function_kwargs={'axis': eval('-1')})
+    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='obj(*args)', method_object=model, object_signature=None, function_args=[image_batch], function_kwargs={})
+    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
     probs = tf.nn.softmax(predictions, axis=-1)
-    custom_method(imports='import tensorflow as tf;import tensorflow_hub as hub;import numpy as np;import matplotlib.pylab as plt', function_to_run='tf.math.top_k(**kwargs)', method_object=None, object_signature=None, function_args=[], function_kwargs={'input': eval('probs'), 'k': eval('k')})
+    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.nn.softmax(*args, **kwargs)', method_object=None, object_signature=None, function_args=[predictions], function_kwargs={'axis': -1})
+    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
     (top_probs, top_idxs) = tf.math.top_k(input=probs, k=k)
+    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.math.top_k(**kwargs)', method_object=None, object_signature=None, function_args=[], function_kwargs={'input': probs, 'k': k})
     top_labels = imagenet_labels[tuple(top_idxs)]
     return (top_labels, top_probs[0])
 for (name, img_tensor) in img_name_tensors.items():
@@ -110,8 +85,9 @@ def f(x):
 def interpolated_path(x):
     """A straight line path."""
     return tf.zeros_like(x)
-custom_method(imports='import tensorflow as tf;import tensorflow_hub as hub;import numpy as np;import matplotlib.pylab as plt', function_to_run='tf.linspace(**kwargs)', method_object=None, object_signature=None, function_args=[], function_kwargs={'start': eval('0.0'), 'stop': eval('1.0'), 'num': eval('6')})
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 x = tf.linspace(start=0.0, stop=1.0, num=6)
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.linspace(**kwargs)', method_object=None, object_signature=None, function_args=[], function_kwargs={'start': 0.0, 'stop': 1.0, 'num': 6})
 y = f(x)
 fig = plt.figure(figsize=(12, 5))
 ax0 = fig.add_subplot(121)
@@ -135,22 +111,26 @@ ax1.set_xticks(tf.range(0, 1.5, 0.5))
 ax1.annotate('Baseline', xy=(0.0, 0.0), xytext=(0.0, 0.2), arrowprops=dict(facecolor='black', shrink=0.1))
 ax1.annotate('Input', xy=(1.0, 0.0), xytext=(0.95, 0.2), arrowprops=dict(facecolor='black', shrink=0.1))
 plt.show()
-custom_method(imports='import tensorflow as tf;import tensorflow_hub as hub;import numpy as np;import matplotlib.pylab as plt', function_to_run='tf.zeros(**kwargs)', method_object=None, object_signature=None, function_args=[], function_kwargs={'shape': eval('(224,224,3)')})
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 baseline = tf.zeros(shape=(224, 224, 3))
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.zeros(**kwargs)', method_object=None, object_signature=None, function_args=[], function_kwargs={'shape': (224, 224, 3)})
 plt.imshow(baseline)
 plt.title('Baseline')
 plt.axis('off')
 plt.show()
 m_steps = 50
-custom_method(imports='import tensorflow as tf;import tensorflow_hub as hub;import numpy as np;import matplotlib.pylab as plt', function_to_run='tf.linspace(**kwargs)', method_object=None, object_signature=None, function_args=[], function_kwargs={'start': eval('0.0'), 'stop': eval('1.0'), 'num': eval('m_steps+1')})
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 alphas = tf.linspace(start=0.0, stop=1.0, num=m_steps + 1)
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.linspace(**kwargs)', method_object=None, object_signature=None, function_args=[], function_kwargs={'start': 0.0, 'stop': 1.0, 'num': m_steps + 1})
 
 def interpolate_images(baseline, image, alphas):
     alphas_x = alphas[:, tf.newaxis, tf.newaxis, tf.newaxis]
-    custom_method(imports='import tensorflow as tf;import tensorflow_hub as hub;import numpy as np;import matplotlib.pylab as plt', function_to_run='tf.expand_dims(*args, **kwargs)', method_object=None, object_signature=None, function_args=[eval('baseline')], function_kwargs={'axis': eval('0')})
+    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
     baseline_x = tf.expand_dims(baseline, axis=0)
-    custom_method(imports='import tensorflow as tf;import tensorflow_hub as hub;import numpy as np;import matplotlib.pylab as plt', function_to_run='tf.expand_dims(*args, **kwargs)', method_object=None, object_signature=None, function_args=[eval('image')], function_kwargs={'axis': eval('0')})
+    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.expand_dims(*args, **kwargs)', method_object=None, object_signature=None, function_args=[baseline], function_kwargs={'axis': 0})
+    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
     input_x = tf.expand_dims(image, axis=0)
+    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.expand_dims(*args, **kwargs)', method_object=None, object_signature=None, function_args=[image], function_kwargs={'axis': 0})
     delta = input_x - baseline_x
     images = baseline_x + alphas_x * delta
     return images
@@ -168,14 +148,16 @@ plt.tight_layout()
 def compute_gradients(images, target_class_idx):
     with tf.GradientTape() as tape:
         tape.watch(images)
-        custom_method(imports='import tensorflow as tf;import tensorflow_hub as hub;import numpy as np;import matplotlib.pylab as plt', function_to_run='obj(*args)', method_object=eval('model'), object_signature=None, function_args=[eval('images')], function_kwargs={}, custom_class=None)
+        start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
         logits = model(images)
+        after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='obj(*args)', method_object=model, object_signature=None, function_args=[images], function_kwargs={})
         probs = tf.nn.softmax(logits, axis=-1)[:, target_class_idx]
     return tape.gradient(probs, images)
 path_gradients = compute_gradients(images=interpolated_images, target_class_idx=555)
 print(path_gradients.shape)
-custom_method(imports='import tensorflow as tf;import tensorflow_hub as hub;import numpy as np;import matplotlib.pylab as plt', function_to_run='obj(*args)', method_object=eval('model'), object_signature=None, function_args=[eval('interpolated_images')], function_kwargs={}, custom_class=None)
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 pred = model(interpolated_images)
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='obj(*args)', method_object=model, object_signature=None, function_args=[interpolated_images], function_kwargs={})
 pred_proba = tf.nn.softmax(pred, axis=-1)[:, 555]
 plt.figure(figsize=(10, 4))
 ax1 = plt.subplot(1, 2, 1)
@@ -185,8 +167,9 @@ ax1.set_ylabel('model p(target class)')
 ax1.set_xlabel('alpha')
 ax1.set_ylim([0, 1])
 ax2 = plt.subplot(1, 2, 2)
-custom_method(imports='import tensorflow as tf;import tensorflow_hub as hub;import numpy as np;import matplotlib.pylab as plt', function_to_run='tf.reduce_mean(*args, **kwargs)', method_object=None, object_signature=None, function_args=[eval('path_gradients')], function_kwargs={'axis': eval('[1, 2, 3]')})
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 average_grads = tf.reduce_mean(path_gradients, axis=[1, 2, 3])
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.reduce_mean(*args, **kwargs)', method_object=None, object_signature=None, function_args=[path_gradients], function_kwargs={'axis': [1, 2, 3]})
 average_grads_norm = (average_grads - tf.math.reduce_min(average_grads)) / (tf.math.reduce_max(average_grads) - tf.reduce_min(average_grads))
 ax2.plot(alphas, average_grads_norm)
 ax2.set_title('Average pixel gradients (normalized) over alpha')
@@ -196,25 +179,29 @@ ax2.set_ylim([0, 1])
 
 def integral_approximation(gradients):
     grads = (gradients[:-1] + gradients[1:]) / tf.constant(2.0)
-    custom_method(imports='import tensorflow as tf;import tensorflow_hub as hub;import numpy as np;import matplotlib.pylab as plt', function_to_run='tf.math.reduce_mean(*args, **kwargs)', method_object=None, object_signature=None, function_args=[eval('grads')], function_kwargs={'axis': eval('0')})
+    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
     integrated_gradients = tf.math.reduce_mean(grads, axis=0)
+    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.math.reduce_mean(*args, **kwargs)', method_object=None, object_signature=None, function_args=[grads], function_kwargs={'axis': 0})
     return integrated_gradients
 ig = integral_approximation(gradients=path_gradients)
 print(ig.shape)
 
 def integrated_gradients(baseline, image, target_class_idx, m_steps=50, batch_size=32):
-    custom_method(imports='import tensorflow as tf;import tensorflow_hub as hub;import numpy as np;import matplotlib.pylab as plt', function_to_run='tf.linspace(**kwargs)', method_object=None, object_signature=None, function_args=[], function_kwargs={'start': eval('0.0'), 'stop': eval('1.0'), 'num': eval('m_steps+1')})
+    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
     alphas = tf.linspace(start=0.0, stop=1.0, num=m_steps + 1)
+    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.linspace(**kwargs)', method_object=None, object_signature=None, function_args=[], function_kwargs={'start': 0.0, 'stop': 1.0, 'num': m_steps + 1})
     gradient_batches = []
     for alpha in tf.range(0, len(alphas), batch_size):
         from_ = alpha
-        custom_method(imports='import tensorflow as tf;import tensorflow_hub as hub;import numpy as np;import matplotlib.pylab as plt', function_to_run='tf.minimum(*args)', method_object=None, object_signature=None, function_args=[eval('from_ + batch_size'), eval('len(alphas)')], function_kwargs={})
+        start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
         to = tf.minimum(from_ + batch_size, len(alphas))
+        after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.minimum(*args)', method_object=None, object_signature=None, function_args=[from_ + batch_size, len(alphas)], function_kwargs={})
         alpha_batch = alphas[from_:to]
         gradient_batch = one_batch(baseline, image, alpha_batch, target_class_idx)
         gradient_batches.append(gradient_batch)
-    custom_method(imports='import tensorflow as tf;import tensorflow_hub as hub;import numpy as np;import matplotlib.pylab as plt', function_to_run='tf.concat(*args, **kwargs)', method_object=None, object_signature=None, function_args=[eval('gradient_batches')], function_kwargs={'axis': eval('0')})
+    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
     total_gradients = tf.concat(gradient_batches, axis=0)
+    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.concat(*args, **kwargs)', method_object=None, object_signature=None, function_args=[gradient_batches], function_kwargs={'axis': 0})
     avg_gradients = integral_approximation(gradients=total_gradients)
     integrated_gradients = (image - baseline) * avg_gradients
     return integrated_gradients
@@ -224,15 +211,18 @@ def one_batch(baseline, image, alpha_batch, target_class_idx):
     interpolated_path_input_batch = interpolate_images(baseline=baseline, image=image, alphas=alpha_batch)
     gradient_batch = compute_gradients(images=interpolated_path_input_batch, target_class_idx=target_class_idx)
     return gradient_batch
-custom_method(imports='import tensorflow as tf;import tensorflow_hub as hub;import numpy as np;import matplotlib.pylab as plt', function_to_run='obj(**kwargs)', method_object=eval('integrated_gradients'), object_signature=None, function_args=[], function_kwargs={'baseline': eval('baseline'), 'image': eval("img_name_tensors['Fireboat']"), 'target_class_idx': eval('555'), 'm_steps': eval('240')}, custom_class=None)
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 ig_attributions = integrated_gradients(baseline=baseline, image=img_name_tensors['Fireboat'], target_class_idx=555, m_steps=240)
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='obj(**kwargs)', method_object=integrated_gradients, object_signature=None, function_args=[], function_kwargs={'baseline': baseline, 'image': img_name_tensors['Fireboat'], 'target_class_idx': 555, 'm_steps': 240})
 print(ig_attributions.shape)
 
 def plot_img_attributions(baseline, image, target_class_idx, m_steps=50, cmap=None, overlay_alpha=0.4):
-    custom_method(imports='import tensorflow as tf;import tensorflow_hub as hub;import numpy as np;import matplotlib.pylab as plt', function_to_run='obj(**kwargs)', method_object=eval('integrated_gradients'), object_signature=None, function_args=[], function_kwargs={'baseline': eval('baseline'), 'image': eval('image'), 'target_class_idx': eval('target_class_idx'), 'm_steps': eval('m_steps')}, custom_class=None)
+    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
     attributions = integrated_gradients(baseline=baseline, image=image, target_class_idx=target_class_idx, m_steps=m_steps)
-    custom_method(imports='import tensorflow as tf;import tensorflow_hub as hub;import numpy as np;import matplotlib.pylab as plt', function_to_run='tf.reduce_sum(*args, **kwargs)', method_object=None, object_signature=None, function_args=[eval('tf.math.abs(attributions)')], function_kwargs={'axis': eval('-1')})
+    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='obj(**kwargs)', method_object=integrated_gradients, object_signature=None, function_args=[], function_kwargs={'baseline': baseline, 'image': image, 'target_class_idx': target_class_idx, 'm_steps': m_steps})
+    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
     attribution_mask = tf.reduce_sum(tf.math.abs(attributions), axis=-1)
+    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.reduce_sum(*args, **kwargs)', method_object=None, object_signature=None, function_args=[tf.math.abs(attributions)], function_kwargs={'axis': -1})
     (fig, axs) = plt.subplots(nrows=2, ncols=2, squeeze=False, figsize=(8, 8))
     axs[0, 0].set_title('Baseline image')
     axs[0, 0].imshow(baseline)

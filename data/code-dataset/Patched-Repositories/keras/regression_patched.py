@@ -2,50 +2,13 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import seaborn as sns
-import os
-from pathlib import Path
-import dill as pickle
 import sys
-import numpy as np
-from tool.client.client_config import EXPERIMENT_DIR, MAX_WAIT_S, WAIT_AFTER_RUN_S
-from tool.server.send_request import send_request
-from tool.server.function_details import FunctionDetails
-import json
-current_path = os.path.abspath(__file__)
+from tool.client.client_config import EXPERIMENT_DIR
+from tool.server.local_execution import before_execution as before_execution_INSERTED_INTO_SCRIPT
+from tool.server.local_execution import after_execution as after_execution_INSERTED_INTO_SCRIPT
 experiment_number = sys.argv[1]
 experiment_project = sys.argv[2]
 EXPERIMENT_FILE_PATH = EXPERIMENT_DIR / 'method-level' / experiment_project / f'experiment-{experiment_number}.json'
-skip_calls_file_path = EXPERIMENT_FILE_PATH.parent / 'skip_calls.json'
-if skip_calls_file_path.exists():
-    with open(skip_calls_file_path, 'r') as f:
-        skip_calls = json.load(f)
-else:
-    skip_calls = []
-    with open(skip_calls_file_path, 'w') as f:
-        json.dump(skip_calls, f)
-
-def custom_method(imports: str, function_to_run: str, method_object=None, object_signature=None, function_args: list=None, function_kwargs: dict=None, custom_class=None):
-    if skip_calls is not None and any((call['function_to_run'] == function_to_run and np.array_equal(call['function_args'], function_args) and (call['function_kwargs'] == function_kwargs) for call in skip_calls)):
-        print('skipping call: ', function_to_run)
-        return
-    result = send_request(imports=imports, function_to_run=function_to_run, function_args=function_args, function_kwargs=function_kwargs, max_wait_secs=MAX_WAIT_S, wait_after_run_secs=WAIT_AFTER_RUN_S, method_object=method_object, object_signature=object_signature, custom_class=custom_class, experiment_file_path=EXPERIMENT_FILE_PATH)
-    if result is not None and isinstance(result, dict) and (len(result) == 1):
-        energy_data = next(iter(result.values()))
-        if skip_calls is not None and 'start_time_perf' in energy_data['times'] and ('end_time_perf' in energy_data['times']) and ('start_time_nvidia' in energy_data['times']) and ('end_time_nvidia' in energy_data['times']) and (energy_data['times']['start_time_perf'] == energy_data['times']['end_time_perf']) and (energy_data['times']['start_time_nvidia'] == energy_data['times']['end_time_nvidia']):
-            call_to_skip = {'function_to_run': function_to_run, 'function_args': function_args, 'function_kwargs': function_kwargs}
-            try:
-                json.dumps(call_to_skip)
-                if call_to_skip not in skip_calls:
-                    skip_calls.append(call_to_skip)
-                    with open(skip_calls_file_path, 'w') as f:
-                        json.dump(skip_calls, f)
-                    print('skipping call added, current list is: ', skip_calls)
-                else:
-                    print('Skipping call already exists.')
-            except TypeError:
-                print('Ignore: Skipping call is not JSON serializable, skipping append and dump.')
-    else:
-        print('Invalid dictionary object or does not have one key-value pair.')
 np.set_printoptions(precision=3, suppress=True)
 import tensorflow as tf
 from tensorflow import keras
@@ -70,10 +33,12 @@ test_features = test_dataset.copy()
 train_labels = train_features.pop('MPG')
 test_labels = test_features.pop('MPG')
 train_dataset.describe().transpose()[['mean', 'std']]
-custom_method(imports='import numpy as np;import seaborn as sns;from tensorflow.keras import layers;from tensorflow import keras;import tensorflow as tf;import matplotlib.pyplot as plt;import pandas as pd', function_to_run='tf.keras.layers.Normalization(**kwargs)', method_object=None, object_signature=None, function_args=[], function_kwargs={'axis': eval('-1')})
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 normalizer = tf.keras.layers.Normalization(axis=-1)
-custom_method(imports='import numpy as np;import seaborn as sns;from tensorflow.keras import layers;from tensorflow import keras;import tensorflow as tf;import matplotlib.pyplot as plt;import pandas as pd', function_to_run='obj.adapt(*args)', method_object=eval('normalizer'), object_signature=None, function_args=[eval('np.array(train_features)')], function_kwargs={}, custom_class=None)
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.keras.layers.Normalization(**kwargs)', method_object=None, object_signature=None, function_args=[], function_kwargs={'axis': -1})
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 normalizer.adapt(np.array(train_features))
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='obj.adapt(*args)', method_object=normalizer, object_signature=None, function_args=[np.array(train_features)], function_kwargs={})
 print(normalizer.mean.numpy())
 first = np.array(train_features[:1])
 with np.printoptions(precision=2, suppress=True):
@@ -81,20 +46,27 @@ with np.printoptions(precision=2, suppress=True):
     print()
     print('Normalized:', normalizer(first).numpy())
 horsepower = np.array(train_features['Horsepower'])
-custom_method(imports='import numpy as np;import seaborn as sns;from tensorflow.keras import layers;from tensorflow import keras;import tensorflow as tf;import matplotlib.pyplot as plt;import pandas as pd', function_to_run='layers.Normalization(**kwargs)', method_object=None, object_signature=None, function_args=[], function_kwargs={'input_shape': eval('[1,]'), 'axis': eval('None')})
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 horsepower_normalizer = layers.Normalization(input_shape=[1], axis=None)
-custom_method(imports='import numpy as np;import seaborn as sns;from tensorflow.keras import layers;from tensorflow import keras;import tensorflow as tf;import matplotlib.pyplot as plt;import pandas as pd', function_to_run='obj.adapt(*args)', method_object=eval('horsepower_normalizer'), object_signature=None, function_args=[eval('horsepower')], function_kwargs={}, custom_class=None)
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='layers.Normalization(**kwargs)', method_object=None, object_signature=None, function_args=[], function_kwargs={'input_shape': [1], 'axis': None})
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 horsepower_normalizer.adapt(horsepower)
-custom_method(imports='import numpy as np;import seaborn as sns;from tensorflow.keras import layers;from tensorflow import keras;import tensorflow as tf;import matplotlib.pyplot as plt;import pandas as pd', function_to_run='tf.keras.Sequential(*args)', method_object=None, object_signature=None, function_args=[eval('[\n    horsepower_normalizer,\n    layers.Dense(units=1)\n]')], function_kwargs={})
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='obj.adapt(*args)', method_object=horsepower_normalizer, object_signature=None, function_args=[horsepower], function_kwargs={})
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 horsepower_model = tf.keras.Sequential([horsepower_normalizer, layers.Dense(units=1)])
-custom_method(imports='import numpy as np;import seaborn as sns;from tensorflow.keras import layers;from tensorflow import keras;import tensorflow as tf;import matplotlib.pyplot as plt;import pandas as pd', function_to_run='obj.summary()', method_object=eval('horsepower_model'), object_signature=None, function_args=[], function_kwargs={}, custom_class=None)
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.keras.Sequential(*args)', method_object=None, object_signature=None, function_args=[[horsepower_normalizer, layers.Dense(units=1)]], function_kwargs={})
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 horsepower_model.summary()
-custom_method(imports='import numpy as np;import seaborn as sns;from tensorflow.keras import layers;from tensorflow import keras;import tensorflow as tf;import matplotlib.pyplot as plt;import pandas as pd', function_to_run='obj.predict(*args)', method_object=eval('horsepower_model'), object_signature=None, function_args=[eval('horsepower[:10]')], function_kwargs={}, custom_class=None)
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='obj.summary()', method_object=horsepower_model, object_signature=None, function_args=[], function_kwargs={})
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 horsepower_model.predict(horsepower[:10])
-custom_method(imports='import numpy as np;import seaborn as sns;from tensorflow.keras import layers;from tensorflow import keras;import tensorflow as tf;import matplotlib.pyplot as plt;import pandas as pd', function_to_run='obj.compile(**kwargs)', method_object=eval('horsepower_model'), object_signature=None, function_args=[], function_kwargs={'optimizer': eval('tf.keras.optimizers.Adam(learning_rate=0.1)'), 'loss': eval("'mean_absolute_error'")}, custom_class=None)
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='obj.predict(*args)', method_object=horsepower_model, object_signature=None, function_args=[horsepower[:10]], function_kwargs={})
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 horsepower_model.compile(optimizer=tf.keras.optimizers.Adam(learning_rate=0.1), loss='mean_absolute_error')
-custom_method(imports='import numpy as np;import seaborn as sns;from tensorflow.keras import layers;from tensorflow import keras;import tensorflow as tf;import matplotlib.pyplot as plt;import pandas as pd', function_to_run='obj.fit(*args, **kwargs)', method_object=eval('horsepower_model'), object_signature=None, function_args=[eval("train_features['Horsepower']"), eval('train_labels')], function_kwargs={'epochs': eval('100'), 'verbose': eval('0'), 'validation_split': eval('0.2')}, custom_class=None)
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='obj.compile(**kwargs)', method_object=horsepower_model, object_signature=None, function_args=[], function_kwargs={'optimizer': tf.keras.optimizers.Adam(learning_rate=0.1), 'loss': 'mean_absolute_error'})
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 history = horsepower_model.fit(train_features['Horsepower'], train_labels, epochs=100, verbose=0, validation_split=0.2)
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='obj.fit(*args, **kwargs)', method_object=horsepower_model, object_signature=None, function_args=[train_features['Horsepower'], train_labels], function_kwargs={'epochs': 100, 'verbose': 0, 'validation_split': 0.2})
 hist = pd.DataFrame(history.history)
 hist['epoch'] = history.epoch
 hist.tail()
@@ -109,12 +81,15 @@ def plot_loss(history):
     plt.grid(True)
 plot_loss(history)
 test_results = {}
-custom_method(imports='import numpy as np;import seaborn as sns;from tensorflow.keras import layers;from tensorflow import keras;import tensorflow as tf;import matplotlib.pyplot as plt;import pandas as pd', function_to_run='obj.evaluate(*args, **kwargs)', method_object=eval('horsepower_model'), object_signature=None, function_args=[eval("test_features['Horsepower']"), eval('test_labels')], function_kwargs={'verbose': eval('0')}, custom_class=None)
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 test_results['horsepower_model'] = horsepower_model.evaluate(test_features['Horsepower'], test_labels, verbose=0)
-custom_method(imports='import numpy as np;import seaborn as sns;from tensorflow.keras import layers;from tensorflow import keras;import tensorflow as tf;import matplotlib.pyplot as plt;import pandas as pd', function_to_run='tf.linspace(*args)', method_object=None, object_signature=None, function_args=[eval('0.0'), eval('250'), eval('251')], function_kwargs={})
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='obj.evaluate(*args, **kwargs)', method_object=horsepower_model, object_signature=None, function_args=[test_features['Horsepower'], test_labels], function_kwargs={'verbose': 0})
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 x = tf.linspace(0.0, 250, 251)
-custom_method(imports='import numpy as np;import seaborn as sns;from tensorflow.keras import layers;from tensorflow import keras;import tensorflow as tf;import matplotlib.pyplot as plt;import pandas as pd', function_to_run='obj.predict(*args)', method_object=eval('horsepower_model'), object_signature=None, function_args=[eval('x')], function_kwargs={}, custom_class=None)
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.linspace(*args)', method_object=None, object_signature=None, function_args=[0.0, 250, 251], function_kwargs={})
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 y = horsepower_model.predict(x)
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='obj.predict(*args)', method_object=horsepower_model, object_signature=None, function_args=[x], function_kwargs={})
 
 def plot_horsepower(x, y):
     plt.scatter(train_features['Horsepower'], train_labels, label='Data')
@@ -123,31 +98,39 @@ def plot_horsepower(x, y):
     plt.ylabel('MPG')
     plt.legend()
 plot_horsepower(x, y)
-custom_method(imports='import numpy as np;import seaborn as sns;from tensorflow.keras import layers;from tensorflow import keras;import tensorflow as tf;import matplotlib.pyplot as plt;import pandas as pd', function_to_run='tf.keras.Sequential(*args)', method_object=None, object_signature=None, function_args=[eval('[\n    normalizer,\n    layers.Dense(units=1)\n]')], function_kwargs={})
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 linear_model = tf.keras.Sequential([normalizer, layers.Dense(units=1)])
-custom_method(imports='import numpy as np;import seaborn as sns;from tensorflow.keras import layers;from tensorflow import keras;import tensorflow as tf;import matplotlib.pyplot as plt;import pandas as pd', function_to_run='obj.predict(*args)', method_object=eval('linear_model'), object_signature=None, function_args=[eval('train_features[:10]')], function_kwargs={}, custom_class=None)
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.keras.Sequential(*args)', method_object=None, object_signature=None, function_args=[[normalizer, layers.Dense(units=1)]], function_kwargs={})
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 linear_model.predict(train_features[:10])
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='obj.predict(*args)', method_object=linear_model, object_signature=None, function_args=[train_features[:10]], function_kwargs={})
 linear_model.layers[1].kernel
-custom_method(imports='import numpy as np;import seaborn as sns;from tensorflow.keras import layers;from tensorflow import keras;import tensorflow as tf;import matplotlib.pyplot as plt;import pandas as pd', function_to_run='obj.compile(**kwargs)', method_object=eval('linear_model'), object_signature=None, function_args=[], function_kwargs={'optimizer': eval('tf.keras.optimizers.Adam(learning_rate=0.1)'), 'loss': eval("'mean_absolute_error'")}, custom_class=None)
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 linear_model.compile(optimizer=tf.keras.optimizers.Adam(learning_rate=0.1), loss='mean_absolute_error')
-custom_method(imports='import numpy as np;import seaborn as sns;from tensorflow.keras import layers;from tensorflow import keras;import tensorflow as tf;import matplotlib.pyplot as plt;import pandas as pd', function_to_run='obj.fit(*args, **kwargs)', method_object=eval('linear_model'), object_signature=None, function_args=[eval('train_features'), eval('train_labels')], function_kwargs={'epochs': eval('100'), 'verbose': eval('0'), 'validation_split': eval('0.2')}, custom_class=None)
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='obj.compile(**kwargs)', method_object=linear_model, object_signature=None, function_args=[], function_kwargs={'optimizer': tf.keras.optimizers.Adam(learning_rate=0.1), 'loss': 'mean_absolute_error'})
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 history = linear_model.fit(train_features, train_labels, epochs=100, verbose=0, validation_split=0.2)
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='obj.fit(*args, **kwargs)', method_object=linear_model, object_signature=None, function_args=[train_features, train_labels], function_kwargs={'epochs': 100, 'verbose': 0, 'validation_split': 0.2})
 plot_loss(history)
-custom_method(imports='import numpy as np;import seaborn as sns;from tensorflow.keras import layers;from tensorflow import keras;import tensorflow as tf;import matplotlib.pyplot as plt;import pandas as pd', function_to_run='obj.evaluate(*args, **kwargs)', method_object=eval('linear_model'), object_signature=None, function_args=[eval('test_features'), eval('test_labels')], function_kwargs={'verbose': eval('0')}, custom_class=None)
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 test_results['linear_model'] = linear_model.evaluate(test_features, test_labels, verbose=0)
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='obj.evaluate(*args, **kwargs)', method_object=linear_model, object_signature=None, function_args=[test_features, test_labels], function_kwargs={'verbose': 0})
 
 def build_and_compile_model(norm):
-    custom_method(imports='import numpy as np;import seaborn as sns;from tensorflow.keras import layers;from tensorflow import keras;import tensorflow as tf;import matplotlib.pyplot as plt;import pandas as pd', function_to_run='keras.Sequential(*args)', method_object=None, object_signature=None, function_args=[eval("[\n      norm,\n      layers.Dense(64, activation='relu'),\n      layers.Dense(64, activation='relu'),\n      layers.Dense(1)\n  ]")], function_kwargs={})
+    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
     model = keras.Sequential([norm, layers.Dense(64, activation='relu'), layers.Dense(64, activation='relu'), layers.Dense(1)])
-    custom_method(imports='import numpy as np;import seaborn as sns;from tensorflow.keras import layers;from tensorflow import keras;import tensorflow as tf;import matplotlib.pyplot as plt;import pandas as pd', function_to_run='obj.compile(**kwargs)', method_object=eval('model'), object_signature=None, function_args=[], function_kwargs={'loss': eval("'mean_absolute_error'"), 'optimizer': eval('tf.keras.optimizers.Adam(0.001)')}, custom_class=None)
+    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='keras.Sequential(*args)', method_object=None, object_signature=None, function_args=[[norm, layers.Dense(64, activation='relu'), layers.Dense(64, activation='relu'), layers.Dense(1)]], function_kwargs={})
+    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
     model.compile(loss='mean_absolute_error', optimizer=tf.keras.optimizers.Adam(0.001))
+    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='obj.compile(**kwargs)', method_object=model, object_signature=None, function_args=[], function_kwargs={'loss': 'mean_absolute_error', 'optimizer': tf.keras.optimizers.Adam(0.001)})
     return model
 dnn_horsepower_model = build_and_compile_model(horsepower_normalizer)
 dnn_horsepower_model.summary()
 history = dnn_horsepower_model.fit(train_features['Horsepower'], train_labels, validation_split=0.2, verbose=0, epochs=100)
 plot_loss(history)
-custom_method(imports='import numpy as np;import seaborn as sns;from tensorflow.keras import layers;from tensorflow import keras;import tensorflow as tf;import matplotlib.pyplot as plt;import pandas as pd', function_to_run='tf.linspace(*args)', method_object=None, object_signature=None, function_args=[eval('0.0'), eval('250'), eval('251')], function_kwargs={})
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 x = tf.linspace(0.0, 250, 251)
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.linspace(*args)', method_object=None, object_signature=None, function_args=[0.0, 250, 251], function_kwargs={})
 y = dnn_horsepower_model.predict(x)
 plot_horsepower(x, y)
 test_results['dnn_horsepower_model'] = dnn_horsepower_model.evaluate(test_features['Horsepower'], test_labels, verbose=0)
@@ -171,8 +154,10 @@ plt.hist(error, bins=25)
 plt.xlabel('Prediction Error [MPG]')
 _ = plt.ylabel('Count')
 dnn_model.save('dnn_model')
-custom_method(imports='import numpy as np;import seaborn as sns;from tensorflow.keras import layers;from tensorflow import keras;import tensorflow as tf;import matplotlib.pyplot as plt;import pandas as pd', function_to_run='tf.keras.models.load_model(*args)', method_object=None, object_signature=None, function_args=[eval("'dnn_model'")], function_kwargs={})
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 reloaded = tf.keras.models.load_model('dnn_model')
-custom_method(imports='import numpy as np;import seaborn as sns;from tensorflow.keras import layers;from tensorflow import keras;import tensorflow as tf;import matplotlib.pyplot as plt;import pandas as pd', function_to_run='obj.evaluate(*args, **kwargs)', method_object=eval('reloaded'), object_signature=None, function_args=[eval('test_features'), eval('test_labels')], function_kwargs={'verbose': eval('0')}, custom_class=None)
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.keras.models.load_model(*args)', method_object=None, object_signature=None, function_args=['dnn_model'], function_kwargs={})
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 test_results['reloaded'] = reloaded.evaluate(test_features, test_labels, verbose=0)
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='obj.evaluate(*args, **kwargs)', method_object=reloaded, object_signature=None, function_args=[test_features, test_labels], function_kwargs={'verbose': 0})
 pd.DataFrame(test_results, index=['Mean absolute error [MPG]']).T

@@ -8,54 +8,18 @@ import numpy as np
 import pandas as pd
 import seaborn as sns
 import tensorflow as tf
-import os
-from pathlib import Path
-import dill as pickle
 import sys
-import numpy as np
-from tool.client.client_config import EXPERIMENT_DIR, MAX_WAIT_S, WAIT_AFTER_RUN_S
-from tool.server.send_request import send_request
-from tool.server.function_details import FunctionDetails
-import json
-current_path = os.path.abspath(__file__)
+from tool.client.client_config import EXPERIMENT_DIR
+from tool.server.local_execution import before_execution as before_execution_INSERTED_INTO_SCRIPT
+from tool.server.local_execution import after_execution as after_execution_INSERTED_INTO_SCRIPT
 experiment_number = sys.argv[1]
 experiment_project = sys.argv[2]
 EXPERIMENT_FILE_PATH = EXPERIMENT_DIR / 'method-level' / experiment_project / f'experiment-{experiment_number}.json'
-skip_calls_file_path = EXPERIMENT_FILE_PATH.parent / 'skip_calls.json'
-if skip_calls_file_path.exists():
-    with open(skip_calls_file_path, 'r') as f:
-        skip_calls = json.load(f)
-else:
-    skip_calls = []
-    with open(skip_calls_file_path, 'w') as f:
-        json.dump(skip_calls, f)
-
-def custom_method(imports: str, function_to_run: str, method_object=None, object_signature=None, function_args: list=None, function_kwargs: dict=None, custom_class=None):
-    if skip_calls is not None and any((call['function_to_run'] == function_to_run and np.array_equal(call['function_args'], function_args) and (call['function_kwargs'] == function_kwargs) for call in skip_calls)):
-        print('skipping call: ', function_to_run)
-        return
-    result = send_request(imports=imports, function_to_run=function_to_run, function_args=function_args, function_kwargs=function_kwargs, max_wait_secs=MAX_WAIT_S, wait_after_run_secs=WAIT_AFTER_RUN_S, method_object=method_object, object_signature=object_signature, custom_class=custom_class, experiment_file_path=EXPERIMENT_FILE_PATH)
-    if result is not None and isinstance(result, dict) and (len(result) == 1):
-        energy_data = next(iter(result.values()))
-        if skip_calls is not None and 'start_time_perf' in energy_data['times'] and ('end_time_perf' in energy_data['times']) and ('start_time_nvidia' in energy_data['times']) and ('end_time_nvidia' in energy_data['times']) and (energy_data['times']['start_time_perf'] == energy_data['times']['end_time_perf']) and (energy_data['times']['start_time_nvidia'] == energy_data['times']['end_time_nvidia']):
-            call_to_skip = {'function_to_run': function_to_run, 'function_args': function_args, 'function_kwargs': function_kwargs}
-            try:
-                json.dumps(call_to_skip)
-                if call_to_skip not in skip_calls:
-                    skip_calls.append(call_to_skip)
-                    with open(skip_calls_file_path, 'w') as f:
-                        json.dump(skip_calls, f)
-                    print('skipping call added, current list is: ', skip_calls)
-                else:
-                    print('Skipping call already exists.')
-            except TypeError:
-                print('Ignore: Skipping call is not JSON serializable, skipping append and dump.')
-    else:
-        print('Invalid dictionary object or does not have one key-value pair.')
 mpl.rcParams['figure.figsize'] = (8, 6)
 mpl.rcParams['axes.grid'] = False
-custom_method(imports='import IPython;import tensorflow as tf;import matplotlib as mpl;import datetime;import pandas as pd;import seaborn as sns;import matplotlib.pyplot as plt;import IPython.display;import numpy as np;import os', function_to_run='tf.keras.utils.get_file(**kwargs)', method_object=None, object_signature=None, function_args=[], function_kwargs={'origin': eval("'https://storage.googleapis.com/tensorflow/tf-keras-datasets/jena_climate_2009_2016.csv.zip'"), 'fname': eval("'jena_climate_2009_2016.csv.zip'"), 'extract': eval('True')})
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 zip_path = tf.keras.utils.get_file(origin='https://storage.googleapis.com/tensorflow/tf-keras-datasets/jena_climate_2009_2016.csv.zip', fname='jena_climate_2009_2016.csv.zip', extract=True)
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.keras.utils.get_file(**kwargs)', method_object=None, object_signature=None, function_args=[], function_kwargs={'origin': 'https://storage.googleapis.com/tensorflow/tf-keras-datasets/jena_climate_2009_2016.csv.zip', 'fname': 'jena_climate_2009_2016.csv.zip', 'extract': True})
 (csv_path, _) = os.path.splitext(zip_path)
 df = pd.read_csv(csv_path)
 df = df[5::6]
@@ -104,8 +68,9 @@ plt.plot(np.array(df['Day sin'])[:25])
 plt.plot(np.array(df['Day cos'])[:25])
 plt.xlabel('Time [h]')
 plt.title('Time of day signal')
-custom_method(imports='import IPython;import tensorflow as tf;import matplotlib as mpl;import datetime;import pandas as pd;import seaborn as sns;import matplotlib.pyplot as plt;import IPython.display;import numpy as np;import os', function_to_run='tf.signal.rfft(*args)', method_object=None, object_signature=None, function_args=[eval("df['T (degC)']")], function_kwargs={})
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 fft = tf.signal.rfft(df['T (degC)'])
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.signal.rfft(*args)', method_object=None, object_signature=None, function_args=[df['T (degC)']], function_kwargs={})
 f_per_dataset = np.arange(0, len(fft))
 n_samples_h = len(df['T (degC)'])
 hours_per_year = 24 * 365.2524
@@ -165,15 +130,18 @@ def split_window(self, features):
     inputs = features[:, self.input_slice, :]
     labels = features[:, self.labels_slice, :]
     if self.label_columns is not None:
-        custom_method(imports='import IPython;import tensorflow as tf;import matplotlib as mpl;import datetime;import pandas as pd;import seaborn as sns;import matplotlib.pyplot as plt;import IPython.display;import numpy as np;import os', function_to_run='tf.stack(*args, **kwargs)', method_object=None, object_signature=None, function_args=[eval('[labels[:, :, self.column_indices[name]] for name in self.label_columns]')], function_kwargs={'axis': eval('-1')})
+        start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
         labels = tf.stack([labels[:, :, self.column_indices[name]] for name in self.label_columns], axis=-1)
+        after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.stack(*args, **kwargs)', method_object=None, object_signature=None, function_args=[[labels[:, :, self.column_indices[name]] for name in self.label_columns]], function_kwargs={'axis': -1})
     inputs.set_shape([None, self.input_width, None])
-    custom_method(imports='import IPython;import tensorflow as tf;import matplotlib as mpl;import datetime;import pandas as pd;import seaborn as sns;import matplotlib.pyplot as plt;import IPython.display;import numpy as np;import os', function_to_run='obj.set_shape(*args)', method_object=eval('labels'), object_signature=None, function_args=[eval('[None, self.label_width, None]')], function_kwargs={}, custom_class=None)
+    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
     labels.set_shape([None, self.label_width, None])
+    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='obj.set_shape(*args)', method_object=labels, object_signature=None, function_args=[[None, self.label_width, None]], function_kwargs={})
     return (inputs, labels)
 WindowGenerator.split_window = split_window
-custom_method(imports='import IPython;import tensorflow as tf;import matplotlib as mpl;import datetime;import pandas as pd;import seaborn as sns;import matplotlib.pyplot as plt;import IPython.display;import numpy as np;import os', function_to_run='tf.stack(*args)', method_object=None, object_signature=None, function_args=[eval('[np.array(train_df[:w2.total_window_size]),\n                           np.array(train_df[100:100+w2.total_window_size]),\n                           np.array(train_df[200:200+w2.total_window_size])]')], function_kwargs={})
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 example_window = tf.stack([np.array(train_df[:w2.total_window_size]), np.array(train_df[100:100 + w2.total_window_size]), np.array(train_df[200:200 + w2.total_window_size])])
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.stack(*args)', method_object=None, object_signature=None, function_args=[[np.array(train_df[:w2.total_window_size]), np.array(train_df[100:100 + w2.total_window_size]), np.array(train_df[200:200 + w2.total_window_size])]], function_kwargs={})
 (example_inputs, example_labels) = w2.split_window(example_window)
 print('All shapes are: (batch, time, features)')
 print(f'Window shape: {example_window.shape}')
@@ -209,10 +177,12 @@ w2.plot(plot_col='p (mbar)')
 
 def make_dataset(self, data):
     data = np.array(data, dtype=np.float32)
-    custom_method(imports='import IPython;import tensorflow as tf;import matplotlib as mpl;import datetime;import pandas as pd;import seaborn as sns;import matplotlib.pyplot as plt;import IPython.display;import numpy as np;import os', function_to_run='tf.keras.utils.timeseries_dataset_from_array(**kwargs)', method_object=None, object_signature=None, function_args=[], function_kwargs={'data': eval('data'), 'targets': eval('None'), 'sequence_length': eval('self.total_window_size'), 'sequence_stride': eval('1'), 'shuffle': eval('True'), 'batch_size': eval('32')})
+    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
     ds = tf.keras.utils.timeseries_dataset_from_array(data=data, targets=None, sequence_length=self.total_window_size, sequence_stride=1, shuffle=True, batch_size=32)
-    custom_method(imports='import IPython;import tensorflow as tf;import matplotlib as mpl;import datetime;import pandas as pd;import seaborn as sns;import matplotlib.pyplot as plt;import IPython.display;import numpy as np;import os', function_to_run='obj.map(*args)', method_object=eval('ds'), object_signature=None, function_args=[eval('self.split_window')], function_kwargs={}, custom_class=None)
+    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.keras.utils.timeseries_dataset_from_array(**kwargs)', method_object=None, object_signature=None, function_args=[], function_kwargs={'data': data, 'targets': None, 'sequence_length': self.total_window_size, 'sequence_stride': 1, 'shuffle': True, 'batch_size': 32})
+    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
     ds = ds.map(self.split_window)
+    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='obj.map(*args)', method_object=ds, object_signature=None, function_args=[self.split_window], function_kwargs={})
     return ds
 WindowGenerator.make_dataset = make_dataset
 
@@ -262,36 +232,43 @@ class Baseline(tf.keras.Model):
         result = inputs[:, :, self.label_index]
         return result[:, :, tf.newaxis]
 baseline = Baseline(label_index=column_indices['T (degC)'])
-custom_method(imports='import IPython;import tensorflow as tf;import matplotlib as mpl;import datetime;import pandas as pd;import seaborn as sns;import matplotlib.pyplot as plt;import IPython.display;import numpy as np;import os', function_to_run='obj.compile(**kwargs)', method_object=eval('baseline'), object_signature="Baseline(label_index=column_indices['T (degC)'])", function_args=[], function_kwargs={'loss': eval('tf.keras.losses.MeanSquaredError()'), 'metrics': eval('[tf.keras.metrics.MeanAbsoluteError()]')}, custom_class='class Baseline(tf.keras.Model):\n  def __init__(self, label_index=None):\n    super().__init__()\n    self.label_index = label_index\n\n  def call(self, inputs):\n    if self.label_index is None:\n      return inputs\n    result = inputs[:, :, self.label_index]\n    return result[:, :, tf.newaxis]')
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 baseline.compile(loss=tf.keras.losses.MeanSquaredError(), metrics=[tf.keras.metrics.MeanAbsoluteError()])
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='obj.compile(**kwargs)', method_object='baseline', object_signature="Baseline(label_index=column_indices['T (degC)'])", function_args=[], function_kwargs={'loss': tf.keras.losses.MeanSquaredError(), 'metrics': [tf.keras.metrics.MeanAbsoluteError()]})
 val_performance = {}
 performance = {}
-custom_method(imports='import IPython;import tensorflow as tf;import matplotlib as mpl;import datetime;import pandas as pd;import seaborn as sns;import matplotlib.pyplot as plt;import IPython.display;import numpy as np;import os', function_to_run='obj.evaluate(*args)', method_object=eval('baseline'), object_signature=None, function_args=[eval('single_step_window.val')], function_kwargs={}, custom_class='class Baseline(tf.keras.Model):\n  def __init__(self, label_index=None):\n    super().__init__()\n    self.label_index = label_index\n\n  def call(self, inputs):\n    if self.label_index is None:\n      return inputs\n    result = inputs[:, :, self.label_index]\n    return result[:, :, tf.newaxis]')
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 val_performance['Baseline'] = baseline.evaluate(single_step_window.val)
-custom_method(imports='import IPython;import tensorflow as tf;import matplotlib as mpl;import datetime;import pandas as pd;import seaborn as sns;import matplotlib.pyplot as plt;import IPython.display;import numpy as np;import os', function_to_run='obj.evaluate(*args, **kwargs)', method_object=eval('baseline'), object_signature=None, function_args=[eval('single_step_window.test')], function_kwargs={'verbose': eval('0')}, custom_class='class Baseline(tf.keras.Model):\n  def __init__(self, label_index=None):\n    super().__init__()\n    self.label_index = label_index\n\n  def call(self, inputs):\n    if self.label_index is None:\n      return inputs\n    result = inputs[:, :, self.label_index]\n    return result[:, :, tf.newaxis]')
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='obj.evaluate(*args)', method_object='baseline', object_signature=None, function_args=[single_step_window.val], function_kwargs={})
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 performance['Baseline'] = baseline.evaluate(single_step_window.test, verbose=0)
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='obj.evaluate(*args, **kwargs)', method_object='baseline', object_signature=None, function_args=[single_step_window.test], function_kwargs={'verbose': 0})
 wide_window = WindowGenerator(input_width=24, label_width=24, shift=1, label_columns=['T (degC)'])
 wide_window
 print('Input shape:', wide_window.example[0].shape)
 print('Output shape:', baseline(wide_window.example[0]).shape)
 wide_window.plot(baseline)
-custom_method(imports='import IPython;import tensorflow as tf;import matplotlib as mpl;import datetime;import pandas as pd;import seaborn as sns;import matplotlib.pyplot as plt;import IPython.display;import numpy as np;import os', function_to_run='tf.keras.Sequential(*args)', method_object=None, object_signature=None, function_args=[eval('[\n    tf.keras.layers.Dense(units=1)\n]')], function_kwargs={})
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 linear = tf.keras.Sequential([tf.keras.layers.Dense(units=1)])
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.keras.Sequential(*args)', method_object=None, object_signature=None, function_args=[[tf.keras.layers.Dense(units=1)]], function_kwargs={})
 print('Input shape:', single_step_window.example[0].shape)
 print('Output shape:', linear(single_step_window.example[0]).shape)
 MAX_EPOCHS = 20
 
 def compile_and_fit(model, window, patience=2):
-    custom_method(imports='import IPython;import tensorflow as tf;import matplotlib as mpl;import datetime;import pandas as pd;import seaborn as sns;import matplotlib.pyplot as plt;import IPython.display;import numpy as np;import os', function_to_run='tf.keras.callbacks.EarlyStopping(**kwargs)', method_object=None, object_signature=None, function_args=[], function_kwargs={'monitor': eval("'val_loss'"), 'patience': eval('patience'), 'mode': eval("'min'")})
+    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
     early_stopping = tf.keras.callbacks.EarlyStopping(monitor='val_loss', patience=patience, mode='min')
+    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.keras.callbacks.EarlyStopping(**kwargs)', method_object=None, object_signature=None, function_args=[], function_kwargs={'monitor': 'val_loss', 'patience': patience, 'mode': 'min'})
     model.compile(loss=tf.keras.losses.MeanSquaredError(), optimizer=tf.keras.optimizers.Adam(), metrics=[tf.keras.metrics.MeanAbsoluteError()])
     history = model.fit(window.train, epochs=MAX_EPOCHS, validation_data=window.val, callbacks=[early_stopping])
     return history
 history = compile_and_fit(linear, single_step_window)
-custom_method(imports='import IPython;import tensorflow as tf;import matplotlib as mpl;import datetime;import pandas as pd;import seaborn as sns;import matplotlib.pyplot as plt;import IPython.display;import numpy as np;import os', function_to_run='obj.evaluate(*args)', method_object=eval('linear'), object_signature=None, function_args=[eval('single_step_window.val')], function_kwargs={}, custom_class=None)
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 val_performance['Linear'] = linear.evaluate(single_step_window.val)
-custom_method(imports='import IPython;import tensorflow as tf;import matplotlib as mpl;import datetime;import pandas as pd;import seaborn as sns;import matplotlib.pyplot as plt;import IPython.display;import numpy as np;import os', function_to_run='obj.evaluate(*args, **kwargs)', method_object=eval('linear'), object_signature=None, function_args=[eval('single_step_window.test')], function_kwargs={'verbose': eval('0')}, custom_class=None)
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='obj.evaluate(*args)', method_object=linear, object_signature=None, function_args=[single_step_window.val], function_kwargs={})
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 performance['Linear'] = linear.evaluate(single_step_window.test, verbose=0)
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='obj.evaluate(*args, **kwargs)', method_object=linear, object_signature=None, function_args=[single_step_window.test], function_kwargs={'verbose': 0})
 print('Input shape:', wide_window.example[0].shape)
 print('Output shape:', baseline(wide_window.example[0]).shape)
 wide_window.plot(linear)
@@ -299,45 +276,54 @@ plt.bar(x=range(len(train_df.columns)), height=linear.layers[0].kernel[:, 0].num
 axis = plt.gca()
 axis.set_xticks(range(len(train_df.columns)))
 _ = axis.set_xticklabels(train_df.columns, rotation=90)
-custom_method(imports='import IPython;import tensorflow as tf;import matplotlib as mpl;import datetime;import pandas as pd;import seaborn as sns;import matplotlib.pyplot as plt;import IPython.display;import numpy as np;import os', function_to_run='tf.keras.Sequential(*args)', method_object=None, object_signature=None, function_args=[eval("[\n    tf.keras.layers.Dense(units=64, activation='relu'),\n    tf.keras.layers.Dense(units=64, activation='relu'),\n    tf.keras.layers.Dense(units=1)\n]")], function_kwargs={})
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 dense = tf.keras.Sequential([tf.keras.layers.Dense(units=64, activation='relu'), tf.keras.layers.Dense(units=64, activation='relu'), tf.keras.layers.Dense(units=1)])
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.keras.Sequential(*args)', method_object=None, object_signature=None, function_args=[[tf.keras.layers.Dense(units=64, activation='relu'), tf.keras.layers.Dense(units=64, activation='relu'), tf.keras.layers.Dense(units=1)]], function_kwargs={})
 history = compile_and_fit(dense, single_step_window)
-custom_method(imports='import IPython;import tensorflow as tf;import matplotlib as mpl;import datetime;import pandas as pd;import seaborn as sns;import matplotlib.pyplot as plt;import IPython.display;import numpy as np;import os', function_to_run='obj.evaluate(*args)', method_object=eval('dense'), object_signature=None, function_args=[eval('single_step_window.val')], function_kwargs={}, custom_class=None)
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 val_performance['Dense'] = dense.evaluate(single_step_window.val)
-custom_method(imports='import IPython;import tensorflow as tf;import matplotlib as mpl;import datetime;import pandas as pd;import seaborn as sns;import matplotlib.pyplot as plt;import IPython.display;import numpy as np;import os', function_to_run='obj.evaluate(*args, **kwargs)', method_object=eval('dense'), object_signature=None, function_args=[eval('single_step_window.test')], function_kwargs={'verbose': eval('0')}, custom_class=None)
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='obj.evaluate(*args)', method_object=dense, object_signature=None, function_args=[single_step_window.val], function_kwargs={})
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 performance['Dense'] = dense.evaluate(single_step_window.test, verbose=0)
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='obj.evaluate(*args, **kwargs)', method_object=dense, object_signature=None, function_args=[single_step_window.test], function_kwargs={'verbose': 0})
 CONV_WIDTH = 3
 conv_window = WindowGenerator(input_width=CONV_WIDTH, label_width=1, shift=1, label_columns=['T (degC)'])
 conv_window
 conv_window.plot()
 plt.title('Given 3 hours of inputs, predict 1 hour into the future.')
-custom_method(imports='import IPython;import tensorflow as tf;import matplotlib as mpl;import datetime;import pandas as pd;import seaborn as sns;import matplotlib.pyplot as plt;import IPython.display;import numpy as np;import os', function_to_run='tf.keras.Sequential(*args)', method_object=None, object_signature=None, function_args=[eval("[\n    tf.keras.layers.Flatten(),\n    tf.keras.layers.Dense(units=32, activation='relu'),\n    tf.keras.layers.Dense(units=32, activation='relu'),\n    tf.keras.layers.Dense(units=1),\n    tf.keras.layers.Reshape([1, -1]),\n]")], function_kwargs={})
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 multi_step_dense = tf.keras.Sequential([tf.keras.layers.Flatten(), tf.keras.layers.Dense(units=32, activation='relu'), tf.keras.layers.Dense(units=32, activation='relu'), tf.keras.layers.Dense(units=1), tf.keras.layers.Reshape([1, -1])])
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.keras.Sequential(*args)', method_object=None, object_signature=None, function_args=[[tf.keras.layers.Flatten(), tf.keras.layers.Dense(units=32, activation='relu'), tf.keras.layers.Dense(units=32, activation='relu'), tf.keras.layers.Dense(units=1), tf.keras.layers.Reshape([1, -1])]], function_kwargs={})
 print('Input shape:', conv_window.example[0].shape)
 print('Output shape:', multi_step_dense(conv_window.example[0]).shape)
 history = compile_and_fit(multi_step_dense, conv_window)
 IPython.display.clear_output()
-custom_method(imports='import IPython;import tensorflow as tf;import matplotlib as mpl;import datetime;import pandas as pd;import seaborn as sns;import matplotlib.pyplot as plt;import IPython.display;import numpy as np;import os', function_to_run='obj.evaluate(*args)', method_object=eval('multi_step_dense'), object_signature=None, function_args=[eval('conv_window.val')], function_kwargs={}, custom_class=None)
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 val_performance['Multi step dense'] = multi_step_dense.evaluate(conv_window.val)
-custom_method(imports='import IPython;import tensorflow as tf;import matplotlib as mpl;import datetime;import pandas as pd;import seaborn as sns;import matplotlib.pyplot as plt;import IPython.display;import numpy as np;import os', function_to_run='obj.evaluate(*args, **kwargs)', method_object=eval('multi_step_dense'), object_signature=None, function_args=[eval('conv_window.test')], function_kwargs={'verbose': eval('0')}, custom_class=None)
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='obj.evaluate(*args)', method_object=multi_step_dense, object_signature=None, function_args=[conv_window.val], function_kwargs={})
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 performance['Multi step dense'] = multi_step_dense.evaluate(conv_window.test, verbose=0)
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='obj.evaluate(*args, **kwargs)', method_object=multi_step_dense, object_signature=None, function_args=[conv_window.test], function_kwargs={'verbose': 0})
 conv_window.plot(multi_step_dense)
 print('Input shape:', wide_window.example[0].shape)
 try:
     print('Output shape:', multi_step_dense(wide_window.example[0]).shape)
 except Exception as e:
     print(f'\n{type(e).__name__}:{e}')
-custom_method(imports='import IPython;import tensorflow as tf;import matplotlib as mpl;import datetime;import pandas as pd;import seaborn as sns;import matplotlib.pyplot as plt;import IPython.display;import numpy as np;import os', function_to_run='tf.keras.Sequential(*args)', method_object=None, object_signature=None, function_args=[eval("[\n    tf.keras.layers.Conv1D(filters=32,\n                           kernel_size=(CONV_WIDTH,),\n                           activation='relu'),\n    tf.keras.layers.Dense(units=32, activation='relu'),\n    tf.keras.layers.Dense(units=1),\n]")], function_kwargs={})
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 conv_model = tf.keras.Sequential([tf.keras.layers.Conv1D(filters=32, kernel_size=(CONV_WIDTH,), activation='relu'), tf.keras.layers.Dense(units=32, activation='relu'), tf.keras.layers.Dense(units=1)])
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.keras.Sequential(*args)', method_object=None, object_signature=None, function_args=[[tf.keras.layers.Conv1D(filters=32, kernel_size=(CONV_WIDTH,), activation='relu'), tf.keras.layers.Dense(units=32, activation='relu'), tf.keras.layers.Dense(units=1)]], function_kwargs={})
 print('Conv model on `conv_window`')
 print('Input shape:', conv_window.example[0].shape)
 print('Output shape:', conv_model(conv_window.example[0]).shape)
 history = compile_and_fit(conv_model, conv_window)
 IPython.display.clear_output()
-custom_method(imports='import IPython;import tensorflow as tf;import matplotlib as mpl;import datetime;import pandas as pd;import seaborn as sns;import matplotlib.pyplot as plt;import IPython.display;import numpy as np;import os', function_to_run='obj.evaluate(*args)', method_object=eval('conv_model'), object_signature=None, function_args=[eval('conv_window.val')], function_kwargs={}, custom_class=None)
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 val_performance['Conv'] = conv_model.evaluate(conv_window.val)
-custom_method(imports='import IPython;import tensorflow as tf;import matplotlib as mpl;import datetime;import pandas as pd;import seaborn as sns;import matplotlib.pyplot as plt;import IPython.display;import numpy as np;import os', function_to_run='obj.evaluate(*args, **kwargs)', method_object=eval('conv_model'), object_signature=None, function_args=[eval('conv_window.test')], function_kwargs={'verbose': eval('0')}, custom_class=None)
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='obj.evaluate(*args)', method_object=conv_model, object_signature=None, function_args=[conv_window.val], function_kwargs={})
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 performance['Conv'] = conv_model.evaluate(conv_window.test, verbose=0)
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='obj.evaluate(*args, **kwargs)', method_object=conv_model, object_signature=None, function_args=[conv_window.test], function_kwargs={'verbose': 0})
 print('Wide window')
 print('Input shape:', wide_window.example[0].shape)
 print('Labels shape:', wide_window.example[1].shape)
@@ -351,22 +337,26 @@ print('Input shape:', wide_conv_window.example[0].shape)
 print('Labels shape:', wide_conv_window.example[1].shape)
 print('Output shape:', conv_model(wide_conv_window.example[0]).shape)
 wide_conv_window.plot(conv_model)
-custom_method(imports='import IPython;import tensorflow as tf;import matplotlib as mpl;import datetime;import pandas as pd;import seaborn as sns;import matplotlib.pyplot as plt;import IPython.display;import numpy as np;import os', function_to_run='tf.keras.models.Sequential(*args)', method_object=None, object_signature=None, function_args=[eval('[\n    tf.keras.layers.LSTM(32, return_sequences=True),\n    tf.keras.layers.Dense(units=1)\n]')], function_kwargs={})
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 lstm_model = tf.keras.models.Sequential([tf.keras.layers.LSTM(32, return_sequences=True), tf.keras.layers.Dense(units=1)])
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.keras.models.Sequential(*args)', method_object=None, object_signature=None, function_args=[[tf.keras.layers.LSTM(32, return_sequences=True), tf.keras.layers.Dense(units=1)]], function_kwargs={})
 print('Input shape:', wide_window.example[0].shape)
 print('Output shape:', lstm_model(wide_window.example[0]).shape)
 history = compile_and_fit(lstm_model, wide_window)
 IPython.display.clear_output()
-custom_method(imports='import IPython;import tensorflow as tf;import matplotlib as mpl;import datetime;import pandas as pd;import seaborn as sns;import matplotlib.pyplot as plt;import IPython.display;import numpy as np;import os', function_to_run='obj.evaluate(*args)', method_object=eval('lstm_model'), object_signature=None, function_args=[eval('wide_window.val')], function_kwargs={}, custom_class=None)
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 val_performance['LSTM'] = lstm_model.evaluate(wide_window.val)
-custom_method(imports='import IPython;import tensorflow as tf;import matplotlib as mpl;import datetime;import pandas as pd;import seaborn as sns;import matplotlib.pyplot as plt;import IPython.display;import numpy as np;import os', function_to_run='obj.evaluate(*args, **kwargs)', method_object=eval('lstm_model'), object_signature=None, function_args=[eval('wide_window.test')], function_kwargs={'verbose': eval('0')}, custom_class=None)
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='obj.evaluate(*args)', method_object=lstm_model, object_signature=None, function_args=[wide_window.val], function_kwargs={})
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 performance['LSTM'] = lstm_model.evaluate(wide_window.test, verbose=0)
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='obj.evaluate(*args, **kwargs)', method_object=lstm_model, object_signature=None, function_args=[wide_window.test], function_kwargs={'verbose': 0})
 wide_window.plot(lstm_model)
 x = np.arange(len(performance))
 width = 0.3
 metric_name = 'mean_absolute_error'
-custom_method(imports='import IPython;import tensorflow as tf;import matplotlib as mpl;import datetime;import pandas as pd;import seaborn as sns;import matplotlib.pyplot as plt;import IPython.display;import numpy as np;import os', function_to_run='obj.metrics_names.index(*args)', method_object=eval('lstm_model'), object_signature=None, function_args=[eval("'mean_absolute_error'")], function_kwargs={}, custom_class=None)
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 metric_index = lstm_model.metrics_names.index('mean_absolute_error')
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='obj.metrics_names.index(*args)', method_object=lstm_model, object_signature=None, function_args=['mean_absolute_error'], function_kwargs={})
 val_mae = [v[metric_index] for v in val_performance.values()]
 test_mae = [v[metric_index] for v in performance.values()]
 plt.ylabel('mean_absolute_error [T (degC), normalized]')
@@ -382,31 +372,40 @@ for (example_inputs, example_labels) in wide_window.train.take(1):
     print(f'Inputs shape (batch, time, features): {example_inputs.shape}')
     print(f'Labels shape (batch, time, features): {example_labels.shape}')
 baseline = Baseline()
-custom_method(imports='import IPython;import tensorflow as tf;import matplotlib as mpl;import datetime;import pandas as pd;import seaborn as sns;import matplotlib.pyplot as plt;import IPython.display;import numpy as np;import os', function_to_run='obj.compile(**kwargs)', method_object=eval('baseline'), object_signature='Baseline()', function_args=[], function_kwargs={'loss': eval('tf.keras.losses.MeanSquaredError()'), 'metrics': eval('[tf.keras.metrics.MeanAbsoluteError()]')}, custom_class='class Baseline(tf.keras.Model):\n  def __init__(self, label_index=None):\n    super().__init__()\n    self.label_index = label_index\n\n  def call(self, inputs):\n    if self.label_index is None:\n      return inputs\n    result = inputs[:, :, self.label_index]\n    return result[:, :, tf.newaxis]')
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 baseline.compile(loss=tf.keras.losses.MeanSquaredError(), metrics=[tf.keras.metrics.MeanAbsoluteError()])
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='obj.compile(**kwargs)', method_object='baseline', object_signature='Baseline()', function_args=[], function_kwargs={'loss': tf.keras.losses.MeanSquaredError(), 'metrics': [tf.keras.metrics.MeanAbsoluteError()]})
 val_performance = {}
 performance = {}
-custom_method(imports='import IPython;import tensorflow as tf;import matplotlib as mpl;import datetime;import pandas as pd;import seaborn as sns;import matplotlib.pyplot as plt;import IPython.display;import numpy as np;import os', function_to_run='obj.evaluate(*args)', method_object=eval('baseline'), object_signature=None, function_args=[eval('wide_window.val')], function_kwargs={}, custom_class='class Baseline(tf.keras.Model):\n  def __init__(self, label_index=None):\n    super().__init__()\n    self.label_index = label_index\n\n  def call(self, inputs):\n    if self.label_index is None:\n      return inputs\n    result = inputs[:, :, self.label_index]\n    return result[:, :, tf.newaxis]')
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 val_performance['Baseline'] = baseline.evaluate(wide_window.val)
-custom_method(imports='import IPython;import tensorflow as tf;import matplotlib as mpl;import datetime;import pandas as pd;import seaborn as sns;import matplotlib.pyplot as plt;import IPython.display;import numpy as np;import os', function_to_run='obj.evaluate(*args, **kwargs)', method_object=eval('baseline'), object_signature=None, function_args=[eval('wide_window.test')], function_kwargs={'verbose': eval('0')}, custom_class='class Baseline(tf.keras.Model):\n  def __init__(self, label_index=None):\n    super().__init__()\n    self.label_index = label_index\n\n  def call(self, inputs):\n    if self.label_index is None:\n      return inputs\n    result = inputs[:, :, self.label_index]\n    return result[:, :, tf.newaxis]')
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='obj.evaluate(*args)', method_object='baseline', object_signature=None, function_args=[wide_window.val], function_kwargs={})
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 performance['Baseline'] = baseline.evaluate(wide_window.test, verbose=0)
-custom_method(imports='import IPython;import tensorflow as tf;import matplotlib as mpl;import datetime;import pandas as pd;import seaborn as sns;import matplotlib.pyplot as plt;import IPython.display;import numpy as np;import os', function_to_run='tf.keras.Sequential(*args)', method_object=None, object_signature=None, function_args=[eval("[\n    tf.keras.layers.Dense(units=64, activation='relu'),\n    tf.keras.layers.Dense(units=64, activation='relu'),\n    tf.keras.layers.Dense(units=num_features)\n]")], function_kwargs={})
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='obj.evaluate(*args, **kwargs)', method_object='baseline', object_signature=None, function_args=[wide_window.test], function_kwargs={'verbose': 0})
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 dense = tf.keras.Sequential([tf.keras.layers.Dense(units=64, activation='relu'), tf.keras.layers.Dense(units=64, activation='relu'), tf.keras.layers.Dense(units=num_features)])
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.keras.Sequential(*args)', method_object=None, object_signature=None, function_args=[[tf.keras.layers.Dense(units=64, activation='relu'), tf.keras.layers.Dense(units=64, activation='relu'), tf.keras.layers.Dense(units=num_features)]], function_kwargs={})
 history = compile_and_fit(dense, single_step_window)
 IPython.display.clear_output()
-custom_method(imports='import IPython;import tensorflow as tf;import matplotlib as mpl;import datetime;import pandas as pd;import seaborn as sns;import matplotlib.pyplot as plt;import IPython.display;import numpy as np;import os', function_to_run='obj.evaluate(*args)', method_object=eval('dense'), object_signature=None, function_args=[eval('single_step_window.val')], function_kwargs={}, custom_class=None)
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 val_performance['Dense'] = dense.evaluate(single_step_window.val)
-custom_method(imports='import IPython;import tensorflow as tf;import matplotlib as mpl;import datetime;import pandas as pd;import seaborn as sns;import matplotlib.pyplot as plt;import IPython.display;import numpy as np;import os', function_to_run='obj.evaluate(*args, **kwargs)', method_object=eval('dense'), object_signature=None, function_args=[eval('single_step_window.test')], function_kwargs={'verbose': eval('0')}, custom_class=None)
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='obj.evaluate(*args)', method_object=dense, object_signature=None, function_args=[single_step_window.val], function_kwargs={})
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 performance['Dense'] = dense.evaluate(single_step_window.test, verbose=0)
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='obj.evaluate(*args, **kwargs)', method_object=dense, object_signature=None, function_args=[single_step_window.test], function_kwargs={'verbose': 0})
 wide_window = WindowGenerator(input_width=24, label_width=24, shift=1)
-custom_method(imports='import IPython;import tensorflow as tf;import matplotlib as mpl;import datetime;import pandas as pd;import seaborn as sns;import matplotlib.pyplot as plt;import IPython.display;import numpy as np;import os', function_to_run='tf.keras.models.Sequential(*args)', method_object=None, object_signature=None, function_args=[eval('[\n    tf.keras.layers.LSTM(32, return_sequences=True),\n    tf.keras.layers.Dense(units=num_features)\n]')], function_kwargs={})
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 lstm_model = tf.keras.models.Sequential([tf.keras.layers.LSTM(32, return_sequences=True), tf.keras.layers.Dense(units=num_features)])
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.keras.models.Sequential(*args)', method_object=None, object_signature=None, function_args=[[tf.keras.layers.LSTM(32, return_sequences=True), tf.keras.layers.Dense(units=num_features)]], function_kwargs={})
 history = compile_and_fit(lstm_model, wide_window)
 IPython.display.clear_output()
-custom_method(imports='import IPython;import tensorflow as tf;import matplotlib as mpl;import datetime;import pandas as pd;import seaborn as sns;import matplotlib.pyplot as plt;import IPython.display;import numpy as np;import os', function_to_run='obj.evaluate(*args)', method_object=eval('lstm_model'), object_signature=None, function_args=[eval('wide_window.val')], function_kwargs={}, custom_class=None)
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 val_performance['LSTM'] = lstm_model.evaluate(wide_window.val)
-custom_method(imports='import IPython;import tensorflow as tf;import matplotlib as mpl;import datetime;import pandas as pd;import seaborn as sns;import matplotlib.pyplot as plt;import IPython.display;import numpy as np;import os', function_to_run='obj.evaluate(*args, **kwargs)', method_object=eval('lstm_model'), object_signature=None, function_args=[eval('wide_window.test')], function_kwargs={'verbose': eval('0')}, custom_class=None)
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='obj.evaluate(*args)', method_object=lstm_model, object_signature=None, function_args=[wide_window.val], function_kwargs={})
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 performance['LSTM'] = lstm_model.evaluate(wide_window.test, verbose=0)
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='obj.evaluate(*args, **kwargs)', method_object=lstm_model, object_signature=None, function_args=[wide_window.test], function_kwargs={'verbose': 0})
 print()
 
 class ResidualWrapper(tf.keras.Model):
@@ -421,16 +420,19 @@ class ResidualWrapper(tf.keras.Model):
 residual_lstm = ResidualWrapper(tf.keras.Sequential([tf.keras.layers.LSTM(32, return_sequences=True), tf.keras.layers.Dense(num_features, kernel_initializer=tf.initializers.zeros())]))
 history = compile_and_fit(residual_lstm, wide_window)
 IPython.display.clear_output()
-custom_method(imports='import IPython;import tensorflow as tf;import matplotlib as mpl;import datetime;import pandas as pd;import seaborn as sns;import matplotlib.pyplot as plt;import IPython.display;import numpy as np;import os', function_to_run='obj.evaluate(*args)', method_object=eval('residual_lstm'), object_signature=None, function_args=[eval('wide_window.val')], function_kwargs={}, custom_class='class ResidualWrapper(tf.keras.Model):\n  def __init__(self, model):\n    super().__init__()\n    self.model = model\n\n  def call(self, inputs, *args, **kwargs):\n    delta = self.model(inputs, *args, **kwargs)\n\n    return inputs + delta')
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 val_performance['Residual LSTM'] = residual_lstm.evaluate(wide_window.val)
-custom_method(imports='import IPython;import tensorflow as tf;import matplotlib as mpl;import datetime;import pandas as pd;import seaborn as sns;import matplotlib.pyplot as plt;import IPython.display;import numpy as np;import os', function_to_run='obj.evaluate(*args, **kwargs)', method_object=eval('residual_lstm'), object_signature=None, function_args=[eval('wide_window.test')], function_kwargs={'verbose': eval('0')}, custom_class='class ResidualWrapper(tf.keras.Model):\n  def __init__(self, model):\n    super().__init__()\n    self.model = model\n\n  def call(self, inputs, *args, **kwargs):\n    delta = self.model(inputs, *args, **kwargs)\n\n    return inputs + delta')
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='obj.evaluate(*args)', method_object='residual_lstm', object_signature=None, function_args=[wide_window.val], function_kwargs={})
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 performance['Residual LSTM'] = residual_lstm.evaluate(wide_window.test, verbose=0)
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='obj.evaluate(*args, **kwargs)', method_object='residual_lstm', object_signature=None, function_args=[wide_window.test], function_kwargs={'verbose': 0})
 print()
 x = np.arange(len(performance))
 width = 0.3
 metric_name = 'mean_absolute_error'
-custom_method(imports='import IPython;import tensorflow as tf;import matplotlib as mpl;import datetime;import pandas as pd;import seaborn as sns;import matplotlib.pyplot as plt;import IPython.display;import numpy as np;import os', function_to_run='obj.metrics_names.index(*args)', method_object=eval('lstm_model'), object_signature=None, function_args=[eval("'mean_absolute_error'")], function_kwargs={}, custom_class=None)
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 metric_index = lstm_model.metrics_names.index('mean_absolute_error')
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='obj.metrics_names.index(*args)', method_object=lstm_model, object_signature=None, function_args=['mean_absolute_error'], function_kwargs={})
 val_mae = [v[metric_index] for v in val_performance.values()]
 test_mae = [v[metric_index] for v in performance.values()]
 plt.bar(x - 0.17, val_mae, width, label='Validation')
@@ -450,14 +452,17 @@ class MultiStepLastBaseline(tf.keras.Model):
     def call(self, inputs):
         return tf.tile(inputs[:, -1:, :], [1, OUT_STEPS, 1])
 last_baseline = MultiStepLastBaseline()
-custom_method(imports='import IPython;import tensorflow as tf;import matplotlib as mpl;import datetime;import pandas as pd;import seaborn as sns;import matplotlib.pyplot as plt;import IPython.display;import numpy as np;import os', function_to_run='obj.compile(**kwargs)', method_object=eval('last_baseline'), object_signature='MultiStepLastBaseline()', function_args=[], function_kwargs={'loss': eval('tf.keras.losses.MeanSquaredError()'), 'metrics': eval('[tf.keras.metrics.MeanAbsoluteError()]')}, custom_class='class MultiStepLastBaseline(tf.keras.Model):\n  def call(self, inputs):\n    return tf.tile(inputs[:, -1:, :], [1, OUT_STEPS, 1])')
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 last_baseline.compile(loss=tf.keras.losses.MeanSquaredError(), metrics=[tf.keras.metrics.MeanAbsoluteError()])
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='obj.compile(**kwargs)', method_object='last_baseline', object_signature='MultiStepLastBaseline()', function_args=[], function_kwargs={'loss': tf.keras.losses.MeanSquaredError(), 'metrics': [tf.keras.metrics.MeanAbsoluteError()]})
 multi_val_performance = {}
 multi_performance = {}
-custom_method(imports='import IPython;import tensorflow as tf;import matplotlib as mpl;import datetime;import pandas as pd;import seaborn as sns;import matplotlib.pyplot as plt;import IPython.display;import numpy as np;import os', function_to_run='obj.evaluate(*args)', method_object=eval('last_baseline'), object_signature=None, function_args=[eval('multi_window.val')], function_kwargs={}, custom_class='class MultiStepLastBaseline(tf.keras.Model):\n  def call(self, inputs):\n    return tf.tile(inputs[:, -1:, :], [1, OUT_STEPS, 1])')
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 multi_val_performance['Last'] = last_baseline.evaluate(multi_window.val)
-custom_method(imports='import IPython;import tensorflow as tf;import matplotlib as mpl;import datetime;import pandas as pd;import seaborn as sns;import matplotlib.pyplot as plt;import IPython.display;import numpy as np;import os', function_to_run='obj.evaluate(*args, **kwargs)', method_object=eval('last_baseline'), object_signature=None, function_args=[eval('multi_window.test')], function_kwargs={'verbose': eval('0')}, custom_class='class MultiStepLastBaseline(tf.keras.Model):\n  def call(self, inputs):\n    return tf.tile(inputs[:, -1:, :], [1, OUT_STEPS, 1])')
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='obj.evaluate(*args)', method_object='last_baseline', object_signature=None, function_args=[multi_window.val], function_kwargs={})
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 multi_performance['Last'] = last_baseline.evaluate(multi_window.test, verbose=0)
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='obj.evaluate(*args, **kwargs)', method_object='last_baseline', object_signature=None, function_args=[multi_window.test], function_kwargs={'verbose': 0})
 multi_window.plot(last_baseline)
 
 class RepeatBaseline(tf.keras.Model):
@@ -465,49 +470,64 @@ class RepeatBaseline(tf.keras.Model):
     def call(self, inputs):
         return inputs
 repeat_baseline = RepeatBaseline()
-custom_method(imports='import IPython;import tensorflow as tf;import matplotlib as mpl;import datetime;import pandas as pd;import seaborn as sns;import matplotlib.pyplot as plt;import IPython.display;import numpy as np;import os', function_to_run='obj.compile(**kwargs)', method_object=eval('repeat_baseline'), object_signature='RepeatBaseline()', function_args=[], function_kwargs={'loss': eval('tf.keras.losses.MeanSquaredError()'), 'metrics': eval('[tf.keras.metrics.MeanAbsoluteError()]')}, custom_class='class RepeatBaseline(tf.keras.Model):\n  def call(self, inputs):\n    return inputs')
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 repeat_baseline.compile(loss=tf.keras.losses.MeanSquaredError(), metrics=[tf.keras.metrics.MeanAbsoluteError()])
-custom_method(imports='import IPython;import tensorflow as tf;import matplotlib as mpl;import datetime;import pandas as pd;import seaborn as sns;import matplotlib.pyplot as plt;import IPython.display;import numpy as np;import os', function_to_run='obj.evaluate(*args)', method_object=eval('repeat_baseline'), object_signature=None, function_args=[eval('multi_window.val')], function_kwargs={}, custom_class='class RepeatBaseline(tf.keras.Model):\n  def call(self, inputs):\n    return inputs')
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='obj.compile(**kwargs)', method_object='repeat_baseline', object_signature='RepeatBaseline()', function_args=[], function_kwargs={'loss': tf.keras.losses.MeanSquaredError(), 'metrics': [tf.keras.metrics.MeanAbsoluteError()]})
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 multi_val_performance['Repeat'] = repeat_baseline.evaluate(multi_window.val)
-custom_method(imports='import IPython;import tensorflow as tf;import matplotlib as mpl;import datetime;import pandas as pd;import seaborn as sns;import matplotlib.pyplot as plt;import IPython.display;import numpy as np;import os', function_to_run='obj.evaluate(*args, **kwargs)', method_object=eval('repeat_baseline'), object_signature=None, function_args=[eval('multi_window.test')], function_kwargs={'verbose': eval('0')}, custom_class='class RepeatBaseline(tf.keras.Model):\n  def call(self, inputs):\n    return inputs')
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='obj.evaluate(*args)', method_object='repeat_baseline', object_signature=None, function_args=[multi_window.val], function_kwargs={})
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 multi_performance['Repeat'] = repeat_baseline.evaluate(multi_window.test, verbose=0)
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='obj.evaluate(*args, **kwargs)', method_object='repeat_baseline', object_signature=None, function_args=[multi_window.test], function_kwargs={'verbose': 0})
 multi_window.plot(repeat_baseline)
-custom_method(imports='import IPython;import tensorflow as tf;import matplotlib as mpl;import datetime;import pandas as pd;import seaborn as sns;import matplotlib.pyplot as plt;import IPython.display;import numpy as np;import os', function_to_run='tf.keras.Sequential(*args)', method_object=None, object_signature=None, function_args=[eval('[\n    tf.keras.layers.Lambda(lambda x: x[:, -1:, :]),\n    tf.keras.layers.Dense(OUT_STEPS*num_features,\n                          kernel_initializer=tf.initializers.zeros()),\n    tf.keras.layers.Reshape([OUT_STEPS, num_features])\n]')], function_kwargs={})
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 multi_linear_model = tf.keras.Sequential([tf.keras.layers.Lambda(lambda x: x[:, -1:, :]), tf.keras.layers.Dense(OUT_STEPS * num_features, kernel_initializer=tf.initializers.zeros()), tf.keras.layers.Reshape([OUT_STEPS, num_features])])
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.keras.Sequential(*args)', method_object=None, object_signature=None, function_args=[[tf.keras.layers.Lambda(lambda x: x[:, -1:, :]), tf.keras.layers.Dense(OUT_STEPS * num_features, kernel_initializer=tf.initializers.zeros()), tf.keras.layers.Reshape([OUT_STEPS, num_features])]], function_kwargs={})
 history = compile_and_fit(multi_linear_model, multi_window)
 IPython.display.clear_output()
-custom_method(imports='import IPython;import tensorflow as tf;import matplotlib as mpl;import datetime;import pandas as pd;import seaborn as sns;import matplotlib.pyplot as plt;import IPython.display;import numpy as np;import os', function_to_run='obj.evaluate(*args)', method_object=eval('multi_linear_model'), object_signature=None, function_args=[eval('multi_window.val')], function_kwargs={}, custom_class=None)
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 multi_val_performance['Linear'] = multi_linear_model.evaluate(multi_window.val)
-custom_method(imports='import IPython;import tensorflow as tf;import matplotlib as mpl;import datetime;import pandas as pd;import seaborn as sns;import matplotlib.pyplot as plt;import IPython.display;import numpy as np;import os', function_to_run='obj.evaluate(*args, **kwargs)', method_object=eval('multi_linear_model'), object_signature=None, function_args=[eval('multi_window.test')], function_kwargs={'verbose': eval('0')}, custom_class=None)
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='obj.evaluate(*args)', method_object=multi_linear_model, object_signature=None, function_args=[multi_window.val], function_kwargs={})
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 multi_performance['Linear'] = multi_linear_model.evaluate(multi_window.test, verbose=0)
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='obj.evaluate(*args, **kwargs)', method_object=multi_linear_model, object_signature=None, function_args=[multi_window.test], function_kwargs={'verbose': 0})
 multi_window.plot(multi_linear_model)
-custom_method(imports='import IPython;import tensorflow as tf;import matplotlib as mpl;import datetime;import pandas as pd;import seaborn as sns;import matplotlib.pyplot as plt;import IPython.display;import numpy as np;import os', function_to_run='tf.keras.Sequential(*args)', method_object=None, object_signature=None, function_args=[eval("[\n    tf.keras.layers.Lambda(lambda x: x[:, -1:, :]),\n    tf.keras.layers.Dense(512, activation='relu'),\n    tf.keras.layers.Dense(OUT_STEPS*num_features,\n                          kernel_initializer=tf.initializers.zeros()),\n    tf.keras.layers.Reshape([OUT_STEPS, num_features])\n]")], function_kwargs={})
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 multi_dense_model = tf.keras.Sequential([tf.keras.layers.Lambda(lambda x: x[:, -1:, :]), tf.keras.layers.Dense(512, activation='relu'), tf.keras.layers.Dense(OUT_STEPS * num_features, kernel_initializer=tf.initializers.zeros()), tf.keras.layers.Reshape([OUT_STEPS, num_features])])
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.keras.Sequential(*args)', method_object=None, object_signature=None, function_args=[[tf.keras.layers.Lambda(lambda x: x[:, -1:, :]), tf.keras.layers.Dense(512, activation='relu'), tf.keras.layers.Dense(OUT_STEPS * num_features, kernel_initializer=tf.initializers.zeros()), tf.keras.layers.Reshape([OUT_STEPS, num_features])]], function_kwargs={})
 history = compile_and_fit(multi_dense_model, multi_window)
 IPython.display.clear_output()
-custom_method(imports='import IPython;import tensorflow as tf;import matplotlib as mpl;import datetime;import pandas as pd;import seaborn as sns;import matplotlib.pyplot as plt;import IPython.display;import numpy as np;import os', function_to_run='obj.evaluate(*args)', method_object=eval('multi_dense_model'), object_signature=None, function_args=[eval('multi_window.val')], function_kwargs={}, custom_class=None)
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 multi_val_performance['Dense'] = multi_dense_model.evaluate(multi_window.val)
-custom_method(imports='import IPython;import tensorflow as tf;import matplotlib as mpl;import datetime;import pandas as pd;import seaborn as sns;import matplotlib.pyplot as plt;import IPython.display;import numpy as np;import os', function_to_run='obj.evaluate(*args, **kwargs)', method_object=eval('multi_dense_model'), object_signature=None, function_args=[eval('multi_window.test')], function_kwargs={'verbose': eval('0')}, custom_class=None)
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='obj.evaluate(*args)', method_object=multi_dense_model, object_signature=None, function_args=[multi_window.val], function_kwargs={})
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 multi_performance['Dense'] = multi_dense_model.evaluate(multi_window.test, verbose=0)
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='obj.evaluate(*args, **kwargs)', method_object=multi_dense_model, object_signature=None, function_args=[multi_window.test], function_kwargs={'verbose': 0})
 multi_window.plot(multi_dense_model)
 CONV_WIDTH = 3
-custom_method(imports='import IPython;import tensorflow as tf;import matplotlib as mpl;import datetime;import pandas as pd;import seaborn as sns;import matplotlib.pyplot as plt;import IPython.display;import numpy as np;import os', function_to_run='tf.keras.Sequential(*args)', method_object=None, object_signature=None, function_args=[eval("[\n    tf.keras.layers.Lambda(lambda x: x[:, -CONV_WIDTH:, :]),\n    tf.keras.layers.Conv1D(256, activation='relu', kernel_size=(CONV_WIDTH)),\n    tf.keras.layers.Dense(OUT_STEPS*num_features,\n                          kernel_initializer=tf.initializers.zeros()),\n    tf.keras.layers.Reshape([OUT_STEPS, num_features])\n]")], function_kwargs={})
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 multi_conv_model = tf.keras.Sequential([tf.keras.layers.Lambda(lambda x: x[:, -CONV_WIDTH:, :]), tf.keras.layers.Conv1D(256, activation='relu', kernel_size=CONV_WIDTH), tf.keras.layers.Dense(OUT_STEPS * num_features, kernel_initializer=tf.initializers.zeros()), tf.keras.layers.Reshape([OUT_STEPS, num_features])])
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.keras.Sequential(*args)', method_object=None, object_signature=None, function_args=[[tf.keras.layers.Lambda(lambda x: x[:, -CONV_WIDTH:, :]), tf.keras.layers.Conv1D(256, activation='relu', kernel_size=CONV_WIDTH), tf.keras.layers.Dense(OUT_STEPS * num_features, kernel_initializer=tf.initializers.zeros()), tf.keras.layers.Reshape([OUT_STEPS, num_features])]], function_kwargs={})
 history = compile_and_fit(multi_conv_model, multi_window)
 IPython.display.clear_output()
-custom_method(imports='import IPython;import tensorflow as tf;import matplotlib as mpl;import datetime;import pandas as pd;import seaborn as sns;import matplotlib.pyplot as plt;import IPython.display;import numpy as np;import os', function_to_run='obj.evaluate(*args)', method_object=eval('multi_conv_model'), object_signature=None, function_args=[eval('multi_window.val')], function_kwargs={}, custom_class=None)
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 multi_val_performance['Conv'] = multi_conv_model.evaluate(multi_window.val)
-custom_method(imports='import IPython;import tensorflow as tf;import matplotlib as mpl;import datetime;import pandas as pd;import seaborn as sns;import matplotlib.pyplot as plt;import IPython.display;import numpy as np;import os', function_to_run='obj.evaluate(*args, **kwargs)', method_object=eval('multi_conv_model'), object_signature=None, function_args=[eval('multi_window.test')], function_kwargs={'verbose': eval('0')}, custom_class=None)
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='obj.evaluate(*args)', method_object=multi_conv_model, object_signature=None, function_args=[multi_window.val], function_kwargs={})
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 multi_performance['Conv'] = multi_conv_model.evaluate(multi_window.test, verbose=0)
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='obj.evaluate(*args, **kwargs)', method_object=multi_conv_model, object_signature=None, function_args=[multi_window.test], function_kwargs={'verbose': 0})
 multi_window.plot(multi_conv_model)
-custom_method(imports='import IPython;import tensorflow as tf;import matplotlib as mpl;import datetime;import pandas as pd;import seaborn as sns;import matplotlib.pyplot as plt;import IPython.display;import numpy as np;import os', function_to_run='tf.keras.Sequential(*args)', method_object=None, object_signature=None, function_args=[eval('[\n    tf.keras.layers.LSTM(32, return_sequences=False),\n    tf.keras.layers.Dense(OUT_STEPS*num_features,\n                          kernel_initializer=tf.initializers.zeros()),\n    tf.keras.layers.Reshape([OUT_STEPS, num_features])\n]')], function_kwargs={})
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 multi_lstm_model = tf.keras.Sequential([tf.keras.layers.LSTM(32, return_sequences=False), tf.keras.layers.Dense(OUT_STEPS * num_features, kernel_initializer=tf.initializers.zeros()), tf.keras.layers.Reshape([OUT_STEPS, num_features])])
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.keras.Sequential(*args)', method_object=None, object_signature=None, function_args=[[tf.keras.layers.LSTM(32, return_sequences=False), tf.keras.layers.Dense(OUT_STEPS * num_features, kernel_initializer=tf.initializers.zeros()), tf.keras.layers.Reshape([OUT_STEPS, num_features])]], function_kwargs={})
 history = compile_and_fit(multi_lstm_model, multi_window)
 IPython.display.clear_output()
-custom_method(imports='import IPython;import tensorflow as tf;import matplotlib as mpl;import datetime;import pandas as pd;import seaborn as sns;import matplotlib.pyplot as plt;import IPython.display;import numpy as np;import os', function_to_run='obj.evaluate(*args)', method_object=eval('multi_lstm_model'), object_signature=None, function_args=[eval('multi_window.val')], function_kwargs={}, custom_class=None)
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 multi_val_performance['LSTM'] = multi_lstm_model.evaluate(multi_window.val)
-custom_method(imports='import IPython;import tensorflow as tf;import matplotlib as mpl;import datetime;import pandas as pd;import seaborn as sns;import matplotlib.pyplot as plt;import IPython.display;import numpy as np;import os', function_to_run='obj.evaluate(*args, **kwargs)', method_object=eval('multi_lstm_model'), object_signature=None, function_args=[eval('multi_window.test')], function_kwargs={'verbose': eval('0')}, custom_class=None)
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='obj.evaluate(*args)', method_object=multi_lstm_model, object_signature=None, function_args=[multi_window.val], function_kwargs={})
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 multi_performance['LSTM'] = multi_lstm_model.evaluate(multi_window.test, verbose=0)
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='obj.evaluate(*args, **kwargs)', method_object=multi_lstm_model, object_signature=None, function_args=[multi_window.test], function_kwargs={'verbose': 0})
 multi_window.plot(multi_lstm_model)
 
 class FeedBack(tf.keras.Model):
@@ -516,12 +536,15 @@ class FeedBack(tf.keras.Model):
         super().__init__()
         self.out_steps = out_steps
         self.units = units
-        custom_method(imports='import IPython;import tensorflow as tf;import matplotlib as mpl;import datetime;import pandas as pd;import seaborn as sns;import matplotlib.pyplot as plt;import IPython.display;import numpy as np;import os', function_to_run='tf.keras.layers.LSTMCell(*args)', method_object=None, object_signature=None, function_args=[eval('units')], function_kwargs={})
+        start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
         self.lstm_cell = tf.keras.layers.LSTMCell(units)
-        custom_method(imports='import IPython;import tensorflow as tf;import matplotlib as mpl;import datetime;import pandas as pd;import seaborn as sns;import matplotlib.pyplot as plt;import IPython.display;import numpy as np;import os', function_to_run='tf.keras.layers.RNN(*args, **kwargs)', method_object=None, object_signature=None, function_args=[eval('self.lstm_cell')], function_kwargs={'return_state': eval('True')})
+        after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.keras.layers.LSTMCell(*args)', method_object=None, object_signature=None, function_args=[units], function_kwargs={})
+        start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
         self.lstm_rnn = tf.keras.layers.RNN(self.lstm_cell, return_state=True)
-        custom_method(imports='import IPython;import tensorflow as tf;import matplotlib as mpl;import datetime;import pandas as pd;import seaborn as sns;import matplotlib.pyplot as plt;import IPython.display;import numpy as np;import os', function_to_run='tf.keras.layers.Dense(*args)', method_object=None, object_signature=None, function_args=[eval('num_features')], function_kwargs={})
+        after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.keras.layers.RNN(*args, **kwargs)', method_object=None, object_signature=None, function_args=[self.lstm_cell], function_kwargs={'return_state': True})
+        start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
         self.dense = tf.keras.layers.Dense(num_features)
+        after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.keras.layers.Dense(*args)', method_object=None, object_signature=None, function_args=[num_features], function_kwargs={})
 feedback_model = FeedBack(units=32, out_steps=OUT_STEPS)
 
 def warmup(self, inputs):
@@ -529,40 +552,48 @@ def warmup(self, inputs):
     prediction = self.dense(x)
     return (prediction, state)
 FeedBack.warmup = warmup
-custom_method(imports='import IPython;import tensorflow as tf;import matplotlib as mpl;import datetime;import pandas as pd;import seaborn as sns;import matplotlib.pyplot as plt;import IPython.display;import numpy as np;import os', function_to_run='obj.warmup(*args)', method_object=eval('feedback_model'), object_signature=None, function_args=[eval('multi_window.example[0]')], function_kwargs={}, custom_class='class FeedBack(tf.keras.Model):\n  def __init__(self, units, out_steps):\n    super().__init__()\n    self.out_steps = out_steps\n    self.units = units\n    self.lstm_cell = tf.keras.layers.LSTMCell(units)\n    self.lstm_rnn = tf.keras.layers.RNN(self.lstm_cell, return_state=True)\n    self.dense = tf.keras.layers.Dense(num_features)')
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 (prediction, state) = feedback_model.warmup(multi_window.example[0])
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='obj.warmup(*args)', method_object='feedback_model', object_signature=None, function_args=[multi_window.example[0]], function_kwargs={})
 prediction.shape
 
 def call(self, inputs, training=None):
     predictions = []
     (prediction, state) = self.warmup(inputs)
-    custom_method(imports='import IPython;import tensorflow as tf;import matplotlib as mpl;import datetime;import pandas as pd;import seaborn as sns;import matplotlib.pyplot as plt;import IPython.display;import numpy as np;import os', function_to_run='obj.append(*args)', method_object=eval('predictions'), object_signature=None, function_args=[eval('prediction')], function_kwargs={}, custom_class=None)
+    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
     predictions.append(prediction)
+    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='obj.append(*args)', method_object=predictions, object_signature=None, function_args=[prediction], function_kwargs={})
     for n in range(1, self.out_steps):
         x = prediction
         (x, state) = self.lstm_cell(x, states=state, training=training)
         prediction = self.dense(x)
-        custom_method(imports='import IPython;import tensorflow as tf;import matplotlib as mpl;import datetime;import pandas as pd;import seaborn as sns;import matplotlib.pyplot as plt;import IPython.display;import numpy as np;import os', function_to_run='obj.append(*args)', method_object=eval('predictions'), object_signature=None, function_args=[eval('prediction')], function_kwargs={}, custom_class=None)
+        start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
         predictions.append(prediction)
-    custom_method(imports='import IPython;import tensorflow as tf;import matplotlib as mpl;import datetime;import pandas as pd;import seaborn as sns;import matplotlib.pyplot as plt;import IPython.display;import numpy as np;import os', function_to_run='tf.stack(*args)', method_object=None, object_signature=None, function_args=[eval('predictions')], function_kwargs={})
+        after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='obj.append(*args)', method_object=predictions, object_signature=None, function_args=[prediction], function_kwargs={})
+    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
     predictions = tf.stack(predictions)
-    custom_method(imports='import IPython;import tensorflow as tf;import matplotlib as mpl;import datetime;import pandas as pd;import seaborn as sns;import matplotlib.pyplot as plt;import IPython.display;import numpy as np;import os', function_to_run='tf.transpose(*args)', method_object=None, object_signature=None, function_args=[eval('predictions'), eval('[1, 0, 2]')], function_kwargs={})
+    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.stack(*args)', method_object=None, object_signature=None, function_args=[predictions], function_kwargs={})
+    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
     predictions = tf.transpose(predictions, [1, 0, 2])
+    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.transpose(*args)', method_object=None, object_signature=None, function_args=[predictions, [1, 0, 2]], function_kwargs={})
     return predictions
 FeedBack.call = call
 print('Output shape (batch, time, features): ', feedback_model(multi_window.example[0]).shape)
 history = compile_and_fit(feedback_model, multi_window)
 IPython.display.clear_output()
-custom_method(imports='import IPython;import tensorflow as tf;import matplotlib as mpl;import datetime;import pandas as pd;import seaborn as sns;import matplotlib.pyplot as plt;import IPython.display;import numpy as np;import os', function_to_run='obj.evaluate(*args)', method_object=eval('feedback_model'), object_signature=None, function_args=[eval('multi_window.val')], function_kwargs={}, custom_class='class FeedBack(tf.keras.Model):\n  def __init__(self, units, out_steps):\n    super().__init__()\n    self.out_steps = out_steps\n    self.units = units\n    self.lstm_cell = tf.keras.layers.LSTMCell(units)\n    self.lstm_rnn = tf.keras.layers.RNN(self.lstm_cell, return_state=True)\n    self.dense = tf.keras.layers.Dense(num_features)')
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 multi_val_performance['AR LSTM'] = feedback_model.evaluate(multi_window.val)
-custom_method(imports='import IPython;import tensorflow as tf;import matplotlib as mpl;import datetime;import pandas as pd;import seaborn as sns;import matplotlib.pyplot as plt;import IPython.display;import numpy as np;import os', function_to_run='obj.evaluate(*args, **kwargs)', method_object=eval('feedback_model'), object_signature=None, function_args=[eval('multi_window.test')], function_kwargs={'verbose': eval('0')}, custom_class='class FeedBack(tf.keras.Model):\n  def __init__(self, units, out_steps):\n    super().__init__()\n    self.out_steps = out_steps\n    self.units = units\n    self.lstm_cell = tf.keras.layers.LSTMCell(units)\n    self.lstm_rnn = tf.keras.layers.RNN(self.lstm_cell, return_state=True)\n    self.dense = tf.keras.layers.Dense(num_features)')
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='obj.evaluate(*args)', method_object='feedback_model', object_signature=None, function_args=[multi_window.val], function_kwargs={})
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 multi_performance['AR LSTM'] = feedback_model.evaluate(multi_window.test, verbose=0)
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='obj.evaluate(*args, **kwargs)', method_object='feedback_model', object_signature=None, function_args=[multi_window.test], function_kwargs={'verbose': 0})
 multi_window.plot(feedback_model)
 x = np.arange(len(multi_performance))
 width = 0.3
 metric_name = 'mean_absolute_error'
-custom_method(imports='import IPython;import tensorflow as tf;import matplotlib as mpl;import datetime;import pandas as pd;import seaborn as sns;import matplotlib.pyplot as plt;import IPython.display;import numpy as np;import os', function_to_run='obj.metrics_names.index(*args)', method_object=eval('lstm_model'), object_signature=None, function_args=[eval("'mean_absolute_error'")], function_kwargs={}, custom_class=None)
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 metric_index = lstm_model.metrics_names.index('mean_absolute_error')
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='obj.metrics_names.index(*args)', method_object=lstm_model, object_signature=None, function_args=['mean_absolute_error'], function_kwargs={})
 val_mae = [v[metric_index] for v in multi_val_performance.values()]
 test_mae = [v[metric_index] for v in multi_performance.values()]
 plt.bar(x - 0.17, val_mae, width, label='Validation')

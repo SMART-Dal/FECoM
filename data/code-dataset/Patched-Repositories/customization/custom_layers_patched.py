@@ -1,55 +1,21 @@
 import tensorflow as tf
-import os
-from pathlib import Path
-import dill as pickle
 import sys
-import numpy as np
-from tool.client.client_config import EXPERIMENT_DIR, MAX_WAIT_S, WAIT_AFTER_RUN_S
-from tool.server.send_request import send_request
-from tool.server.function_details import FunctionDetails
-import json
-current_path = os.path.abspath(__file__)
+from tool.client.client_config import EXPERIMENT_DIR
+from tool.server.local_execution import before_execution as before_execution_INSERTED_INTO_SCRIPT
+from tool.server.local_execution import after_execution as after_execution_INSERTED_INTO_SCRIPT
 experiment_number = sys.argv[1]
 experiment_project = sys.argv[2]
 EXPERIMENT_FILE_PATH = EXPERIMENT_DIR / 'method-level' / experiment_project / f'experiment-{experiment_number}.json'
-skip_calls_file_path = EXPERIMENT_FILE_PATH.parent / 'skip_calls.json'
-if skip_calls_file_path.exists():
-    with open(skip_calls_file_path, 'r') as f:
-        skip_calls = json.load(f)
-else:
-    skip_calls = []
-    with open(skip_calls_file_path, 'w') as f:
-        json.dump(skip_calls, f)
-
-def custom_method(imports: str, function_to_run: str, method_object=None, object_signature=None, function_args: list=None, function_kwargs: dict=None, custom_class=None):
-    if skip_calls is not None and any((call['function_to_run'] == function_to_run and np.array_equal(call['function_args'], function_args) and (call['function_kwargs'] == function_kwargs) for call in skip_calls)):
-        print('skipping call: ', function_to_run)
-        return
-    result = send_request(imports=imports, function_to_run=function_to_run, function_args=function_args, function_kwargs=function_kwargs, max_wait_secs=MAX_WAIT_S, wait_after_run_secs=WAIT_AFTER_RUN_S, method_object=method_object, object_signature=object_signature, custom_class=custom_class, experiment_file_path=EXPERIMENT_FILE_PATH)
-    if result is not None and isinstance(result, dict) and (len(result) == 1):
-        energy_data = next(iter(result.values()))
-        if skip_calls is not None and 'start_time_perf' in energy_data['times'] and ('end_time_perf' in energy_data['times']) and ('start_time_nvidia' in energy_data['times']) and ('end_time_nvidia' in energy_data['times']) and (energy_data['times']['start_time_perf'] == energy_data['times']['end_time_perf']) and (energy_data['times']['start_time_nvidia'] == energy_data['times']['end_time_nvidia']):
-            call_to_skip = {'function_to_run': function_to_run, 'function_args': function_args, 'function_kwargs': function_kwargs}
-            try:
-                json.dumps(call_to_skip)
-                if call_to_skip not in skip_calls:
-                    skip_calls.append(call_to_skip)
-                    with open(skip_calls_file_path, 'w') as f:
-                        json.dump(skip_calls, f)
-                    print('skipping call added, current list is: ', skip_calls)
-                else:
-                    print('Skipping call already exists.')
-            except TypeError:
-                print('Ignore: Skipping call is not JSON serializable, skipping append and dump.')
-    else:
-        print('Invalid dictionary object or does not have one key-value pair.')
 print(tf.config.list_physical_devices('GPU'))
-custom_method(imports='import tensorflow as tf', function_to_run='tf.keras.layers.Dense(*args)', method_object=None, object_signature=None, function_args=[eval('100')], function_kwargs={})
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 layer = tf.keras.layers.Dense(100)
-custom_method(imports='import tensorflow as tf', function_to_run='tf.keras.layers.Dense(*args, **kwargs)', method_object=None, object_signature=None, function_args=[eval('10')], function_kwargs={'input_shape': eval('(None, 5)')})
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.keras.layers.Dense(*args)', method_object=None, object_signature=None, function_args=[100], function_kwargs={})
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 layer = tf.keras.layers.Dense(10, input_shape=(None, 5))
-custom_method(imports='import tensorflow as tf', function_to_run='obj(*args)', method_object=eval('layer'), object_signature=None, function_args=[eval('tf.zeros([10, 5])')], function_kwargs={}, custom_class=None)
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.keras.layers.Dense(*args, **kwargs)', method_object=None, object_signature=None, function_args=[10], function_kwargs={'input_shape': (None, 5)})
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 layer(tf.zeros([10, 5]))
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='obj(*args)', method_object=layer, object_signature=None, function_args=[tf.zeros([10, 5])], function_kwargs={})
 layer.variables
 (layer.kernel, layer.bias)
 
@@ -65,8 +31,9 @@ class MyDenseLayer(tf.keras.layers.Layer):
     def call(self, inputs):
         return tf.matmul(inputs, self.kernel)
 layer = MyDenseLayer(10)
-custom_method(imports='import tensorflow as tf', function_to_run='obj(*args)', method_object=eval('layer'), object_signature=None, function_args=[eval('tf.zeros([10, 5])')], function_kwargs={}, custom_class='class MyDenseLayer(tf.keras.layers.Layer):\n  def __init__(self, num_outputs):\n    super(MyDenseLayer, self).__init__()\n    self.num_outputs = num_outputs\n\n  def build(self, input_shape):\n    self.kernel = self.add_weight("kernel",\n                                  shape=[int(input_shape[-1]),\n                                         self.num_outputs])\n\n  def call(self, inputs):\n    return tf.matmul(inputs, self.kernel)')
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 _ = layer(tf.zeros([10, 5]))
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='obj(*args)', method_object='layer', object_signature=None, function_args=[tf.zeros([10, 5])], function_kwargs={})
 print([var.name for var in layer.trainable_variables])
 
 class ResnetIdentityBlock(tf.keras.Model):
@@ -74,42 +41,55 @@ class ResnetIdentityBlock(tf.keras.Model):
     def __init__(self, kernel_size, filters):
         super(ResnetIdentityBlock, self).__init__(name='')
         (filters1, filters2, filters3) = filters
-        custom_method(imports='import tensorflow as tf', function_to_run='tf.keras.layers.Conv2D(*args)', method_object=None, object_signature=None, function_args=[eval('filters1'), eval('(1, 1)')], function_kwargs={})
+        start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
         self.conv2a = tf.keras.layers.Conv2D(filters1, (1, 1))
-        custom_method(imports='import tensorflow as tf', function_to_run='tf.keras.layers.BatchNormalization()', method_object=None, object_signature=None, function_args=[], function_kwargs={})
+        after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.keras.layers.Conv2D(*args)', method_object=None, object_signature=None, function_args=[filters1, (1, 1)], function_kwargs={})
+        start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
         self.bn2a = tf.keras.layers.BatchNormalization()
-        custom_method(imports='import tensorflow as tf', function_to_run='tf.keras.layers.Conv2D(*args, **kwargs)', method_object=None, object_signature=None, function_args=[eval('filters2'), eval('kernel_size')], function_kwargs={'padding': eval("'same'")})
+        after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.keras.layers.BatchNormalization()', method_object=None, object_signature=None, function_args=[], function_kwargs={})
+        start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
         self.conv2b = tf.keras.layers.Conv2D(filters2, kernel_size, padding='same')
-        custom_method(imports='import tensorflow as tf', function_to_run='tf.keras.layers.BatchNormalization()', method_object=None, object_signature=None, function_args=[], function_kwargs={})
+        after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.keras.layers.Conv2D(*args, **kwargs)', method_object=None, object_signature=None, function_args=[filters2, kernel_size], function_kwargs={'padding': 'same'})
+        start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
         self.bn2b = tf.keras.layers.BatchNormalization()
-        custom_method(imports='import tensorflow as tf', function_to_run='tf.keras.layers.Conv2D(*args)', method_object=None, object_signature=None, function_args=[eval('filters3'), eval('(1, 1)')], function_kwargs={})
+        after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.keras.layers.BatchNormalization()', method_object=None, object_signature=None, function_args=[], function_kwargs={})
+        start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
         self.conv2c = tf.keras.layers.Conv2D(filters3, (1, 1))
-        custom_method(imports='import tensorflow as tf', function_to_run='tf.keras.layers.BatchNormalization()', method_object=None, object_signature=None, function_args=[], function_kwargs={})
+        after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.keras.layers.Conv2D(*args)', method_object=None, object_signature=None, function_args=[filters3, (1, 1)], function_kwargs={})
+        start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
         self.bn2c = tf.keras.layers.BatchNormalization()
+        after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.keras.layers.BatchNormalization()', method_object=None, object_signature=None, function_args=[], function_kwargs={})
 
     def call(self, input_tensor, training=False):
         x = self.conv2a(input_tensor)
         x = self.bn2a(x, training=training)
-        custom_method(imports='import tensorflow as tf', function_to_run='tf.nn.relu(*args)', method_object=None, object_signature=None, function_args=[eval('x')], function_kwargs={})
+        start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
         x = tf.nn.relu(x)
+        after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.nn.relu(*args)', method_object=None, object_signature=None, function_args=[x], function_kwargs={})
         x = self.conv2b(x)
         x = self.bn2b(x, training=training)
-        custom_method(imports='import tensorflow as tf', function_to_run='tf.nn.relu(*args)', method_object=None, object_signature=None, function_args=[eval('x')], function_kwargs={})
+        start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
         x = tf.nn.relu(x)
+        after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.nn.relu(*args)', method_object=None, object_signature=None, function_args=[x], function_kwargs={})
         x = self.conv2c(x)
         x = self.bn2c(x, training=training)
         x += input_tensor
         return tf.nn.relu(x)
 block = ResnetIdentityBlock(1, [1, 2, 3])
-custom_method(imports='import tensorflow as tf', function_to_run='obj(*args)', method_object=eval('block'), object_signature=None, function_args=[eval('tf.zeros([1, 2, 3, 3])')], function_kwargs={}, custom_class="class ResnetIdentityBlock(tf.keras.Model):\n  def __init__(self, kernel_size, filters):\n    super(ResnetIdentityBlock, self).__init__(name='')\n    filters1, filters2, filters3 = filters\n\n    self.conv2a = tf.keras.layers.Conv2D(filters1, (1, 1))\n    self.bn2a = tf.keras.layers.BatchNormalization()\n\n    self.conv2b = tf.keras.layers.Conv2D(filters2, kernel_size, padding='same')\n    self.bn2b = tf.keras.layers.BatchNormalization()\n\n    self.conv2c = tf.keras.layers.Conv2D(filters3, (1, 1))\n    self.bn2c = tf.keras.layers.BatchNormalization()\n\n  def call(self, input_tensor, training=False):\n    x = self.conv2a(input_tensor)\n    x = self.bn2a(x, training=training)\n    x = tf.nn.relu(x)\n\n    x = self.conv2b(x)\n    x = self.bn2b(x, training=training)\n    x = tf.nn.relu(x)\n\n    x = self.conv2c(x)\n    x = self.bn2c(x, training=training)\n\n    x += input_tensor\n    return tf.nn.relu(x)")
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 _ = block(tf.zeros([1, 2, 3, 3]))
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='obj(*args)', method_object='block', object_signature=None, function_args=[tf.zeros([1, 2, 3, 3])], function_kwargs={})
 block.layers
 len(block.variables)
-custom_method(imports='import tensorflow as tf', function_to_run='obj.summary()', method_object=eval('block'), object_signature=None, function_args=[], function_kwargs={}, custom_class="class ResnetIdentityBlock(tf.keras.Model):\n  def __init__(self, kernel_size, filters):\n    super(ResnetIdentityBlock, self).__init__(name='')\n    filters1, filters2, filters3 = filters\n\n    self.conv2a = tf.keras.layers.Conv2D(filters1, (1, 1))\n    self.bn2a = tf.keras.layers.BatchNormalization()\n\n    self.conv2b = tf.keras.layers.Conv2D(filters2, kernel_size, padding='same')\n    self.bn2b = tf.keras.layers.BatchNormalization()\n\n    self.conv2c = tf.keras.layers.Conv2D(filters3, (1, 1))\n    self.bn2c = tf.keras.layers.BatchNormalization()\n\n  def call(self, input_tensor, training=False):\n    x = self.conv2a(input_tensor)\n    x = self.bn2a(x, training=training)\n    x = tf.nn.relu(x)\n\n    x = self.conv2b(x)\n    x = self.bn2b(x, training=training)\n    x = tf.nn.relu(x)\n\n    x = self.conv2c(x)\n    x = self.bn2c(x, training=training)\n\n    x += input_tensor\n    return tf.nn.relu(x)")
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 block.summary()
-custom_method(imports='import tensorflow as tf', function_to_run='tf.keras.Sequential(*args)', method_object=None, object_signature=None, function_args=[eval("[tf.keras.layers.Conv2D(1, (1, 1),\n                                                    input_shape=(\n                                                        None, None, 3)),\n                             tf.keras.layers.BatchNormalization(),\n                             tf.keras.layers.Conv2D(2, 1,\n                                                    padding='same'),\n                             tf.keras.layers.BatchNormalization(),\n                             tf.keras.layers.Conv2D(3, (1, 1)),\n                             tf.keras.layers.BatchNormalization()]")], function_kwargs={})
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='obj.summary()', method_object='block', object_signature=None, function_args=[], function_kwargs={})
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 my_seq = tf.keras.Sequential([tf.keras.layers.Conv2D(1, (1, 1), input_shape=(None, None, 3)), tf.keras.layers.BatchNormalization(), tf.keras.layers.Conv2D(2, 1, padding='same'), tf.keras.layers.BatchNormalization(), tf.keras.layers.Conv2D(3, (1, 1)), tf.keras.layers.BatchNormalization()])
-custom_method(imports='import tensorflow as tf', function_to_run='obj(*args)', method_object=eval('my_seq'), object_signature=None, function_args=[eval('tf.zeros([1, 2, 3, 3])')], function_kwargs={}, custom_class=None)
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.keras.Sequential(*args)', method_object=None, object_signature=None, function_args=[[tf.keras.layers.Conv2D(1, (1, 1), input_shape=(None, None, 3)), tf.keras.layers.BatchNormalization(), tf.keras.layers.Conv2D(2, 1, padding='same'), tf.keras.layers.BatchNormalization(), tf.keras.layers.Conv2D(3, (1, 1)), tf.keras.layers.BatchNormalization()]], function_kwargs={})
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 my_seq(tf.zeros([1, 2, 3, 3]))
-custom_method(imports='import tensorflow as tf', function_to_run='obj.summary()', method_object=eval('my_seq'), object_signature=None, function_args=[], function_kwargs={}, custom_class=None)
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='obj(*args)', method_object=my_seq, object_signature=None, function_args=[tf.zeros([1, 2, 3, 3])], function_kwargs={})
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 my_seq.summary()
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='obj.summary()', method_object=my_seq, object_signature=None, function_args=[], function_kwargs={})

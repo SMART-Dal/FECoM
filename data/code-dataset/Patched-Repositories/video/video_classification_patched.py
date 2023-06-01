@@ -12,50 +12,13 @@ import matplotlib.pyplot as plt
 import tensorflow as tf
 import keras
 from keras import layers
-import os
-from pathlib import Path
-import dill as pickle
 import sys
-import numpy as np
-from tool.client.client_config import EXPERIMENT_DIR, MAX_WAIT_S, WAIT_AFTER_RUN_S
-from tool.server.send_request import send_request
-from tool.server.function_details import FunctionDetails
-import json
-current_path = os.path.abspath(__file__)
+from tool.client.client_config import EXPERIMENT_DIR
+from tool.server.local_execution import before_execution as before_execution_INSERTED_INTO_SCRIPT
+from tool.server.local_execution import after_execution as after_execution_INSERTED_INTO_SCRIPT
 experiment_number = sys.argv[1]
 experiment_project = sys.argv[2]
 EXPERIMENT_FILE_PATH = EXPERIMENT_DIR / 'method-level' / experiment_project / f'experiment-{experiment_number}.json'
-skip_calls_file_path = EXPERIMENT_FILE_PATH.parent / 'skip_calls.json'
-if skip_calls_file_path.exists():
-    with open(skip_calls_file_path, 'r') as f:
-        skip_calls = json.load(f)
-else:
-    skip_calls = []
-    with open(skip_calls_file_path, 'w') as f:
-        json.dump(skip_calls, f)
-
-def custom_method(imports: str, function_to_run: str, method_object=None, object_signature=None, function_args: list=None, function_kwargs: dict=None, custom_class=None):
-    if skip_calls is not None and any((call['function_to_run'] == function_to_run and np.array_equal(call['function_args'], function_args) and (call['function_kwargs'] == function_kwargs) for call in skip_calls)):
-        print('skipping call: ', function_to_run)
-        return
-    result = send_request(imports=imports, function_to_run=function_to_run, function_args=function_args, function_kwargs=function_kwargs, max_wait_secs=MAX_WAIT_S, wait_after_run_secs=WAIT_AFTER_RUN_S, method_object=method_object, object_signature=object_signature, custom_class=custom_class, experiment_file_path=EXPERIMENT_FILE_PATH)
-    if result is not None and isinstance(result, dict) and (len(result) == 1):
-        energy_data = next(iter(result.values()))
-        if skip_calls is not None and 'start_time_perf' in energy_data['times'] and ('end_time_perf' in energy_data['times']) and ('start_time_nvidia' in energy_data['times']) and ('end_time_nvidia' in energy_data['times']) and (energy_data['times']['start_time_perf'] == energy_data['times']['end_time_perf']) and (energy_data['times']['start_time_nvidia'] == energy_data['times']['end_time_nvidia']):
-            call_to_skip = {'function_to_run': function_to_run, 'function_args': function_args, 'function_kwargs': function_kwargs}
-            try:
-                json.dumps(call_to_skip)
-                if call_to_skip not in skip_calls:
-                    skip_calls.append(call_to_skip)
-                    with open(skip_calls_file_path, 'w') as f:
-                        json.dump(skip_calls, f)
-                    print('skipping call added, current list is: ', skip_calls)
-                else:
-                    print('Skipping call already exists.')
-            except TypeError:
-                print('Ignore: Skipping call is not JSON serializable, skipping append and dump.')
-    else:
-        print('Invalid dictionary object or does not have one key-value pair.')
 
 def list_files_per_class(zip_url):
     """
@@ -186,10 +149,12 @@ def format_frames(frame, output_size):
     Return:
       Formatted frame with padding of specified output size.
   """
-    custom_method(imports='import pathlib;import remotezip as rz;import seaborn as sns;import matplotlib.pyplot as plt;import tqdm;import itertools;import collections;import tensorflow as tf;import random;import numpy as np;from keras import layers;import einops;import keras;import cv2', function_to_run='tf.image.convert_image_dtype(*args)', method_object=None, object_signature=None, function_args=[eval('frame'), eval('tf.float32')], function_kwargs={})
+    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
     frame = tf.image.convert_image_dtype(frame, tf.float32)
-    custom_method(imports='import pathlib;import remotezip as rz;import seaborn as sns;import matplotlib.pyplot as plt;import tqdm;import itertools;import collections;import tensorflow as tf;import random;import numpy as np;from keras import layers;import einops;import keras;import cv2', function_to_run='tf.image.resize_with_pad(*args)', method_object=None, object_signature=None, function_args=[eval('frame'), eval('*output_size')], function_kwargs={})
+    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.image.convert_image_dtype(*args)', method_object=None, object_signature=None, function_args=[frame, tf.float32], function_kwargs={})
+    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
     frame = tf.image.resize_with_pad(frame, *output_size)
+    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.image.resize_with_pad(*args)', method_object=None, object_signature=None, function_args=[frame, *output_size], function_kwargs={})
     return frame
 
 def frames_from_video_file(video_path, n_frames, output_size=(224, 224), frame_step=15):
@@ -264,18 +229,24 @@ subset_paths = download_ufc_101_subset(URL, num_classes=10, splits={'train': 30,
 n_frames = 10
 batch_size = 8
 output_signature = (tf.TensorSpec(shape=(None, None, None, 3), dtype=tf.float32), tf.TensorSpec(shape=(), dtype=tf.int16))
-custom_method(imports='import pathlib;import remotezip as rz;import seaborn as sns;import matplotlib.pyplot as plt;import tqdm;import itertools;import collections;import tensorflow as tf;import random;import numpy as np;from keras import layers;import einops;import keras;import cv2', function_to_run='tf.data.Dataset.from_generator(*args, **kwargs)', method_object=None, object_signature=None, function_args=[eval("FrameGenerator(subset_paths['train'], n_frames, training=True)")], function_kwargs={'output_signature': eval('output_signature')})
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 train_ds = tf.data.Dataset.from_generator(FrameGenerator(subset_paths['train'], n_frames, training=True), output_signature=output_signature)
-custom_method(imports='import pathlib;import remotezip as rz;import seaborn as sns;import matplotlib.pyplot as plt;import tqdm;import itertools;import collections;import tensorflow as tf;import random;import numpy as np;from keras import layers;import einops;import keras;import cv2', function_to_run='obj.batch(*args)', method_object=eval('train_ds'), object_signature=None, function_args=[eval('batch_size')], function_kwargs={}, custom_class=None)
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.data.Dataset.from_generator(*args, **kwargs)', method_object=None, object_signature=None, function_args=[FrameGenerator(subset_paths['train'], n_frames, training=True)], function_kwargs={'output_signature': output_signature})
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 train_ds = train_ds.batch(batch_size)
-custom_method(imports='import pathlib;import remotezip as rz;import seaborn as sns;import matplotlib.pyplot as plt;import tqdm;import itertools;import collections;import tensorflow as tf;import random;import numpy as np;from keras import layers;import einops;import keras;import cv2', function_to_run='tf.data.Dataset.from_generator(*args, **kwargs)', method_object=None, object_signature=None, function_args=[eval("FrameGenerator(subset_paths['val'], n_frames)")], function_kwargs={'output_signature': eval('output_signature')})
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='obj.batch(*args)', method_object=train_ds, object_signature=None, function_args=[batch_size], function_kwargs={})
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 val_ds = tf.data.Dataset.from_generator(FrameGenerator(subset_paths['val'], n_frames), output_signature=output_signature)
-custom_method(imports='import pathlib;import remotezip as rz;import seaborn as sns;import matplotlib.pyplot as plt;import tqdm;import itertools;import collections;import tensorflow as tf;import random;import numpy as np;from keras import layers;import einops;import keras;import cv2', function_to_run='obj.batch(*args)', method_object=eval('val_ds'), object_signature=None, function_args=[eval('batch_size')], function_kwargs={}, custom_class=None)
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.data.Dataset.from_generator(*args, **kwargs)', method_object=None, object_signature=None, function_args=[FrameGenerator(subset_paths['val'], n_frames)], function_kwargs={'output_signature': output_signature})
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 val_ds = val_ds.batch(batch_size)
-custom_method(imports='import pathlib;import remotezip as rz;import seaborn as sns;import matplotlib.pyplot as plt;import tqdm;import itertools;import collections;import tensorflow as tf;import random;import numpy as np;from keras import layers;import einops;import keras;import cv2', function_to_run='tf.data.Dataset.from_generator(*args, **kwargs)', method_object=None, object_signature=None, function_args=[eval("FrameGenerator(subset_paths['test'], n_frames)")], function_kwargs={'output_signature': eval('output_signature')})
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='obj.batch(*args)', method_object=val_ds, object_signature=None, function_args=[batch_size], function_kwargs={})
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 test_ds = tf.data.Dataset.from_generator(FrameGenerator(subset_paths['test'], n_frames), output_signature=output_signature)
-custom_method(imports='import pathlib;import remotezip as rz;import seaborn as sns;import matplotlib.pyplot as plt;import tqdm;import itertools;import collections;import tensorflow as tf;import random;import numpy as np;from keras import layers;import einops;import keras;import cv2', function_to_run='obj.batch(*args)', method_object=eval('test_ds'), object_signature=None, function_args=[eval('batch_size')], function_kwargs={}, custom_class=None)
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.data.Dataset.from_generator(*args, **kwargs)', method_object=None, object_signature=None, function_args=[FrameGenerator(subset_paths['test'], n_frames)], function_kwargs={'output_signature': output_signature})
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 test_ds = test_ds.batch(batch_size)
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='obj.batch(*args)', method_object=test_ds, object_signature=None, function_args=[batch_size], function_kwargs={})
 HEIGHT = 224
 WIDTH = 224
 
@@ -416,17 +387,21 @@ def get_actual_predicted_labels(dataset):
   """
     actual = [labels for (_, labels) in dataset.unbatch()]
     predicted = model.predict(dataset)
-    custom_method(imports='import pathlib;import remotezip as rz;import seaborn as sns;import matplotlib.pyplot as plt;import tqdm;import itertools;import collections;import tensorflow as tf;import random;import numpy as np;from keras import layers;import einops;import keras;import cv2', function_to_run='tf.stack(*args, **kwargs)', method_object=None, object_signature=None, function_args=[eval('actual')], function_kwargs={'axis': eval('0')})
+    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
     actual = tf.stack(actual, axis=0)
-    custom_method(imports='import pathlib;import remotezip as rz;import seaborn as sns;import matplotlib.pyplot as plt;import tqdm;import itertools;import collections;import tensorflow as tf;import random;import numpy as np;from keras import layers;import einops;import keras;import cv2', function_to_run='tf.concat(*args, **kwargs)', method_object=None, object_signature=None, function_args=[eval('predicted')], function_kwargs={'axis': eval('0')})
+    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.stack(*args, **kwargs)', method_object=None, object_signature=None, function_args=[actual], function_kwargs={'axis': 0})
+    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
     predicted = tf.concat(predicted, axis=0)
-    custom_method(imports='import pathlib;import remotezip as rz;import seaborn as sns;import matplotlib.pyplot as plt;import tqdm;import itertools;import collections;import tensorflow as tf;import random;import numpy as np;from keras import layers;import einops;import keras;import cv2', function_to_run='tf.argmax(*args, **kwargs)', method_object=None, object_signature=None, function_args=[eval('predicted')], function_kwargs={'axis': eval('1')})
+    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.concat(*args, **kwargs)', method_object=None, object_signature=None, function_args=[predicted], function_kwargs={'axis': 0})
+    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
     predicted = tf.argmax(predicted, axis=1)
+    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.argmax(*args, **kwargs)', method_object=None, object_signature=None, function_args=[predicted], function_kwargs={'axis': 1})
     return (actual, predicted)
 
 def plot_confusion_matrix(actual, predicted, labels, ds_type):
-    custom_method(imports='import pathlib;import remotezip as rz;import seaborn as sns;import matplotlib.pyplot as plt;import tqdm;import itertools;import collections;import tensorflow as tf;import random;import numpy as np;from keras import layers;import einops;import keras;import cv2', function_to_run='tf.math.confusion_matrix(*args)', method_object=None, object_signature=None, function_args=[eval('actual'), eval('predicted')], function_kwargs={})
+    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
     cm = tf.math.confusion_matrix(actual, predicted)
+    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.math.confusion_matrix(*args)', method_object=None, object_signature=None, function_args=[actual, predicted], function_kwargs={})
     ax = sns.heatmap(cm, annot=True, fmt='g')
     sns.set(rc={'figure.figsize': (12, 12)})
     sns.set(font_scale=1.4)
@@ -457,8 +432,9 @@ def calculate_classification_metrics(y_actual, y_pred, labels):
     Return:
       Precision and recall measures.
   """
-    custom_method(imports='import pathlib;import remotezip as rz;import seaborn as sns;import matplotlib.pyplot as plt;import tqdm;import itertools;import collections;import tensorflow as tf;import random;import numpy as np;from keras import layers;import einops;import keras;import cv2', function_to_run='tf.math.confusion_matrix(*args)', method_object=None, object_signature=None, function_args=[eval('y_actual'), eval('y_pred')], function_kwargs={})
+    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
     cm = tf.math.confusion_matrix(y_actual, y_pred)
+    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.math.confusion_matrix(*args)', method_object=None, object_signature=None, function_args=[y_actual, y_pred], function_kwargs={})
     tp = np.diag(cm)
     precision = dict()
     recall = dict()
