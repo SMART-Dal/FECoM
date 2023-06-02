@@ -9,7 +9,7 @@ from tool.server.local_execution import before_execution as before_execution_INS
 from tool.server.local_execution import after_execution as after_execution_INSERTED_INTO_SCRIPT
 experiment_number = sys.argv[1]
 experiment_project = sys.argv[2]
-EXPERIMENT_FILE_PATH = EXPERIMENT_DIR / 'method-level' / experiment_project / f'experiment-{experiment_number}.json'
+EXPERIMENT_FILE_PATH = EXPERIMENT_DIR / 'local-execution' / experiment_project / f'experiment-{experiment_number}.json'
 (dataset, info) = tfds.load('oxford_iiit_pet:3.*.*', with_info=True)
 
 def normalize(input_image, input_mask):
@@ -20,10 +20,10 @@ def normalize(input_image, input_mask):
 def load_image(datapoint):
     start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
     input_image = tf.image.resize(datapoint['image'], (128, 128))
-    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.image.resize(*args)', method_object=None, object_signature=None, function_args=[datapoint['image'], (128, 128)], function_kwargs={})
+    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.image.resize()', method_object=None, function_args=[datapoint['image'], (128, 128)], function_kwargs=None)
     start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
     input_mask = tf.image.resize(datapoint['segmentation_mask'], (128, 128), method=tf.image.ResizeMethod.NEAREST_NEIGHBOR)
-    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.image.resize(*args, **kwargs)', method_object=None, object_signature=None, function_args=[datapoint['segmentation_mask'], (128, 128)], function_kwargs={'method': tf.image.ResizeMethod.NEAREST_NEIGHBOR})
+    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.image.resize()', method_object=None, function_args=[datapoint['segmentation_mask'], (128, 128)], function_kwargs={'method': tf.image.ResizeMethod.NEAREST_NEIGHBOR})
     (input_image, input_mask) = normalize(input_image, input_mask)
     return (input_image, input_mask)
 TRAIN_LENGTH = info.splits['train'].num_examples
@@ -39,10 +39,10 @@ class Augment(tf.keras.layers.Layer):
         super().__init__()
         start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
         self.augment_inputs = tf.keras.layers.RandomFlip(mode='horizontal', seed=seed)
-        after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.keras.layers.RandomFlip(**kwargs)', method_object=None, object_signature=None, function_args=[], function_kwargs={'mode': 'horizontal', 'seed': seed})
+        after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.keras.layers.RandomFlip()', method_object=None, function_args=None, function_kwargs={'mode': 'horizontal', 'seed': seed})
         start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
         self.augment_labels = tf.keras.layers.RandomFlip(mode='horizontal', seed=seed)
-        after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.keras.layers.RandomFlip(**kwargs)', method_object=None, object_signature=None, function_args=[], function_kwargs={'mode': 'horizontal', 'seed': seed})
+        after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.keras.layers.RandomFlip()', method_object=None, function_args=None, function_kwargs={'mode': 'horizontal', 'seed': seed})
 
     def call(self, inputs, labels):
         inputs = self.augment_inputs(inputs)
@@ -65,50 +65,50 @@ for (images, masks) in train_batches.take(2):
     display([sample_image, sample_mask])
 start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 base_model = tf.keras.applications.MobileNetV2(input_shape=[128, 128, 3], include_top=False)
-after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.keras.applications.MobileNetV2(**kwargs)', method_object=None, object_signature=None, function_args=[], function_kwargs={'input_shape': [128, 128, 3], 'include_top': False})
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.keras.applications.MobileNetV2()', method_object=None, function_args=None, function_kwargs={'input_shape': [128, 128, 3], 'include_top': False})
 layer_names = ['block_1_expand_relu', 'block_3_expand_relu', 'block_6_expand_relu', 'block_13_expand_relu', 'block_16_project']
 base_model_outputs = [base_model.get_layer(name).output for name in layer_names]
 start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 down_stack = tf.keras.Model(inputs=base_model.input, outputs=base_model_outputs)
-after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.keras.Model(**kwargs)', method_object=None, object_signature=None, function_args=[], function_kwargs={'inputs': base_model.input, 'outputs': base_model_outputs})
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.keras.Model()', method_object=None, function_args=None, function_kwargs={'inputs': base_model.input, 'outputs': base_model_outputs})
 down_stack.trainable = False
 up_stack = [pix2pix.upsample(512, 3), pix2pix.upsample(256, 3), pix2pix.upsample(128, 3), pix2pix.upsample(64, 3)]
 
 def unet_model(output_channels: int):
     start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
     inputs = tf.keras.layers.Input(shape=[128, 128, 3])
-    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.keras.layers.Input(**kwargs)', method_object=None, object_signature=None, function_args=[], function_kwargs={'shape': [128, 128, 3]})
+    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.keras.layers.Input()', method_object=None, function_args=None, function_kwargs={'shape': [128, 128, 3]})
     start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
     skips = down_stack(inputs)
-    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='obj(*args)', method_object=down_stack, object_signature=None, function_args=[inputs], function_kwargs={})
+    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.keras.Model()', method_object=down_stack, function_args=[inputs], function_kwargs=None)
     x = skips[-1]
     skips = reversed(skips[:-1])
     for (up, skip) in zip(up_stack, skips):
         x = up(x)
         start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
         concat = tf.keras.layers.Concatenate()
-        after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.keras.layers.Concatenate()', method_object=None, object_signature=None, function_args=[], function_kwargs={})
+        after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.keras.layers.Concatenate()', method_object=None, function_args=None, function_kwargs=None)
         start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
         x = concat([x, skip])
-        after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='obj(*args)', method_object=concat, object_signature=None, function_args=[[x, skip]], function_kwargs={})
+        after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.keras.layers.Concatenate()', method_object=concat, function_args=[[x, skip]], function_kwargs=None)
     start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
     last = tf.keras.layers.Conv2DTranspose(filters=output_channels, kernel_size=3, strides=2, padding='same')
-    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.keras.layers.Conv2DTranspose(**kwargs)', method_object=None, object_signature=None, function_args=[], function_kwargs={'filters': output_channels, 'kernel_size': 3, 'strides': 2, 'padding': 'same'})
+    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.keras.layers.Conv2DTranspose()', method_object=None, function_args=None, function_kwargs={'filters': output_channels, 'kernel_size': 3, 'strides': 2, 'padding': 'same'})
     start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
     x = last(x)
-    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='obj(*args)', method_object=last, object_signature=None, function_args=[x], function_kwargs={})
+    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.keras.layers.Conv2DTranspose()', method_object=last, function_args=[x], function_kwargs=None)
     return tf.keras.Model(inputs=inputs, outputs=x)
 OUTPUT_CLASSES = 3
 model = unet_model(output_channels=OUTPUT_CLASSES)
 model.compile(optimizer='adam', loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True), metrics=['accuracy'])
 start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 tf.keras.utils.plot_model(model, show_shapes=True)
-after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.keras.utils.plot_model(*args, **kwargs)', method_object=None, object_signature=None, function_args=[model], function_kwargs={'show_shapes': True})
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.keras.utils.plot_model()', method_object=None, function_args=[model], function_kwargs={'show_shapes': True})
 
 def create_mask(pred_mask):
     start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
     pred_mask = tf.math.argmax(pred_mask, axis=-1)
-    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.math.argmax(*args, **kwargs)', method_object=None, object_signature=None, function_args=[pred_mask], function_kwargs={'axis': -1})
+    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.math.argmax()', method_object=None, function_args=[pred_mask], function_kwargs={'axis': -1})
     pred_mask = pred_mask[..., tf.newaxis]
     return pred_mask[0]
 
@@ -153,19 +153,19 @@ prediction = [[-3.0, 0], [-3, 0]]
 sample_weight = [1, 10]
 start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 loss = tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True, reduction=tf.keras.losses.Reduction.NONE)
-after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.keras.losses.SparseCategoricalCrossentropy(**kwargs)', method_object=None, object_signature=None, function_args=[], function_kwargs={'from_logits': True, 'reduction': tf.keras.losses.Reduction.NONE})
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.keras.losses.SparseCategoricalCrossentropy()', method_object=None, function_args=None, function_kwargs={'from_logits': True, 'reduction': tf.keras.losses.Reduction.NONE})
 start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 loss(label, prediction, sample_weight).numpy()
-after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='obj(label, prediction, sample_weight).numpy()', method_object=loss, object_signature=None, function_args=[], function_kwargs={})
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.keras.losses.SparseCategoricalCrossentropy(label, prediction, sample_weight).numpy()', method_object=loss, function_args=None, function_kwargs=None)
 
 def add_sample_weights(image, label):
     start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
     class_weights = tf.constant([2.0, 2.0, 1.0])
-    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.constant(*args)', method_object=None, object_signature=None, function_args=[[2.0, 2.0, 1.0]], function_kwargs={})
+    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.constant()', method_object=None, function_args=[[2.0, 2.0, 1.0]], function_kwargs=None)
     class_weights = class_weights / tf.reduce_sum(class_weights)
     start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
     sample_weights = tf.gather(class_weights, indices=tf.cast(label, tf.int32))
-    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.gather(*args, **kwargs)', method_object=None, object_signature=None, function_args=[class_weights], function_kwargs={'indices': tf.cast(label, tf.int32)})
+    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.gather()', method_object=None, function_args=[class_weights], function_kwargs={'indices': tf.cast(label, tf.int32)})
     return (image, label, sample_weights)
 train_batches.map(add_sample_weights).element_spec
 weighted_model = unet_model(OUTPUT_CLASSES)

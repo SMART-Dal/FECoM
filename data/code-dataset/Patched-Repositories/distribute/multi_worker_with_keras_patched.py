@@ -7,7 +7,7 @@ from tool.server.local_execution import before_execution as before_execution_INS
 from tool.server.local_execution import after_execution as after_execution_INSERTED_INTO_SCRIPT
 experiment_number = sys.argv[1]
 experiment_project = sys.argv[2]
-EXPERIMENT_FILE_PATH = EXPERIMENT_DIR / 'method-level' / experiment_project / f'experiment-{experiment_number}.json'
+EXPERIMENT_FILE_PATH = EXPERIMENT_DIR / 'local-execution' / experiment_project / f'experiment-{experiment_number}.json'
 os.environ['CUDA_VISIBLE_DEVICES'] = '-1'
 os.environ.pop('TF_CONFIG', None)
 if '.' not in sys.path:
@@ -20,21 +20,21 @@ import numpy as np
 def mnist_dataset(batch_size):
     start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
     ((x_train, y_train), _) = tf.keras.datasets.mnist.load_data()
-    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.keras.datasets.mnist.load_data()', method_object=None, object_signature=None, function_args=[], function_kwargs={})
+    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.keras.datasets.mnist.load_data()', method_object=None, function_args=None, function_kwargs=None)
     x_train = x_train / np.float32(255)
     y_train = y_train.astype(np.int64)
     start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
     train_dataset = tf.data.Dataset.from_tensor_slices((x_train, y_train)).shuffle(60000).repeat().batch(batch_size)
-    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.data.Dataset.from_tensor_slices((x_train, y_train)).shuffle(60000).repeat().batch(*args)', method_object=None, object_signature=None, function_args=[batch_size], function_kwargs={})
+    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.data.Dataset.from_tensor_slices((x_train, y_train)).shuffle(60000).repeat().batch()', method_object=None, function_args=[batch_size], function_kwargs=None)
     return train_dataset
 
 def build_and_compile_cnn_model():
     start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
     model = tf.keras.Sequential([tf.keras.layers.InputLayer(input_shape=(28, 28)), tf.keras.layers.Reshape(target_shape=(28, 28, 1)), tf.keras.layers.Conv2D(32, 3, activation='relu'), tf.keras.layers.Flatten(), tf.keras.layers.Dense(128, activation='relu'), tf.keras.layers.Dense(10)])
-    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.keras.Sequential(*args)', method_object=None, object_signature=None, function_args=[[tf.keras.layers.InputLayer(input_shape=(28, 28)), tf.keras.layers.Reshape(target_shape=(28, 28, 1)), tf.keras.layers.Conv2D(32, 3, activation='relu'), tf.keras.layers.Flatten(), tf.keras.layers.Dense(128, activation='relu'), tf.keras.layers.Dense(10)]], function_kwargs={})
+    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.keras.Sequential()', method_object=None, function_args=[[tf.keras.layers.InputLayer(input_shape=(28, 28)), tf.keras.layers.Reshape(target_shape=(28, 28, 1)), tf.keras.layers.Conv2D(32, 3, activation='relu'), tf.keras.layers.Flatten(), tf.keras.layers.Dense(128, activation='relu'), tf.keras.layers.Dense(10)]], function_kwargs=None)
     start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
     model.compile(loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True), optimizer=tf.keras.optimizers.SGD(learning_rate=0.001), metrics=['accuracy'])
-    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='obj.compile(**kwargs)', method_object=model, object_signature=None, function_args=[], function_kwargs={'loss': tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True), 'optimizer': tf.keras.optimizers.SGD(learning_rate=0.001), 'metrics': ['accuracy']})
+    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.keras.Sequential.compile()', method_object=model, function_args=None, function_kwargs={'loss': tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True), 'optimizer': tf.keras.optimizers.SGD(learning_rate=0.001), 'metrics': ['accuracy']})
     return model
 import mnist_setup
 batch_size = 64
@@ -46,7 +46,7 @@ json.dumps(tf_config)
 os.environ['GREETINGS'] = 'Hello TensorFlow!'
 start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 strategy = tf.distribute.MultiWorkerMirroredStrategy()
-after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.distribute.MultiWorkerMirroredStrategy()', method_object=None, object_signature=None, function_args=[], function_kwargs={})
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.distribute.MultiWorkerMirroredStrategy()', method_object=None, function_args=None, function_kwargs=None)
 with strategy.scope():
     multi_worker_model = mnist_setup.build_and_compile_cnn_model()
 import os
@@ -58,7 +58,7 @@ tf_config = json.loads(os.environ['TF_CONFIG'])
 num_workers = len(tf_config['cluster']['worker'])
 start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 strategy = tf.distribute.MultiWorkerMirroredStrategy()
-after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.distribute.MultiWorkerMirroredStrategy()', method_object=None, object_signature=None, function_args=[], function_kwargs={})
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.distribute.MultiWorkerMirroredStrategy()', method_object=None, function_args=None, function_kwargs=None)
 global_batch_size = per_worker_batch_size * num_workers
 multi_worker_dataset = mnist_setup.mnist_dataset(global_batch_size)
 with strategy.scope():
@@ -72,7 +72,7 @@ os.environ['TF_CONFIG'] = json.dumps(tf_config)
 os.environ.pop('TF_CONFIG', None)
 start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 options = tf.data.Options()
-after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.data.Options()', method_object=None, object_signature=None, function_args=[], function_kwargs={})
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.data.Options()', method_object=None, function_args=None, function_kwargs=None)
 options.experimental_distribute.auto_shard_policy = tf.data.experimental.AutoShardPolicy.OFF
 global_batch_size = 64
 multi_worker_dataset = mnist_setup.mnist_dataset(batch_size=64)
@@ -87,7 +87,7 @@ def _get_temp_dir(dirpath, task_id):
     temp_dir = os.path.join(dirpath, base_dirpath)
     start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
     tf.io.gfile.makedirs(temp_dir)
-    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.io.gfile.makedirs(*args)', method_object=None, object_signature=None, function_args=[temp_dir], function_kwargs={})
+    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.io.gfile.makedirs()', method_object=None, function_args=[temp_dir], function_kwargs=None)
     return temp_dir
 
 def write_filepath(filepath, task_type, task_id):
@@ -102,34 +102,34 @@ multi_worker_model.save(write_model_path)
 if not _is_chief(task_type, task_id):
     start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
     tf.io.gfile.rmtree(os.path.dirname(write_model_path))
-    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.io.gfile.rmtree(*args)', method_object=None, object_signature=None, function_args=[os.path.dirname(write_model_path)], function_kwargs={})
+    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.io.gfile.rmtree()', method_object=None, function_args=[os.path.dirname(write_model_path)], function_kwargs=None)
 start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 loaded_model = tf.keras.models.load_model(model_path)
-after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.keras.models.load_model(*args)', method_object=None, object_signature=None, function_args=[model_path], function_kwargs={})
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.keras.models.load_model()', method_object=None, function_args=[model_path], function_kwargs=None)
 start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 loaded_model.fit(single_worker_dataset, epochs=2, steps_per_epoch=20)
-after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='obj.fit(*args, **kwargs)', method_object=loaded_model, object_signature=None, function_args=[single_worker_dataset], function_kwargs={'epochs': 2, 'steps_per_epoch': 20})
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.keras.models.load_model.fit()', method_object=loaded_model, function_args=[single_worker_dataset], function_kwargs={'epochs': 2, 'steps_per_epoch': 20})
 checkpoint_dir = '/tmp/ckpt'
 start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 checkpoint = tf.train.Checkpoint(model=multi_worker_model)
-after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.train.Checkpoint(**kwargs)', method_object=None, object_signature=None, function_args=[], function_kwargs={'model': multi_worker_model})
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.train.Checkpoint()', method_object=None, function_args=None, function_kwargs={'model': multi_worker_model})
 write_checkpoint_dir = write_filepath(checkpoint_dir, task_type, task_id)
 start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 checkpoint_manager = tf.train.CheckpointManager(checkpoint, directory=write_checkpoint_dir, max_to_keep=1)
-after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.train.CheckpointManager(*args, **kwargs)', method_object=None, object_signature=None, function_args=[checkpoint], function_kwargs={'directory': write_checkpoint_dir, 'max_to_keep': 1})
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.train.CheckpointManager()', method_object=None, function_args=[checkpoint], function_kwargs={'directory': write_checkpoint_dir, 'max_to_keep': 1})
 start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 checkpoint_manager.save()
-after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='obj.save()', method_object=checkpoint_manager, object_signature=None, function_args=[], function_kwargs={})
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.train.CheckpointManager.save()', method_object=checkpoint_manager, function_args=None, function_kwargs=None)
 if not _is_chief(task_type, task_id):
     start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
     tf.io.gfile.rmtree(write_checkpoint_dir)
-    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.io.gfile.rmtree(*args)', method_object=None, object_signature=None, function_args=[write_checkpoint_dir], function_kwargs={})
+    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.io.gfile.rmtree()', method_object=None, function_args=[write_checkpoint_dir], function_kwargs=None)
 start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 latest_checkpoint = tf.train.latest_checkpoint(checkpoint_dir)
-after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.train.latest_checkpoint(*args)', method_object=None, object_signature=None, function_args=[checkpoint_dir], function_kwargs={})
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.train.latest_checkpoint()', method_object=None, function_args=[checkpoint_dir], function_kwargs=None)
 start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 checkpoint.restore(latest_checkpoint)
-after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='obj.restore(*args)', method_object=checkpoint, object_signature=None, function_args=[latest_checkpoint], function_kwargs={})
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.train.Checkpoint.restore()', method_object=checkpoint, function_args=[latest_checkpoint], function_kwargs=None)
 multi_worker_model.fit(multi_worker_dataset, epochs=2, steps_per_epoch=20)
 callbacks = [tf.keras.callbacks.BackupAndRestore(backup_dir='/tmp/backup')]
 with strategy.scope():

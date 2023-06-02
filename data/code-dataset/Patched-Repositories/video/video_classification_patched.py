@@ -18,7 +18,7 @@ from tool.server.local_execution import before_execution as before_execution_INS
 from tool.server.local_execution import after_execution as after_execution_INSERTED_INTO_SCRIPT
 experiment_number = sys.argv[1]
 experiment_project = sys.argv[2]
-EXPERIMENT_FILE_PATH = EXPERIMENT_DIR / 'method-level' / experiment_project / f'experiment-{experiment_number}.json'
+EXPERIMENT_FILE_PATH = EXPERIMENT_DIR / 'local-execution' / experiment_project / f'experiment-{experiment_number}.json'
 
 def list_files_per_class(zip_url):
     """
@@ -151,10 +151,10 @@ def format_frames(frame, output_size):
   """
     start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
     frame = tf.image.convert_image_dtype(frame, tf.float32)
-    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.image.convert_image_dtype(*args)', method_object=None, object_signature=None, function_args=[frame, tf.float32], function_kwargs={})
+    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.image.convert_image_dtype()', method_object=None, function_args=[frame, tf.float32], function_kwargs=None)
     start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
     frame = tf.image.resize_with_pad(frame, *output_size)
-    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.image.resize_with_pad(*args)', method_object=None, object_signature=None, function_args=[frame, *output_size], function_kwargs={})
+    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.image.resize_with_pad()', method_object=None, function_args=[frame, *output_size], function_kwargs=None)
     return frame
 
 def frames_from_video_file(video_path, n_frames, output_size=(224, 224), frame_step=15):
@@ -231,22 +231,22 @@ batch_size = 8
 output_signature = (tf.TensorSpec(shape=(None, None, None, 3), dtype=tf.float32), tf.TensorSpec(shape=(), dtype=tf.int16))
 start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 train_ds = tf.data.Dataset.from_generator(FrameGenerator(subset_paths['train'], n_frames, training=True), output_signature=output_signature)
-after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.data.Dataset.from_generator(*args, **kwargs)', method_object=None, object_signature=None, function_args=[FrameGenerator(subset_paths['train'], n_frames, training=True)], function_kwargs={'output_signature': output_signature})
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.data.Dataset.from_generator()', method_object=None, function_args=[FrameGenerator(subset_paths['train'], n_frames, training=True)], function_kwargs={'output_signature': output_signature})
 start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 train_ds = train_ds.batch(batch_size)
-after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='obj.batch(*args)', method_object=train_ds, object_signature=None, function_args=[batch_size], function_kwargs={})
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='train_ds.batch.batch()', method_object=train_ds, function_args=[batch_size], function_kwargs=None)
 start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 val_ds = tf.data.Dataset.from_generator(FrameGenerator(subset_paths['val'], n_frames), output_signature=output_signature)
-after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.data.Dataset.from_generator(*args, **kwargs)', method_object=None, object_signature=None, function_args=[FrameGenerator(subset_paths['val'], n_frames)], function_kwargs={'output_signature': output_signature})
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.data.Dataset.from_generator()', method_object=None, function_args=[FrameGenerator(subset_paths['val'], n_frames)], function_kwargs={'output_signature': output_signature})
 start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 val_ds = val_ds.batch(batch_size)
-after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='obj.batch(*args)', method_object=val_ds, object_signature=None, function_args=[batch_size], function_kwargs={})
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='val_ds.batch.batch()', method_object=val_ds, function_args=[batch_size], function_kwargs=None)
 start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 test_ds = tf.data.Dataset.from_generator(FrameGenerator(subset_paths['test'], n_frames), output_signature=output_signature)
-after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.data.Dataset.from_generator(*args, **kwargs)', method_object=None, object_signature=None, function_args=[FrameGenerator(subset_paths['test'], n_frames)], function_kwargs={'output_signature': output_signature})
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.data.Dataset.from_generator()', method_object=None, function_args=[FrameGenerator(subset_paths['test'], n_frames)], function_kwargs={'output_signature': output_signature})
 start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 test_ds = test_ds.batch(batch_size)
-after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='obj.batch(*args)', method_object=test_ds, object_signature=None, function_args=[batch_size], function_kwargs={})
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='test_ds.batch.batch()', method_object=test_ds, function_args=[batch_size], function_kwargs=None)
 HEIGHT = 224
 WIDTH = 224
 
@@ -389,19 +389,19 @@ def get_actual_predicted_labels(dataset):
     predicted = model.predict(dataset)
     start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
     actual = tf.stack(actual, axis=0)
-    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.stack(*args, **kwargs)', method_object=None, object_signature=None, function_args=[actual], function_kwargs={'axis': 0})
+    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.stack()', method_object=None, function_args=[actual], function_kwargs={'axis': 0})
     start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
     predicted = tf.concat(predicted, axis=0)
-    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.concat(*args, **kwargs)', method_object=None, object_signature=None, function_args=[predicted], function_kwargs={'axis': 0})
+    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.concat()', method_object=None, function_args=[predicted], function_kwargs={'axis': 0})
     start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
     predicted = tf.argmax(predicted, axis=1)
-    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.argmax(*args, **kwargs)', method_object=None, object_signature=None, function_args=[predicted], function_kwargs={'axis': 1})
+    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.argmax()', method_object=None, function_args=[predicted], function_kwargs={'axis': 1})
     return (actual, predicted)
 
 def plot_confusion_matrix(actual, predicted, labels, ds_type):
     start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
     cm = tf.math.confusion_matrix(actual, predicted)
-    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.math.confusion_matrix(*args)', method_object=None, object_signature=None, function_args=[actual, predicted], function_kwargs={})
+    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.math.confusion_matrix()', method_object=None, function_args=[actual, predicted], function_kwargs=None)
     ax = sns.heatmap(cm, annot=True, fmt='g')
     sns.set(rc={'figure.figsize': (12, 12)})
     sns.set(font_scale=1.4)
@@ -434,7 +434,7 @@ def calculate_classification_metrics(y_actual, y_pred, labels):
   """
     start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
     cm = tf.math.confusion_matrix(y_actual, y_pred)
-    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.math.confusion_matrix(*args)', method_object=None, object_signature=None, function_args=[y_actual, y_pred], function_kwargs={})
+    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.math.confusion_matrix()', method_object=None, function_args=[y_actual, y_pred], function_kwargs=None)
     tp = np.diag(cm)
     precision = dict()
     recall = dict()

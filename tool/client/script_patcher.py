@@ -65,9 +65,6 @@ def main():
     before_execution_call="start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()"
     global before_execution_call_node
     before_execution_call_node = ast.parse(before_execution_call)
-    # print("before_exec:",ast.dump(before_execution_call_node, indent=4))
-    # after_execution_call="after_execution(start_times = None, experiment_file_path = None, function_to_run = None,function_args = None, function_kwargs = None,method_object = None, object_signature = None, project_level = False)"
-    # after_execution_call_node=ast.parse(after_execution_call)
 
     #Step5: Tranform the client script by adding custom method calls
     transf = TransformCall()
@@ -205,6 +202,7 @@ class TransformCall(ast.NodeTransformer):
         target = node.targets[0]
         self.objectname = self.get_target_id(target)
         classname = self.get_func_name(node.value)
+        # print("node.value: ", ast.dump(node.value))
         modified_node = None  # Initialize modified_node as None
 
         if classname and classname in list(requiredClassDefs.keys()):
@@ -212,6 +210,8 @@ class TransformCall(ast.NodeTransformer):
             requiredObjectsSignature[self.objectname] = ast.get_source_segment(sourceCode, node.value)
 
         if isinstance(node.value, ast.Call):
+            requiredObjectsSignature[self.objectname] = ast.get_source_segment(sourceCode, node.value.func)
+            # print("self.objectname : ", self.objectname, " --- value: ", ast.get_source_segment(sourceCode, node.value))
             modified_node = self.custom_Call(node.value)
         
         if modified_node and modified_node != node.value:
@@ -237,7 +237,6 @@ class TransformCall(ast.NodeTransformer):
 
         if(any(lib in callvisitor.get_name_list() for lib in requiredAlias)):
             dummyNode=copy.deepcopy(node)
-            unmodified_node = copy.deepcopy(node)
             dummyNode.args.clear()
             dummyNode.keywords.clear()
             # argList = [ast.get_source_segment(sourceCode, a) for a in node.args]
@@ -246,10 +245,10 @@ class TransformCall(ast.NodeTransformer):
             # keywordsDict = {a.arg:ast.get_source_segment(sourceCode, a.value) for a in node.keywords}
             keywordsDict = {a.arg:a.value for a in node.keywords}
             # print("keywordsDict", [kwitem for kwitem in keywordsDict])
-            if(node.args):
-                dummyNode.args.append(ast.Name(id='*args', ctx=ast.Load()))
-            if(node.keywords):
-                dummyNode.keywords.append(ast.Name(id='**kwargs', ctx=ast.Load()))
+            # if(node.args):
+            #     dummyNode.args.append(ast.Name(id='*args', ctx=ast.Load()))
+            # if(node.keywords):
+            #     dummyNode.keywords.append(ast.Name(id='**kwargs', ctx=ast.Load()))
 
             new_node = ast.Call(func=ast.Name(id='after_execution_INSERTED_INTO_SCRIPT', ctx=ast.Load()),
                                 args=[],
@@ -267,18 +266,17 @@ class TransformCall(ast.NodeTransformer):
                                         arg='method_object',
                                         value=ast.Constant(None)),
                                     ast.keyword(
-                                            arg='object_signature',
-                                            value=ast.Constant(None)),
-                                    ast.keyword(
                                         arg='function_args',
                                         value=ast.List(
                                             elts=[argItem for argItem in argList],
-                                            ctx=ast.Load())),
+                                            ctx=ast.Load()) if argList else ast.Constant(None)
+                                            ),
                                     ast.keyword(
                                         arg='function_kwargs',
                                         value=ast.Dict(
                                             keys=[ast.Constant(KWItem) for KWItem in keywordsDict],
-                                            values=[keywordsDict[KWItem] for KWItem in keywordsDict]))
+                                            values=[keywordsDict[KWItem] for KWItem in keywordsDict]) if keywordsDict else ast.Constant(None)
+                                            )
                                         ],
                                         starargs=None, kwargs=None
                                 )
@@ -297,10 +295,10 @@ class TransformCall(ast.NodeTransformer):
             # keywordsDict = {a.arg:ast.get_source_segment(sourceCode, a.value) for a in node.keywords}
             keywordsDict = {a.arg:a.value for a in node.keywords}
             # print("keywordsDict", [kwitem for kwitem in keywordsDict])
-            if(node.args):
-                dummyNode.args.append(ast.Name(id='*args', ctx=ast.Load()))
-            if(node.keywords):
-                dummyNode.keywords.append(ast.Name(id='**kwargs', ctx=ast.Load()))
+            # if(node.args):
+            #     dummyNode.args.append(ast.Name(id='*args', ctx=ast.Load()))
+            # if(node.keywords):
+            #     dummyNode.keywords.append(ast.Name(id='**kwargs', ctx=ast.Load()))
             new_node = ast.Call(func=ast.Name(id='after_execution_INSERTED_INTO_SCRIPT', ctx=ast.Load()),
                                 args=[],
                                 keywords=[
@@ -312,24 +310,23 @@ class TransformCall(ast.NodeTransformer):
                                         value=ast.Name(id='EXPERIMENT_FILE_PATH')),
                                     ast.keyword(
                                         arg='function_to_run',
-                                        value=ast.Constant(ast.unparse(dummyNode).replace(callvisitor_list[0], 'obj', 1))),
+                                        value=ast.Constant(ast.unparse(dummyNode).replace(callvisitor_list[0], requiredObjectsSignature.get(callvisitor_list[0]), 1))),
                                     ast.keyword(
                                         arg='method_object',
-                                        value= ast.Constant(callvisitor_list[0])
+                                        value= ast.Name(callvisitor_list[0])
                                         ),
-                                    ast.keyword(
-                                        arg='object_signature',
-                                        value=ast.Constant(requiredObjectsSignature.get(self.objectname))),
                                     ast.keyword(
                                         arg='function_args',
                                         value=ast.List(
                                             elts=[argItem for argItem in argList],
-                                            ctx=ast.Load())),
+                                            ctx=ast.Load()) if argList else ast.Constant(None)
+                                            ),
                                     ast.keyword(
                                         arg='function_kwargs',
                                         value=ast.Dict(
                                             keys=[ast.Constant(KWItem) for KWItem in keywordsDict],
-                                            values=[keywordsDict[KWItem] for KWItem in keywordsDict]))
+                                            values=[keywordsDict[KWItem] for KWItem in keywordsDict]) if keywordsDict else ast.Constant(None)
+                                            )
                                         ],
                                         starargs=None, kwargs=None
                                 )
@@ -347,10 +344,10 @@ class TransformCall(ast.NodeTransformer):
             # keywordsDict = {a.arg:ast.get_source_segment(sourceCode, a.value) for a in node.keywords}
             keywordsDict = {a.arg:a.value for a in node.keywords}
             # print("keywordsDict", [kwitem for kwitem in keywordsDict])
-            if(node.args):
-                dummyNode.args.append(ast.Name(id='*args', ctx=ast.Load()))
-            if(node.keywords):
-                dummyNode.keywords.append(ast.Name(id='**kwargs', ctx=ast.Load()))
+            # if(node.args):
+            #     dummyNode.args.append(ast.Name(id='*args', ctx=ast.Load()))
+            # if(node.keywords):
+            #     dummyNode.keywords.append(ast.Name(id='**kwargs', ctx=ast.Load()))
             new_node = ast.Call(func=ast.Name(id='after_execution_INSERTED_INTO_SCRIPT', ctx=ast.Load()),
                                 args=[],
                                 keywords=[
@@ -362,24 +359,23 @@ class TransformCall(ast.NodeTransformer):
                                         value=ast.Name(id='EXPERIMENT_FILE_PATH')),
                                     ast.keyword(
                                         arg='function_to_run',
-                                        value=ast.Constant(ast.unparse(dummyNode).replace(callvisitor_list[0], 'obj', 1))),
+                                        value=ast.Constant(ast.unparse(dummyNode).replace(callvisitor_list[0], requiredObjectsSignature.get(callvisitor_list[0]), 1))),
                                     ast.keyword(
                                         arg='method_object',
                                         value= ast.Name(callvisitor_list[0])
                                         ),
                                     ast.keyword(
-                                        arg='object_signature',
-                                        value=ast.Constant(requiredObjectsSignature.get(self.objectname))),
-                                    ast.keyword(
                                         arg='function_args',
                                         value=ast.List(
                                             elts=[argItem for argItem in argList],
-                                            ctx=ast.Load())),
+                                            ctx=ast.Load()) if argList else ast.Constant(None)
+                                            ),
                                     ast.keyword(
                                         arg='function_kwargs',
                                         value=ast.Dict(
                                             keys=[ast.Constant(KWItem) for KWItem in keywordsDict],
-                                            values=[keywordsDict[KWItem] for KWItem in keywordsDict]))
+                                            values=[keywordsDict[KWItem] for KWItem in keywordsDict]) if keywordsDict else ast.Constant(None)
+                                            )
                                         ],
                                         starargs=None, kwargs=None
                                 )

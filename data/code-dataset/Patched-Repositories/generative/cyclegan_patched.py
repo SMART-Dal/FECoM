@@ -11,7 +11,7 @@ from tool.server.local_execution import before_execution as before_execution_INS
 from tool.server.local_execution import after_execution as after_execution_INSERTED_INTO_SCRIPT
 experiment_number = sys.argv[1]
 experiment_project = sys.argv[2]
-EXPERIMENT_FILE_PATH = EXPERIMENT_DIR / 'method-level' / experiment_project / f'experiment-{experiment_number}.json'
+EXPERIMENT_FILE_PATH = EXPERIMENT_DIR / 'local-execution' / experiment_project / f'experiment-{experiment_number}.json'
 AUTOTUNE = tf.data.AUTOTUNE
 (dataset, metadata) = tfds.load('cycle_gan/horse2zebra', with_info=True, as_supervised=True)
 (train_horses, train_zebras) = (dataset['trainA'], dataset['trainB'])
@@ -24,24 +24,24 @@ IMG_HEIGHT = 256
 def random_crop(image):
     start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
     cropped_image = tf.image.random_crop(image, size=[IMG_HEIGHT, IMG_WIDTH, 3])
-    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.image.random_crop(*args, **kwargs)', method_object=None, object_signature=None, function_args=[image], function_kwargs={'size': [IMG_HEIGHT, IMG_WIDTH, 3]})
+    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.image.random_crop()', method_object=None, function_args=[image], function_kwargs={'size': [IMG_HEIGHT, IMG_WIDTH, 3]})
     return cropped_image
 
 def normalize(image):
     start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
     image = tf.cast(image, tf.float32)
-    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.cast(*args)', method_object=None, object_signature=None, function_args=[image, tf.float32], function_kwargs={})
+    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.cast()', method_object=None, function_args=[image, tf.float32], function_kwargs=None)
     image = image / 127.5 - 1
     return image
 
 def random_jitter(image):
     start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
     image = tf.image.resize(image, [286, 286], method=tf.image.ResizeMethod.NEAREST_NEIGHBOR)
-    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.image.resize(*args, **kwargs)', method_object=None, object_signature=None, function_args=[image, [286, 286]], function_kwargs={'method': tf.image.ResizeMethod.NEAREST_NEIGHBOR})
+    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.image.resize()', method_object=None, function_args=[image, [286, 286]], function_kwargs={'method': tf.image.ResizeMethod.NEAREST_NEIGHBOR})
     image = random_crop(image)
     start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
     image = tf.image.random_flip_left_right(image)
-    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.image.random_flip_left_right(*args)', method_object=None, object_signature=None, function_args=[image], function_kwargs={})
+    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.image.random_flip_left_right()', method_object=None, function_args=[image], function_kwargs=None)
     return image
 
 def preprocess_image_train(image, label):
@@ -100,15 +100,15 @@ plt.show()
 LAMBDA = 10
 start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 loss_obj = tf.keras.losses.BinaryCrossentropy(from_logits=True)
-after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.keras.losses.BinaryCrossentropy(**kwargs)', method_object=None, object_signature=None, function_args=[], function_kwargs={'from_logits': True})
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.keras.losses.BinaryCrossentropy()', method_object=None, function_args=None, function_kwargs={'from_logits': True})
 
 def discriminator_loss(real, generated):
     start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
     real_loss = loss_obj(tf.ones_like(real), real)
-    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='obj(*args)', method_object=loss_obj, object_signature=None, function_args=[tf.ones_like(real), real], function_kwargs={})
+    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.keras.losses.BinaryCrossentropy()', method_object=loss_obj, function_args=[tf.ones_like(real), real], function_kwargs=None)
     start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
     generated_loss = loss_obj(tf.zeros_like(generated), generated)
-    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='obj(*args)', method_object=loss_obj, object_signature=None, function_args=[tf.zeros_like(generated), generated], function_kwargs={})
+    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.keras.losses.BinaryCrossentropy()', method_object=loss_obj, function_args=[tf.zeros_like(generated), generated], function_kwargs=None)
     total_disc_loss = real_loss + generated_loss
     return total_disc_loss * 0.5
 
@@ -118,37 +118,37 @@ def generator_loss(generated):
 def calc_cycle_loss(real_image, cycled_image):
     start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
     loss1 = tf.reduce_mean(tf.abs(real_image - cycled_image))
-    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.reduce_mean(*args)', method_object=None, object_signature=None, function_args=[tf.abs(real_image - cycled_image)], function_kwargs={})
+    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.reduce_mean()', method_object=None, function_args=[tf.abs(real_image - cycled_image)], function_kwargs=None)
     return LAMBDA * loss1
 
 def identity_loss(real_image, same_image):
     start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
     loss = tf.reduce_mean(tf.abs(real_image - same_image))
-    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.reduce_mean(*args)', method_object=None, object_signature=None, function_args=[tf.abs(real_image - same_image)], function_kwargs={})
+    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.reduce_mean()', method_object=None, function_args=[tf.abs(real_image - same_image)], function_kwargs=None)
     return LAMBDA * 0.5 * loss
 start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 generator_g_optimizer = tf.keras.optimizers.Adam(0.0002, beta_1=0.5)
-after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.keras.optimizers.Adam(*args, **kwargs)', method_object=None, object_signature=None, function_args=[0.0002], function_kwargs={'beta_1': 0.5})
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.keras.optimizers.Adam()', method_object=None, function_args=[0.0002], function_kwargs={'beta_1': 0.5})
 start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 generator_f_optimizer = tf.keras.optimizers.Adam(0.0002, beta_1=0.5)
-after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.keras.optimizers.Adam(*args, **kwargs)', method_object=None, object_signature=None, function_args=[0.0002], function_kwargs={'beta_1': 0.5})
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.keras.optimizers.Adam()', method_object=None, function_args=[0.0002], function_kwargs={'beta_1': 0.5})
 start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 discriminator_x_optimizer = tf.keras.optimizers.Adam(0.0002, beta_1=0.5)
-after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.keras.optimizers.Adam(*args, **kwargs)', method_object=None, object_signature=None, function_args=[0.0002], function_kwargs={'beta_1': 0.5})
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.keras.optimizers.Adam()', method_object=None, function_args=[0.0002], function_kwargs={'beta_1': 0.5})
 start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 discriminator_y_optimizer = tf.keras.optimizers.Adam(0.0002, beta_1=0.5)
-after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.keras.optimizers.Adam(*args, **kwargs)', method_object=None, object_signature=None, function_args=[0.0002], function_kwargs={'beta_1': 0.5})
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.keras.optimizers.Adam()', method_object=None, function_args=[0.0002], function_kwargs={'beta_1': 0.5})
 checkpoint_path = './checkpoints/train'
 start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 ckpt = tf.train.Checkpoint(generator_g=generator_g, generator_f=generator_f, discriminator_x=discriminator_x, discriminator_y=discriminator_y, generator_g_optimizer=generator_g_optimizer, generator_f_optimizer=generator_f_optimizer, discriminator_x_optimizer=discriminator_x_optimizer, discriminator_y_optimizer=discriminator_y_optimizer)
-after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.train.Checkpoint(**kwargs)', method_object=None, object_signature=None, function_args=[], function_kwargs={'generator_g': generator_g, 'generator_f': generator_f, 'discriminator_x': discriminator_x, 'discriminator_y': discriminator_y, 'generator_g_optimizer': generator_g_optimizer, 'generator_f_optimizer': generator_f_optimizer, 'discriminator_x_optimizer': discriminator_x_optimizer, 'discriminator_y_optimizer': discriminator_y_optimizer})
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.train.Checkpoint()', method_object=None, function_args=None, function_kwargs={'generator_g': generator_g, 'generator_f': generator_f, 'discriminator_x': discriminator_x, 'discriminator_y': discriminator_y, 'generator_g_optimizer': generator_g_optimizer, 'generator_f_optimizer': generator_f_optimizer, 'discriminator_x_optimizer': discriminator_x_optimizer, 'discriminator_y_optimizer': discriminator_y_optimizer})
 start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 ckpt_manager = tf.train.CheckpointManager(ckpt, checkpoint_path, max_to_keep=5)
-after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.train.CheckpointManager(*args, **kwargs)', method_object=None, object_signature=None, function_args=[ckpt, checkpoint_path], function_kwargs={'max_to_keep': 5})
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.train.CheckpointManager()', method_object=None, function_args=[ckpt, checkpoint_path], function_kwargs={'max_to_keep': 5})
 if ckpt_manager.latest_checkpoint:
     start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
     ckpt.restore(ckpt_manager.latest_checkpoint)
-    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='obj.restore(*args)', method_object=ckpt, object_signature=None, function_args=[ckpt_manager.latest_checkpoint], function_kwargs={})
+    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.train.Checkpoint.restore()', method_object=ckpt, function_args=[ckpt_manager.latest_checkpoint], function_kwargs=None)
     print('Latest checkpoint restored!!')
 EPOCHS = 10
 
@@ -190,16 +190,16 @@ def train_step(real_x, real_y):
     discriminator_y_gradients = tape.gradient(disc_y_loss, discriminator_y.trainable_variables)
     start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
     generator_g_optimizer.apply_gradients(zip(generator_g_gradients, generator_g.trainable_variables))
-    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='obj.apply_gradients(*args)', method_object=generator_g_optimizer, object_signature=None, function_args=[zip(generator_g_gradients, generator_g.trainable_variables)], function_kwargs={})
+    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.keras.optimizers.Adam.apply_gradients()', method_object=generator_g_optimizer, function_args=[zip(generator_g_gradients, generator_g.trainable_variables)], function_kwargs=None)
     start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
     generator_f_optimizer.apply_gradients(zip(generator_f_gradients, generator_f.trainable_variables))
-    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='obj.apply_gradients(*args)', method_object=generator_f_optimizer, object_signature=None, function_args=[zip(generator_f_gradients, generator_f.trainable_variables)], function_kwargs={})
+    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.keras.optimizers.Adam.apply_gradients()', method_object=generator_f_optimizer, function_args=[zip(generator_f_gradients, generator_f.trainable_variables)], function_kwargs=None)
     start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
     discriminator_x_optimizer.apply_gradients(zip(discriminator_x_gradients, discriminator_x.trainable_variables))
-    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='obj.apply_gradients(*args)', method_object=discriminator_x_optimizer, object_signature=None, function_args=[zip(discriminator_x_gradients, discriminator_x.trainable_variables)], function_kwargs={})
+    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.keras.optimizers.Adam.apply_gradients()', method_object=discriminator_x_optimizer, function_args=[zip(discriminator_x_gradients, discriminator_x.trainable_variables)], function_kwargs=None)
     start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
     discriminator_y_optimizer.apply_gradients(zip(discriminator_y_gradients, discriminator_y.trainable_variables))
-    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='obj.apply_gradients(*args)', method_object=discriminator_y_optimizer, object_signature=None, function_args=[zip(discriminator_y_gradients, discriminator_y.trainable_variables)], function_kwargs={})
+    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.keras.optimizers.Adam.apply_gradients()', method_object=discriminator_y_optimizer, function_args=[zip(discriminator_y_gradients, discriminator_y.trainable_variables)], function_kwargs=None)
 for epoch in range(EPOCHS):
     start = time.time()
     n = 0
@@ -213,7 +213,7 @@ for epoch in range(EPOCHS):
     if (epoch + 1) % 5 == 0:
         start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
         ckpt_save_path = ckpt_manager.save()
-        after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='obj.save()', method_object=ckpt_manager, object_signature=None, function_args=[], function_kwargs={})
+        after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.train.CheckpointManager.save()', method_object=ckpt_manager, function_args=None, function_kwargs=None)
         print('Saving checkpoint for epoch {} at {}'.format(epoch + 1, ckpt_save_path))
     print('Time taken for epoch {} is {} sec\n'.format(epoch + 1, time.time() - start))
 for inp in test_horses.take(5):

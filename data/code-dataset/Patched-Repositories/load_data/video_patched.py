@@ -18,7 +18,7 @@ from tool.server.local_execution import before_execution as before_execution_INS
 from tool.server.local_execution import after_execution as after_execution_INSERTED_INTO_SCRIPT
 experiment_number = sys.argv[1]
 experiment_project = sys.argv[2]
-EXPERIMENT_FILE_PATH = EXPERIMENT_DIR / 'method-level' / experiment_project / f'experiment-{experiment_number}.json'
+EXPERIMENT_FILE_PATH = EXPERIMENT_DIR / 'local-execution' / experiment_project / f'experiment-{experiment_number}.json'
 URL = 'https://storage.googleapis.com/thumos14_files/UCF101_videos.zip'
 
 def list_files_from_zip_url(zip_url):
@@ -179,10 +179,10 @@ def format_frames(frame, output_size):
   """
     start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
     frame = tf.image.convert_image_dtype(frame, tf.float32)
-    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.image.convert_image_dtype(*args)', method_object=None, object_signature=None, function_args=[frame, tf.float32], function_kwargs={})
+    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.image.convert_image_dtype()', method_object=None, function_args=[frame, tf.float32], function_kwargs=None)
     start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
     frame = tf.image.resize_with_pad(frame, *output_size)
-    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.image.resize_with_pad(*args)', method_object=None, object_signature=None, function_args=[frame, *output_size], function_kwargs={})
+    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.image.resize_with_pad()', method_object=None, function_args=[frame, *output_size], function_kwargs=None)
     return frame
 
 def frames_from_video_file(video_path, n_frames, output_size=(224, 224), frame_step=15):
@@ -269,12 +269,12 @@ print(f'Label: {label}')
 output_signature = (tf.TensorSpec(shape=(None, None, None, 3), dtype=tf.float32), tf.TensorSpec(shape=(), dtype=tf.int16))
 start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 train_ds = tf.data.Dataset.from_generator(FrameGenerator(subset_paths['train'], 10, training=True), output_signature=output_signature)
-after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.data.Dataset.from_generator(*args, **kwargs)', method_object=None, object_signature=None, function_args=[FrameGenerator(subset_paths['train'], 10, training=True)], function_kwargs={'output_signature': output_signature})
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.data.Dataset.from_generator()', method_object=None, function_args=[FrameGenerator(subset_paths['train'], 10, training=True)], function_kwargs={'output_signature': output_signature})
 for (frames, labels) in train_ds.take(10):
     print(labels)
 start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 val_ds = tf.data.Dataset.from_generator(FrameGenerator(subset_paths['val'], 10), output_signature=output_signature)
-after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.data.Dataset.from_generator(*args, **kwargs)', method_object=None, object_signature=None, function_args=[FrameGenerator(subset_paths['val'], 10)], function_kwargs={'output_signature': output_signature})
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.data.Dataset.from_generator()', method_object=None, function_args=[FrameGenerator(subset_paths['val'], 10)], function_kwargs={'output_signature': output_signature})
 (train_frames, train_labels) = next(iter(train_ds))
 print(f'Shape of training set of frames: {train_frames.shape}')
 print(f'Shape of training labels: {train_labels.shape}')
@@ -284,16 +284,16 @@ print(f'Shape of validation labels: {val_labels.shape}')
 AUTOTUNE = tf.data.AUTOTUNE
 start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 train_ds = train_ds.cache().shuffle(1000).prefetch(buffer_size=AUTOTUNE)
-after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='obj.cache().shuffle(1000).prefetch(**kwargs)', method_object=train_ds, object_signature=None, function_args=[], function_kwargs={'buffer_size': AUTOTUNE})
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='train_ds.cache().shuffle(1000).prefetch.cache().shuffle(1000).prefetch()', method_object=train_ds, function_args=None, function_kwargs={'buffer_size': AUTOTUNE})
 start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 val_ds = val_ds.cache().shuffle(1000).prefetch(buffer_size=AUTOTUNE)
-after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='obj.cache().shuffle(1000).prefetch(**kwargs)', method_object=val_ds, object_signature=None, function_args=[], function_kwargs={'buffer_size': AUTOTUNE})
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='val_ds.cache().shuffle(1000).prefetch.cache().shuffle(1000).prefetch()', method_object=val_ds, function_args=None, function_kwargs={'buffer_size': AUTOTUNE})
 start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 train_ds = train_ds.batch(2)
-after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='obj.batch(*args)', method_object=train_ds, object_signature=None, function_args=[2], function_kwargs={})
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='train_ds.batch.batch()', method_object=train_ds, function_args=[2], function_kwargs=None)
 start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 val_ds = val_ds.batch(2)
-after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='obj.batch(*args)', method_object=val_ds, object_signature=None, function_args=[2], function_kwargs={})
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='val_ds.batch.batch()', method_object=val_ds, function_args=[2], function_kwargs=None)
 (train_frames, train_labels) = next(iter(train_ds))
 print(f'Shape of training set of frames: {train_frames.shape}')
 print(f'Shape of training labels: {train_labels.shape}')
@@ -302,14 +302,14 @@ print(f'Shape of validation set of frames: {val_frames.shape}')
 print(f'Shape of validation labels: {val_labels.shape}')
 start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 net = tf.keras.applications.EfficientNetB0(include_top=False)
-after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.keras.applications.EfficientNetB0(**kwargs)', method_object=None, object_signature=None, function_args=[], function_kwargs={'include_top': False})
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.keras.applications.EfficientNetB0()', method_object=None, function_args=None, function_kwargs={'include_top': False})
 net.trainable = False
 start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 model = tf.keras.Sequential([tf.keras.layers.Rescaling(scale=255), tf.keras.layers.TimeDistributed(net), tf.keras.layers.Dense(10), tf.keras.layers.GlobalAveragePooling3D()])
-after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.keras.Sequential(*args)', method_object=None, object_signature=None, function_args=[[tf.keras.layers.Rescaling(scale=255), tf.keras.layers.TimeDistributed(net), tf.keras.layers.Dense(10), tf.keras.layers.GlobalAveragePooling3D()]], function_kwargs={})
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.keras.Sequential()', method_object=None, function_args=[[tf.keras.layers.Rescaling(scale=255), tf.keras.layers.TimeDistributed(net), tf.keras.layers.Dense(10), tf.keras.layers.GlobalAveragePooling3D()]], function_kwargs=None)
 start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 model.compile(optimizer='adam', loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True), metrics=['accuracy'])
-after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='obj.compile(**kwargs)', method_object=model, object_signature=None, function_args=[], function_kwargs={'optimizer': 'adam', 'loss': tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True), 'metrics': ['accuracy']})
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.keras.Sequential.compile()', method_object=model, function_args=None, function_kwargs={'optimizer': 'adam', 'loss': tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True), 'metrics': ['accuracy']})
 start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 model.fit(train_ds, epochs=10, validation_data=val_ds, callbacks=tf.keras.callbacks.EarlyStopping(patience=2, monitor='val_loss'))
-after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='obj.fit(*args, **kwargs)', method_object=model, object_signature=None, function_args=[train_ds], function_kwargs={'epochs': 10, 'validation_data': val_ds, 'callbacks': tf.keras.callbacks.EarlyStopping(patience=2, monitor='val_loss')})
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.keras.Sequential.fit()', method_object=model, function_args=[train_ds], function_kwargs={'epochs': 10, 'validation_data': val_ds, 'callbacks': tf.keras.callbacks.EarlyStopping(patience=2, monitor='val_loss')})

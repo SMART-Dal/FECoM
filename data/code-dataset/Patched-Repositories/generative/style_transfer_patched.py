@@ -6,7 +6,7 @@ from tool.server.local_execution import before_execution as before_execution_INS
 from tool.server.local_execution import after_execution as after_execution_INSERTED_INTO_SCRIPT
 experiment_number = sys.argv[1]
 experiment_project = sys.argv[2]
-EXPERIMENT_FILE_PATH = EXPERIMENT_DIR / 'method-level' / experiment_project / f'experiment-{experiment_number}.json'
+EXPERIMENT_FILE_PATH = EXPERIMENT_DIR / 'local-execution' / experiment_project / f'experiment-{experiment_number}.json'
 os.environ['TFHUB_MODEL_LOAD_FORMAT'] = 'COMPRESSED'
 import IPython.display as display
 import matplotlib.pyplot as plt
@@ -27,33 +27,33 @@ def tensor_to_image(tensor):
     return PIL.Image.fromarray(tensor)
 start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 content_path = tf.keras.utils.get_file('YellowLabradorLooking_new.jpg', 'https://storage.googleapis.com/download.tensorflow.org/example_images/YellowLabradorLooking_new.jpg')
-after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.keras.utils.get_file(*args)', method_object=None, object_signature=None, function_args=['YellowLabradorLooking_new.jpg', 'https://storage.googleapis.com/download.tensorflow.org/example_images/YellowLabradorLooking_new.jpg'], function_kwargs={})
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.keras.utils.get_file()', method_object=None, function_args=['YellowLabradorLooking_new.jpg', 'https://storage.googleapis.com/download.tensorflow.org/example_images/YellowLabradorLooking_new.jpg'], function_kwargs=None)
 start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 style_path = tf.keras.utils.get_file('kandinsky5.jpg', 'https://storage.googleapis.com/download.tensorflow.org/example_images/Vassily_Kandinsky%2C_1913_-_Composition_7.jpg')
-after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.keras.utils.get_file(*args)', method_object=None, object_signature=None, function_args=['kandinsky5.jpg', 'https://storage.googleapis.com/download.tensorflow.org/example_images/Vassily_Kandinsky%2C_1913_-_Composition_7.jpg'], function_kwargs={})
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.keras.utils.get_file()', method_object=None, function_args=['kandinsky5.jpg', 'https://storage.googleapis.com/download.tensorflow.org/example_images/Vassily_Kandinsky%2C_1913_-_Composition_7.jpg'], function_kwargs=None)
 
 def load_img(path_to_img):
     max_dim = 512
     start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
     img = tf.io.read_file(path_to_img)
-    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.io.read_file(*args)', method_object=None, object_signature=None, function_args=[path_to_img], function_kwargs={})
+    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.io.read_file()', method_object=None, function_args=[path_to_img], function_kwargs=None)
     start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
     img = tf.image.decode_image(img, channels=3)
-    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.image.decode_image(*args, **kwargs)', method_object=None, object_signature=None, function_args=[img], function_kwargs={'channels': 3})
+    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.image.decode_image()', method_object=None, function_args=[img], function_kwargs={'channels': 3})
     start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
     img = tf.image.convert_image_dtype(img, tf.float32)
-    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.image.convert_image_dtype(*args)', method_object=None, object_signature=None, function_args=[img, tf.float32], function_kwargs={})
+    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.image.convert_image_dtype()', method_object=None, function_args=[img, tf.float32], function_kwargs=None)
     start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
     shape = tf.cast(tf.shape(img)[:-1], tf.float32)
-    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.cast(*args)', method_object=None, object_signature=None, function_args=[tf.shape(img)[:-1], tf.float32], function_kwargs={})
+    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.cast()', method_object=None, function_args=[tf.shape(img)[:-1], tf.float32], function_kwargs=None)
     long_dim = max(shape)
     scale = max_dim / long_dim
     start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
     new_shape = tf.cast(shape * scale, tf.int32)
-    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.cast(*args)', method_object=None, object_signature=None, function_args=[shape * scale, tf.int32], function_kwargs={})
+    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.cast()', method_object=None, function_args=[shape * scale, tf.int32], function_kwargs=None)
     start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
     img = tf.image.resize(img, new_shape)
-    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.image.resize(*args)', method_object=None, object_signature=None, function_args=[img, new_shape], function_kwargs={})
+    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.image.resize()', method_object=None, function_args=[img, new_shape], function_kwargs=None)
     img = img[tf.newaxis, :]
     return img
 
@@ -61,7 +61,7 @@ def imshow(image, title=None):
     if len(image.shape) > 3:
         start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
         image = tf.squeeze(image, axis=0)
-        after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.squeeze(*args, **kwargs)', method_object=None, object_signature=None, function_args=[image], function_kwargs={'axis': 0})
+        after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.squeeze()', method_object=None, function_args=[image], function_kwargs={'axis': 0})
     plt.imshow(image)
     if title:
         plt.title(title)
@@ -77,22 +77,22 @@ stylized_image = hub_model(tf.constant(content_image), tf.constant(style_image))
 tensor_to_image(stylized_image)
 start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 x = tf.keras.applications.vgg19.preprocess_input(content_image * 255)
-after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.keras.applications.vgg19.preprocess_input(*args)', method_object=None, object_signature=None, function_args=[content_image * 255], function_kwargs={})
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.keras.applications.vgg19.preprocess_input()', method_object=None, function_args=[content_image * 255], function_kwargs=None)
 start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 x = tf.image.resize(x, (224, 224))
-after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.image.resize(*args)', method_object=None, object_signature=None, function_args=[x, (224, 224)], function_kwargs={})
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.image.resize()', method_object=None, function_args=[x, (224, 224)], function_kwargs=None)
 start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 vgg = tf.keras.applications.VGG19(include_top=True, weights='imagenet')
-after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.keras.applications.VGG19(**kwargs)', method_object=None, object_signature=None, function_args=[], function_kwargs={'include_top': True, 'weights': 'imagenet'})
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.keras.applications.VGG19()', method_object=None, function_args=None, function_kwargs={'include_top': True, 'weights': 'imagenet'})
 start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 prediction_probabilities = vgg(x)
-after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='obj(*args)', method_object=vgg, object_signature=None, function_args=[x], function_kwargs={})
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.keras.applications.VGG19()', method_object=vgg, function_args=[x], function_kwargs=None)
 prediction_probabilities.shape
 predicted_top_5 = tf.keras.applications.vgg19.decode_predictions(prediction_probabilities.numpy())[0]
 [(class_name, prob) for (number, class_name, prob) in predicted_top_5]
 start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 vgg = tf.keras.applications.VGG19(include_top=False, weights='imagenet')
-after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.keras.applications.VGG19(**kwargs)', method_object=None, object_signature=None, function_args=[], function_kwargs={'include_top': False, 'weights': 'imagenet'})
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.keras.applications.VGG19()', method_object=None, function_args=None, function_kwargs={'include_top': False, 'weights': 'imagenet'})
 print()
 for layer in vgg.layers:
     print(layer.name)
@@ -105,12 +105,12 @@ def vgg_layers(layer_names):
     """ Creates a VGG model that returns a list of intermediate output values."""
     start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
     vgg = tf.keras.applications.VGG19(include_top=False, weights='imagenet')
-    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.keras.applications.VGG19(**kwargs)', method_object=None, object_signature=None, function_args=[], function_kwargs={'include_top': False, 'weights': 'imagenet'})
+    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.keras.applications.VGG19()', method_object=None, function_args=None, function_kwargs={'include_top': False, 'weights': 'imagenet'})
     vgg.trainable = False
     outputs = [vgg.get_layer(name).output for name in layer_names]
     start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
     model = tf.keras.Model([vgg.input], outputs)
-    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.keras.Model(*args)', method_object=None, object_signature=None, function_args=[[vgg.input], outputs], function_kwargs={})
+    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.keras.Model()', method_object=None, function_args=[[vgg.input], outputs], function_kwargs=None)
     return model
 style_extractor = vgg_layers(style_layers)
 style_outputs = style_extractor(style_image * 255)
@@ -125,13 +125,13 @@ for (name, output) in zip(style_layers, style_outputs):
 def gram_matrix(input_tensor):
     start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
     result = tf.linalg.einsum('bijc,bijd->bcd', input_tensor, input_tensor)
-    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.linalg.einsum(*args)', method_object=None, object_signature=None, function_args=['bijc,bijd->bcd', input_tensor, input_tensor], function_kwargs={})
+    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.linalg.einsum()', method_object=None, function_args=['bijc,bijd->bcd', input_tensor, input_tensor], function_kwargs=None)
     start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
     input_shape = tf.shape(input_tensor)
-    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.shape(*args)', method_object=None, object_signature=None, function_args=[input_tensor], function_kwargs={})
+    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.shape()', method_object=None, function_args=[input_tensor], function_kwargs=None)
     start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
     num_locations = tf.cast(input_shape[1] * input_shape[2], tf.float32)
-    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.cast(*args)', method_object=None, object_signature=None, function_args=[input_shape[1] * input_shape[2], tf.float32], function_kwargs={})
+    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.cast()', method_object=None, function_args=[input_shape[1] * input_shape[2], tf.float32], function_kwargs=None)
     return result / num_locations
 
 class StyleContentModel(tf.keras.models.Model):
@@ -149,7 +149,7 @@ class StyleContentModel(tf.keras.models.Model):
         inputs = inputs * 255.0
         start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
         preprocessed_input = tf.keras.applications.vgg19.preprocess_input(inputs)
-        after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.keras.applications.vgg19.preprocess_input(*args)', method_object=None, object_signature=None, function_args=[inputs], function_kwargs={})
+        after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.keras.applications.vgg19.preprocess_input()', method_object=None, function_args=[inputs], function_kwargs=None)
         outputs = self.vgg(preprocessed_input)
         (style_outputs, content_outputs) = (outputs[:self.num_style_layers], outputs[self.num_style_layers:])
         style_outputs = [gram_matrix(style_output) for style_output in style_outputs]
@@ -159,7 +159,7 @@ class StyleContentModel(tf.keras.models.Model):
 extractor = StyleContentModel(style_layers, content_layers)
 start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 results = extractor(tf.constant(content_image))
-after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='obj(*args)', method_object='extractor', object_signature=None, function_args=[tf.constant(content_image)], function_kwargs={})
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='StyleContentModel()', method_object=extractor, function_args=[tf.constant(content_image)], function_kwargs=None)
 print('Styles:')
 for (name, output) in sorted(results['style'].items()):
     print('  ', name)
@@ -179,13 +179,13 @@ style_targets = extractor(style_image)['style']
 content_targets = extractor(content_image)['content']
 start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 image = tf.Variable(content_image)
-after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.Variable(*args)', method_object=None, object_signature=None, function_args=[content_image], function_kwargs={})
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.Variable()', method_object=None, function_args=[content_image], function_kwargs=None)
 
 def clip_0_1(image):
     return tf.clip_by_value(image, clip_value_min=0.0, clip_value_max=1.0)
 start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 opt = tf.keras.optimizers.Adam(learning_rate=0.02, beta_1=0.99, epsilon=0.1)
-after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.keras.optimizers.Adam(**kwargs)', method_object=None, object_signature=None, function_args=[], function_kwargs={'learning_rate': 0.02, 'beta_1': 0.99, 'epsilon': 0.1})
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.keras.optimizers.Adam()', method_object=None, function_args=None, function_kwargs={'learning_rate': 0.02, 'beta_1': 0.99, 'epsilon': 0.1})
 style_weight = 0.01
 content_weight = 10000.0
 
@@ -194,11 +194,11 @@ def style_content_loss(outputs):
     content_outputs = outputs['content']
     start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
     style_loss = tf.add_n([tf.reduce_mean((style_outputs[name] - style_targets[name]) ** 2) for name in style_outputs.keys()])
-    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.add_n(*args)', method_object=None, object_signature=None, function_args=[[tf.reduce_mean((style_outputs[name] - style_targets[name]) ** 2) for name in style_outputs.keys()]], function_kwargs={})
+    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.add_n()', method_object=None, function_args=[[tf.reduce_mean((style_outputs[name] - style_targets[name]) ** 2) for name in style_outputs.keys()]], function_kwargs=None)
     style_loss *= style_weight / num_style_layers
     start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
     content_loss = tf.add_n([tf.reduce_mean((content_outputs[name] - content_targets[name]) ** 2) for name in content_outputs.keys()])
-    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.add_n(*args)', method_object=None, object_signature=None, function_args=[[tf.reduce_mean((content_outputs[name] - content_targets[name]) ** 2) for name in content_outputs.keys()]], function_kwargs={})
+    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.add_n()', method_object=None, function_args=[[tf.reduce_mean((content_outputs[name] - content_targets[name]) ** 2) for name in content_outputs.keys()]], function_kwargs=None)
     content_loss *= content_weight / num_content_layers
     loss = style_loss + content_loss
     return loss
@@ -208,15 +208,15 @@ def train_step(image):
     with tf.GradientTape() as tape:
         start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
         outputs = extractor(image)
-        after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='obj(*args)', method_object='extractor', object_signature=None, function_args=[image], function_kwargs={})
+        after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='StyleContentModel()', method_object=extractor, function_args=[image], function_kwargs=None)
         loss = style_content_loss(outputs)
     grad = tape.gradient(loss, image)
     start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
     opt.apply_gradients([(grad, image)])
-    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='obj.apply_gradients(*args)', method_object=opt, object_signature=None, function_args=[[(grad, image)]], function_kwargs={})
+    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.keras.optimizers.Adam.apply_gradients()', method_object=opt, function_args=[[(grad, image)]], function_kwargs=None)
     start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
     image.assign(clip_0_1(image))
-    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='obj.assign(*args)', method_object=image, object_signature=None, function_args=[clip_0_1(image)], function_kwargs={})
+    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.Variable.assign()', method_object=image, function_args=[clip_0_1(image)], function_kwargs=None)
 train_step(image)
 train_step(image)
 train_step(image)
@@ -255,7 +255,7 @@ imshow(clip_0_1(2 * x_deltas + 0.5), 'Vertical Deltas: Styled')
 plt.figure(figsize=(14, 10))
 start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 sobel = tf.image.sobel_edges(content_image)
-after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.image.sobel_edges(*args)', method_object=None, object_signature=None, function_args=[content_image], function_kwargs={})
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.image.sobel_edges()', method_object=None, function_args=[content_image], function_kwargs=None)
 plt.subplot(1, 2, 1)
 imshow(clip_0_1(sobel[..., 0] / 4 + 0.5), 'Horizontal Sobel-edges')
 plt.subplot(1, 2, 2)
@@ -267,7 +267,7 @@ def total_variation_loss(image):
 total_variation_loss(image).numpy()
 start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 tf.image.total_variation(image).numpy()
-after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.image.total_variation(image).numpy()', method_object=None, object_signature=None, function_args=[], function_kwargs={})
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.image.total_variation(image).numpy()', method_object=None, function_args=None, function_kwargs=None)
 total_variation_weight = 30
 
 @tf.function()
@@ -275,22 +275,22 @@ def train_step(image):
     with tf.GradientTape() as tape:
         start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
         outputs = extractor(image)
-        after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='obj(*args)', method_object='extractor', object_signature=None, function_args=[image], function_kwargs={})
+        after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='StyleContentModel()', method_object=extractor, function_args=[image], function_kwargs=None)
         loss = style_content_loss(outputs)
         loss += total_variation_weight * tf.image.total_variation(image)
     grad = tape.gradient(loss, image)
     start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
     opt.apply_gradients([(grad, image)])
-    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='obj.apply_gradients(*args)', method_object=opt, object_signature=None, function_args=[[(grad, image)]], function_kwargs={})
+    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.keras.optimizers.Adam.apply_gradients()', method_object=opt, function_args=[[(grad, image)]], function_kwargs=None)
     start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
     image.assign(clip_0_1(image))
-    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='obj.assign(*args)', method_object=image, object_signature=None, function_args=[clip_0_1(image)], function_kwargs={})
+    after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.Variable.assign()', method_object=image, function_args=[clip_0_1(image)], function_kwargs=None)
 start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 opt = tf.keras.optimizers.Adam(learning_rate=0.02, beta_1=0.99, epsilon=0.1)
-after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.keras.optimizers.Adam(**kwargs)', method_object=None, object_signature=None, function_args=[], function_kwargs={'learning_rate': 0.02, 'beta_1': 0.99, 'epsilon': 0.1})
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.keras.optimizers.Adam()', method_object=None, function_args=None, function_kwargs={'learning_rate': 0.02, 'beta_1': 0.99, 'epsilon': 0.1})
 start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 image = tf.Variable(content_image)
-after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.Variable(*args)', method_object=None, object_signature=None, function_args=[content_image], function_kwargs={})
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.Variable()', method_object=None, function_args=[content_image], function_kwargs=None)
 import time
 start = time.time()
 epochs = 10

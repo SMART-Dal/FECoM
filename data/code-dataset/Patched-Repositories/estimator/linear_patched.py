@@ -13,7 +13,7 @@ from tool.server.local_execution import before_execution as before_execution_INS
 from tool.server.local_execution import after_execution as after_execution_INSERTED_INTO_SCRIPT
 experiment_number = sys.argv[1]
 experiment_project = sys.argv[2]
-EXPERIMENT_FILE_PATH = EXPERIMENT_DIR / 'method-level' / experiment_project / f'experiment-{experiment_number}.json'
+EXPERIMENT_FILE_PATH = EXPERIMENT_DIR / 'local-execution' / experiment_project / f'experiment-{experiment_number}.json'
 dftrain = pd.read_csv('https://storage.googleapis.com/tf-datasets/titanic/train.csv')
 dfeval = pd.read_csv('https://storage.googleapis.com/tf-datasets/titanic/eval.csv')
 y_train = dftrain.pop('survived')
@@ -39,14 +39,14 @@ def make_input_fn(data_df, label_df, num_epochs=10, shuffle=True, batch_size=32)
     def input_function():
         start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
         ds = tf.data.Dataset.from_tensor_slices((dict(data_df), label_df))
-        after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.data.Dataset.from_tensor_slices(*args)', method_object=None, object_signature=None, function_args=[(dict(data_df), label_df)], function_kwargs={})
+        after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.data.Dataset.from_tensor_slices()', method_object=None, function_args=[(dict(data_df), label_df)], function_kwargs=None)
         if shuffle:
             start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
             ds = ds.shuffle(1000)
-            after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='obj.shuffle(*args)', method_object=ds, object_signature=None, function_args=[1000], function_kwargs={})
+            after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='ds.shuffle.shuffle()', method_object=ds, function_args=[1000], function_kwargs=None)
         start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
         ds = ds.batch(batch_size).repeat(num_epochs)
-        after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='obj.batch(batch_size).repeat(*args)', method_object=ds, object_signature=None, function_args=[num_epochs], function_kwargs={})
+        after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='ds.batch(batch_size).repeat.batch(batch_size).repeat()', method_object=ds, function_args=[num_epochs], function_kwargs=None)
         return ds
     return input_function
 train_input_fn = make_input_fn(dftrain, y_train)
@@ -61,35 +61,35 @@ for (feature_batch, label_batch) in ds.take(1):
 age_column = feature_columns[7]
 start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 tf.keras.layers.DenseFeatures([age_column])(feature_batch).numpy()
-after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.keras.layers.DenseFeatures([age_column])(feature_batch).numpy()', method_object=None, object_signature=None, function_args=[], function_kwargs={})
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.keras.layers.DenseFeatures([age_column])(feature_batch).numpy()', method_object=None, function_args=None, function_kwargs=None)
 gender_column = feature_columns[0]
 start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 tf.keras.layers.DenseFeatures([tf.feature_column.indicator_column(gender_column)])(feature_batch).numpy()
-after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.keras.layers.DenseFeatures([tf.feature_column.indicator_column(gender_column)])(feature_batch).numpy()', method_object=None, object_signature=None, function_args=[], function_kwargs={})
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.keras.layers.DenseFeatures([tf.feature_column.indicator_column(gender_column)])(feature_batch).numpy()', method_object=None, function_args=None, function_kwargs=None)
 start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 linear_est = tf.estimator.LinearClassifier(feature_columns=feature_columns)
-after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.estimator.LinearClassifier(**kwargs)', method_object=None, object_signature=None, function_args=[], function_kwargs={'feature_columns': feature_columns})
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.estimator.LinearClassifier()', method_object=None, function_args=None, function_kwargs={'feature_columns': feature_columns})
 start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 linear_est.train(train_input_fn)
-after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='obj.train(*args)', method_object=linear_est, object_signature=None, function_args=[train_input_fn], function_kwargs={})
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.estimator.LinearClassifier.train()', method_object=linear_est, function_args=[train_input_fn], function_kwargs=None)
 start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 result = linear_est.evaluate(eval_input_fn)
-after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='obj.evaluate(*args)', method_object=linear_est, object_signature=None, function_args=[eval_input_fn], function_kwargs={})
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.estimator.LinearClassifier.evaluate()', method_object=linear_est, function_args=[eval_input_fn], function_kwargs=None)
 clear_output()
 print(result)
 start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 age_x_gender = tf.feature_column.crossed_column(['age', 'sex'], hash_bucket_size=100)
-after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.feature_column.crossed_column(*args, **kwargs)', method_object=None, object_signature=None, function_args=[['age', 'sex']], function_kwargs={'hash_bucket_size': 100})
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.feature_column.crossed_column()', method_object=None, function_args=[['age', 'sex']], function_kwargs={'hash_bucket_size': 100})
 derived_feature_columns = [age_x_gender]
 start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 linear_est = tf.estimator.LinearClassifier(feature_columns=feature_columns + derived_feature_columns)
-after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.estimator.LinearClassifier(**kwargs)', method_object=None, object_signature=None, function_args=[], function_kwargs={'feature_columns': feature_columns + derived_feature_columns})
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.estimator.LinearClassifier()', method_object=None, function_args=None, function_kwargs={'feature_columns': feature_columns + derived_feature_columns})
 start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 linear_est.train(train_input_fn)
-after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='obj.train(*args)', method_object=linear_est, object_signature=None, function_args=[train_input_fn], function_kwargs={})
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.estimator.LinearClassifier.train()', method_object=linear_est, function_args=[train_input_fn], function_kwargs=None)
 start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 result = linear_est.evaluate(eval_input_fn)
-after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='obj.evaluate(*args)', method_object=linear_est, object_signature=None, function_args=[eval_input_fn], function_kwargs={})
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.estimator.LinearClassifier.evaluate()', method_object=linear_est, function_args=[eval_input_fn], function_kwargs=None)
 clear_output()
 print(result)
 pred_dicts = list(linear_est.predict(eval_input_fn))
