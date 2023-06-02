@@ -20,8 +20,6 @@ def get_perf_times(energy_data: EnergyData) -> list:
     perf_times = [
         (energy_data.start_time_perf, "method_start", 'r', 'dashed'),
         (energy_data.end_time_perf, "method_end", 'r', 'solid'),
-        (energy_data.pickle_load_time_perf, "pickle_load", 'b', 'solid'),
-        (energy_data.import_time_perf, "import", 'g', 'dotted'),
         (energy_data.begin_stable_check_time_perf, "stable_check", 'y', 'dashed'),
         (energy_data.begin_temperature_check_time_perf, "temperature_check", 'c', (0, (1, 10)))
     ]
@@ -98,8 +96,6 @@ def format_ax_gpu(energy_data: EnergyData, ax: plt.Axes, graph_stable_mean=False
     gpu_times = [
         (energy_data.start_time_nvidia, "method_start", 'r', 'dashed'),
         (energy_data.end_time_nvidia, "method_end", 'r', 'solid'),
-        (energy_data.pickle_load_time_nvidia, "pickle_load", 'b', 'solid'),
-        (energy_data.import_time_nvidia, "import", 'g', 'dotted'),
         (energy_data.begin_stable_check_time_nvidia, "stable_check", 'y', 'dashed'),
         (energy_data.lag_end_time_gpu, "lag_end", 'm', 'dotted'),
         (energy_data.begin_temperature_check_time_nvidia, "temperature_check", 'c', (0, (1, 10)))

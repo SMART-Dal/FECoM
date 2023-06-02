@@ -104,7 +104,7 @@ def before_execution():
     return start_times
 
 
-# TODO add default values, and test this method
+# TODO remove object_signature when patching is refactored
 def after_execution(
         start_times: dict, experiment_file_path: str, function_to_run: str,
         function_args: list = None, function_kwargs: dict = None,

@@ -1,5 +1,5 @@
 """
-This package contains four classes for handling experiment data
+This module contains four classes for handling experiment data
 1. FunctionEnergyData: a data structure for accumulating data for one function, but from multiple experiments for one hardware component (CPU, RAM or GPU)
 2. ProjectEnergyData: a data structure for accumulating all data associated with one project
 3. EnergyData: a data structure for storing all data associated with one function and one experiment, i.e. one server response
@@ -33,8 +33,12 @@ class FunctionEnergyData():
         self.lag_normalised = []
         self.total_lag_normalised = []
         self.execution_time = []
+        # TODO size values are not used so far. Look into how they should be used.
         self.total_args_size = []
         self.total_input_size = []
+        self.stdev_power = []
+        self.mean_power = []
+        self.median_power = []
     
     def __len__(self):
         return len(self.total)
@@ -45,7 +49,6 @@ class FunctionEnergyData():
             raise AttributeError("Function name was not initialised")
         return self.__name
     
-    ### mean values
     @name.setter
     def name(self, function_name: str):
         # the following line removes content enclosed by brackets, in this case "func(*args, **kwargs)"" becomes "func"
@@ -53,6 +56,7 @@ class FunctionEnergyData():
         name_without_args = re.sub("\(.*?\)","", function_name)
         self.__name = name_without_args
     
+    ### mean values
     @property
     def mean_total(self):
         return mean(self.total)
@@ -80,6 +84,14 @@ class FunctionEnergyData():
     @property
     def mean_execution_time(self):
         return mean(self.execution_time)
+    
+    @property
+    def mean_mean_power(self):
+        return mean(self.mean_power)
+    
+    @property
+    def mean_stdev_power(self):
+        return mean(self.stdev_power)
     
     ### median values
     @property
@@ -109,6 +121,14 @@ class FunctionEnergyData():
     @property
     def median_execution_time(self):
         return median(self.execution_time)
+    
+    @property
+    def median_median_power(self):
+        return median(self.median_power)
+    
+    @property
+    def median_stdev_power(self):
+        return median(self.stdev_power)
     
 
 class ProjectEnergyData():
@@ -229,14 +249,6 @@ class EnergyData():
         return self.times["end_time_perf"]
 
     @property
-    def pickle_load_time_perf(self):
-        return (self.times["pickle_load_time"] - self.times["sys_start_time_perf"]) / NS_CONVERSION
-    
-    @property
-    def import_time_perf(self):
-        return (self.times["import_time"] - self.times["sys_start_time_perf"]) / NS_CONVERSION
-    
-    @property
     def begin_stable_check_time_perf(self): 
         return (self.times["begin_stable_check_time"] - self.times["sys_start_time_perf"]) / NS_CONVERSION
     
@@ -261,14 +273,6 @@ class EnergyData():
     @property
     def end_time_nvidia(self):
         return self.times["end_time_nvidia"]
-    
-    @property
-    def pickle_load_time_nvidia(self):
-        return (self.times["pickle_load_time"] - self.times["sys_start_time_nvidia"]) / NS_CONVERSION
-    
-    @property
-    def import_time_nvidia(self):
-        return (self.times["import_time"] - self.times["sys_start_time_nvidia"]) / NS_CONVERSION
     
     @property
     def begin_stable_check_time_nvidia(self):
@@ -300,7 +304,7 @@ class EnergyData():
 
     @property
     def stable_gpu_energy_mean(self):
-        return self.stable_gpu_energy_mean * self.measurement_interval_s # convert power (W) to energy (J)
+        return self.stable_gpu_power_mean * self.measurement_interval_s # convert power (W) to energy (J)
     
 
     ### Mean stable state power draw
@@ -344,6 +348,44 @@ class EnergyData():
         assert self.gpu_energy_in_execution["time_elapsed"].iloc[0] >= self.start_time_nvidia
         assert self.gpu_energy_in_execution["time_elapsed"].iloc[-1] <= self.end_time_nvidia
         return self.gpu_energy_in_execution["power_draw (W)"].sum() * self.measurement_interval_s # convert power to joules
+    
+
+    ### Statistics of the power during execution
+    @property
+    def stdev_power_cpu(self):
+        return self.cpu_energy_in_execution.std(numeric_only=True)["energy (J)"]
+    
+    @property
+    def stdev_power_ram(self):
+        return self.ram_energy_in_execution.std(numeric_only=True)["energy (J)"]
+    
+    @property
+    def stdev_power_gpu(self):
+        return self.gpu_energy_in_execution.std(numeric_only=True)["power_draw (W)"]
+    
+    @property
+    def mean_power_cpu(self):
+        return self.cpu_energy_in_execution.mean(numeric_only=True)["energy (J)"]
+    
+    @property
+    def mean_power_ram(self):
+        return self.ram_energy_in_execution.mean(numeric_only=True)["energy (J)"]
+    
+    @property
+    def mean_power_gpu(self):
+        return self.gpu_energy_in_execution.mean(numeric_only=True)["power_draw (W)"]
+    
+    @property
+    def median_power_cpu(self):
+        return self.cpu_energy_in_execution.median(numeric_only=True)["energy (J)"]
+    
+    @property
+    def median_power_ram(self):
+        return self.ram_energy_in_execution.median(numeric_only=True)["energy (J)"]
+    
+    @property
+    def median_power_gpu(self):
+        return self.gpu_energy_in_execution.median(numeric_only=True)["power_draw (W)"]
     
 
     ### Normalised energy consumption during execution (subtracting baseline energy consumption)

@@ -2,10 +2,11 @@ import tensorflow as tf
 from tensorflow.keras import datasets, layers, models
 
 from tool.server.function_details import build_function_details
-from tool.client.client_config import WAIT_AFTER_RUN_S, MAX_WAIT_S, EXPERIMENT_DIR
+from tool.client.client_config import EXPERIMENT_DIR
 from tool.experiment.experiments import DataSizeExperiment
 from tool.experiment.run import run_experiments
 
+raise DeprecationWarning("This module needs to be updated to work with the new local execution environment")
 
 def run_keras_classification_model_fit_datasize_experiment():
     # (1) setup like in the original project

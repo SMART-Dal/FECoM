@@ -18,12 +18,12 @@ def implementation_plot_GPU_energy_with_times():
         if energy_data.function_name == "tf.keras.Sequential.fit(*args, **kwargs)":
             plot_single_energy_with_times(energy_data, hardware_component="gpu")
 
-### RQ 2 PLOTS
+### RQ 1 PLOTS
 def rq1_plot_total_energy_vs_time():
     project_name = "keras/classification"
-    data_1 = init_project_energy_data(project_name, ExperimentKinds.METHOD_LEVEL, first_experiment=6, last_experiment=10)
+    data_1 = init_project_energy_data(project_name, ExperimentKinds.METHOD_LEVEL, first_experiment=1, last_experiment=10)
     project_name = "images/cnn"
-    data_2 = init_project_energy_data(project_name, ExperimentKinds.METHOD_LEVEL, first_experiment=6, last_experiment=10)
+    data_2 = init_project_energy_data(project_name, ExperimentKinds.METHOD_LEVEL, first_experiment=1, last_experiment=10)
 
     plot_total_energy_vs_execution_time([data_1, data_2], title=False)
 

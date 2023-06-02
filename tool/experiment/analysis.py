@@ -11,7 +11,7 @@ from tool.experiment.experiments import ExperimentKinds
 from tool.client.client_config import EXPERIMENT_DIR
 
 
-SUMMARY_DF_COLUMNS = ['function', 'exec time (s)', 'total', 'total (normalised)', 'lag time (s)', 'lag', 'lag (normalised)', 'total + lag (normalised)']
+SUMMARY_DF_COLUMNS = ['function', 'exec time (s)', 'total', 'total (normalised)', 'lag time (s)', 'lag', 'lag (normalised)', 'total + lag (normalised)', 'stdev power', 'avg power']
 
 
 def init_project_energy_data(project: str, experiment_kind: ExperimentKinds, first_experiment: int = 1, last_experiment: int = 10) -> ProjectEnergyData: 
@@ -56,6 +56,9 @@ def init_project_energy_data(project: str, experiment_kind: ExperimentKinds, fir
             project_energy_data.cpu[function_number].lag.append(function_data.cpu_lag)
             project_energy_data.cpu[function_number].lag_normalised.append(function_data.cpu_lag_normalised)
             project_energy_data.cpu[function_number].total_lag_normalised.append(function_data.total_cpu_lag_normalised)
+            project_energy_data.cpu[function_number].stdev_power.append(function_data.stdev_power_cpu)
+            project_energy_data.cpu[function_number].mean_power.append(function_data.mean_power_cpu)
+            project_energy_data.cpu[function_number].median_power.append(function_data.median_power_cpu)
 
             ### add RAM data
             # general data
@@ -70,6 +73,9 @@ def init_project_energy_data(project: str, experiment_kind: ExperimentKinds, fir
             project_energy_data.ram[function_number].lag.append(function_data.ram_lag)
             project_energy_data.ram[function_number].lag_normalised.append(function_data.ram_lag_normalised)
             project_energy_data.ram[function_number].total_lag_normalised.append(function_data.total_ram_lag_normalised)
+            project_energy_data.ram[function_number].stdev_power.append(function_data.stdev_power_ram)
+            project_energy_data.ram[function_number].mean_power.append(function_data.mean_power_ram)
+            project_energy_data.ram[function_number].median_power.append(function_data.median_power_ram)
 
             ### add GPU data
             # general data
@@ -84,6 +90,9 @@ def init_project_energy_data(project: str, experiment_kind: ExperimentKinds, fir
             project_energy_data.gpu[function_number].lag.append(function_data.gpu_lag)
             project_energy_data.gpu[function_number].lag_normalised.append(function_data.gpu_lag_normalised)
             project_energy_data.gpu[function_number].total_lag_normalised.append(function_data.total_gpu_lag_normalised)
+            project_energy_data.gpu[function_number].stdev_power.append(function_data.stdev_power_gpu)
+            project_energy_data.gpu[function_number].mean_power.append(function_data.mean_power_gpu)
+            project_energy_data.gpu[function_number].median_power.append(function_data.median_power_gpu)
     
     return project_energy_data
 
@@ -111,7 +120,9 @@ def build_summary_df_median(energy_data_list: List[FunctionEnergyData]) -> pd.Da
             function_data.median_lag_time,
             function_data.median_lag,
             function_data.median_lag_normalised,
-            function_data.median_total_lag_normalised
+            function_data.median_total_lag_normalised,
+            function_data.median_stdev_power,
+            function_data.median_median_power
         ])
     
     return format_df(data_list, SUMMARY_DF_COLUMNS)
@@ -128,7 +139,9 @@ def build_summary_df_mean(energy_data_list: List[FunctionEnergyData]) -> pd.Data
             function_data.mean_lag_time,
             function_data.mean_lag,
             function_data.mean_lag_normalised,
-            function_data.mean_total_lag_normalised
+            function_data.mean_total_lag_normalised,
+            function_data.mean_stdev_power,
+            function_data.mean_mean_power
         ])
     return format_df(data_list, SUMMARY_DF_COLUMNS)
 
