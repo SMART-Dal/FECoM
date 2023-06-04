@@ -15,8 +15,8 @@ tests/test_data
 .pytest_cache
 
 # client
-tool/client/sample.py
-tool/client/data
+from tool/patching/sample.py
+from tool/patching/data
 .idea/*
 ENV/*
 .ipynb_checkpoints/

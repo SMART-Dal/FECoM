@@ -38,8 +38,8 @@ class Experiment(ABC):
         args:
         - experiment_kind is a string that is hard-coded into the specific experiment implementation
         - project is a string in the form "category/project_name"
-        - code_dir should most likely be set to client_config.CODE_DIR in TODO REMOVE THIS HERE
-        - output_dir should most likely be set to client_config.EXPERIMENT_DIR
+        - code_dir should most likely be set to patching_config.CODE_DIR in TODO REMOVE THIS HERE
+        - output_dir should most likely be set to patching_config.EXPERIMENT_DIR
         """
         self.number = None
         self.project = project

@@ -6,7 +6,7 @@ import sys
 # import os
 # from pathlib import Path
 # import dill as pickle
-from tool.client.client_config import EXPERIMENT_DIR #, MAX_WAIT_S, WAIT_AFTER_RUN_S
+from tool.patching.patching_config import EXPERIMENT_DIR #, MAX_WAIT_S, WAIT_AFTER_RUN_S
 # from tool.measurement.send_request import send_request
 # from tool.measurement.function_details import FunctionDetails
 # current_path = os.path.abspath(__file__)

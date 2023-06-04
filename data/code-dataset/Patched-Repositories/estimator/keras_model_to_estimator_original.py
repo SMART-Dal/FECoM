@@ -14,7 +14,9 @@ def input_fn():
   import tensorflow_datasets as tfds
   split = tfds.Split.TRAIN
   dataset = tfds.load('iris', split=split, as_supervised=True)
-  dataset = dataset.map(lambda features, labels: ({'dense_2_input':features}, labels))
+  # dataset = dataset.map(lambda features, labels: ({'dense_2_input':features}, labels))
+  # changed above line to below (T 01/06/23)
+  dataset = dataset.map(lambda features, labels: ({'dense_input':features}, labels))
   dataset = dataset.batch(32).repeat()
   return dataset
 for features_batch, labels_batch in input_fn().take(1):

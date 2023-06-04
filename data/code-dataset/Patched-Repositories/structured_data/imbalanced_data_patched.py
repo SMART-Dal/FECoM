@@ -12,7 +12,7 @@ from sklearn.metrics import confusion_matrix
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 import sys
-from tool.client.client_config import EXPERIMENT_DIR
+from tool.patching.patching_config import EXPERIMENT_DIR
 from tool.measurement.execution import before_execution as before_execution_INSERTED_INTO_SCRIPT
 from tool.measurement.execution import after_execution as after_execution_INSERTED_INTO_SCRIPT
 experiment_number = sys.argv[1]

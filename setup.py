@@ -15,7 +15,7 @@ setup(
     long_description=readme,
     author='Tim Widmayer',
     author_email='tim.widmayer.20@ucl.ac.uk',
-    url='https://github.com/mkechagia/GreenAI-extension/tree/main/client_agent',
+    url='https://github.com/mkechagia/GreenAI-extension/tree/main/tool',
     # license=license,
     packages=find_packages(exclude=('tests', 'docs', 'data', 'deprecated', 'replication'))
 )

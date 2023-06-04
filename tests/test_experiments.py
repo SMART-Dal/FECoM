@@ -1,7 +1,7 @@
 from tool.experiment.experiments import ProjectLevelExperiment
 from pathlib import Path
 
-from tool.client.client_config import CODE_DIR, EXPERIMENT_DIR
+from tool.patching.patching_config import CODE_DIR, EXPERIMENT_DIR
 
 def test_get_experiment_number():
     raise DeprecationWarning("Update to work with expanded Experiment class")

@@ -17,7 +17,7 @@ from tensorflow.keras.losses import SparseCategoricalCrossentropy
 from official.projects.movinet.modeling import movinet
 from official.projects.movinet.modeling import movinet_model
 import sys
-from tool.client.client_config import EXPERIMENT_DIR
+from tool.patching.patching_config import EXPERIMENT_DIR
 from tool.measurement.execution import before_execution as before_execution_INSERTED_INTO_SCRIPT
 from tool.measurement.execution import after_execution as after_execution_INSERTED_INTO_SCRIPT
 experiment_number = sys.argv[1]

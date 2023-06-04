@@ -8,7 +8,7 @@ from pathlib import Path
 
 from tool.experiment.data import DataLoader, FunctionEnergyData, ProjectEnergyData
 from tool.experiment.experiments import ExperimentKinds
-from tool.client.client_config import EXPERIMENT_DIR
+from tool.patching.patching_config import EXPERIMENT_DIR
 
 
 SUMMARY_DF_COLUMNS = ['function', 'exec time (s)', 'total', 'total (normalised)', 'lag time (s)', 'lag', 'lag (normalised)', 'total + lag (normalised)', 'stdev power', 'avg power']

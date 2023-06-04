@@ -21,9 +21,9 @@ Once we have the target repo, we can run the patching script.
 python3 repo-patching.py
 ```
 
-The final patched code will be stored in the `~/data/code-dataset/Patched-Repositories` directory. You can modify the paths for these directories in "client_config.py".
+The final patched code will be stored in the `~/data/code-dataset/Patched-Repositories` directory. You can modify the paths for these directories in "patching_config.py".
 
-Once the repo is patched, it is important that you update the `EXPERIMENT_DIR` and `EXPERIMENT_TAG` settings in `client_config.py`. Then you can simply run the python files from the patched projects like any a script with `python3 project_name.py`. When executing, the patched files will send method requests to the server, get the energy consumption data and store it in `~/data/energy-dataset`.
+Once the repo is patched, it is important that you update the `EXPERIMENT_DIR` and `EXPERIMENT_TAG` settings in `patching_config.py`. Then you can simply run the python files from the patched projects like any a script with `python3 project_name.py`. When executing, the patched files will send method requests to the server, get the energy consumption data and store it in `~/data/energy-dataset`.
 
 Once the execution is complete we will have a list of json objects for each method call. Please refer to `~/tool/measurement/README.md` for more information on the format of these objects.
 

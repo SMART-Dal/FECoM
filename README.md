@@ -42,16 +42,14 @@ to install the tool. If you make any changes, for example to the configuration f
 To test if you have setup everything correctly, go to the `tests` directory and follow the instructions in that directory's README file to run all tests. Make sure to do this in a new terminal with the activated environment. 
 
 ## Configuration
-All constants and settings for the server can be found in `tool/measurement/measurement_config.py`, and for the client in `tool/client/client_config.py`. These files are the single source of truth for all used constants.
+All constants and settings for the measurement script can be found in `tool/measurement/measurement_config.py`, and for the patching script in `tool/patching/patching_config.py`. These files are the single source of truth for all used constants.
 
 `measurement_config.py` contains configurations regarding
-- Server URL and port
 - Stable state checking
 - Energy measurements
 - Temperature measurements
-- Authentication & SSL
 
-`client_config.py` contains client file paths. 
+`patching_config.py` contains patching script file paths. 
 
 Some of these constants are critical settings for the experiments. 
 

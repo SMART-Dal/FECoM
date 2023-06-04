@@ -9,7 +9,7 @@ import importlib
 import re
 from pathlib import Path
 
-from client_config import PATCHED_REPO_DIR, SOURCE_REPO_DIR, PATCHING_SCRIPT_PATH
+from patching_config import PATCHED_REPO_DIR, SOURCE_REPO_DIR, PATCHING_SCRIPT_PATH
 # from server.send_request import send_request, send_single_thread_request
 
 

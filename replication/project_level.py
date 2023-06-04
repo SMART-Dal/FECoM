@@ -1,6 +1,6 @@
 from tool.experiment.experiments import ProjectLevelExperiment
 from tool.experiment.run import run_experiments
-from tool.client.client_config import EXPERIMENT_DIR, CODE_DIR, MAX_WAIT_S, WAIT_AFTER_RUN_S
+from tool.patching.patching_config import EXPERIMENT_DIR, CODE_DIR, MAX_WAIT_S, WAIT_AFTER_RUN_S
 
 def run_keras_classification_project_level():
     experiment = ProjectLevelExperiment("keras/classification", EXPERIMENT_DIR, CODE_DIR, MAX_WAIT_S, WAIT_AFTER_RUN_S)

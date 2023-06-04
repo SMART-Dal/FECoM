@@ -3,7 +3,7 @@ import os
 from pathlib import Path
 import sys
 import numpy as np
-from tool.client.client_config import EXPERIMENT_DIR, MAX_WAIT_S, WAIT_AFTER_RUN_S
+from tool.patching.patching_config import EXPERIMENT_DIR, MAX_WAIT_S, WAIT_AFTER_RUN_S
 from tool.measurement.send_request import send_request
 # TODO: do we need this import? @Saurabh
 from tool.measurement.function_details import FunctionDetails

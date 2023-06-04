@@ -3,7 +3,7 @@
 import os
 import random
 from pathlib import Path
-from tool.client.client_config import EXPERIMENT_DIR
+from tool.patching.patching_config import EXPERIMENT_DIR
 from tool.experiment.experiments import ExperimentKinds
 
 

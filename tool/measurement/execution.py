@@ -15,7 +15,7 @@ from tool.measurement.stable_check import run_check_loop, server_is_stable_check
 from tool.measurement.measurement_parse import get_current_times, get_energy_data, get_cpu_temperature_data
 
 # TODO these two settings should be moved to measurement_config
-from tool.client.client_config import MAX_WAIT_S, WAIT_AFTER_RUN_S
+from tool.patching.patching_config import MAX_WAIT_S, WAIT_AFTER_RUN_S
 
 from tool.measurement.measurement_config import DEBUG
 # stable state constants

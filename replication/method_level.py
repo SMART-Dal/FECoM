@@ -1,6 +1,6 @@
 from tool.experiment.experiments import MethodLevelExperiment, MethodLevelLocalExperiment
 from tool.experiment.run import run_experiments
-from tool.client.client_config import EXPERIMENT_DIR, CODE_DIR
+from tool.patching.patching_config import EXPERIMENT_DIR, CODE_DIR
 
 on_hold = [
     "generative/cvae",
