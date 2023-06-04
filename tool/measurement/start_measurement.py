@@ -194,7 +194,7 @@ if __name__ == "__main__":
             # When the server adds a new execution to the log file, we want to to restart perf & nvidia-smi to clear the energy measurement files
             if latest_execution != previous_execution:
                 # restart all programs, and update the references to point at the new processes
-                perf_stat, nvidia_smi = restart_measurements(perf_stat, nvidia_smi, latest_execution.split(";")[0], server_start_time)
+                perf_stat, nvidia_smi = restart_measurements(perf_stat, nvidia_smi, latest_execution.split(";")[0])
                 previous_execution = latest_execution
             
             # this is half the time the server waits after receiving a request, which gives the system enough time to restart in between method calls.

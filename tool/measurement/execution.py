@@ -14,16 +14,13 @@ from tool.measurement.start_measurement import start_sensors, quit_process, unre
 from tool.measurement.stable_check import run_check_loop, server_is_stable_check, temperature_is_low_check
 from tool.measurement.measurement_parse import get_current_times, get_energy_data, get_cpu_temperature_data
 
-# TODO these two settings should be moved to measurement_config
-from tool.patching.patching_config import MAX_WAIT_S, WAIT_AFTER_RUN_S
-
 from tool.measurement.measurement_config import DEBUG
 # stable state constants
-from tool.measurement.measurement_config import CPU_STD_TO_MEAN, RAM_STD_TO_MEAN, GPU_STD_TO_MEAN, CPU_MAXIMUM_TEMPERATURE, GPU_MAXIMUM_TEMPERATURE
+from tool.measurement.measurement_config import MAX_WAIT_S, WAIT_AFTER_RUN_S, CPU_STD_TO_MEAN, RAM_STD_TO_MEAN, GPU_STD_TO_MEAN, CPU_MAXIMUM_TEMPERATURE, GPU_MAXIMUM_TEMPERATURE
 # stable state settings
 from tool.measurement.measurement_config import WAIT_PER_STABLE_CHECK_LOOP_S, CHECK_LAST_N_POINTS, STABLE_CHECK_TOLERANCE, CPU_TEMPERATURE_INTERVAL_S, MEASUREMENT_INTERVAL_S
 # file paths and separators
-from tool.measurement.measurement_config import PERF_FILE, NVIDIA_SMI_FILE, EXECUTION_LOG_FILE, START_TIMES_FILE
+from tool.measurement.measurement_config import PERF_FILE, NVIDIA_SMI_FILE, EXECUTION_LOG_FILE, START_TIMES_FILE, CPU_TEMPERATURE_FILE
 
 from tool.experiment.experiments import ExperimentKinds
 
@@ -55,7 +52,7 @@ def prepare_state():
 
     # (2b) check that the CPU, RAM and GPU energy consumption is stable
     begin_stable_check_time = time.time_ns()
-    if not run_check_loop(False, MAX_WAIT_S, WAIT_PER_STABLE_CHECK_LOOP_S, "stable state", server_is_stable_check, CHECK_LAST_N_POINTS, STABLE_CHECK_TOLERANCE):
+    if not run_check_loop(False, MAX_WAIT_S, WAIT_PER_STABLE_CHECK_LOOP_S, "stable state", server_is_stable_check, CHECK_LAST_N_POINTS, STABLE_CHECK_TOLERANCE, CPU_STD_TO_MEAN, RAM_STD_TO_MEAN, GPU_STD_TO_MEAN):
         raise TimeoutError(f"Server could not reach a stable state within {MAX_WAIT_S} seconds")
 
     # (3) evaluate the function. Get the start & end times from the files and also save their exact values.
@@ -113,7 +110,7 @@ def before_execution():
         except TimeoutError as e:
             error_file = "timeout_energy_data.json"
             with open(error_file, 'w') as f:
-                json.dump(get_energy_data()[0], f)
+                json.dump(get_energy_data(PERF_FILE, NVIDIA_SMI_FILE)[0], f)
             time.sleep(30)
             continue  # retry reaching stable state
     
@@ -156,8 +153,8 @@ def after_execution(
         print_exec(f"Performed {function_to_run[:100]} on input and will now save energy data.")
 
     # (5) get the energy data & gather all start and end times
-    energy_data, df_gpu = get_energy_data()
-    cpu_temperatures = get_cpu_temperature_data()
+    energy_data, df_gpu = get_energy_data(PERF_FILE, NVIDIA_SMI_FILE)
+    cpu_temperatures = get_cpu_temperature_data(CPU_TEMPERATURE_FILE)
 
     # "normalise" nvidia-smi start/end times such that the first value in the gpu energy data has timestamp 0
     start_time_nvidia_normalised = start_times["start_time_nvidia"] - df_gpu["timestamp"].iloc[0]
@@ -201,10 +198,19 @@ def after_execution(
 
     # (4) The function has executed successfully. Now add size data and format the return dictionary
     # to be in the format {function_signature: results}
+    try:
+        args_size = len(pickle.dumps(function_args)) if function_args is not None else None
+        kwargs_size = len(pickle.dumps(function_kwargs)) if function_kwargs is not None else None
+        object_size = len(pickle.dumps(method_object)) if method_object is not None else None
+    # when the function args or object cannot be pickled, this error is raised.
+    except AttributeError as e:
+        print_exec(f"Could not pickle function args or method object. Error: \n {e} \n Sizes will be None for this function. Execution will continue normally.")
+        args_size, kwargs_size, object_size = (None, None, None)
+
     input_sizes = {
-        "args_size": len(pickle.dumps(function_args)) if function_args is not None else None,
-        "kwargs_size": len(pickle.dumps(function_kwargs)) if function_kwargs is not None else None,
-        "object_size": len(pickle.dumps(method_object)) if method_object is not None else None
+        "args_size": args_size,
+        "kwargs_size": kwargs_size,
+        "object_size": object_size
     }
 
     # (7) return the energy data, times, temperatures and settings
@@ -233,6 +239,6 @@ def after_execution(
     # This triggers the reload of perf & nvidia-smi, clearing the energy data from the execution of this function
     # (see tool.server.start_measurement for the implementation of this process) 
     with open(EXECUTION_LOG_FILE, 'a') as f:
-        f.write(f"{function_to_run};{time.time_ns()}")
+        f.write(f"{function_to_run};{time.time_ns()}\n")
 
     store_data(results, experiment_file_path)

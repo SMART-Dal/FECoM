@@ -8,8 +8,9 @@ from abc import ABC, abstractmethod
 from pathlib import Path
 from enum import Enum
 
-from tool.measurement.send_request import send_request_with_func_details as send_request
-from tool.measurement.function_details import FunctionDetails, build_function_details
+# TODO adopt project-level experiments for local execution
+# from tool.measurement.send_request import send_request_with_func_details as send_request
+# from tool.measurement.function_details import FunctionDetails, build_function_details
 
 
 class ExperimentKinds(Enum):
@@ -71,15 +72,16 @@ class ProjectLevelExperiment(Experiment):
         # have we already read the code file?
         if self.__code_string is None:
             self.__code_string = self.read_project_file(self.code_file)
-
-        function_details = build_function_details(
-            imports = "",
-            function_to_run = self.__code_string,
-            max_wait_secs = self.max_wait_secs,
-            wait_after_run_secs = self.wait_after_run_secs,
-            exec_not_eval = True
-        )
-        send_request(function_details, experiment_file_path=self.output_file)
+        
+        # TODO adopt to local execution
+        # function_details = build_function_details(
+        #     imports = "",
+        #     function_to_run = self.__code_string,
+        #     max_wait_secs = self.max_wait_secs,
+        #     wait_after_run_secs = self.wait_after_run_secs,
+        #     exec_not_eval = True
+        # )
+        # send_request(function_details, experiment_file_path=self.output_file)
         return
 
     # read the code file into a string
@@ -120,7 +122,8 @@ class MethodLevelLocalExperiment(Experiment):
 
 class DataSizeExperiment(Experiment):
     # TODO make it clear that n_runs is the theoretical number of runs, which is smaller when start_at > 1
-    def __init__(self, project: str, experiment_dir: Path, n_runs: int, function_details: FunctionDetails, vary_args: list, start_at: int = 1):
+    # TODO adopt to local execution
+    def __init__(self, project: str, experiment_dir: Path, n_runs: int, function_details, vary_args: list, start_at: int = 1):
         # raise NotImplementedError("This experiment has not been tested yet")
         """
         args:
@@ -145,10 +148,11 @@ class DataSizeExperiment(Experiment):
             print(f"Begin run [{run}] with data size {fraction} of original")
 
             self.function_details.args = self.vary_arg_sizes(fraction)
-            send_request(
-                function_details = self.function_details,
-                experiment_file_path= self.output_file
-            )
+            # TODO adopt to local execution
+            # send_request(
+            #     function_details = self.function_details,
+            #     experiment_file_path= self.output_file
+            # )
 
     def vary_arg_sizes(self, fraction: float) -> list:
         """
