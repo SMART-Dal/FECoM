@@ -26,12 +26,12 @@ Repositories/*
 # server
 *.pth
 flask.log
-tool/server/out/*
+tool/measurement/out/*
 
 # package
 *.egg-info
 build
 
-tool/server/flickr8k/*
-tool/server/datasets/*
-tool/server/test_data/*
+tool/measurement/flickr8k/*
+tool/measurement/datasets/*
+tool/measurement/test_data/*

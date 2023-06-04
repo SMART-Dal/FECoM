@@ -4,8 +4,8 @@ import time
 import json
 from pathlib import Path
 
-from tool.server.server_config import URL, DEBUG
-from tool.server.function_details import FunctionDetails, build_function_details
+from tool.measurement.server_config import URL, DEBUG
+from tool.measurement.function_details import FunctionDetails, build_function_details
 
 # TODO is_dict is a temporary fix to experiment with local_execution
 def store_response(response, experiment_file_path: Path, is_dict = False):

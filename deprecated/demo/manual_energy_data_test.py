@@ -2,8 +2,8 @@ import sys
 import numpy as np
 import pandas as pd
 
-from tool.server.server_config import DEBUG
-from tool.server.send_request import send_request
+from tool.measurement.server_config import DEBUG
+from tool.measurement.send_request import send_request
 
 
 def test_matmul_request():

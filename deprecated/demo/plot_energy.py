@@ -4,8 +4,8 @@ from sklearn.preprocessing import MinMaxScaler
 import numpy as np
 from pathlib import Path
 
-from tool.server.measurement_parse import parse_nvidia_smi, parse_perf, parse_cpu_temperature
-from tool.server.server_config import CPU_TEMPERATURE_FILE
+from tool.measurement.measurement_parse import parse_nvidia_smi, parse_perf, parse_cpu_temperature
+from tool.measurement.server_config import CPU_TEMPERATURE_FILE
 
 # TODO refactor this module
 

@@ -8,14 +8,15 @@ from abc import ABC, abstractmethod
 from pathlib import Path
 from enum import Enum
 
-from tool.server.send_request import send_request_with_func_details as send_request
-from tool.server.function_details import FunctionDetails, build_function_details
+from tool.measurement.send_request import send_request_with_func_details as send_request
+from tool.measurement.function_details import FunctionDetails, build_function_details
 
 
 class ExperimentKinds(Enum):
     METHOD_LEVEL = "method-level"
     PROJECT_LEVEL = "project-level"
     DATA_SIZE = "data-size"
+    LOCAL_EXECUTION = "local-execution"
 
 
 def format_full_output_dir(output_dir: Path, experiment_kind: str, project: str):

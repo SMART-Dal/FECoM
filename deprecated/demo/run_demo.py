@@ -14,7 +14,7 @@ import tensorflow as tf
 import pandas as pd
 import matplotlib.pyplot as plt
 
-from tool.server.send_request import send_request
+from tool.measurement.send_request import send_request
 from tool.demo.plot_energy import combined_plot, plot_energy_from_dfs
 
 """

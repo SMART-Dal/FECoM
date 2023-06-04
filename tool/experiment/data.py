@@ -217,11 +217,11 @@ class EnergyData():
         """
         How long did the server check for stable state?
         """
-        return (self.times["start_time_server"]-self.times["begin_stable_check_time"]) / NS_CONVERSION
+        return (self.times["start_time_execution"]-self.times["begin_stable_check_time"]) / NS_CONVERSION
     
     @property
     def execution_time_s(self):
-        return (self.times["end_time_server"] - self.times["start_time_server"]) / NS_CONVERSION
+        return (self.times["end_time_execution"] - self.times["start_time_execution"]) / NS_CONVERSION
 
     @property
     def wait_per_stable_check_loop_s(self):
@@ -230,7 +230,7 @@ class EnergyData():
     @property
     def measurement_interval_s(self):
         # data gathered until 04 May 2023 does have the settings/measurement_interval_s attribute,
-        # so use the previous server_config constant value of 0.5 if the attribute does not exist
+        # so use the previous measurement_config constant value of 0.5 if the attribute does not exist
         measurement_interval_s_old = 0.5
         return self.settings.get("measurement_interval_s", measurement_interval_s_old)
     

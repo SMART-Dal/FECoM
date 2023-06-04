@@ -2,8 +2,8 @@ import numpy as np
 import tensorflow as tf
 import requests
 
-from tool.server.send_request import send_request
-from tool.server.server_config import SERVER_HOST, SERVER_PORT
+from tool.measurement.send_request import send_request
+from tool.measurement.measurement_config import SERVER_HOST, SERVER_PORT
 
 def test_server_is_deployed():
     url = "https://"+SERVER_HOST+":"+str(SERVER_PORT)+"/"

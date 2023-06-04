@@ -17,19 +17,19 @@ from werkzeug.security import check_password_hash
 import dill as pickle
 from flask import Flask, Response, request
 from flask_httpauth import HTTPBasicAuth
-from tool.server.start_measurement import start_sensors, quit_process, unregister_and_quit_process
+from tool.measurement.start_measurement import start_sensors, quit_process, unregister_and_quit_process
 
 # server settings
-from tool.server.server_config import API_PATH, DEBUG, SERVER_HOST, SERVER_PORT, USERS, CA_CERT_PATH, CA_KEY_PATH, TEMP_EXEC_CODE_FILE
+from tool.measurement.server_config import API_PATH, DEBUG, SERVER_HOST, SERVER_PORT, USERS, CA_CERT_PATH, CA_KEY_PATH, TEMP_EXEC_CODE_FILE
 # file paths and separators
-from tool.server.server_config import PERF_FILE, NVIDIA_SMI_FILE, EXECUTION_LOG_FILE, START_TIMES_FILE, CPU_TEMPERATURE_FILE, CPU_FILE_SEPARATOR
+from tool.measurement.server_config import PERF_FILE, NVIDIA_SMI_FILE, EXECUTION_LOG_FILE, START_TIMES_FILE, CPU_TEMPERATURE_FILE, CPU_FILE_SEPARATOR
 # stable state constants
-from tool.server.server_config import CPU_STD_TO_MEAN, RAM_STD_TO_MEAN, GPU_STD_TO_MEAN, CPU_MAXIMUM_TEMPERATURE, GPU_MAXIMUM_TEMPERATURE
+from tool.measurement.server_config import CPU_STD_TO_MEAN, RAM_STD_TO_MEAN, GPU_STD_TO_MEAN, CPU_MAXIMUM_TEMPERATURE, GPU_MAXIMUM_TEMPERATURE
 # stable state settings
-from tool.server.server_config import WAIT_PER_STABLE_CHECK_LOOP_S, CHECK_LAST_N_POINTS, STABLE_CHECK_TOLERANCE, CPU_TEMPERATURE_INTERVAL_S, MEASUREMENT_INTERVAL_S
-from tool.server.function_details import FunctionDetails # shown unused but still required since this is the class used for sending function details to the server
-from tool.server.measurement_parse import parse_nvidia_smi, parse_perf, parse_cpu_temperature
-from tool.server.utilities import custom_print
+from tool.measurement.server_config import WAIT_PER_STABLE_CHECK_LOOP_S, CHECK_LAST_N_POINTS, STABLE_CHECK_TOLERANCE, CPU_TEMPERATURE_INTERVAL_S, MEASUREMENT_INTERVAL_S
+from tool.measurement.function_details import FunctionDetails # shown unused but still required since this is the class used for sending function details to the server
+from tool.measurement.measurement_parse import parse_nvidia_smi, parse_perf, parse_cpu_temperature
+from tool.measurement.utilities import custom_print
 
 from tool.experiment.experiments import ExperimentKinds
 

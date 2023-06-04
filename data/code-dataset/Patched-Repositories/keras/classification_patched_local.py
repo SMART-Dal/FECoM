@@ -7,8 +7,8 @@ import sys
 # from pathlib import Path
 # import dill as pickle
 from tool.client.client_config import EXPERIMENT_DIR #, MAX_WAIT_S, WAIT_AFTER_RUN_S
-# from tool.measurement.send_request import send_request
-# from tool.measurement.function_details import FunctionDetails
+# from tool.server.send_request import send_request
+# from tool.server.function_details import FunctionDetails
 # current_path = os.path.abspath(__file__)
 # END NEW
 experiment_number = sys.argv[1]
@@ -56,7 +56,7 @@ after_execution_INSERTED_INTO_SCRIPT(
     # TODO: we don't really need this format anymore for local execution. It would simplify the code
     # to simply have the full function/method signature as function_to_run, here 'tf.keras.Sequential'
     function_to_run='tf.keras.Sequential(*args)',
-    function_args=[tf.keras.layers.Flatten(input_shape=(28, 28)), tf.keras.layers.Dense(128, activation='relu'), tf.keras.layers.Dense(10)]
+    function_args=[[tf.keras.layers.Flatten(input_shape=(28, 28)), tf.keras.layers.Dense(128, activation='relu'), tf.keras.layers.Dense(10)]]
 )
 # END NEW
 

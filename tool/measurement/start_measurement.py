@@ -1,14 +1,10 @@
 """
-Start the server application together with perf & nvidia-smi
-by running this python module.
-
-When running with the -l option, it does not start the server 
-(local execution mode)
+Start the energy measurement scripts by running this python module.
 
 This has the same effect as running bash energy_measurement.sh,
 but is more useful for gathering precise start/end times of perf
 & nvidia-smi, which helps to synchronise time measurements with
-the server.
+the execution script.
 """
 
 from subprocess import Popen
@@ -19,11 +15,11 @@ import time
 import os
 import sys
 
-from tool.server.idle_stats import calc_ratios_from_data
-from tool.server.server_config import MEASUREMENT_INTERVAL_MS, CPU_FILE_SEPARATOR
-from tool.server.server_config import NVIDIA_SMI_FILE, PERF_FILE, SERVER_MODULE, START_TIMES_FILE, EXECUTION_LOG_FILE, CPU_TEMPERATURE_MODULE
-from tool.server.server_config import CHECK_LAST_N_POINTS, CPU_STD_TO_MEAN, RAM_STD_TO_MEAN, GPU_STD_TO_MEAN, STABLE_CHECK_TOLERANCE
-from tool.server.utilities import custom_print
+from tool.measurement.idle_stats import calc_ratios_from_data
+from tool.measurement.measurement_config import MEASUREMENT_INTERVAL_MS, CPU_FILE_SEPARATOR, WAIT_UNTIL_PRINTING_STATS_S
+from tool.measurement.measurement_config import NVIDIA_SMI_FILE, PERF_FILE, START_TIMES_FILE, EXECUTION_LOG_FILE, CPU_TEMPERATURE_MODULE
+from tool.measurement.measurement_config import CHECK_LAST_N_POINTS, CPU_STD_TO_MEAN, RAM_STD_TO_MEAN, GPU_STD_TO_MEAN, STABLE_CHECK_TOLERANCE
+from tool.measurement.utilities import custom_print
 
 def print_main(message: str):
     custom_print("main", message)
@@ -36,7 +32,7 @@ def quit_process(process: Popen, message: str, print_func):
 def unregister_and_quit_process(process: Popen, message: str):
     """
     This will unregister all instances of quit_process in the local interpreter, so use carefully.
-    Used by flask_server.py to quit the CPU temperature process.
+    Used by execution.py to quit the CPU temperature process.
     """
     atexit.unregister(quit_process)
     quit_process(process, message, print_main)
@@ -45,20 +41,6 @@ def unregister_and_quit_process(process: Popen, message: str):
 def cleanup(perf_stat, nvidia_smi):
     quit_process(nvidia_smi, "nvidia smi", print_main)
     quit_process(perf_stat, "perf stat", print_main)
-
-
-# start the flask server & make sure it is terminated when start_measurement is quit
-def start_server():
-    start_server = shlex.split(f"python3 {SERVER_MODULE}")
-
-    server = Popen(start_server)
-
-    server_start_time = time.time_ns()
-    atexit.register(print_main, "Terminated the flask server")
-    atexit.register(server.terminate)
-    print_main(f"Server started")
-
-    return server_start_time
 
 
 # start nvidia-smi and return the process such that it can be registered by cleanup
@@ -96,38 +78,36 @@ def start_sensors(print_func):
 
     sensors = Popen(start_sensors)
 
-    sensors_start_time = time.time_ns()
     print_func(f"Sensors started")
 
     return sensors
 
 
 # write start times to a file for further processing
-def write_start_times(perf_start_time: int, nvidia_smi_start_time: int, server_start_time: int):
+def write_start_times(perf_start_time: int, nvidia_smi_start_time: int):
     """
     This method expects start times obtained from the time.time_ns() function such that
-    the server can synchronise its timing with the perf & nvidia-smi tools.
+    the execution script can synchronise its timing with the perf & nvidia-smi tools.
     """
     with open(START_TIMES_FILE, "w") as f:
         f.writelines([
             f"PERF_START {perf_start_time}\n",
-            f"NVIDIA_SMI_START {nvidia_smi_start_time}\n",
-            f"SERVER_START {server_start_time}"
+            f"NVIDIA_SMI_START {nvidia_smi_start_time}"
         ])
 
 
 # called by the main program at initial startup or when restarting the energy measurement script through restart_measurements
-def start_measurements(server_start_time):
+def start_measurements():
     perf_stat, perf_start_time = start_perf()
     nvidia_smi, nvidia_smi_start_time = start_nvidia()
     atexit.register(cleanup, perf_stat=perf_stat, nvidia_smi=nvidia_smi)
 
-    write_start_times(perf_start_time, nvidia_smi_start_time, server_start_time)
+    write_start_times(perf_start_time, nvidia_smi_start_time)
     return perf_stat, nvidia_smi
 
 
 # quit, cleanup and restart all measurement programs in a way that avoids any file corruptions to the energy_measurement/out files
-def restart_measurements(previous_perf_stat, previous_nvidia_smi, latest_execution, server_start_time):
+def restart_measurements(previous_perf_stat, previous_nvidia_smi, latest_execution):
     # unregister the previous cleanup function
     atexit.unregister(cleanup)
     # terminate the previous processes
@@ -146,16 +126,16 @@ def restart_measurements(previous_perf_stat, previous_nvidia_smi, latest_executi
         raise OSError("Could not find and remove perf & nvidia files")
 
     # restart the measurement programs
-    perf_stat, nvidia_smi = start_measurements(server_start_time)
+    perf_stat, nvidia_smi = start_measurements()
 
     return perf_stat, nvidia_smi
 
 def print_experiment_settings():
     """
     Print the most important experiment settings such that the user
-    can confirm they are correct when starting the server.
+    can confirm they are correct when starting the measurement tools.
     """
-    from tool.server.server_config import WAIT_PER_STABLE_CHECK_LOOP_S, MEASUREMENT_INTERVAL_S, CPU_MAXIMUM_TEMPERATURE, GPU_MAXIMUM_TEMPERATURE, CPU_TEMPERATURE_INTERVAL_S
+    from tool.measurement.measurement_config import WAIT_PER_STABLE_CHECK_LOOP_S, MEASUREMENT_INTERVAL_S, CPU_MAXIMUM_TEMPERATURE, GPU_MAXIMUM_TEMPERATURE, CPU_TEMPERATURE_INTERVAL_S
     print_main(f"""
     ### Experiment Settings ###
     "wait_per_stable_check_loop_s": {WAIT_PER_STABLE_CHECK_LOOP_S},
@@ -183,43 +163,31 @@ def print_stdev_mean_ratios(wait_until_printing_stats: int):
 
 if __name__ == "__main__":
     print_experiment_settings()
-    atexit.register(print_main, "Successfully terminated the server application")
+    atexit.register(print_main, "Successfully terminated the measurement application")
     
-    # (1) Start the server & energy measurement programs (perf stat & nvidia-smi).
-    
-    # do not start the server if running in local execution mode
-    if len(sys.argv) > 1:
-        if sys.argv[1] == "-l":
-            print_main("Running in LOCAL mode")
-            server_start_time = 0
-        else:
-            raise ValueError("Expected -l option for local execution or no option.")
-    else: 
-        print_main("Running in SERVER mode")
-        server_start_time = start_server()
-    
+    # (1) Start the energy measurement programs (perf stat & nvidia-smi).
     # Keep a reference to perf stat & nvidia-smi such that they can be terminated by the program.
-    perf_stat, nvidia_smi = start_measurements(server_start_time)
+    perf_stat, nvidia_smi = start_measurements()
 
     # (2) Create the execution log file which keeps track of the functions executed.
     # Initialise previous_execution with the initial contents of the file.
-    previous_execution = f"START_MEASUREMENTS;{server_start_time};Functions executed are logged in this file\n"
+    previous_execution = f"START_MEASUREMENTS;{time.time_ns()}\n"
     with open(EXECUTION_LOG_FILE, 'w') as f:
-        f.write("function_executed;time_stamp;server_status_code\n")
+        f.write("function_executed;time_stamp\n")
         f.write(previous_execution)
 
     # (3) Start the main loop and quit when receiving keyboard interrupt (Control-C)
     try:
         time_counter = 0
         check_idle_stats = True
-        wait_until_printing_stats = 120
-        print_main(f"Please wait {wait_until_printing_stats} seconds to see if the server is in a stable state")
+        print_main(f"Please wait {WAIT_UNTIL_PRINTING_STATS_S} seconds to see if the machine is in a stable state")
         while(True):
-            if check_idle_stats and time_counter >= wait_until_printing_stats:
-                print_stdev_mean_ratios(wait_until_printing_stats)
+            # print out stdev to mean ratios once after the specified time
+            if check_idle_stats and time_counter >= WAIT_UNTIL_PRINTING_STATS_S:
+                print_stdev_mean_ratios(WAIT_UNTIL_PRINTING_STATS_S)
                 check_idle_stats = False
 
-            # check the execution log: has the server added a new execution?
+            # check the execution log: has there been a new execution?
             with open(EXECUTION_LOG_FILE, 'r') as f:
                 latest_execution = f.readlines()[-1]
             

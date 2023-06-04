@@ -1,11 +1,13 @@
 from datetime import datetime
 import pandas as pd
-import matplotlib
 import matplotlib.pyplot as plt
-import numpy as np
 from pathlib import Path
 
-from tool.server.server_config import CPU_FILE_SEPARATOR
+from tool.measurement.measurement_config import CPU_FILE_SEPARATOR
+
+"""
+Functions to parse the measurement tool output files and load them into dataframes
+"""
 
 def parse_nvidia_smi(filepath: Path) -> pd.DataFrame:
     """
@@ -71,6 +73,7 @@ def parse_perf(filepath: Path) -> tuple((pd.DataFrame, pd.DataFrame)):
     df_ram = df[df['event_name'] == 'power/energy-ram/'].reset_index(drop=True).drop(columns='event_name')
     return df_pkg, df_ram
 
+
 def parse_cpu_temperature(filepath: Path) -> pd.DataFrame:
     temperature_df = pd.read_csv(filepath, sep=CPU_FILE_SEPARATOR, names=["time_elapsed","temperature","timestamp"], dtype={
         "time_elapsed": float,
@@ -78,6 +81,42 @@ def parse_cpu_temperature(filepath: Path) -> pd.DataFrame:
         "timestamp": float
     })
     return temperature_df
+
+"""
+Energy & temperature data loaders
+"""
+
+def get_current_times(perf_file: Path, nvidia_smi_file: Path):
+    with open(perf_file, 'r') as f:
+        last_line_perf = f.readlines()[-1]
+    with open(nvidia_smi_file, 'r') as f:
+        last_line_nvidia = f.readlines()[-1]
+    
+    time_perf = float(last_line_perf.strip(' \n').split(';')[0])
+    time_nvidia = datetime.strptime(last_line_nvidia.strip('\n').split(',')[0], '%Y/%m/%d %H:%M:%S.%f').timestamp()
+
+    return time_perf, time_nvidia
+
+
+def get_energy_data(perf_file: Path, nvidia_smi_file: Path):
+    df_cpu, df_ram = parse_perf(perf_file)
+    df_gpu = parse_nvidia_smi(nvidia_smi_file)
+
+    energy_data = {
+        "cpu": df_cpu.to_json(orient="split"),
+        "ram": df_ram.to_json(orient="split"),
+        "gpu": df_gpu.to_json(orient="split") 
+    }
+
+    return energy_data, df_gpu
+
+
+def get_cpu_temperature_data(cpu_temperature_file: Path):
+    """
+    Get a dataframe with all the cpu temperature data and convert it to json
+    """
+    df_cpu_temperature = parse_cpu_temperature(cpu_temperature_file)
+    return df_cpu_temperature.to_json(orient="split")
 
 
 

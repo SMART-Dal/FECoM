@@ -5,8 +5,8 @@ Test client to send requests to the server
 import numpy as np
 import tensorflow as tf
 
-from tool.server.server_config import DEBUG
-from tool.server.send_request import send_request
+from tool.measurement.server_config import DEBUG
+from tool.measurement.send_request import send_request
 
 
 def send_matmul_request():

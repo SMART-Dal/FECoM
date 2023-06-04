@@ -1,6 +1,5 @@
 """
-Enable local execution of energy measurement experiments, removing the need
-to serialise function details.
+Functions to run directly before and after a function call to measure energy consumption.
 """
 
 import time
@@ -9,29 +8,27 @@ import atexit
 import json
 from pathlib import Path
 
-from tool.server.utilities import custom_print
-from tool.server.start_measurement import start_sensors, quit_process, unregister_and_quit_process
-from tool.server.send_request import store_response
-from tool.server.function_details import FunctionDetails, build_function_details
+from tool.measurement.utilities import custom_print
+from tool.measurement.start_measurement import start_sensors, quit_process, unregister_and_quit_process
 
-# TODO these methods should potentially be refactored into a new module
-from tool.server.flask_server import run_check_loop, server_is_stable_check, temperature_is_low_check, get_current_times, get_energy_data, get_cpu_temperature_data
+from tool.measurement.stable_check import run_check_loop, server_is_stable_check, temperature_is_low_check
+from tool.measurement.measurement_parse import get_current_times, get_energy_data, get_cpu_temperature_data
 
-# TODO these two settings should be moved to server_config
+# TODO these two settings should be moved to measurement_config
 from tool.client.client_config import MAX_WAIT_S, WAIT_AFTER_RUN_S
 
-from tool.server.server_config import DEBUG
+from tool.measurement.measurement_config import DEBUG
 # stable state constants
-from tool.server.server_config import CPU_STD_TO_MEAN, RAM_STD_TO_MEAN, GPU_STD_TO_MEAN, CPU_MAXIMUM_TEMPERATURE, GPU_MAXIMUM_TEMPERATURE
+from tool.measurement.measurement_config import CPU_STD_TO_MEAN, RAM_STD_TO_MEAN, GPU_STD_TO_MEAN, CPU_MAXIMUM_TEMPERATURE, GPU_MAXIMUM_TEMPERATURE
 # stable state settings
-from tool.server.server_config import WAIT_PER_STABLE_CHECK_LOOP_S, CHECK_LAST_N_POINTS, STABLE_CHECK_TOLERANCE, CPU_TEMPERATURE_INTERVAL_S, MEASUREMENT_INTERVAL_S
+from tool.measurement.measurement_config import WAIT_PER_STABLE_CHECK_LOOP_S, CHECK_LAST_N_POINTS, STABLE_CHECK_TOLERANCE, CPU_TEMPERATURE_INTERVAL_S, MEASUREMENT_INTERVAL_S
 # file paths and separators
-from tool.server.server_config import PERF_FILE, NVIDIA_SMI_FILE, EXECUTION_LOG_FILE, START_TIMES_FILE #, CPU_TEMPERATURE_FILE, CPU_FILE_SEPARATOR
+from tool.measurement.measurement_config import PERF_FILE, NVIDIA_SMI_FILE, EXECUTION_LOG_FILE, START_TIMES_FILE
 
 from tool.experiment.experiments import ExperimentKinds
 
-def print_local(message: str):
-    custom_print("local", message)
+def print_exec(message: str):
+    custom_print("execution", message)
 
 
 
@@ -41,10 +38,10 @@ def prepare_state():
     """
 
     # (0) start the cpu temperature measurement process
-    sensors = start_sensors(print_local)
+    sensors = start_sensors(print_exec)
     # give sensors some time to gather initial measurements
     time.sleep(3)
-    atexit.register(quit_process, sensors, "sensors", print_local)
+    atexit.register(quit_process, sensors, "sensors", print_exec)
 
 
     # (2) continue only when CPU & GPU temperatures are below threshold and the system has reached a stable state of energy consumption
@@ -64,10 +61,37 @@ def prepare_state():
     # (3) evaluate the function. Get the start & end times from the files and also save their exact values.
     # TODO potentially correct here for the small time offset created by fetching the times for the files. We can use the server times for this.
     start_time_perf, start_time_nvidia = get_current_times(PERF_FILE, NVIDIA_SMI_FILE)
-    start_time_server = time.time_ns()
+    start_time_execution = time.time_ns()
     
     # start execution
-    return start_time_perf, start_time_nvidia, start_time_server, begin_stable_check_time, begin_temperature_check_time
+    return start_time_perf, start_time_nvidia, start_time_execution, begin_stable_check_time, begin_temperature_check_time
+
+
+def store_data(data: dict, experiment_file_path: Path):
+    """
+    Create a new file and store the data as json, or append it to the existing data in this file.
+    """
+    
+    if DEBUG:
+        print(f"Result: {str(data)[:100]}")
+
+    if experiment_file_path.is_file():
+        with open(experiment_file_path, 'r') as f:
+            file_content = f.read()
+        if file_content.strip():
+            existing_data = json.loads(file_content)
+        else:
+            existing_data = []
+    else:
+        existing_data = []
+
+    existing_data.append(data)
+    if DEBUG:
+        print("Data loaded from response")
+    with open(experiment_file_path, 'w') as f:
+        json.dump(existing_data, f)
+    if DEBUG:
+        print(f"Data written to file {str(experiment_file_path)}")
 
 
 """
@@ -81,10 +105,10 @@ def before_execution():
     # similar to send_request, re-try finding stable state in a loop
     while True:
         try:
-            print_local("Waiting before running function for 10 seconds.")
+            print_exec("Waiting before running function for 10 seconds.")
             time.sleep(10)
-            start_time_perf, start_time_nvidia, start_time_server, begin_stable_check_time, begin_temperature_check_time = prepare_state()
-            print_local("Successfully reached stable state")
+            start_time_perf, start_time_nvidia, start_time_execution, begin_stable_check_time, begin_temperature_check_time = prepare_state()
+            print_exec("Successfully reached stable state")
             break
         except TimeoutError as e:
             error_file = "timeout_energy_data.json"
@@ -96,7 +120,7 @@ def before_execution():
     start_times = {
         "start_time_perf": start_time_perf,
         "start_time_nvidia": start_time_nvidia,
-        "start_time_server": start_time_server,
+        "start_time_execution": start_time_execution,
         "begin_stable_check_time": begin_stable_check_time,
         "begin_temperature_check_time": begin_temperature_check_time
 
@@ -119,17 +143,17 @@ def after_execution(
     The last 5 arguments (times) are provided by the return of before_execution, the rest
     by the patcher.
     """
-    end_time_server = time.time_ns()
+    end_time_execution = time.time_ns()
     end_time_perf, end_time_nvidia = get_current_times(PERF_FILE, NVIDIA_SMI_FILE)
 
     # (4) Wait some specified amount of time to measure potentially elevated energy consumption after the function has terminated
     if DEBUG:
-        print_local(f"waiting idle for {WAIT_AFTER_RUN_S} seconds after function execution")
+        print_exec(f"waiting idle for {WAIT_AFTER_RUN_S} seconds after function execution")
     if WAIT_AFTER_RUN_S > 0:
         time.sleep(WAIT_AFTER_RUN_S)
     
     if DEBUG:
-        print_local(f"Performed {function_to_run[:100]} on input and will now save energy data.")
+        print_exec(f"Performed {function_to_run[:100]} on input and will now save energy data.")
 
     # (5) get the energy data & gather all start and end times
     energy_data, df_gpu = get_energy_data()
@@ -143,13 +167,12 @@ def after_execution(
     with open(START_TIMES_FILE, 'r') as f:
         raw_times = f.readlines()
     
-    # START_TIMES_FILE has format PERF_START <time_perf>\nNVIDIA_SMI_START <time_nvidia>\nSERVER_START <time_server>
-    sys_start_time_perf, sys_start_time_nvidia, initial_start_time_server = [int(line.strip(' \n').split(" ")[1]) for line in raw_times]
+    # START_TIMES_FILE has format PERF_START <time_perf>\nNVIDIA_SMI_START <time_nvidia>
+    sys_start_time_perf, sys_start_time_nvidia = [int(line.strip(' \n').split(" ")[1]) for line in raw_times]
 
     times = {
-        "initial_start_time_server": initial_start_time_server,
-        "start_time_server": start_times["start_time_server"],
-        "end_time_server": end_time_server,
+        "start_time_execution": start_times["start_time_execution"],
+        "end_time_execution": end_time_execution,
         "start_time_perf": start_times["start_time_perf"], 
         "end_time_perf": end_time_perf,
         "sys_start_time_perf": sys_start_time_perf,
@@ -212,40 +235,4 @@ def after_execution(
     with open(EXECUTION_LOG_FILE, 'a') as f:
         f.write(f"{function_to_run};{time.time_ns()}")
 
-    store_response(results, experiment_file_path, is_dict=True)
-
-
-
-    # TODO continue by figuring out file handling, then test with manual patching
-
-
-
-
-"""
-Attempt to write a new custom method that does local execution.
-But this would mean all methods are run twice on the same machine, which
-will likely introduce unnecessary noise & other problems.
-"""
-# from tool.client.client_config import EXPERIMENT_DIR, MAX_WAIT_S, WAIT_AFTER_RUN_S
-# import sys
-# experiment_number = sys.argv[1]
-# experiment_project = sys.argv[2]
-# EXPERIMENT_FILE_PATH = EXPERIMENT_DIR / 'method-level' / experiment_project / f'experiment-{experiment_number}.json'
-
-# # adheres to the same interface as send_request_with_function_details
-# def custom_method(imports: str, function_to_run: str, method_object=None,
-#                   object_signature=None, function_args: list=None,
-#                   function_kwargs: dict=None, custom_class=None):
-#     function_details = build_function_details(
-#             imports = imports,
-#             function_to_run = function_to_run,
-#             function_args = function_args,
-#             function_kwargs = function_kwargs,
-#             max_wait_secs = MAX_WAIT_S,
-#             wait_after_run_secs = WAIT_AFTER_RUN_S,
-#             method_object = method_object,
-#             object_signature = object_signature
-#         )
-#     result = run_local(function_details, experiment_file_path=EXPERIMENT_FILE_PATH)
-
-# def run_local(function_details: FunctionDetails, experiment_file_path: Path = None):
+    store_data(results, experiment_file_path)

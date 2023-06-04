@@ -1,7 +1,7 @@
 import tensorflow as tf
 from tensorflow.keras import datasets, layers, models
 
-from tool.server.function_details import build_function_details
+from tool.measurement.function_details import build_function_details
 from tool.client.client_config import EXPERIMENT_DIR
 from tool.experiment.experiments import DataSizeExperiment
 from tool.experiment.run import run_experiments

@@ -42,9 +42,9 @@ to install the tool. If you make any changes, for example to the configuration f
 To test if you have setup everything correctly, go to the `tests` directory and follow the instructions in that directory's README file to run all tests. Make sure to do this in a new terminal with the activated environment. 
 
 ## Configuration
-All constants and settings for the server can be found in `tool/server/server_config.py`, and for the client in `tool/client/client_config.py`. These files are the single source of truth for all used constants.
+All constants and settings for the server can be found in `tool/measurement/measurement_config.py`, and for the client in `tool/client/client_config.py`. These files are the single source of truth for all used constants.
 
-`server_config.py` contains configurations regarding
+`measurement_config.py` contains configurations regarding
 - Server URL and port
 - Stable state checking
 - Energy measurements
@@ -59,7 +59,7 @@ Some of these constants are critical settings for the experiments.
 Start the server by following the instructions below, wait a few seconds and then start sending requests from the client.  
 
 
-With the activated venv, navigate to `tool/server` and run this command to start the server. This will also start `perf` and `nvidia-smi` (energy measurement tools) as well as `sensors` (cpu temperature tool, run inside the wrapper `cpu_temperature.py`):  
+With the activated venv, navigate to `tool/measurement` and run this command to start the server. This will also start `perf` and `nvidia-smi` (energy measurement tools) as well as `sensors` (cpu temperature tool, run inside the wrapper `cpu_temperature.py`):  
 ```python3 start_measurement.py```  
   
 The application can be terminated by pressing Control-C.  

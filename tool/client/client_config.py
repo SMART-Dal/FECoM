@@ -14,7 +14,7 @@ project_path_tim_compute_canada = Path('/home/timw/GreenAI-extension/')
 project_path_tim_falcon = Path('/home/tim/GreenAI-extension/')
 
 # (!) Change this to the relevant path variable (!)
-PROJECT_PATH = project_path_tim_falcon
+PROJECT_PATH = project_path_tim
 
 # EXPERIMENT_TAG = 'experiment-1' (deprecated)
 
@@ -29,8 +29,3 @@ PATCHING_SCRIPT_PATH = Path('script_patcher.py')
 code_dataset_path = Path('../../data/code-dataset')
 SOURCE_REPO_DIR = code_dataset_path / 'Repositories'
 PATCHED_REPO_DIR =  code_dataset_path / 'Patched-Repositories'
-
-# When you want to update these seconds, you have to re-run repo-patching.py
-# such that the new settings are written to the patched python files
-MAX_WAIT_S = 120
-WAIT_AFTER_RUN_S = 30

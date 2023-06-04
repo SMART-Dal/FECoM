@@ -4,7 +4,7 @@ Test
 
 import tensorflow as tf
 import pytest
-from tool.server.send_request import send_request
+from tool.measurement.send_request import send_request
 
 @pytest.fixture
 def imports():

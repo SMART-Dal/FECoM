@@ -1,7 +1,7 @@
 import pytest
 import numpy as np
 
-from tool.server.send_request import send_request
+from tool.measurement.send_request import send_request
 
 # TODO refactor the server such that it can take a dict of allowed usernames/passwords for better testing
 def test_wrongUsernameDeniesAccess_and_raisesError():
