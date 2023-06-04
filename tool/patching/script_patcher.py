@@ -32,6 +32,8 @@ def main():
     analyzer.visit(tree)
     global requiredAlias
     global importScriptList
+    global importMap 
+    importMap = analyzer.importMap
     requiredAlias = analyzer.stats['required']
     importScriptList = list(set(analyzer.stats['importScript']))
 
@@ -48,9 +50,11 @@ def main():
 
     # Step3: Get list of Classdefs having bases from the required libraries
     global requiredClassDefs
+    global requiredClassBase
     classDefAnalyzer = ClassDefAnalyzer()
     classDefAnalyzer.visit(tree)
     requiredClassDefs = classDefAnalyzer.classDef
+    requiredClassBase = classDefAnalyzer.classBases
 
     # Step4: Get list of objects created from the required libraries
     global requiredObjects
@@ -128,7 +132,9 @@ class TransformCall(ast.NodeTransformer):
         global requiredObjClassMapping
         global requiredObjectsSignature
         global requiredClassDefs
+        global requiredClassBase
         global before_execution_call_node
+        global importMap
         self.objectname = None
 
     def get_target_id(self, target):
@@ -249,7 +255,6 @@ class TransformCall(ast.NodeTransformer):
             #     dummyNode.args.append(ast.Name(id='*args', ctx=ast.Load()))
             # if(node.keywords):
             #     dummyNode.keywords.append(ast.Name(id='**kwargs', ctx=ast.Load()))
-
             new_node = ast.Call(func=ast.Name(id='after_execution_INSERTED_INTO_SCRIPT', ctx=ast.Load()),
                                 args=[],
                                 keywords=[
@@ -261,7 +266,7 @@ class TransformCall(ast.NodeTransformer):
                                         value=ast.Name(id='EXPERIMENT_FILE_PATH')),
                                     ast.keyword(
                                         arg='function_to_run',
-                                        value=ast.Constant(ast.unparse(dummyNode))),
+                                        value=ast.Constant(ast.unparse(dummyNode).replace(callvisitor_list[0],importMap.get(callvisitor_list[0]),1))),
                                     ast.keyword(
                                         arg='method_object',
                                         value=ast.Constant(None)),
@@ -310,7 +315,7 @@ class TransformCall(ast.NodeTransformer):
                                         value=ast.Name(id='EXPERIMENT_FILE_PATH')),
                                     ast.keyword(
                                         arg='function_to_run',
-                                        value=ast.Constant(ast.unparse(dummyNode).replace(callvisitor_list[0], requiredObjectsSignature.get(callvisitor_list[0]), 1))),
+                                        value=ast.Constant(ast.unparse(dummyNode).replace(callvisitor_list[0], importMap.get(requiredClassBase.get(requiredObjectsSignature.get(callvisitor_list[0]))), 1))),
                                     ast.keyword(
                                         arg='method_object',
                                         value= ast.Name(callvisitor_list[0])
@@ -348,6 +353,8 @@ class TransformCall(ast.NodeTransformer):
             #     dummyNode.args.append(ast.Name(id='*args', ctx=ast.Load()))
             # if(node.keywords):
             #     dummyNode.keywords.append(ast.Name(id='**kwargs', ctx=ast.Load()))
+            print("requiredObjectsSignature.get(callvisitor_list[0]) :", requiredObjectsSignature.get(callvisitor_list[0]))
+            print("importMap.get :", importMap.get(requiredObjectsSignature.get(callvisitor_list[0]).split('.')[0]))
             new_node = ast.Call(func=ast.Name(id='after_execution_INSERTED_INTO_SCRIPT', ctx=ast.Load()),
                                 args=[],
                                 keywords=[
@@ -359,7 +366,7 @@ class TransformCall(ast.NodeTransformer):
                                         value=ast.Name(id='EXPERIMENT_FILE_PATH')),
                                     ast.keyword(
                                         arg='function_to_run',
-                                        value=ast.Constant(ast.unparse(dummyNode).replace(callvisitor_list[0], requiredObjectsSignature.get(callvisitor_list[0]), 1))),
+                                        value=ast.Constant(ast.unparse(dummyNode).replace(callvisitor_list[0], requiredObjectsSignature.get(callvisitor_list[0]).replace(requiredObjectsSignature.get(callvisitor_list[0]).split('.')[0],importMap.get(requiredObjectsSignature.get(callvisitor_list[0]).split('.')[0]),1), 1))),
                                     ast.keyword(
                                         arg='method_object',
                                         value= ast.Name(callvisitor_list[0])
@@ -392,6 +399,7 @@ class TransformCall(ast.NodeTransformer):
 class Analyzer(ast.NodeVisitor):
     def __init__(self):
         self.stats = {"import": [], "from": [], "required": [],"importScript": []}
+        self.importMap = {}
         global sourceCode
 
     def visit_Import(self, node):
@@ -402,8 +410,10 @@ class Analyzer(ast.NodeVisitor):
             if(any(lib in lib_path for lib in requiredLibraries)):
                 if(alias.asname):
                     self.stats["required"].append(alias.asname)
+                    self.importMap[alias.asname] = alias.name
                 else:
                     self.stats["required"].append(lib_path[-1])
+                    self.importMap[lib_path[-1]] = alias.name
         self.generic_visit(node)
 
     def visit_ImportFrom(self, node):
@@ -414,12 +424,14 @@ class Analyzer(ast.NodeVisitor):
             if(any(lib in lib_path for lib in requiredLibraries)):
                 if(alias.asname):
                     self.stats["required"].append(alias.asname)
+                    self.importMap[alias.asname] = node.module+"."+alias.name
                 elif(alias.name == '*'):
                     pass
                     # TODO: Need to find a way to get all the methods from the module without installing the libraries if possible
                     # print("Star import not supported and is not required for this script")
                 else:
                     self.stats["required"].append(alias.name)
+                    self.importMap[alias.name] = node.module+"."+alias.name
         self.generic_visit(node)
 
     def report(self):
@@ -428,11 +440,14 @@ class Analyzer(ast.NodeVisitor):
 class ClassDefAnalyzer(ast.NodeVisitor):
     def __init__(self):
         self.classDef = {}
+        self.classBases = {}
         global sourceCode
 
     def visit_ClassDef(self, node):
         if((node.bases) and any(ast.get_source_segment(sourceCode,lib).split('.')[0] in requiredAlias for lib in node.bases)):
             self.classDef[node.name] = ast.get_source_segment(sourceCode, node)
+            # This logic only covers classes that inherit from one base class
+            self.classBases[node.name] = ast.get_source_segment(sourceCode,node.bases[0]).split('.')[0]
 
 class ObjectAnalyzer(ast.NodeVisitor):
     def __init__(self):
