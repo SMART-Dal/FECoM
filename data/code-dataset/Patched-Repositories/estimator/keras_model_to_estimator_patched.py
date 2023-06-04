@@ -5,9 +5,10 @@ import sys
 from tool.patching.patching_config import EXPERIMENT_DIR
 from tool.measurement.execution import before_execution as before_execution_INSERTED_INTO_SCRIPT
 from tool.measurement.execution import after_execution as after_execution_INSERTED_INTO_SCRIPT
+from tool.experiment.experiments import ExperimentKinds
 experiment_number = sys.argv[1]
 experiment_project = sys.argv[2]
-EXPERIMENT_FILE_PATH = EXPERIMENT_DIR / 'local-execution' / experiment_project / f'experiment-{experiment_number}.json'
+EXPERIMENT_FILE_PATH = EXPERIMENT_DIR / ExperimentKinds.METHOD_LEVEL.value / experiment_project / f'experiment-{experiment_number}.json'
 start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 model = tf.keras.models.Sequential([tf.keras.layers.Dense(16, activation='relu', input_shape=(4,)), tf.keras.layers.Dropout(0.2), tf.keras.layers.Dense(3)])
 after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tf.keras.models.Sequential()', method_object=None, function_args=[[tf.keras.layers.Dense(16, activation='relu', input_shape=(4,)), tf.keras.layers.Dropout(0.2), tf.keras.layers.Dense(3)]], function_kwargs=None)

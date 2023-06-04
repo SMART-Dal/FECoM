@@ -13,7 +13,7 @@ from tool.patching.patching_config import EXPERIMENT_DIR #, MAX_WAIT_S, WAIT_AFT
 # END NEW
 experiment_number = sys.argv[1]
 experiment_project = sys.argv[2]
-EXPERIMENT_FILE_PATH = EXPERIMENT_DIR / 'local-execution' / experiment_project / f'experiment-{experiment_number}.json'
+EXPERIMENT_FILE_PATH = EXPERIMENT_DIR / 'method-level' / experiment_project / f'experiment-{experiment_number}.json'
 
 # NEW
 # changed names to make function name clash less likely

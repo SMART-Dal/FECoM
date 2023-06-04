@@ -5,9 +5,10 @@ import sys
 from tool.patching.patching_config import EXPERIMENT_DIR
 from tool.measurement.execution import before_execution as before_execution_INSERTED_INTO_SCRIPT
 from tool.measurement.execution import after_execution as after_execution_INSERTED_INTO_SCRIPT
+from tool.experiment.experiments import ExperimentKinds
 experiment_number = sys.argv[1]
 experiment_project = sys.argv[2]
-EXPERIMENT_FILE_PATH = EXPERIMENT_DIR / 'local-execution' / experiment_project / f'experiment-{experiment_number}.json'
+EXPERIMENT_FILE_PATH = EXPERIMENT_DIR / ExperimentKinds.METHOD_LEVEL.value / experiment_project / f'experiment-{experiment_number}.json'
 start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 ((img_train, label_train), (img_test, label_test)) = keras.datasets.fashion_mnist.load_data()
 after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='keras.datasets.fashion_mnist.load_data()', method_object=None, function_args=None, function_kwargs=None)

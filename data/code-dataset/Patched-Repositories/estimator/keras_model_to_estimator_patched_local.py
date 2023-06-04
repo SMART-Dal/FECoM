@@ -13,12 +13,12 @@ from tool.patching.patching_config import EXPERIMENT_DIR #, MAX_WAIT_S, WAIT_AFT
 # current_path = os.path.abspath(__file__)
 experiment_number = sys.argv[1]
 experiment_project = sys.argv[2]
-EXPERIMENT_FILE_PATH = EXPERIMENT_DIR / 'local-execution' / experiment_project / f'experiment-{experiment_number}.json'
+EXPERIMENT_FILE_PATH = EXPERIMENT_DIR / 'method-level' / experiment_project / f'experiment-{experiment_number}.json'
 
 # NEW
 # changed names to make function name clash less likely
-from tool.server.local_execution import before_execution as before_execution_INSERTED_INTO_SCRIPT
-from tool.server.local_execution import after_execution as after_execution_INSERTED_INTO_SCRIPT
+from tool.measurement.execution import before_execution as before_execution_INSERTED_INTO_SCRIPT
+from tool.measurement.execution import after_execution as after_execution_INSERTED_INTO_SCRIPT
 # END NEW
 
 # skip_calls_file_path = EXPERIMENT_FILE_PATH.parent / 'skip_calls.json'
@@ -96,7 +96,9 @@ def input_fn():
     import tensorflow_datasets as tfds
     split = tfds.Split.TRAIN
     dataset = tfds.load('iris', split=split, as_supervised=True)
-    dataset = dataset.map(lambda features, labels: ({'dense_2_input': features}, labels))
+    # dataset = dataset.map(lambda features, labels: ({'dense_2_input':features}, labels))
+    # changed above line to below (T 01/06/23)
+    dataset = dataset.map(lambda features, labels: ({'dense_input': features}, labels))
     dataset = dataset.batch(32).repeat()
     return dataset
 for (features_batch, labels_batch) in input_fn().take(1):

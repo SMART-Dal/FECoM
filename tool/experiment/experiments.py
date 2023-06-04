@@ -17,7 +17,6 @@ class ExperimentKinds(Enum):
     METHOD_LEVEL = "method-level"
     PROJECT_LEVEL = "project-level"
     DATA_SIZE = "data-size"
-    LOCAL_EXECUTION = "local-execution"
 
 
 def format_full_output_dir(output_dir: Path, experiment_kind: str, project: str):
@@ -95,20 +94,6 @@ class MethodLevelExperiment(Experiment):
     def __init__(self, project: str, experiment_dir: Path, code_dir: Path):
         super().__init__(ExperimentKinds.METHOD_LEVEL, project, experiment_dir)
         self.__code_file = code_dir / f"{self.project}_patched.py"
-
-    def run(self, exp_number):
-        self.number = exp_number
-        with subprocess.Popen(['python', self.__code_file, str(self.number), str(self.project)], stdout=subprocess.PIPE, stderr=subprocess.PIPE, bufsize=1, universal_newlines=True) as p:
-            for line in p.stdout:
-                print(line, end='')
-            for line in p.stderr:
-                print(line, end='')  # Print error output to console
-        return
-
-class MethodLevelLocalExperiment(Experiment):
-    def __init__(self, project: str, experiment_dir: Path, code_dir: Path):
-        super().__init__(ExperimentKinds.METHOD_LEVEL, project, experiment_dir)
-        self.__code_file = code_dir / f"{self.project}_patched_local.py" # only change from MethodLevelExperiment is the file name
 
     def run(self, exp_number):
         self.number = exp_number

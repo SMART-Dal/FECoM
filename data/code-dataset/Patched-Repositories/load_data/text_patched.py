@@ -11,9 +11,10 @@ import sys
 from tool.patching.patching_config import EXPERIMENT_DIR
 from tool.measurement.execution import before_execution as before_execution_INSERTED_INTO_SCRIPT
 from tool.measurement.execution import after_execution as after_execution_INSERTED_INTO_SCRIPT
+from tool.experiment.experiments import ExperimentKinds
 experiment_number = sys.argv[1]
 experiment_project = sys.argv[2]
-EXPERIMENT_FILE_PATH = EXPERIMENT_DIR / 'local-execution' / experiment_project / f'experiment-{experiment_number}.json'
+EXPERIMENT_FILE_PATH = EXPERIMENT_DIR / ExperimentKinds.METHOD_LEVEL.value / experiment_project / f'experiment-{experiment_number}.json'
 data_url = 'https://storage.googleapis.com/download.tensorflow.org/data/stack_overflow_16k.tar.gz'
 start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
 dataset_dir = utils.get_file(origin=data_url, untar=True, cache_dir='stack_overflow', cache_subdir='')
