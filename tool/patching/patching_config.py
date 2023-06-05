@@ -14,7 +14,7 @@ project_path_tim_compute_canada = Path('/home/timw/GreenAI-extension/')
 project_path_tim_falcon = Path('/home/tim/GreenAI-extension/')
 
 # (!) Change this to the relevant path variable (!)
-PROJECT_PATH = project_path_tim
+PROJECT_PATH = project_path_saurabh
 
 # directory where to store data, an Experiment will append to this the experiment kind
 # (e.g. project-level) and after that the subdirectory structure will be equivalent to the code dataset
@@ -22,6 +22,7 @@ EXPERIMENT_DIR = PROJECT_PATH / 'data/energy-dataset/'
 
 # directory where to find patched code
 CODE_DIR = PROJECT_PATH / 'data/code-dataset/Patched-Repositories'
+UNPATCHED_CODE_DIR = PROJECT_PATH / 'data/code-dataset/Repositories'
 
 PATCHING_SCRIPT_PATH = Path('script_patcher.py')
 code_dataset_path = Path('../../data/code-dataset')
