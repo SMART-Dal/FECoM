@@ -34,7 +34,7 @@ def prepare_state():
     Ensure the server is in the right state before starting execution
     """
 
-    # (0) start the cpu temperature measurement process
+    # (1) start the cpu temperature measurement process
     sensors = start_sensors(print_exec)
     # give sensors some time to gather initial measurements
     time.sleep(3)
@@ -55,12 +55,11 @@ def prepare_state():
     if not run_check_loop(False, MAX_WAIT_S, WAIT_PER_STABLE_CHECK_LOOP_S, "stable state", server_is_stable_check, CHECK_LAST_N_POINTS, STABLE_CHECK_TOLERANCE, CPU_STD_TO_MEAN, RAM_STD_TO_MEAN, GPU_STD_TO_MEAN):
         raise TimeoutError(f"Server could not reach a stable state within {MAX_WAIT_S} seconds")
 
-    # (3) evaluate the function. Get the start & end times from the files and also save their exact values.
+    # (3a) Get the start times from the files and also save their exact value.
     # TODO potentially correct here for the small time offset created by fetching the times for the files. We can use the server times for this.
     start_time_perf, start_time_nvidia = get_current_times(PERF_FILE, NVIDIA_SMI_FILE)
     start_time_execution = time.time_ns()
     
-    # start execution
     return start_time_perf, start_time_nvidia, start_time_execution, begin_stable_check_time, begin_temperature_check_time
 
 
@@ -99,7 +98,7 @@ def before_execution():
     """
     Insert directly before the function call in the script.
     """
-    # similar to send_request, re-try finding stable state in a loop
+    # re-try finding stable state in a loop
     while True:
         try:
             print_exec("Waiting before running function for 10 seconds.")
@@ -125,21 +124,20 @@ def before_execution():
     return start_times
 
 
-# TODO remove object_signature when patching is refactored
 def after_execution(
-        start_times: dict, experiment_file_path: str, function_to_run: str,
-        function_args: list = None, function_kwargs: dict = None,
-        method_object: str = None, object_signature: str = None, project_level: bool = False):
+        start_times: dict, experiment_file_path: str, function_to_run: str = None,
+        method_object: str = None, function_args: list = None, function_kwargs: dict = None):
     """
     Insert directly after the function call in the script.
 
-    For project-level experiments, project_level is True. The patcher should then
+    For project-level experiments, function_to_run is None. The patcher should then
     simply prepend the before_execution call to the file, and append the after_execution
     call after the last line.
 
-    The last 5 arguments (times) are provided by the return of before_execution, the rest
+    The start_times are provided by the return of before_execution, the rest
     by the patcher.
     """
+    # (3b) Get the end times from the files and also save their exact value.
     end_time_execution = time.time_ns()
     end_time_perf, end_time_nvidia = get_current_times(PERF_FILE, NVIDIA_SMI_FILE)
 
@@ -148,6 +146,10 @@ def after_execution(
         print_exec(f"waiting idle for {WAIT_AFTER_RUN_S} seconds after function execution")
     if WAIT_AFTER_RUN_S > 0:
         time.sleep(WAIT_AFTER_RUN_S)
+    
+    # if this is a project-level experiment, function_to_run is None so set it to project-level
+    if function_to_run is None:
+        function_to_run = ExperimentKinds.PROJECT_LEVEL.value
     
     if DEBUG:
         print_exec(f"Performed {function_to_run[:100]} on input and will now save energy data.")
@@ -196,8 +198,7 @@ def after_execution(
         "cpu_temperature_interval_s": CPU_TEMPERATURE_INTERVAL_S
     }
 
-    # (4) The function has executed successfully. Now add size data and format the return dictionary
-    # to be in the format {function_signature: results}
+    # (7) Add size data using pickle, if possible
     try:
         args_size = len(pickle.dumps(function_args)) if function_args is not None else None
         kwargs_size = len(pickle.dumps(function_kwargs)) if function_kwargs is not None else None
@@ -213,31 +214,20 @@ def after_execution(
         "object_size": object_size
     }
 
-    # (7) return the energy data, times, temperatures and settings
+    # (8) format the return dictionary to be in the format {function_signature: results}
     results = {
-        "energy_data": energy_data,
-        "times": times,
-        "cpu_temperatures": cpu_temperatures,
-        "settings": settings,
-        "input_sizes": input_sizes
+        function_to_run: {
+            "energy_data": energy_data,
+            "times": times,
+            "cpu_temperatures": cpu_temperatures,
+            "settings": settings,
+            "input_sizes": input_sizes
+        }
     }
-    
-    if project_level:
-        # if this option is enabled, we don't execute a single function, so use project-level as key instead
-        # to avoid having a multiline code string as the dict key
-        results = {ExperimentKinds.PROJECT_LEVEL.value: results}
-    else:
-        # if the function executed is a method run on an object (first condition),
-        # check if an object signature is available (second condition),
-        # if yes, remove obj and prepend it to the call: e.g. obj.fit() becomes tf.keras.Sequential.fit()
-        if (method_object is not None) and (object_signature is not None):
-            results = {object_signature + function_to_run[3:]: results}
-        else:
-            results = {function_to_run: results}
         
-    # (6) Write the method details to the execution log file with a time stamp (to keep entries unique)
+    # (9) Write the method details to the execution log file with a time stamp (to keep entries unique)
     # This triggers the reload of perf & nvidia-smi, clearing the energy data from the execution of this function
-    # (see tool.server.start_measurement for the implementation of this process) 
+    # (see tool.measurement.start_measurement for the implementation of this process) 
     with open(EXECUTION_LOG_FILE, 'a') as f:
         f.write(f"{function_to_run};{time.time_ns()}\n")
 
