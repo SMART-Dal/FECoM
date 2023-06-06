@@ -7,6 +7,7 @@ import pickle
 import atexit
 import json
 from pathlib import Path
+from datetime import datetime
 
 from tool.measurement.utilities import custom_print
 from tool.measurement.start_measurement import start_sensors, quit_process, unregister_and_quit_process
@@ -229,6 +230,6 @@ def after_execution(
     # This triggers the reload of perf & nvidia-smi, clearing the energy data from the execution of this function
     # (see tool.measurement.start_measurement for the implementation of this process) 
     with open(EXECUTION_LOG_FILE, 'a') as f:
-        f.write(f"{function_to_run};{time.time_ns()}\n")
+        f.write(f"{function_to_run};{datetime.now().strftime('%H:%M:%S')}\n")
 
     store_data(results, experiment_file_path)
