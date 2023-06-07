@@ -24,7 +24,8 @@ EXPERIMENT_DIR = PROJECT_PATH / 'data/energy-dataset/'
 CODE_DIR = PROJECT_PATH / 'data/code-dataset/Patched-Repositories'
 UNPATCHED_CODE_DIR = PROJECT_PATH / 'data/code-dataset/Repositories'
 
-PATCHING_SCRIPT_PATH = Path('script_patcher.py')
+METHOD_LEVEL_PATCHING_SCRIPT_PATH = Path('method_level_script_patcher.py')
+PROJECT_LEVEL_PATCHING_SCRIPT_PATH = Path('project_level_script_patcher.py')
 code_dataset_path = Path('../../data/code-dataset')
 SOURCE_REPO_DIR = code_dataset_path / 'Repositories'
 PATCHED_REPO_DIR =  code_dataset_path / 'Patched-Repositories'

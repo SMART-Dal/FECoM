@@ -81,7 +81,7 @@ def main():
     # Step5: Tranform the client script by adding custom method calls
     transf = TransformCall()
     transf.visit(tree)
-    with open("custom_method.py", "r") as source:
+    with open("method_level_patch_imports.py", "r") as source:
         cm = source.read()
         cm_node = ast.parse(cm)
 
