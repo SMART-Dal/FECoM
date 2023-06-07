@@ -138,7 +138,9 @@ while epoch.numpy() < num_epochs:
     step_in_epoch.assign_add(1)
 
   train_loss = total_loss / num_batches
-  print('Epoch: %d, accuracy: %f, train_loss: %f.'
+  
+  print('Epoch: %d, accuracy: %f, train_loss: %f.' %(epoch.numpy(), train_accuracy.result(), train_loss))
+
 
   train_accuracy.reset_states()
 
@@ -254,7 +256,8 @@ while epoch.numpy() < num_epochs:
     step_in_epoch.assign_add(1)
 
   train_loss = total_loss / num_batches
-  print('Epoch: %d, accuracy: %f, train_loss: %f.'
+
+  print('Epoch: %d, accuracy: %f, train_loss: %f.' %(epoch.numpy(), train_accuracy.result(), train_loss))
   
   train_accuracy.reset_states()
 

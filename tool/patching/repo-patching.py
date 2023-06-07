@@ -63,7 +63,7 @@ def get_python_scripts_path(directory):
     for i, file_path in enumerate(python_scripts_path):
         base_path, ext = os.path.splitext(file_path)
         original_path = f"{base_path}_original{ext}"
-        patched_path = f"{base_path}_patched{ext}"
+        patched_path = f"{base_path}_method-level{ext}"
         os.rename(file_path, original_path)
         shutil.copy2(original_path, patched_path)
         python_scripts_path[i] = patched_path
