@@ -91,9 +91,9 @@ def calc_stdev_mean_ratios(mean_stats: pd.Series):
         - RAM Energy
         - GPU Power
     """
-    cpu_std_mean = str(round(mean_stats[0] / mean_stats[1], 2))
-    ram_std_mean = str(round(mean_stats[2] / mean_stats[3], 2))
-    gpu_std_mean = str(round(mean_stats[4] / mean_stats[5], 2))
+    cpu_std_mean = str(round(mean_stats[0] / mean_stats[1], 3))
+    ram_std_mean = str(round(mean_stats[2] / mean_stats[3], 3))
+    gpu_std_mean = str(round(mean_stats[4] / mean_stats[5], 3))
     return cpu_std_mean, ram_std_mean, gpu_std_mean
 
 
