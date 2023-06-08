@@ -69,7 +69,7 @@ class PatchedExperiment(Experiment):
         assert (experiment_kind == ExperimentKinds.METHOD_LEVEL) or (experiment_kind == ExperimentKinds.PROJECT_LEVEL)
         
         super().__init__(experiment_kind, project, experiment_dir)
-        self.__code_file = code_dir / f"{self.project}_{experiment_kind}.py"
+        self.__code_file = code_dir / f"{self.project}_{experiment_kind.value}.py"
 
     def run(self, exp_number):
         self.number = exp_number

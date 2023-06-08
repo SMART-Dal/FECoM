@@ -8,7 +8,7 @@ energy_plot.png
 *.tex
 
 # data
-data/code-dataset/Repositories
+# data/code-dataset/Repositories
 
 # tests
 tests/test_data
@@ -21,7 +21,7 @@ from tool/patching/data
 ENV/*
 .ipynb_checkpoints/
 patched-code/*
-Repositories/*
+# Repositories/*
 
 # server
 *.pth

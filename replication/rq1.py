@@ -21,7 +21,6 @@ def run_rq1_experiments(project, start=START, count=COUNT):
     experiment = PatchedExperiment(ExperimentKinds.PROJECT_LEVEL, project, EXPERIMENT_DIR, CODE_DIR)
     run_experiments(experiment, count=count, start=start)
 
-def keras_classification():
-    project = "keras/classification"
-    run_rq1_experiments(project)
-    
+
+if __name__ == "__main__":
+    run_rq1_experiments("estimator/keras_model_to_estimator")
