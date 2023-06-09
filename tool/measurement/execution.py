@@ -205,7 +205,7 @@ def after_execution(
         kwargs_size = len(pickle.dumps(function_kwargs)) if function_kwargs is not None else None
         object_size = len(pickle.dumps(method_object)) if method_object is not None else None
     # when the function args or object cannot be pickled, this error is raised.
-    except AttributeError as e:
+    except Exception as e:
         print_exec(f"Could not pickle function args or method object. Error: \n {e} \n Sizes will be None for this function. Execution will continue normally.")
         args_size, kwargs_size, object_size = (None, None, None)
 

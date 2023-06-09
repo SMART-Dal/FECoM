@@ -23,4 +23,6 @@ def run_rq1_experiments(project, start=START, count=COUNT):
 
 
 if __name__ == "__main__":
-    run_rq1_experiments("estimator/keras_model_to_estimator")
+    # run_rq1_experiments("estimator/keras_model_to_estimator")
+    # run_rq1_experiments("generative/autoencoder") # TODO run remaining method-level experiments (3-10)
+    pass
