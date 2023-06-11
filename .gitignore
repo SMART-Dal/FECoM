@@ -2,6 +2,7 @@
 venv
 __pycache__
 .DS_Store
+__*
 
 # replication
 energy_plot.png
@@ -9,6 +10,11 @@ energy_plot.png
 
 # data
 # data/code-dataset/Repositories
+
+# simple audio
+mini_speech_commands*
+replication/saved/*
+saved/*
 
 # tests
 tests/test_data
