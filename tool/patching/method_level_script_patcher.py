@@ -73,10 +73,11 @@ def main():
 
     # create nodes to add before and after the method call
     before_execution_call = (
-        "start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()"
+        "start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT(function_to_run = None)"
     )
     global before_execution_call_node
     before_execution_call_node = ast.parse(before_execution_call)
+    # print(ast.dump(before_execution_call_node))
 
     # Step5: Tranform the client script by adding custom method calls
     transf = TransformCall()
@@ -234,7 +235,10 @@ class TransformCall(ast.NodeTransformer):
             )
 
         if modified_node and modified_node != node.value:
-            return [before_execution_call_node, node, ast.Expr(value=modified_node[0])]
+            # print("modified_node[0] :", ast.dump(modified_node[0]))
+            before_execution_call_node_copy = copy.deepcopy(before_execution_call_node)
+            before_execution_call_node_copy.body[0].value.keywords[0] = (ast.keyword(arg='function_to_run', value=modified_node[0].keywords[2].value))
+            return [before_execution_call_node_copy, node, ast.Expr(value=modified_node[0])]
 
         return node
 
@@ -243,8 +247,11 @@ class TransformCall(ast.NodeTransformer):
             modified_node = None  # Initialize modified_node as None
             modified_node = self.custom_Call(node.value)
             if modified_node and modified_node != node.value:
+                before_execution_call_node_copy = copy.deepcopy(before_execution_call_node)
+                # print("modified_node[0] :", modified_node[0])
+                before_execution_call_node_copy.body[0].value.keywords[0] = (ast.keyword(arg='function_to_run', value=modified_node[0].keywords[2].value))
                 return [
-                    before_execution_call_node,
+                    before_execution_call_node_copy,
                     node,
                     ast.Expr(value=modified_node[0]),
                 ]
