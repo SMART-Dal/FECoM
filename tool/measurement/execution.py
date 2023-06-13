@@ -63,6 +63,32 @@ def prepare_state():
     
     return start_time_perf, start_time_nvidia, start_time_execution, begin_stable_check_time, begin_temperature_check_time
 
+def load_skip_calls(skip_calls_file_path: Path):
+    """
+    Get the list of calls to skip from the file.
+    """
+    if skip_calls_file_path.is_file():
+        with open(skip_calls_file_path, 'r') as f:
+            skip_calls_file_content = f.read()
+        if skip_calls_file_content.strip():
+            skip_calls = json.loads(skip_calls_file_content)
+        else:
+            skip_calls = []
+    else:
+        skip_calls = []
+    return skip_calls
+
+def should_skip_call(function_to_run: str = None):
+    
+    function_to_run = list(results.keys())[0]
+    times = results[function_to_run]["times"]
+    start_time_nvidia = times["start_time_nvidia"]
+    end_time_nvidia = times["end_time_nvidia"]
+    start_time_perf = times["start_time_perf"]
+    end_time_perf = times["end_time_perf"]
+
+    if( start_time_nvidia and end_time_nvidia and start_time_perf and end_time_nvidia and (start_time_nvidia == end_time_nvidia or start_time_perf == end_time_perf)):
+        return True
 
 def store_data(data: dict, experiment_file_path: Path):
     """
@@ -90,15 +116,38 @@ def store_data(data: dict, experiment_file_path: Path):
     if DEBUG:
         print(f"Data written to file {str(experiment_file_path)}")
 
+    skip_calls = load_skip_calls(experiment_file_path.parent / "skip_calls.json")
+    if skip_calls is not None and 'start_time_perf' in data['times'] and 'end_time_perf' in data['times'] and 'start_time_nvidia' in data['times'] and 'end_time_nvidia' in data['times'] and data['times']['start_time_perf'] == data['times']['end_time_perf'] and data['times']['start_time_nvidia'] == data['times']['end_time_nvidia']:
+        call_to_skip = {
+            'function_to_run': function_to_run,
+            'function_args': function_args,
+            'function_kwargs': function_kwargs
+        }
+        try:
+            json.dumps(call_to_skip)
+            if call_to_skip not in skip_calls:
+                skip_calls.append(call_to_skip)
+                with open(experiment_file_path.parent / "skip_calls.json", 'w') as f:
+                    json.dump(skip_calls, f)
+                print('skipping call added, current list is: ', skip_calls)
+            else:
+                print('Skipping call already exists.')
+        except TypeError:
+            print('Ignore: Skipping call is not JSON serializable, skipping append and dump.')
+
 
 """
 Core functions
 """
 
-def before_execution():
+def before_execution(function_to_run: str = None):
     """
     Insert directly before the function call in the script.
     """
+    # check if we should skip this call (e.g. if it doesn't consume energy)
+    if(should_skip_call(function_to_run)):
+        return
+
     # re-try finding stable state in a loop
     while True:
         try:
