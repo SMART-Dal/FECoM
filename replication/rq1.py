@@ -9,9 +9,9 @@ from tool.patching.patching_config import EXPERIMENT_DIR, CODE_DIR
 
 ### DO NOT CHANGE THESE VALUES 
 # number of the first experiment
-START = 1
+START = 3
 # total number of experiments
-COUNT = 10
+COUNT = 8
 
 def run_rq1_experiments(project, start=START, count=COUNT):
     # method-level
@@ -24,6 +24,10 @@ def run_rq1_experiments(project, start=START, count=COUNT):
 
 if __name__ == "__main__":
     # run_rq1_experiments("estimator/keras_model_to_estimator")
-    # run_rq1_experiments("generative/autoencoder") # TODO run remaining method-level experiments (3-10)
+    # run_rq1_experiments("generative/autoencoder")
     # run_rq1_experiments("audio/simple_audio")
+    # run_rq1_experiments("keras/keras_tuner")
+    # run_rq1_experiments("estimator/linear")
+    # run_rq1_experiments("estimator/premade")
+    # run_rq1_experiments("generative/adversarial_fgsm")
     pass
