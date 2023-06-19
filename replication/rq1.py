@@ -9,14 +9,14 @@ from tool.patching.patching_config import EXPERIMENT_DIR, CODE_DIR
 
 ### DO NOT CHANGE THESE VALUES 
 # number of the first experiment
-START = 3
+START = 1
 # total number of experiments
-COUNT = 8
+COUNT = 7
 
 def run_rq1_experiments(project, start=START, count=COUNT):
     # method-level
-    experiment = PatchedExperiment(ExperimentKinds.METHOD_LEVEL, project, EXPERIMENT_DIR, CODE_DIR)
-    run_experiments(experiment, count=count, start=start)
+    # experiment = PatchedExperiment(ExperimentKinds.METHOD_LEVEL, project, EXPERIMENT_DIR, CODE_DIR)
+    # run_experiments(experiment, count=count, start=start)
     # project-level
     experiment = PatchedExperiment(ExperimentKinds.PROJECT_LEVEL, project, EXPERIMENT_DIR, CODE_DIR)
     run_experiments(experiment, count=count, start=start)
@@ -30,4 +30,6 @@ if __name__ == "__main__":
     # run_rq1_experiments("estimator/linear")
     # run_rq1_experiments("estimator/premade")
     # run_rq1_experiments("generative/adversarial_fgsm")
+    # run_rq1_experiments("load_data/numpy")
+    run_rq1_experiments("keras/regression")
     pass
