@@ -31,5 +31,6 @@ if __name__ == "__main__":
     # run_rq1_experiments("estimator/premade")
     # run_rq1_experiments("generative/adversarial_fgsm")
     # run_rq1_experiments("load_data/numpy")
-    run_rq1_experiments("keras/regression")
+    # run_rq1_experiments("keras/regression")
+    run_rq1_experiments("quickstart/beginner")
     pass
