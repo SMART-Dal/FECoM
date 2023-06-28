@@ -67,19 +67,19 @@ METRICS = [keras.metrics.BinaryCrossentropy(name='cross entropy'), keras.metrics
 
 def make_model(metrics=METRICS, output_bias=None):
     if output_bias is not None:
-        start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
+        start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT(experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.keras.initializers.Constant()')
         output_bias = tf.keras.initializers.Constant(output_bias)
         after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.keras.initializers.Constant()', method_object=None, function_args=[output_bias], function_kwargs=None)
-    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
+    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT(experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.keras.Sequential()')
     model = keras.Sequential([keras.layers.Dense(16, activation='relu', input_shape=(train_features.shape[-1],)), keras.layers.Dropout(0.5), keras.layers.Dense(1, activation='sigmoid', bias_initializer=output_bias)])
     after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.keras.Sequential()', method_object=None, function_args=[[keras.layers.Dense(16, activation='relu', input_shape=(train_features.shape[-1],)), keras.layers.Dropout(0.5), keras.layers.Dense(1, activation='sigmoid', bias_initializer=output_bias)]], function_kwargs=None)
-    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
+    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT(experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.keras.Sequential.compile()')
     model.compile(optimizer=keras.optimizers.Adam(learning_rate=0.001), loss=keras.losses.BinaryCrossentropy(), metrics=metrics)
     after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.keras.Sequential.compile()', method_object=model, function_args=None, function_kwargs={'optimizer': keras.optimizers.Adam(learning_rate=0.001), 'loss': keras.losses.BinaryCrossentropy(), 'metrics': metrics})
     return model
 EPOCHS = 100
 BATCH_SIZE = 2048
-start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT(experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.keras.callbacks.EarlyStopping()')
 early_stopping = tf.keras.callbacks.EarlyStopping(monitor='val_prc', verbose=1, patience=10, mode='max', restore_best_weights=True)
 after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.keras.callbacks.EarlyStopping()', method_object=None, function_args=None, function_kwargs={'monitor': 'val_prc', 'verbose': 1, 'patience': 10, 'mode': 'max', 'restore_best_weights': True})
 model = make_model()
@@ -225,10 +225,10 @@ resampled_features.shape
 BUFFER_SIZE = 100000
 
 def make_ds(features, labels):
-    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
+    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT(experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.data.Dataset.from_tensor_slices()')
     ds = tf.data.Dataset.from_tensor_slices((features, labels))
     after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.data.Dataset.from_tensor_slices()', method_object=None, function_args=[(features, labels)], function_kwargs=None)
-    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
+    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT(experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.data.Dataset.from_tensor_slices.shuffle(BUFFER_SIZE).repeat()')
     ds = ds.shuffle(BUFFER_SIZE).repeat()
     after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.data.Dataset.from_tensor_slices.shuffle(BUFFER_SIZE).repeat()', method_object=ds, function_args=None, function_kwargs=None)
     return ds
@@ -238,10 +238,10 @@ for (features, label) in pos_ds.take(1):
     print('Features:\n', features.numpy())
     print()
     print('Label: ', label.numpy())
-start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT(experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.data.Dataset.sample_from_datasets()')
 resampled_ds = tf.data.Dataset.sample_from_datasets([pos_ds, neg_ds], weights=[0.5, 0.5])
 after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.data.Dataset.sample_from_datasets()', method_object=None, function_args=[[pos_ds, neg_ds]], function_kwargs={'weights': [0.5, 0.5]})
-start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT(experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.data.Dataset.sample_from_datasets.batch(BATCH_SIZE).prefetch()')
 resampled_ds = resampled_ds.batch(BATCH_SIZE).prefetch(2)
 after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.data.Dataset.sample_from_datasets.batch(BATCH_SIZE).prefetch()', method_object=resampled_ds, function_args=[2], function_kwargs=None)
 for (features, label) in resampled_ds.take(1):
@@ -252,10 +252,10 @@ resampled_model = make_model()
 resampled_model.load_weights(initial_weights)
 output_layer = resampled_model.layers[-1]
 output_layer.bias.assign([0])
-start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT(experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.data.Dataset.from_tensor_slices((val_features, val_labels)).cache()')
 val_ds = tf.data.Dataset.from_tensor_slices((val_features, val_labels)).cache()
 after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.data.Dataset.from_tensor_slices((val_features, val_labels)).cache()', method_object=None, function_args=None, function_kwargs=None)
-start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT(experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.data.Dataset.from_tensor_slices((val_features, val_labels)).cache.batch(BATCH_SIZE).prefetch()')
 val_ds = val_ds.batch(BATCH_SIZE).prefetch(2)
 after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.data.Dataset.from_tensor_slices((val_features, val_labels)).cache.batch(BATCH_SIZE).prefetch()', method_object=val_ds, function_args=[2], function_kwargs=None)
 resampled_history = resampled_model.fit(resampled_ds, epochs=EPOCHS, steps_per_epoch=resampled_steps_per_epoch, callbacks=[early_stopping], validation_data=val_ds)

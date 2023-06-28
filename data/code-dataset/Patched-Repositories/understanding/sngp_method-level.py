@@ -61,7 +61,7 @@ class DeepResNet(tf.keras.Model):
         self.num_layers = num_layers
         self.dropout_rate = dropout_rate
         self.classifier_kwargs = classifier_kwargs
-        start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
+        start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT(experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.keras.layers.Dense()')
         self.input_layer = tf.keras.layers.Dense(self.num_hidden, trainable=False)
         after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.keras.layers.Dense()', method_object=None, function_args=[self.num_hidden], function_kwargs={'trainable': False})
         self.dense_layers = [self.make_dense_layer() for _ in range(num_layers)]
@@ -71,7 +71,7 @@ class DeepResNet(tf.keras.Model):
         hidden = self.input_layer(inputs)
         for i in range(self.num_layers):
             resid = self.dense_layers[i](hidden)
-            start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
+            start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT(experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.keras.layers.Dropout(self.dropout_rate)()')
             resid = tf.keras.layers.Dropout(self.dropout_rate)(resid)
             after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.keras.layers.Dropout(self.dropout_rate)()', method_object=None, function_args=[resid], function_kwargs=None)
             hidden += resid
@@ -86,25 +86,25 @@ class DeepResNet(tf.keras.Model):
         return tf.keras.layers.Dense(num_classes, **self.classifier_kwargs)
 resnet_config = dict(num_classes=2, num_layers=6, num_hidden=128)
 resnet_model = DeepResNet(**resnet_config)
-start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT(experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.keras.Model.build()')
 resnet_model.build((None, 2))
 after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.keras.Model.build()', method_object=resnet_model, function_args=[(None, 2)], function_kwargs=None)
-start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT(experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.keras.Model.summary()')
 resnet_model.summary()
 after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.keras.Model.summary()', method_object=resnet_model, function_args=None, function_kwargs=None)
-start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT(experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.keras.losses.SparseCategoricalCrossentropy()')
 loss = tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True)
 after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.keras.losses.SparseCategoricalCrossentropy()', method_object=None, function_args=None, function_kwargs={'from_logits': True})
 metrics = (tf.keras.metrics.SparseCategoricalAccuracy(),)
-start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT(experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.keras.optimizers.legacy.Adam()')
 optimizer = tf.keras.optimizers.legacy.Adam(learning_rate=0.0001)
 after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.keras.optimizers.legacy.Adam()', method_object=None, function_args=None, function_kwargs={'learning_rate': 0.0001})
 train_config = dict(loss=loss, metrics=metrics, optimizer=optimizer)
 fit_config = dict(batch_size=128, epochs=100)
-start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT(experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.keras.Model.compile()')
 resnet_model.compile(**train_config)
 after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.keras.Model.compile()', method_object=resnet_model, function_args=None, function_kwargs={None: train_config})
-start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT(experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.keras.Model.fit()')
 resnet_model.fit(train_examples, train_labels, **fit_config)
 after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.keras.Model.fit()', method_object=resnet_model, function_args=[train_examples, train_labels], function_kwargs={None: fit_config})
 
@@ -134,7 +134,7 @@ def plot_uncertainty_surface(test_uncertainty, ax, cmap=None):
     ax.scatter(train_examples[:, 0], train_examples[:, 1], c=train_labels, cmap=DEFAULT_CMAP, alpha=0.5)
     ax.scatter(ood_examples[:, 0], ood_examples[:, 1], c='red', alpha=0.1)
     return pcm
-start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT(experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.keras.Model()')
 resnet_logits = resnet_model(test_examples)
 after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.keras.Model()', method_object=resnet_model, function_args=[test_examples], function_kwargs=None)
 resnet_probs = tf.nn.softmax(resnet_logits, axis=-1)[:, 0]
@@ -149,7 +149,7 @@ pcm = plot_uncertainty_surface(resnet_uncertainty, ax=ax)
 plt.colorbar(pcm, ax=ax)
 plt.title('Predictive Uncertainty, Deterministic Model')
 plt.show()
-start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT(experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.keras.layers.Dense()')
 dense = tf.keras.layers.Dense(units=10)
 after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.keras.layers.Dense()', method_object=None, function_args=None, function_kwargs={'units': 10})
 dense = nlp_layers.SpectralNormalization(dense, norm_multiplier=0.9)
@@ -157,7 +157,7 @@ batch_size = 32
 input_dim = 1024
 num_classes = 10
 gp_layer = nlp_layers.RandomFeatureGaussianProcess(units=num_classes, num_inducing=1024, normalize_input=False, scale_random_features=True, gp_cov_momentum=-1)
-start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT(experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.random.normal()')
 embedding = tf.random.normal(shape=(batch_size, input_dim))
 after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.random.normal()', method_object=None, function_args=None, function_kwargs={'shape': (batch_size, input_dim)})
 (logits, covmat) = gp_layer(embedding)
@@ -184,10 +184,10 @@ class DeepResNetSNGP(DeepResNet):
         return logits
 resnet_config
 sngp_model = DeepResNetSNGP(**resnet_config)
-start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT(experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.keras.Model.build()')
 sngp_model.build((None, 2))
 after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.keras.Model.build()', method_object=sngp_model, function_args=[(None, 2)], function_kwargs=None)
-start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT(experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.keras.Model.summary()')
 sngp_model.summary()
 after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.keras.Model.summary()', method_object=sngp_model, function_args=None, function_kwargs=None)
 
@@ -206,13 +206,13 @@ class DeepResNetSNGPWithCovReset(DeepResNetSNGP):
         kwargs['callbacks'].append(ResetCovarianceCallback())
         return super().fit(*args, **kwargs)
 sngp_model = DeepResNetSNGPWithCovReset(**resnet_config)
-start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT(experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.keras.Model.compile()')
 sngp_model.compile(**train_config)
 after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.keras.Model.compile()', method_object=sngp_model, function_args=None, function_kwargs={None: train_config})
-start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT(experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.keras.Model.fit()')
 sngp_model.fit(train_examples, train_labels, **fit_config)
 after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.keras.Model.fit()', method_object=sngp_model, function_args=[train_examples, train_labels], function_kwargs={None: fit_config})
-start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT(experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.keras.Model()')
 (sngp_logits, sngp_covmat) = sngp_model(test_examples, return_covmat=True)
 after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.keras.Model()', method_object=sngp_model, function_args=[test_examples], function_kwargs={'return_covmat': True})
 sngp_variance = tf.linalg.diag_part(sngp_covmat)[:, None]
@@ -222,7 +222,7 @@ sngp_probs = tf.nn.softmax(sngp_logits_adjusted, axis=-1)[:, 0]
 def compute_posterior_mean_probability(logits, covmat, lambda_param=np.pi / 8.0):
     logits_adjusted = nlp_layers.gaussian_process.mean_field_logits(logits, covmat, mean_field_factor=lambda_param)
     return tf.nn.softmax(logits_adjusted, axis=-1)[:, 0]
-start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT(experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.keras.Model()')
 (sngp_logits, sngp_covmat) = sngp_model(test_examples, return_covmat=True)
 after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.keras.Model()', method_object=sngp_model, function_args=[test_examples], function_kwargs={'return_covmat': True})
 sngp_probs = compute_posterior_mean_probability(sngp_logits, sngp_covmat)
@@ -241,13 +241,13 @@ def plot_predictions(pred_probs, model_name=''):
 
 def train_and_test_sngp(train_examples, test_examples):
     sngp_model = DeepResNetSNGPWithCovReset(**resnet_config)
-    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
+    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT(experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.keras.Model.compile()')
     sngp_model.compile(**train_config)
     after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.keras.Model.compile()', method_object=sngp_model, function_args=None, function_kwargs={None: train_config})
-    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
+    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT(experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.keras.Model.fit()')
     sngp_model.fit(train_examples, train_labels, verbose=0, **fit_config)
     after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.keras.Model.fit()', method_object=sngp_model, function_args=[train_examples, train_labels], function_kwargs={'verbose': 0, None: fit_config})
-    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
+    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT(experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.keras.Model()')
     (sngp_logits, sngp_covmat) = sngp_model(test_examples, return_covmat=True)
     after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.keras.Model()', method_object=sngp_model, function_args=[test_examples], function_kwargs={'return_covmat': True})
     sngp_probs = compute_posterior_mean_probability(sngp_logits, sngp_covmat)
@@ -261,26 +261,26 @@ def mc_dropout_sampling(test_examples):
     return resnet_model(test_examples, training=True)
 dropout_logit_samples = [mc_dropout_sampling(test_examples) for _ in range(num_ensemble)]
 dropout_prob_samples = [tf.nn.softmax(dropout_logits, axis=-1)[:, 0] for dropout_logits in dropout_logit_samples]
-start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT(experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.reduce_mean()')
 dropout_probs = tf.reduce_mean(dropout_prob_samples, axis=0)
 after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.reduce_mean()', method_object=None, function_args=[dropout_prob_samples], function_kwargs={'axis': 0})
-start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT(experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.reduce_mean()')
 dropout_probs = tf.reduce_mean(dropout_prob_samples, axis=0)
 after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.reduce_mean()', method_object=None, function_args=[dropout_prob_samples], function_kwargs={'axis': 0})
 plot_predictions(dropout_probs, model_name='MC Dropout')
 resnet_ensemble = []
 for _ in range(num_ensemble):
     resnet_model = DeepResNet(**resnet_config)
-    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
+    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT(experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.keras.Model.compile()')
     resnet_model.compile(optimizer=optimizer, loss=loss, metrics=metrics)
     after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.keras.Model.compile()', method_object=resnet_model, function_args=None, function_kwargs={'optimizer': optimizer, 'loss': loss, 'metrics': metrics})
-    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
+    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT(experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.keras.Model.fit()')
     resnet_model.fit(train_examples, train_labels, verbose=0, **fit_config)
     after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.keras.Model.fit()', method_object=resnet_model, function_args=[train_examples, train_labels], function_kwargs={'verbose': 0, None: fit_config})
     resnet_ensemble.append(resnet_model)
 ensemble_logit_samples = [model(test_examples) for model in resnet_ensemble]
 ensemble_prob_samples = [tf.nn.softmax(logits, axis=-1)[:, 0] for logits in ensemble_logit_samples]
-start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT(experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.reduce_mean()')
 ensemble_probs = tf.reduce_mean(ensemble_prob_samples, axis=0)
 after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.reduce_mean()', method_object=None, function_args=[ensemble_prob_samples], function_kwargs={'axis': 0})
 plot_predictions(ensemble_probs, model_name='Deep ensemble')

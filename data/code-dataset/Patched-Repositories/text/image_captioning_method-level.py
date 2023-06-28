@@ -35,10 +35,10 @@ EXPERIMENT_FILE_PATH = EXPERIMENT_DIR / ExperimentKinds.METHOD_LEVEL.value / exp
 def flickr8k(path='flickr8k'):
     path = pathlib.Path(path)
     if len(list(path.rglob('*'))) < 16197:
-        start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
+        start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT(experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.keras.utils.get_file()')
         tf.keras.utils.get_file(origin='https://github.com/jbrownlee/Datasets/releases/download/Flickr8k/Flickr8k_Dataset.zip', cache_dir='.', cache_subdir=path, extract=True)
         after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.keras.utils.get_file()', method_object=None, function_args=None, function_kwargs={'origin': 'https://github.com/jbrownlee/Datasets/releases/download/Flickr8k/Flickr8k_Dataset.zip', 'cache_dir': '.', 'cache_subdir': path, 'extract': True})
-        start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
+        start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT(experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.keras.utils.get_file()')
         tf.keras.utils.get_file(origin='https://github.com/jbrownlee/Datasets/releases/download/Flickr8k/Flickr8k_text.zip', cache_dir='.', cache_subdir=path, extract=True)
         after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.keras.utils.get_file()', method_object=None, function_args=None, function_kwargs={'origin': 'https://github.com/jbrownlee/Datasets/releases/download/Flickr8k/Flickr8k_text.zip', 'cache_dir': '.', 'cache_subdir': path, 'extract': True})
     captions = (path / 'Flickr8k.token.txt').read_text().splitlines()
@@ -51,10 +51,10 @@ def flickr8k(path='flickr8k'):
     train_captions = [(str(path / 'Flicker8k_Dataset' / fname), cap_dict[fname]) for fname in train_files]
     test_files = (path / 'Flickr_8k.testImages.txt').read_text().splitlines()
     test_captions = [(str(path / 'Flicker8k_Dataset' / fname), cap_dict[fname]) for fname in test_files]
-    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
+    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT(experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.data.experimental.from_list()')
     train_ds = tf.data.experimental.from_list(train_captions)
     after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.data.experimental.from_list()', method_object=None, function_args=[train_captions], function_kwargs=None)
-    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
+    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT(experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.data.experimental.from_list()')
     test_ds = tf.data.experimental.from_list(test_captions)
     after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.data.experimental.from_list()', method_object=None, function_args=[test_captions], function_kwargs=None)
     return (train_ds, test_ds)
@@ -102,18 +102,18 @@ def conceptual_captions(*, data_dir='conceptual_captions', num_train, num_val):
             new_captions.append(cap)
             new_paths.append(path)
         new_paths = [str(p) for p in new_paths]
-        start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
+        start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT(experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.data.Dataset.from_tensor_slices()')
         ds = tf.data.Dataset.from_tensor_slices((new_paths, new_captions))
         after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.data.Dataset.from_tensor_slices()', method_object=None, function_args=[(new_paths, new_captions)], function_kwargs=None)
-        start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
+        start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT(experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.data.Dataset.from_tensor_slices.map()')
         ds = ds.map(lambda path, cap: (path, cap[tf.newaxis]))
         after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.data.Dataset.from_tensor_slices.map()', method_object=ds, function_args=[lambda path, cap: (path, cap[tf.newaxis])], function_kwargs=None)
         return ds
     data_dir = pathlib.Path(data_dir)
-    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
+    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT(experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.keras.utils.get_file()')
     train_index_path = tf.keras.utils.get_file(origin='https://storage.googleapis.com/gcc-data/Train/GCC-training.tsv', cache_subdir=data_dir, cache_dir='.')
     after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.keras.utils.get_file()', method_object=None, function_args=None, function_kwargs={'origin': 'https://storage.googleapis.com/gcc-data/Train/GCC-training.tsv', 'cache_subdir': data_dir, 'cache_dir': '.'})
-    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
+    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT(experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.keras.utils.get_file()')
     val_index_path = tf.keras.utils.get_file(origin='https://storage.googleapis.com/gcc-data/Validation/GCC-1.1.0-Validation.tsv', cache_subdir=data_dir, cache_dir='.')
     after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.keras.utils.get_file()', method_object=None, function_args=None, function_kwargs={'origin': 'https://storage.googleapis.com/gcc-data/Validation/GCC-1.1.0-Validation.tsv', 'cache_subdir': data_dir, 'cache_dir': '.'})
     train_raw = ds_from_index_file(train_index_path, data_dir=data_dir / 'train', count=num_train)
@@ -129,19 +129,19 @@ for (ex_path, ex_captions) in train_raw.take(1):
     print(ex_path)
     print(ex_captions)
 IMAGE_SHAPE = (224, 224, 3)
-start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT(experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.keras.applications.MobileNetV3Small()')
 mobilenet = tf.keras.applications.MobileNetV3Small(input_shape=IMAGE_SHAPE, include_top=False, include_preprocessing=True)
 after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.keras.applications.MobileNetV3Small()', method_object=None, function_args=None, function_kwargs={'input_shape': IMAGE_SHAPE, 'include_top': False, 'include_preprocessing': True})
 mobilenet.trainable = False
 
 def load_image(image_path):
-    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
+    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT(experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.io.read_file()')
     img = tf.io.read_file(image_path)
     after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.io.read_file()', method_object=None, function_args=[image_path], function_kwargs=None)
-    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
+    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT(experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.io.decode_jpeg()')
     img = tf.io.decode_jpeg(img, channels=3)
     after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.io.decode_jpeg()', method_object=None, function_args=[img], function_kwargs={'channels': 3})
-    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
+    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT(experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.image.resize()')
     img = tf.image.resize(img, IMAGE_SHAPE[:-1])
     after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.image.resize()', method_object=None, function_args=[img, IMAGE_SHAPE[:-1]], function_kwargs=None)
     return img
@@ -150,41 +150,41 @@ print(test_img_batch.shape)
 print(mobilenet(test_img_batch).shape)
 
 def standardize(s):
-    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
+    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT(experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.strings.lower()')
     s = tf.strings.lower(s)
     after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.strings.lower()', method_object=None, function_args=[s], function_kwargs=None)
-    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
+    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT(experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.strings.regex_replace()')
     s = tf.strings.regex_replace(s, f'[{re.escape(string.punctuation)}]', '')
     after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.strings.regex_replace()', method_object=None, function_args=[s, f'[{re.escape(string.punctuation)}]', ''], function_kwargs=None)
-    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
+    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT(experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.strings.join()')
     s = tf.strings.join(['[START]', s, '[END]'], separator=' ')
     after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.strings.join()', method_object=None, function_args=[['[START]', s, '[END]']], function_kwargs={'separator': ' '})
     return s
 vocabulary_size = 5000
-start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT(experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.keras.layers.TextVectorization()')
 tokenizer = tf.keras.layers.TextVectorization(max_tokens=vocabulary_size, standardize=standardize, ragged=True)
 after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.keras.layers.TextVectorization()', method_object=None, function_args=None, function_kwargs={'max_tokens': vocabulary_size, 'standardize': standardize, 'ragged': True})
-start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT(experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.keras.layers.TextVectorization.adapt()')
 tokenizer.adapt(train_raw.map(lambda fp, txt: txt).unbatch().batch(1024))
 after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.keras.layers.TextVectorization.adapt()', method_object=tokenizer, function_args=[train_raw.map(lambda fp, txt: txt).unbatch().batch(1024)], function_kwargs=None)
 tokenizer.get_vocabulary()[:10]
-start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT(experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.keras.layers.TextVectorization()')
 t = tokenizer([['a cat in a hat'], ['a robot dog']])
 after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.keras.layers.TextVectorization()', method_object=tokenizer, function_args=[[['a cat in a hat'], ['a robot dog']]], function_kwargs=None)
 t
-start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT(experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.keras.layers.StringLookup()')
 word_to_index = tf.keras.layers.StringLookup(mask_token='', vocabulary=tokenizer.get_vocabulary())
 after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.keras.layers.StringLookup()', method_object=None, function_args=None, function_kwargs={'mask_token': '', 'vocabulary': tokenizer.get_vocabulary()})
-start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT(experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.keras.layers.StringLookup()')
 index_to_word = tf.keras.layers.StringLookup(mask_token='', vocabulary=tokenizer.get_vocabulary(), invert=True)
 after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.keras.layers.StringLookup()', method_object=None, function_args=None, function_kwargs={'mask_token': '', 'vocabulary': tokenizer.get_vocabulary(), 'invert': True})
-start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT(experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.keras.layers.StringLookup()')
 w = index_to_word(t)
 after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.keras.layers.StringLookup()', method_object=index_to_word, function_args=[t], function_kwargs=None)
-start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT(experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.keras.layers.StringLookup.to_list()')
 w.to_list()
 after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.keras.layers.StringLookup.to_list()', method_object=w, function_args=None, function_kwargs=None)
-start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT(experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run="tensorflow.strings.reduce_join(w, separator=' ', axis=-1).numpy()")
 tf.strings.reduce_join(w, separator=' ', axis=-1).numpy()
 after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run="tensorflow.strings.reduce_join(w, separator=' ', axis=-1).numpy()", method_object=None, function_args=None, function_kwargs=None)
 
@@ -203,7 +203,7 @@ print('image_paths:', ex_paths.shape)
 print('captions:', ex_captions.shape)
 
 def prepare_txt(imgs, txts):
-    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
+    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT(experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.keras.layers.TextVectorization()')
     tokens = tokenizer(txts)
     after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.keras.layers.TextVectorization()', method_object=tokenizer, function_args=[txts], function_kwargs=None)
     input_tokens = tokens[..., :-1]
@@ -211,7 +211,7 @@ def prepare_txt(imgs, txts):
     return ((imgs, input_tokens), label_tokens)
 
 def prepare_dataset(ds, tokenizer, batch_size=32, shuffle_buffer=1000):
-    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
+    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT(experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.data.Dataset.from_tensor_slices.map.shuffle(10000).map(lambda path, caption: (load_image(path), caption)).apply(tf.data.experimental.ignore_errors()).batch()')
     ds = ds.shuffle(10000).map(lambda path, caption: (load_image(path), caption)).apply(tf.data.experimental.ignore_errors()).batch(batch_size)
     after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.data.Dataset.from_tensor_slices.map.shuffle(10000).map(lambda path, caption: (load_image(path), caption)).apply(tf.data.experimental.ignore_errors()).batch()', method_object=ds, function_args=[batch_size], function_kwargs=None)
 
@@ -232,10 +232,10 @@ def save_dataset(ds, save_path, image_model, tokenizer, shards=10, batch_size=32
             feature_maps = image_model(images)
             (feature_maps, captions) = match_shapes(feature_maps, captions)
             yield (feature_maps, captions)
-    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
+    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT(experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.data.Dataset.from_generator()')
     new_ds = tf.data.Dataset.from_generator(gen, output_signature=(tf.TensorSpec(shape=image_model.output_shape), tf.TensorSpec(shape=(None,), dtype=tf.string)))
     after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.data.Dataset.from_generator()', method_object=None, function_args=[gen], function_kwargs={'output_signature': (tf.TensorSpec(shape=image_model.output_shape), tf.TensorSpec(shape=(None,), dtype=tf.string))})
-    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
+    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT(experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.data.Dataset.from_generator.map(prepare_txt, tf.data.AUTOTUNE).unbatch().shuffle()')
     new_ds = new_ds.map(prepare_txt, tf.data.AUTOTUNE).unbatch().shuffle(1000)
     after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.data.Dataset.from_generator.map(prepare_txt, tf.data.AUTOTUNE).unbatch().shuffle()', method_object=new_ds, function_args=[1000], function_kwargs=None)
 
@@ -248,13 +248,13 @@ def load_dataset(save_path, batch_size=32, shuffle=1000, cycle_length=2):
     def custom_reader_func(datasets):
         datasets = datasets.shuffle(1000)
         return datasets.interleave(lambda x: x, cycle_length=cycle_length)
-    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
+    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT(experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.data.Dataset.load()')
     ds = tf.data.Dataset.load(save_path, reader_func=custom_reader_func)
     after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.data.Dataset.load()', method_object=None, function_args=[save_path], function_kwargs={'reader_func': custom_reader_func})
 
     def drop_index(i, x):
         return x
-    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
+    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT(experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.data.Dataset.load.map(drop_index, tf.data.AUTOTUNE).shuffle(shuffle).padded_batch(batch_size).prefetch()')
     ds = ds.map(drop_index, tf.data.AUTOTUNE).shuffle(shuffle).padded_batch(batch_size).prefetch(tf.data.AUTOTUNE)
     after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.data.Dataset.load.map(drop_index, tf.data.AUTOTUNE).shuffle(shuffle).padded_batch(batch_size).prefetch()', method_object=ds, function_args=[tf.data.AUTOTUNE], function_kwargs=None)
     return ds
@@ -275,19 +275,19 @@ class SeqEmbedding(tf.keras.layers.Layer):
 
     def __init__(self, vocab_size, max_length, depth):
         super().__init__()
-        start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
+        start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT(experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.keras.layers.Embedding()')
         self.pos_embedding = tf.keras.layers.Embedding(input_dim=max_length, output_dim=depth)
         after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.keras.layers.Embedding()', method_object=None, function_args=None, function_kwargs={'input_dim': max_length, 'output_dim': depth})
-        start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
+        start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT(experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.keras.layers.Embedding()')
         self.token_embedding = tf.keras.layers.Embedding(input_dim=vocab_size, output_dim=depth, mask_zero=True)
         after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.keras.layers.Embedding()', method_object=None, function_args=None, function_kwargs={'input_dim': vocab_size, 'output_dim': depth, 'mask_zero': True})
-        start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
+        start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT(experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.keras.layers.Add()')
         self.add = tf.keras.layers.Add()
         after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.keras.layers.Add()', method_object=None, function_args=None, function_kwargs=None)
 
     def call(self, seq):
         seq = self.token_embedding(seq)
-        start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
+        start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT(experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.range()')
         x = tf.range(tf.shape(seq)[1])
         after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.range()', method_object=None, function_args=[tf.shape(seq)[1]], function_kwargs=None)
         x = x[tf.newaxis, :]
@@ -298,13 +298,13 @@ class CausalSelfAttention(tf.keras.layers.Layer):
 
     def __init__(self, **kwargs):
         super().__init__()
-        start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
+        start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT(experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.keras.layers.MultiHeadAttention()')
         self.mha = tf.keras.layers.MultiHeadAttention(**kwargs)
         after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.keras.layers.MultiHeadAttention()', method_object=None, function_args=None, function_kwargs={None: kwargs})
-        start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
+        start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT(experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.keras.layers.Add()')
         self.add = tf.keras.layers.Add()
         after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.keras.layers.Add()', method_object=None, function_args=None, function_kwargs=None)
-        start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
+        start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT(experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.keras.layers.LayerNormalization()')
         self.layernorm = tf.keras.layers.LayerNormalization()
         after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.keras.layers.LayerNormalization()', method_object=None, function_args=None, function_kwargs=None)
 
@@ -317,13 +317,13 @@ class CrossAttention(tf.keras.layers.Layer):
 
     def __init__(self, **kwargs):
         super().__init__()
-        start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
+        start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT(experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.keras.layers.MultiHeadAttention()')
         self.mha = tf.keras.layers.MultiHeadAttention(**kwargs)
         after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.keras.layers.MultiHeadAttention()', method_object=None, function_args=None, function_kwargs={None: kwargs})
-        start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
+        start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT(experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.keras.layers.Add()')
         self.add = tf.keras.layers.Add()
         after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.keras.layers.Add()', method_object=None, function_args=None, function_kwargs=None)
-        start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
+        start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT(experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.keras.layers.LayerNormalization()')
         self.layernorm = tf.keras.layers.LayerNormalization()
         after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.keras.layers.LayerNormalization()', method_object=None, function_args=None, function_kwargs=None)
 
@@ -337,10 +337,10 @@ class FeedForward(tf.keras.layers.Layer):
 
     def __init__(self, units, dropout_rate=0.1):
         super().__init__()
-        start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
+        start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT(experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.keras.Sequential()')
         self.seq = tf.keras.Sequential([tf.keras.layers.Dense(units=2 * units, activation='relu'), tf.keras.layers.Dense(units=units), tf.keras.layers.Dropout(rate=dropout_rate)])
         after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.keras.Sequential()', method_object=None, function_args=[[tf.keras.layers.Dense(units=2 * units, activation='relu'), tf.keras.layers.Dense(units=units), tf.keras.layers.Dropout(rate=dropout_rate)]], function_kwargs=None)
-        start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
+        start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT(experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.keras.layers.LayerNormalization()')
         self.layernorm = tf.keras.layers.LayerNormalization()
         after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.keras.layers.LayerNormalization()', method_object=None, function_args=None, function_kwargs=None)
 
@@ -368,7 +368,7 @@ class TokenOutput(tf.keras.layers.Layer):
 
     def __init__(self, tokenizer, banned_tokens=('', '[UNK]', '[START]'), **kwargs):
         super().__init__()
-        start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
+        start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT(experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.keras.layers.Dense()')
         self.dense = tf.keras.layers.Dense(units=tokenizer.vocabulary_size(), **kwargs)
         after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.keras.layers.Dense()', method_object=None, function_args=None, function_kwargs={'units': tokenizer.vocabulary_size(), None: kwargs})
         self.tokenizer = tokenizer
@@ -400,7 +400,7 @@ class TokenOutput(tf.keras.layers.Layer):
         x = self.dense(x)
         return x + self.bias
 output_layer = TokenOutput(tokenizer, banned_tokens=('', '[UNK]', '[START]'))
-start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT(experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.keras.layers.Layer.adapt()')
 output_layer.adapt(train_ds.map(lambda inputs, labels: labels))
 after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.keras.layers.Layer.adapt()', method_object=output_layer, function_args=[train_ds.map(lambda inputs, labels: labels)], function_kwargs=None)
 
@@ -415,10 +415,10 @@ class Captioner(tf.keras.Model):
         super().__init__()
         self.feature_extractor = feature_extractor
         self.tokenizer = tokenizer
-        start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
+        start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT(experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.keras.layers.StringLookup()')
         self.word_to_index = tf.keras.layers.StringLookup(mask_token='', vocabulary=tokenizer.get_vocabulary())
         after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.keras.layers.StringLookup()', method_object=None, function_args=None, function_kwargs={'mask_token': '', 'vocabulary': tokenizer.get_vocabulary()})
-        start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
+        start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT(experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.keras.layers.StringLookup()')
         self.index_to_word = tf.keras.layers.StringLookup(mask_token='', vocabulary=tokenizer.get_vocabulary(), invert=True)
         after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.keras.layers.StringLookup()', method_object=None, function_args=None, function_kwargs={'mask_token': '', 'vocabulary': tokenizer.get_vocabulary(), 'invert': True})
         self.seq_embedding = SeqEmbedding(vocab_size=tokenizer.vocabulary_size(), depth=units, max_length=max_length)
@@ -432,7 +432,7 @@ class Captioner(tf.keras.Model):
             image = self.feature_extractor(image)
         image = einops.rearrange(image, 'b h w c -> b (h w) c')
         if txt.dtype == tf.string:
-            start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
+            start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT(experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.keras.layers.TextVectorization()')
             txt = tokenizer(txt)
             after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.keras.layers.TextVectorization()', method_object=tokenizer, function_args=[txt], function_kwargs=None)
         txt = self.seq_embedding(txt)
@@ -442,7 +442,7 @@ class Captioner(tf.keras.Model):
         return txt
 model = Captioner(tokenizer, feature_extractor=mobilenet, output_layer=output_layer, units=256, dropout_rate=0.5, num_layers=2, num_heads=2)
 image_url = 'https://tensorflow.org/images/surf.jpg'
-start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT(experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.keras.utils.get_file()')
 image_path = tf.keras.utils.get_file('surf.jpg', origin=image_url)
 after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.keras.utils.get_file()', method_object=None, function_args=['surf.jpg'], function_kwargs={'origin': image_url})
 image = load_image(image_path)
@@ -458,33 +458,33 @@ def simple_gen(self, image, temperature=1):
         if temperature == 0:
             next = tf.argmax(preds, axis=-1)[:, tf.newaxis]
         else:
-            start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
+            start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT(experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.random.categorical()')
             next = tf.random.categorical(preds / temperature, num_samples=1)
             after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.random.categorical()', method_object=None, function_args=[preds / temperature], function_kwargs={'num_samples': 1})
-        start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
+        start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT(experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.concat()')
         tokens = tf.concat([tokens, next], axis=1)
         after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.concat()', method_object=None, function_args=[[tokens, next]], function_kwargs={'axis': 1})
         if next[0] == self.word_to_index('[END]'):
             break
-    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
+    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT(experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.keras.layers.StringLookup()')
     words = index_to_word(tokens[0, 1:-1])
     after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.keras.layers.StringLookup()', method_object=index_to_word, function_args=[tokens[0, 1:-1]], function_kwargs=None)
-    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
+    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT(experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.strings.reduce_join()')
     result = tf.strings.reduce_join(words, axis=-1, separator=' ')
     after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.strings.reduce_join()', method_object=None, function_args=[words], function_kwargs={'axis': -1, 'separator': ' '})
     return result.numpy().decode()
 for t in (0.0, 0.5, 1.0):
-    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
+    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT(experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.keras.Model.simple_gen()')
     result = model.simple_gen(image, temperature=t)
     after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.keras.Model.simple_gen()', method_object=model, function_args=[image], function_kwargs={'temperature': t})
     print(result)
 
 def masked_loss(labels, preds):
-    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
+    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT(experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.nn.sparse_softmax_cross_entropy_with_logits()')
     loss = tf.nn.sparse_softmax_cross_entropy_with_logits(labels, preds)
     after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.nn.sparse_softmax_cross_entropy_with_logits()', method_object=None, function_args=[labels, preds], function_kwargs=None)
     mask = (labels != 0) & (loss < 100000000.0)
-    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
+    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT(experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.cast()')
     mask = tf.cast(mask, loss.dtype)
     after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.cast()', method_object=None, function_args=[mask, loss.dtype], function_kwargs=None)
     loss = loss * mask
@@ -492,16 +492,16 @@ def masked_loss(labels, preds):
     return loss
 
 def masked_acc(labels, preds):
-    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
+    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT(experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.cast()')
     mask = tf.cast(labels != 0, tf.float32)
     after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.cast()', method_object=None, function_args=[labels != 0, tf.float32], function_kwargs=None)
-    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
+    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT(experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.argmax()')
     preds = tf.argmax(preds, axis=-1)
     after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.argmax()', method_object=None, function_args=[preds], function_kwargs={'axis': -1})
-    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
+    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT(experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.cast()')
     labels = tf.cast(labels, tf.int64)
     after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.cast()', method_object=None, function_args=[labels, tf.int64], function_kwargs=None)
-    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
+    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT(experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.cast()')
     match = tf.cast(preds == labels, mask.dtype)
     after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.cast()', method_object=None, function_args=[preds == labels, mask.dtype], function_kwargs=None)
     acc = tf.reduce_sum(match * mask) / tf.reduce_sum(mask)
@@ -511,7 +511,7 @@ class GenerateText(tf.keras.callbacks.Callback):
 
     def __init__(self):
         image_url = 'https://tensorflow.org/images/surf.jpg'
-        start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
+        start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT(experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.keras.utils.get_file()')
         image_path = tf.keras.utils.get_file('surf.jpg', origin=image_url)
         after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.keras.utils.get_file()', method_object=None, function_args=['surf.jpg'], function_kwargs={'origin': image_url})
         self.image = load_image(image_path)
@@ -525,14 +525,14 @@ class GenerateText(tf.keras.callbacks.Callback):
         print()
 g = GenerateText()
 g.model = model
-start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT(experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.keras.callbacks.Callback.on_epoch_end()')
 g.on_epoch_end(0)
 after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.keras.callbacks.Callback.on_epoch_end()', method_object=g, function_args=[0], function_kwargs=None)
 callbacks = [GenerateText(), tf.keras.callbacks.EarlyStopping(patience=5, restore_best_weights=True)]
-start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT(experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.keras.Model.compile()')
 model.compile(optimizer=tf.keras.optimizers.Adam(learning_rate=0.0001), loss=masked_loss, metrics=[masked_acc])
 after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.keras.Model.compile()', method_object=model, function_args=None, function_kwargs={'optimizer': tf.keras.optimizers.Adam(learning_rate=0.0001), 'loss': masked_loss, 'metrics': [masked_acc]})
-start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT(experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.keras.Model.fit()')
 history = model.fit(train_ds.repeat(), steps_per_epoch=100, validation_data=test_ds.repeat(), validation_steps=20, epochs=100, callbacks=callbacks)
 after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.keras.Model.fit()', method_object=model, function_args=[train_ds.repeat()], function_kwargs={'steps_per_epoch': 100, 'validation_data': test_ds.repeat(), 'validation_steps': 20, 'epochs': 100, 'callbacks': callbacks})
 plt.plot(history.history['loss'], label='loss')
@@ -547,7 +547,7 @@ plt.ylim([0, max(plt.ylim())])
 plt.xlabel('Epoch #')
 plt.ylabel('CE/token')
 plt.legend()
-start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT(experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.keras.Model.simple_gen()')
 result = model.simple_gen(image, temperature=0.0)
 after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.keras.Model.simple_gen()', method_object=model, function_args=[image], function_kwargs={'temperature': 0.0})
 result
@@ -555,7 +555,7 @@ str_tokens = result.split()
 str_tokens.append('[END]')
 attn_maps = [layer.last_attention_scores for layer in model.decoder_layers]
 [map.shape for map in attn_maps]
-start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT(experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.concat()')
 attention_maps = tf.concat(attn_maps, axis=0)
 after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.concat()', method_object=None, function_args=[attn_maps], function_kwargs={'axis': 0})
 attention_maps = einops.reduce(attention_maps, 'batch heads sequence (height width) -> sequence height width', height=7, width=7, reduction='mean')
@@ -581,7 +581,7 @@ def run_and_show_attention(self, image, temperature=0.0):
     str_tokens = result_txt.split()
     str_tokens.append('[END]')
     attention_maps = [layer.last_attention_scores for layer in self.decoder_layers]
-    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
+    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT(experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.concat()')
     attention_maps = tf.concat(attention_maps, axis=0)
     after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.concat()', method_object=None, function_args=[attention_maps], function_kwargs={'axis': 0})
     attention_maps = einops.reduce(attention_maps, 'batch heads sequence (height width) -> sequence height width', height=7, width=7, reduction='mean')
@@ -590,7 +590,7 @@ def run_and_show_attention(self, image, temperature=0.0):
     t.set_y(1.05)
 run_and_show_attention(model, image)
 image_url = 'https://tensorflow.org/images/bedroom_hrnet_tutorial.jpg'
-start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT(experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.keras.utils.get_file()')
 image_path = tf.keras.utils.get_file(origin=image_url)
 after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.keras.utils.get_file()', method_object=None, function_args=None, function_kwargs={'origin': image_url})
 image = load_image(image_path)

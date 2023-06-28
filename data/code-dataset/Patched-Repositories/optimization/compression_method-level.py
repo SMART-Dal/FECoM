@@ -28,27 +28,27 @@ class CustomDense(tf.keras.layers.Layer):
         """Instantiates weights, optionally initializing them from `other`."""
         if other is None:
             kernel_shape = (input_shape[-1], self.filters)
-            start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
+            start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT(experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.keras.initializers.GlorotUniform()()')
             kernel = tf.keras.initializers.GlorotUniform()(shape=kernel_shape)
             after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.keras.initializers.GlorotUniform()()', method_object=None, function_args=None, function_kwargs={'shape': kernel_shape})
-            start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
+            start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT(experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.keras.initializers.Zeros()()')
             bias = tf.keras.initializers.Zeros()(shape=(self.filters,))
             after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.keras.initializers.Zeros()()', method_object=None, function_args=None, function_kwargs={'shape': (self.filters,)})
         else:
             (kernel, bias) = (other.kernel, other.bias)
-        start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
+        start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT(experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.Variable()')
         self.kernel = tf.Variable(tf.cast(kernel, self.variable_dtype), name='kernel')
         after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.Variable()', method_object=None, function_args=[tf.cast(kernel, self.variable_dtype)], function_kwargs={'name': 'kernel'})
-        start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
+        start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT(experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.Variable()')
         self.bias = tf.Variable(tf.cast(bias, self.variable_dtype), name='bias')
         after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.Variable()', method_object=None, function_args=[tf.cast(bias, self.variable_dtype)], function_kwargs={'name': 'bias'})
         self.built = True
 
     def call(self, inputs):
-        start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
+        start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT(experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.linalg.matvec()')
         outputs = tf.linalg.matvec(self.kernel, inputs, transpose_a=True)
         after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.linalg.matvec()', method_object=None, function_args=[self.kernel, inputs], function_kwargs={'transpose_a': True})
-        start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
+        start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT(experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.nn.bias_add()')
         outputs = tf.nn.bias_add(outputs, self.bias)
         after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.nn.bias_add()', method_object=None, function_args=[outputs, self.bias], function_kwargs=None)
         return tf.nn.leaky_relu(outputs)
@@ -73,31 +73,31 @@ class CustomConv2D(tf.keras.layers.Layer):
         """Instantiates weights, optionally initializing them from `other`."""
         if other is None:
             kernel_shape = 2 * (self.kernel_size,) + (input_shape[-1], self.filters)
-            start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
+            start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT(experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.keras.initializers.GlorotUniform()()')
             kernel = tf.keras.initializers.GlorotUniform()(shape=kernel_shape)
             after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.keras.initializers.GlorotUniform()()', method_object=None, function_args=None, function_kwargs={'shape': kernel_shape})
-            start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
+            start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT(experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.keras.initializers.Zeros()()')
             bias = tf.keras.initializers.Zeros()(shape=(self.filters,))
             after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.keras.initializers.Zeros()()', method_object=None, function_args=None, function_kwargs={'shape': (self.filters,)})
         else:
             (kernel, bias) = (other.kernel, other.bias)
-        start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
+        start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT(experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.Variable()')
         self.kernel = tf.Variable(tf.cast(kernel, self.variable_dtype), name='kernel')
         after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.Variable()', method_object=None, function_args=[tf.cast(kernel, self.variable_dtype)], function_kwargs={'name': 'kernel'})
-        start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
+        start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT(experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.Variable()')
         self.bias = tf.Variable(tf.cast(bias, self.variable_dtype), name='bias')
         after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.Variable()', method_object=None, function_args=[tf.cast(bias, self.variable_dtype)], function_kwargs={'name': 'bias'})
         self.built = True
 
     def call(self, inputs):
-        start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
+        start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT(experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.nn.convolution()')
         outputs = tf.nn.convolution(inputs, self.kernel, strides=self.strides, padding=self.padding)
         after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.nn.convolution()', method_object=None, function_args=[inputs, self.kernel], function_kwargs={'strides': self.strides, 'padding': self.padding})
-        start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
+        start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT(experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.nn.bias_add()')
         outputs = tf.nn.bias_add(outputs, self.bias)
         after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.nn.bias_add()', method_object=None, function_args=[outputs, self.bias], function_kwargs=None)
         return tf.nn.leaky_relu(outputs)
-start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT(experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.keras.Sequential()')
 classifier = tf.keras.Sequential([CustomConv2D(20, 5, strides=2, name='conv_1'), CustomConv2D(50, 5, strides=2, name='conv_2'), tf.keras.layers.Flatten(), CustomDense(500, name='fc_1'), CustomDense(10, name='fc_2')], name='classifier')
 after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.keras.Sequential()', method_object=None, function_args=[[CustomConv2D(20, 5, strides=2, name='conv_1'), CustomConv2D(50, 5, strides=2, name='conv_2'), tf.keras.layers.Flatten(), CustomDense(500, name='fc_1'), CustomDense(10, name='fc_2')]], function_kwargs={'name': 'classifier'})
 
@@ -116,7 +116,7 @@ def train_model(model, training_data, validation_data, **kwargs):
     return log.history['val_sparse_categorical_accuracy'][-1]
 classifier_accuracy = train_model(classifier, training_dataset, validation_dataset)
 print(f'Accuracy: {classifier_accuracy:0.4f}')
-start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT(experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.linspace()')
 _ = tf.linspace(-5.0, 5.0, 501)
 after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.linspace()', method_object=None, function_args=[-5.0, 5.0, 501], function_kwargs=None)
 plt.plot(_, tfc.PowerLawEntropyModel(0).penalty(_))
@@ -133,7 +133,7 @@ class PowerLawRegularizer(tf.keras.regularizers.Regularizer):
 regularizer = PowerLawRegularizer(lmbda=2.0 / classifier.count_params())
 
 def quantize(latent, log_step):
-    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
+    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT(experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.exp()')
     step = tf.exp(log_step)
     after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.exp()', method_object=None, function_args=[log_step], function_kwargs=None)
     return tfc.round_st(latent / step) * step
@@ -152,10 +152,10 @@ class CompressibleDense(CustomDense):
             bias_log_step = other.bias_log_step
         else:
             kernel_log_step = bias_log_step = -4.0
-        start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
+        start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT(experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.Variable()')
         self.kernel_log_step = tf.Variable(tf.cast(kernel_log_step, self.variable_dtype), name='kernel_log_step')
         after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.Variable()', method_object=None, function_args=[tf.cast(kernel_log_step, self.variable_dtype)], function_kwargs={'name': 'kernel_log_step'})
-        start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
+        start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT(experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.Variable()')
         self.bias_log_step = tf.Variable(tf.cast(bias_log_step, self.variable_dtype), name='bias_log_step')
         after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.Variable()', method_object=None, function_args=[tf.cast(bias_log_step, self.variable_dtype)], function_kwargs={'name': 'bias_log_step'})
         self.add_loss(lambda : self.regularizer(self.kernel_latent / tf.exp(self.kernel_log_step)))
@@ -167,7 +167,7 @@ class CompressibleDense(CustomDense):
 
     @kernel.setter
     def kernel(self, kernel):
-        start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
+        start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT(experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.Variable()')
         self.kernel_latent = tf.Variable(kernel, name='kernel_latent')
         after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.Variable()', method_object=None, function_args=[kernel], function_kwargs={'name': 'kernel_latent'})
 
@@ -177,28 +177,28 @@ class CompressibleDense(CustomDense):
 
     @bias.setter
     def bias(self, bias):
-        start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
+        start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT(experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.Variable()')
         self.bias_latent = tf.Variable(bias, name='bias_latent')
         after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.Variable()', method_object=None, function_args=[bias], function_kwargs={'name': 'bias_latent'})
 
 def to_rdft(kernel, kernel_size):
-    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
+    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT(experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.transpose()')
     kernel = tf.transpose(kernel, (2, 3, 0, 1))
     after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.transpose()', method_object=None, function_args=[kernel, (2, 3, 0, 1)], function_kwargs=None)
-    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
+    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT(experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.signal.rfft2d()')
     kernel_rdft = tf.signal.rfft2d(kernel)
     after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.signal.rfft2d()', method_object=None, function_args=[kernel], function_kwargs=None)
-    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
+    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT(experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.stack()')
     kernel_rdft = tf.stack([tf.math.real(kernel_rdft), tf.math.imag(kernel_rdft)], axis=-1)
     after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.stack()', method_object=None, function_args=[[tf.math.real(kernel_rdft), tf.math.imag(kernel_rdft)]], function_kwargs={'axis': -1})
     return kernel_rdft / kernel_size
 
 def from_rdft(kernel_rdft, kernel_size):
     kernel_rdft *= kernel_size
-    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
+    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT(experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.dtypes.complex()')
     kernel_rdft = tf.dtypes.complex(*tf.unstack(kernel_rdft, axis=-1))
     after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.dtypes.complex()', method_object=None, function_args=[*tf.unstack(kernel_rdft, axis=-1)], function_kwargs=None)
-    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
+    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT(experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.signal.irfft2d()')
     kernel = tf.signal.irfft2d(kernel_rdft, fft_length=2 * (kernel_size,))
     after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.signal.irfft2d()', method_object=None, function_args=[kernel_rdft], function_kwargs={'fft_length': 2 * (kernel_size,)})
     return tf.transpose(kernel, (2, 3, 0, 1))
@@ -216,14 +216,14 @@ class CompressibleConv2D(CustomConv2D):
             kernel_log_step = other.kernel_log_step
             bias_log_step = other.bias_log_step
         else:
-            start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
+            start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT(experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.fill()')
             kernel_log_step = tf.fill(self.kernel_latent.shape[2:], -4.0)
             after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.fill()', method_object=None, function_args=[self.kernel_latent.shape[2:], -4.0], function_kwargs=None)
             bias_log_step = -4.0
-        start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
+        start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT(experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.Variable()')
         self.kernel_log_step = tf.Variable(tf.cast(kernel_log_step, self.variable_dtype), name='kernel_log_step')
         after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.Variable()', method_object=None, function_args=[tf.cast(kernel_log_step, self.variable_dtype)], function_kwargs={'name': 'kernel_log_step'})
-        start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
+        start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT(experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.Variable()')
         self.bias_log_step = tf.Variable(tf.cast(bias_log_step, self.variable_dtype), name='bias_log_step')
         after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.Variable()', method_object=None, function_args=[tf.cast(bias_log_step, self.variable_dtype)], function_kwargs={'name': 'bias_log_step'})
         self.add_loss(lambda : self.regularizer(self.kernel_latent / tf.exp(self.kernel_log_step)))
@@ -237,7 +237,7 @@ class CompressibleConv2D(CustomConv2D):
     @kernel.setter
     def kernel(self, kernel):
         kernel_rdft = to_rdft(kernel, self.kernel_size)
-        start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
+        start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT(experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.Variable()')
         self.kernel_latent = tf.Variable(kernel_rdft, name='kernel_latent')
         after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.Variable()', method_object=None, function_args=[kernel_rdft], function_kwargs={'name': 'kernel_latent'})
 
@@ -247,7 +247,7 @@ class CompressibleConv2D(CustomConv2D):
 
     @bias.setter
     def bias(self, bias):
-        start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
+        start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT(experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.Variable()')
         self.bias_latent = tf.Variable(bias, name='bias_latent')
         after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.Variable()', method_object=None, function_args=[bias], function_kwargs={'name': 'bias_latent'})
 
@@ -260,20 +260,20 @@ print(f'Accuracy: {penalized_accuracy:0.4f}')
 def compress_latent(latent, log_step, name):
     em = tfc.PowerLawEntropyModel(latent.shape.rank)
     compressed = em.compress(latent / tf.exp(log_step))
-    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
+    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT(experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.Variable()')
     compressed = tf.Variable(compressed, name=f'{name}_compressed')
     after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.Variable()', method_object=None, function_args=[compressed], function_kwargs={'name': f'{name}_compressed'})
-    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
+    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT(experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.cast()')
     log_step = tf.cast(log_step, tf.float16)
     after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.cast()', method_object=None, function_args=[log_step, tf.float16], function_kwargs=None)
-    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
+    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT(experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.Variable()')
     log_step = tf.Variable(log_step, name=f'{name}_log_step')
     after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.Variable()', method_object=None, function_args=[log_step], function_kwargs={'name': f'{name}_log_step'})
     return (compressed, log_step)
 
 def decompress_latent(compressed, shape, log_step):
     latent = tfc.PowerLawEntropyModel(len(shape)).decompress(compressed, shape)
-    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
+    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT(experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.exp()')
     step = tf.exp(tf.cast(log_step, latent.dtype))
     after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.exp()', method_object=None, function_args=[tf.cast(log_step, latent.dtype)], function_kwargs=None)
     return latent * step
@@ -323,13 +323,13 @@ def compress_layer(layer):
     if isinstance(layer, CompressibleConv2D):
         return CompressedConv2D.copy(layer)
     return type(layer).from_config(layer.get_config())
-start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT(experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.keras.models.clone_model()')
 compressed_classifier = tf.keras.models.clone_model(compressible_classifier, clone_function=compress_layer)
 after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.keras.models.clone_model()', method_object=None, function_args=[compressible_classifier], function_kwargs={'clone_function': compress_layer})
-start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT(experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.keras.models.clone_model.compile()')
 compressed_classifier.compile(metrics=[tf.keras.metrics.SparseCategoricalAccuracy()])
 after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.keras.models.clone_model.compile()', method_object=compressed_classifier, function_args=None, function_kwargs={'metrics': [tf.keras.metrics.SparseCategoricalAccuracy()]})
-start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT(experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.keras.models.clone_model.evaluate()')
 (_, compressed_accuracy) = compressed_classifier.evaluate(validation_dataset.batch(128))
 after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.keras.models.clone_model.evaluate()', method_object=compressed_classifier, function_args=[validation_dataset.batch(128)], function_kwargs=None)
 print(f'Accuracy of the compressible classifier: {penalized_accuracy:0.4f}')
@@ -366,26 +366,26 @@ def compress_and_evaluate_model(lmbda):
     compressible_classifier = make_mnist_classifier(regularizer)
     train_model(compressible_classifier, training_dataset, validation_dataset, verbose=0)
     print('compressing...', flush=True)
-    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
+    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT(experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.keras.models.clone_model()')
     compressed_classifier = tf.keras.models.clone_model(compressible_classifier, clone_function=compress_layer)
     after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.keras.models.clone_model()', method_object=None, function_args=[compressible_classifier], function_kwargs={'clone_function': compress_layer})
     compressed_size = sum(map(get_weight_size_in_bytes, compressed_classifier.weights))
     compressed_zip_size = float(get_disk_size(compressed_classifier, '/tmp/compressed_classifier'))
     print('evaluating...', flush=True)
-    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
+    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT(experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.keras.models.load_model()')
     compressed_classifier = tf.keras.models.load_model('/tmp/compressed_classifier')
     after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.keras.models.load_model()', method_object=None, function_args=['/tmp/compressed_classifier'], function_kwargs=None)
-    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
+    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT(experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.keras.models.load_model.compile()')
     compressed_classifier.compile(metrics=[tf.keras.metrics.SparseCategoricalAccuracy()])
     after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.keras.models.load_model.compile()', method_object=compressed_classifier, function_args=None, function_kwargs={'metrics': [tf.keras.metrics.SparseCategoricalAccuracy()]})
-    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
+    start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT(experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.keras.models.load_model.evaluate()')
     (_, compressed_accuracy) = compressed_classifier.evaluate(validation_dataset.batch(128), verbose=0)
     after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.keras.models.load_model.evaluate()', method_object=compressed_classifier, function_args=[validation_dataset.batch(128)], function_kwargs={'verbose': 0})
     print()
     return (compressed_size, compressed_zip_size, compressed_accuracy)
 lambdas = (2.0, 5.0, 10.0, 20.0, 50.0)
 metrics = [compress_and_evaluate_model(l) for l in lambdas]
-start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT(experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.convert_to_tensor()')
 metrics = tf.convert_to_tensor(metrics, tf.float32)
 after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.convert_to_tensor()', method_object=None, function_args=[metrics, tf.float32], function_kwargs=None)
 
@@ -396,7 +396,7 @@ def plot_broken_xaxis(ax, compressed_sizes, original_size, original_accuracy):
     ax.set_xticks(xticks[1:])
     ax.set_xticklabels(xticks[1:-1] + [f'{original_size:0.2f}'])
     ax.plot(xticks[-1], original_accuracy, 'o', label='float32')
-start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT(experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.transpose()')
 (sizes, zip_sizes, accuracies) = tf.transpose(metrics)
 after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.transpose()', method_object=None, function_args=[metrics], function_kwargs=None)
 sizes /= 1024
@@ -424,7 +424,7 @@ def decompress_layer(layer):
     if isinstance(layer, CompressedConv2D):
         return CustomConv2D.copy(layer)
     return type(layer).from_config(layer.get_config())
-start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT(experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.keras.models.clone_model()')
 decompressed_classifier = tf.keras.models.clone_model(compressed_classifier, clone_function=decompress_layer)
 after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.keras.models.clone_model()', method_object=None, function_args=[compressed_classifier], function_kwargs={'clone_function': decompress_layer})
 decompressed_accuracy = train_model(decompressed_classifier, training_dataset, validation_dataset, epochs=1)
@@ -437,7 +437,7 @@ def decompress_layer_with_penalty(layer):
     if isinstance(layer, CompressedConv2D):
         return CompressibleConv2D.copy(layer, regularizer=regularizer)
     return type(layer).from_config(layer.get_config())
-start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT(experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.keras.models.clone_model()')
 decompressed_classifier = tf.keras.models.clone_model(compressed_classifier, clone_function=decompress_layer_with_penalty)
 after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, function_to_run='tensorflow.keras.models.clone_model()', method_object=None, function_args=[compressed_classifier], function_kwargs={'clone_function': decompress_layer_with_penalty})
 decompressed_accuracy = train_model(decompressed_classifier, training_dataset, validation_dataset, epochs=1)
