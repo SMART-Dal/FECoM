@@ -73,7 +73,7 @@ def main():
 
     # create nodes to add before and after the method call
     before_execution_call = (
-        "start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT(function_to_run = None)"
+        "start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT(experiment_file_path = None, function_to_run = None)"
     )
     global before_execution_call_node
     before_execution_call_node = ast.parse(before_execution_call)
@@ -237,7 +237,8 @@ class TransformCall(ast.NodeTransformer):
         if modified_node and modified_node != node.value:
             # print("modified_node[0] :", ast.dump(modified_node[0]))
             before_execution_call_node_copy = copy.deepcopy(before_execution_call_node)
-            before_execution_call_node_copy.body[0].value.keywords[0] = (ast.keyword(arg='function_to_run', value=modified_node[0].keywords[2].value))
+            before_execution_call_node_copy.body[0].value.keywords[1] = (ast.keyword(arg='function_to_run', value=modified_node[0].keywords[2].value))
+            before_execution_call_node_copy.body[0].value.keywords[0] = (ast.keyword(arg='experiment_file_path', value=modified_node[0].keywords[1].value))
             return [before_execution_call_node_copy, node, ast.Expr(value=modified_node[0])]
 
         return node
@@ -249,7 +250,8 @@ class TransformCall(ast.NodeTransformer):
             if modified_node and modified_node != node.value:
                 before_execution_call_node_copy = copy.deepcopy(before_execution_call_node)
                 # print("modified_node[0] :", modified_node[0])
-                before_execution_call_node_copy.body[0].value.keywords[0] = (ast.keyword(arg='function_to_run', value=modified_node[0].keywords[2].value))
+                before_execution_call_node_copy.body[0].value.keywords[1] = (ast.keyword(arg='function_to_run', value=modified_node[0].keywords[2].value))
+                before_execution_call_node_copy.body[0].value.keywords[0] = (ast.keyword(arg='experiment_file_path', value=modified_node[0].keywords[1].value))
                 return [
                     before_execution_call_node_copy,
                     node,
