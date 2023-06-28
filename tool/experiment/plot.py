@@ -21,7 +21,7 @@ def get_perf_times(energy_data: EnergyData) -> list:
         (energy_data.start_time_perf, "method_start", 'r', 'dashed'),
         (energy_data.end_time_perf, "method_end", 'r', 'solid'),
         (energy_data.begin_stable_check_time_perf, "stable_check", 'y', 'dashed'),
-        (energy_data.begin_temperature_check_time_perf, "temperature_check", 'c', (0, (1, 10)))
+        (energy_data.begin_temperature_check_time_perf, "temperature_check", 'c', 'solid')
     ]
     return perf_times
 
@@ -84,7 +84,7 @@ def format_ax_ram(energy_data: EnergyData, ax: plt.Axes, graph_stable_mean=False
     if graph_stable_mean:
         ax, ax_legend_handles = add_stable_mean_to_ax(ax, ax_legend_handles, "RAM", energy_data)
 
-    ax.legend(handles=ax_legend_handles, loc="upper left")
+    ax.legend(handles=ax_legend_handles, loc="upper left", bbox_to_anchor=(1, 1))
     
     ax.set_ylabel("Power (W)")
     ax.set_xlabel("Time elapsed (s)")
@@ -98,7 +98,7 @@ def format_ax_gpu(energy_data: EnergyData, ax: plt.Axes, graph_stable_mean=False
         (energy_data.end_time_nvidia, "method_end", 'r', 'solid'),
         (energy_data.begin_stable_check_time_nvidia, "stable_check", 'y', 'dashed'),
         (energy_data.lag_end_time_gpu, "lag_end", 'm', 'dotted'),
-        (energy_data.begin_temperature_check_time_nvidia, "temperature_check", 'c', (0, (1, 10)))
+        (energy_data.begin_temperature_check_time_nvidia, "temperature_check", 'c', 'solid')
     ]
 
     ax.set_title("GPU Power over time")
@@ -111,7 +111,7 @@ def format_ax_gpu(energy_data: EnergyData, ax: plt.Axes, graph_stable_mean=False
     if graph_stable_mean:
         ax, ax_legend_handles = add_stable_mean_to_ax(ax, ax_legend_handles, "GPU", energy_data)
 
-    ax.legend(handles=ax_legend_handles, loc="upper left")
+    ax.legend(handles=ax_legend_handles, loc='upper left', bbox_to_anchor=(1, 1))
     
     ax.set_ylabel("Power (W)")
     ax.set_xlabel("Time elapsed (s)")
@@ -129,7 +129,8 @@ def plot_single_energy_with_times(energy_data: EnergyData, hardware_component: s
     fig, ax = plt.subplots()
     if title:
         fig.suptitle(f"Data for {energy_data.function_name} from {energy_data.project_name}", fontsize=16)
-
+    
+    # run format_ax_{hardware_component} to populate the ax object with the correct data for the given hardware component
     ax = eval(f"format_ax_{hardware_component}(energy_data, ax, graph_stable_mean)")
 
     if start_at_stable_state:
@@ -144,7 +145,8 @@ def plot_single_energy_with_times(energy_data: EnergyData, hardware_component: s
 
     figure = plt.gcf() # get current figure
     figure.set_size_inches(12, 6)
-    plt.savefig('energy_plot.png', dpi=200)
+    plt.tight_layout()
+    plt.savefig('energy_plot.png', dpi=200, bbox_inches='tight')
 
     plt.show()
 

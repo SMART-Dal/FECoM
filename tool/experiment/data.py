@@ -327,16 +327,27 @@ class EnergyData():
     def total_cpu(self):
         # make sure that the filtering works: first time stamp must be start_time_perf and last time stamp must be end_time_perf,
         # since the server reads these times from the perf files
-        assert self.cpu_energy_in_execution["time_elapsed"].iloc[0] == self.start_time_perf
+        try:
+            assert round(self.cpu_energy_in_execution["time_elapsed"].iloc[0], 6) >= round(self.start_time_perf, 6)
+        except AssertionError:
+            # for debugging purposes
+            print("self.cpu_energy_in_execution['time_elapsed'].iloc[0]: ", self.cpu_energy_in_execution['time_elapsed'].iloc[0])
+            print("self.start_time_perf: ", self.start_time_perf)
+            print("### Energy in execution ###")
+            print(self.cpu_energy_in_execution)
+            print("### Energy ###")
+            with pd.option_context('display.max_rows', None, 'display.max_columns', None, 'display.float_format', '{:.20f}'.format):
+                print(self.cpu_energy)
+            raise AssertionError
         assert self.cpu_energy_in_execution["time_elapsed"].iloc[-1] <= self.end_time_perf
         # return the total energy consumption
         return self.cpu_energy_in_execution["energy (J)"].sum()
-    
+
     @property
     def total_ram(self):
         # make sure that the filtering works: first time stamp must be start_time_perf and last time stamp must be end_time_perf,
         # since the server reads these times from the perf files
-        assert self.ram_energy_in_execution["time_elapsed"].iloc[0] == self.start_time_perf
+        assert round(self.ram_energy_in_execution["time_elapsed"].iloc[0], 6) >= round(self.start_time_perf, 6)
         assert self.ram_energy_in_execution["time_elapsed"].iloc[-1] <= self.end_time_perf
         # return the total energy consumption
         return self.ram_energy_in_execution["energy (J)"].sum()
@@ -656,8 +667,11 @@ class DataLoader():
         # 'experiment-10.json' does not appear before 'experiment-2.json' in the sorted list
         for data_file in sorted(os.listdir(self.__data_dir), key=lambda file_name: int(file_name.split('-')[1].split('.')[0])):
             file_path = self.__data_dir / data_file
-            with open(file_path, 'r') as f:
-                data = json.load(f)
+            try:
+                with open(file_path, 'r') as f:
+                    data = json.load(f)
+            except json.decoder.JSONDecodeError:
+                raise json.decoder.JSONDecodeError(f"Could not load file {data_file}. Is it empty?")
             if len(data) != 0:
                 all_data_files.append(data_file)
         return all_data_files

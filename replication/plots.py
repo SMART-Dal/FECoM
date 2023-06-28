@@ -8,6 +8,8 @@ from tool.experiment.analysis import init_project_energy_data
 from tool.patching.patching_config import EXPERIMENT_DIR
 from tool.experiment.plot import plot_single_energy_with_times, plot_total_energy_vs_execution_time, plot_total_energy_vs_data_size_boxplot, plot_total_unnormalised_energy_vs_data_size_boxplot
 
+from executed_experiments import EXECUTED_EXPERIMENTS
+
 def implementation_plot_GPU_energy_with_times():
     """
     create the GPU plot used in Design & Implementation, Processed Data Representation
@@ -20,36 +22,45 @@ def implementation_plot_GPU_energy_with_times():
 
 ### RQ 1 PLOTS
 def rq1_plot_total_energy_vs_time():
-    project_name = "keras/classification"
-    data_1 = init_project_energy_data(project_name, ExperimentKinds.METHOD_LEVEL, first_experiment=1, last_experiment=10)
-    project_name = "images/cnn"
-    data_2 = init_project_energy_data(project_name, ExperimentKinds.METHOD_LEVEL, first_experiment=1, last_experiment=10)
+    experiments_data = []
+    for project_name in EXECUTED_EXPERIMENTS:
+        try:
+            data = init_project_energy_data(project_name, ExperimentKinds.METHOD_LEVEL, first_experiment=1, last_experiment=10)
+            experiments_data.append(data)
+        except Exception as e:
+            print("Exception in project: ", project_name)
+            raise e
 
-    plot_total_energy_vs_execution_time([data_1, data_2], title=False)
+    plot_total_energy_vs_execution_time(experiments_data, title=True)
 
 
 def rq1_plot_tail_power_states_cpu():
     dl = DataLoader("images/cnn", EXPERIMENT_DIR, ExperimentKinds.METHOD_LEVEL)
     energy_data_list = dl.load_single_file("experiment-1.json")
     for energy_data in energy_data_list:
-        if energy_data.function_name == "models.Sequential.fit(*args, **kwargs)":
-            plot_single_energy_with_times(energy_data, hardware_component="cpu", graph_stable_mean=True, start_at_stable_state=True, title=False)
+        if energy_data.function_name == "tensorflow.keras.models.Sequential.fit()":
+            plot_single_energy_with_times(energy_data, hardware_component="cpu", graph_stable_mean=True, start_at_stable_state=True, title=True)
+            return
+    print("could not find function")
 
 def rq1_plot_tail_power_states_ram():
     dl = DataLoader("images/cnn", EXPERIMENT_DIR, ExperimentKinds.METHOD_LEVEL)
     energy_data_list = dl.load_single_file("experiment-1.json")
     for energy_data in energy_data_list:
-        if energy_data.function_name == "models.Sequential.fit(*args, **kwargs)":
-            plot_single_energy_with_times(energy_data, hardware_component="ram", graph_stable_mean=True, start_at_stable_state=True, title=False)
-            
+        if energy_data.function_name == "tensorflow.keras.models.Sequential.fit()":
+            plot_single_energy_with_times(energy_data, hardware_component="ram", graph_stable_mean=True, start_at_stable_state=True, title=True)
+            return
+    print("could not find function")
 
 def rq1_plot_tail_power_states_gpu():
     dl = DataLoader("images/cnn", EXPERIMENT_DIR, ExperimentKinds.METHOD_LEVEL)
     energy_data_list = dl.load_single_file("experiment-1.json")
     for energy_data in energy_data_list:
-        if energy_data.function_name == "models.Sequential.fit(*args, **kwargs)":
-            plot_single_energy_with_times(energy_data, hardware_component="gpu", graph_stable_mean=True, start_at_stable_state=True, title=False)
-
+        if energy_data.function_name == "tensorflow.keras.models.Sequential.fit()":
+            plot_single_energy_with_times(energy_data, hardware_component="gpu", graph_stable_mean=True, start_at_stable_state=True, title=True)
+            return
+    print("could not find function")
+    
 ### RQ 2 PLOTS
 def rq2_plot_data_size_vs_energy():
     project_name = "keras/classification"
@@ -80,7 +91,7 @@ if __name__ == "__main__":
     ### commented code has already been run, uncomment to replicate
 
     # implementation_plot_GPU_energy_with_times()
-    # rq1_plot_total_energy_vs_time()
+    rq1_plot_total_energy_vs_time()
     # rq1_plot_tail_power_states_gpu()
     # rq1_plot_tail_power_states_cpu()
     # rq1_plot_tail_power_states_ram()
