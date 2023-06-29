@@ -10,7 +10,7 @@ import json
 import re
 from pathlib import Path
 from typing import List
-from statistics import mean, median
+from statistics import mean, median, stdev
 
 import pandas as pd
 
@@ -145,6 +145,8 @@ class ProjectEnergyData():
         self.gpu = [FunctionEnergyData() for _ in range(function_count)]
         # keep track of functions without energy 
         self.no_energy_functions = set()
+        # dict of format {function_name: [execution_time_exp1, execution_time_exp2, ...]}
+        self.execution_times = {}
     
     def __len__(self):
         return len(self.cpu_data)
@@ -172,6 +174,49 @@ class ProjectEnergyData():
         Each object contains GPU data for one function.
         """
         return [data for data in self.gpu if len(data) == self.experiment_count]
+    
+    @property
+    def total_function_count(self) -> int:
+        """
+        The total number of functions in this project is the sum of the number of functions
+        with energy data and the number of functions without energy data.
+        """
+        return len(self) + len(self.no_energy_functions)
+    
+    @property
+    def no_energy_function_count(self) -> int:
+        """
+        The number of functions without energy data.
+        """
+        return len(self.no_energy_functions)
+    
+    @property
+    def energy_function_count(self) -> int:
+        """
+        The number of functions with energy data.
+        """
+        return len(self)
+    
+    @property
+    def no_energy_functions_execution_time_stats(self) -> list:
+        """
+        Calculate stats about the execution times of functions without energy data.
+        Returns a list of tuples of the form (stdev_time, median_time, range_time) for each function without energy data.
+        """
+        # only consider functions without energy data
+        filtered_execution_times = {function_name: self.execution_times[function_name] for function_name in self.no_energy_functions}
+        execution_times_stats = []
+        for function_name, execution_times in filtered_execution_times.items():
+            # TODO this assumption doesn't hold if there are multiple calls to the same function in one experiment
+            # assert len(execution_times) == self.experiment_count, f"Function {function_name} has {len(execution_times)} execution times but there are {self.experiment_count} experiments"
+            stdev_time = stdev(execution_times)
+            median_time = median(execution_times)
+            max_time = max(execution_times)
+            min_time = min(execution_times)
+            range_time = max_time - min_time
+            execution_times_stats.append((stdev_time, median_time, range_time, max_time, min_time))
+
+        return execution_times_stats
 
 
 class EnergyData():

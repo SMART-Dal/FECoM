@@ -36,8 +36,13 @@ def init_project_energy_data(project: str, experiment_kind: ExperimentKinds, fir
         # exp_data is a list of EnergyData objects for this experiment. Each list entry corresponds to a unique function executed in this experiment.
         exp_data = dl.load_single_file(exp_file)
         # the number of functions executed should be the same for every experiment, otherwise something went wrong
+        # TODO we have to weaken this assumption for skip_calls experiments, where we skip some functions
         assert len(exp_data) == function_count, f"{experiment_kind.value}/{project}/{exp_file} contains data for {len(exp_data)} functions, but it should contain {function_count}!"
         for function_number, function_data in enumerate(exp_data):
+            
+            # add the execution time to the list of execution times for this function, create a new list if this is the first experiment
+            project_energy_data.execution_times.setdefault(function_data.function_name, []).append(function_data.execution_time_s)
+
             # skip a function if it has no energy data, but keep track of it
             if not function_data.has_energy_data:
                 project_energy_data.no_energy_functions.add(function_data.function_name)
