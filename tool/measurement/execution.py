@@ -69,11 +69,7 @@ def load_skip_calls(skip_calls_file_path: Path):
     """
     if skip_calls_file_path.is_file():
         with open(skip_calls_file_path, 'r') as f:
-            skip_calls_file_content = f.read()
-        if skip_calls_file_content.strip():
-            skip_calls = json.loads(skip_calls_file_content)
-        else:
-            skip_calls = []
+            skip_calls = json.load(f)
     else:
         skip_calls = []
     return skip_calls
@@ -94,7 +90,7 @@ def store_data(data: dict, experiment_file_path: Path):
     """
     
     if DEBUG:
-        print(f"Result: {str(data)[:100]}")
+        print_exec(f"Result: {str(data)[:100]}")
 
     if experiment_file_path.is_file():
         with open(experiment_file_path, 'r') as f:
@@ -108,31 +104,11 @@ def store_data(data: dict, experiment_file_path: Path):
 
     existing_data.append(data)
     if DEBUG:
-        print("Data loaded from response")
+        print_exec("Data loaded from response")
     with open(experiment_file_path, 'w') as f:
         json.dump(existing_data, f)
     if DEBUG:
-        print(f"Data written to file {str(experiment_file_path)}")
-
-    skip_calls = load_skip_calls(experiment_file_path.parent / "skip_calls.json")
-    function_to_run = list(data.keys())[0]
-    times = data[function_to_run]["times"]
-    start_time_nvidia = times["start_time_nvidia"]
-    end_time_nvidia = times["end_time_nvidia"]
-    start_time_perf = times["start_time_perf"]
-    end_time_perf = times["end_time_perf"]
-    if(start_time_nvidia == end_time_nvidia or start_time_perf == end_time_perf):
-        try:
-            # json.dumps(call_to_skip)
-            if function_to_run not in skip_calls:
-                skip_calls.append(function_to_run)
-                with open(experiment_file_path.parent / "skip_calls.json", 'w') as f:
-                    json.dump(skip_calls, f)
-                print('skipping call added, current list is: ', skip_calls)
-            else:
-                print('Skipping call already exists.')
-        except TypeError:
-            print('Ignore: Skipping call is not JSON serializable, skipping append and dump.')
+        print_exec(f"Data written to file {str(experiment_file_path)}")
 
 
 """
@@ -235,7 +211,19 @@ def after_execution(
         "begin_temperature_check_time": start_times["begin_temperature_check_time"]
     }
 
-    # (6) collect all relevant settings
+    # (6) if the runtime is below 0.5s, there is no energy data for this method so add it to the skip_calls list
+    skip_calls = load_skip_calls(experiment_file_path.parent / "skip_calls.json")
+
+    if(start_time_nvidia_normalised == end_time_nvidia_normalised or start_times["start_time_perf"] == end_time_perf):
+        if function_to_run not in skip_calls:
+            skip_calls.append(function_to_run)
+            with open(experiment_file_path.parent / "skip_calls.json", 'w') as f:
+                json.dump(skip_calls, f)
+            print_exec('skipping call added, current list is: ', skip_calls)
+        else:
+            print_exec('Skipping call already exists.')
+
+    # (7) collect all relevant settings
     settings = {
         "max_wait_s": MAX_WAIT_S,
         "wait_after_run_s": WAIT_AFTER_RUN_S,
@@ -251,7 +239,7 @@ def after_execution(
         "cpu_temperature_interval_s": CPU_TEMPERATURE_INTERVAL_S
     }
 
-    # (7) Add size data using pickle, if possible
+    # (8) Add size data using pickle, if possible
     try:
         args_size = len(pickle.dumps(function_args)) if function_args is not None else None
         kwargs_size = len(pickle.dumps(function_kwargs)) if function_kwargs is not None else None
@@ -267,7 +255,7 @@ def after_execution(
         "object_size": object_size
     }
 
-    # (8) format the return dictionary to be in the format {function_signature: results}
+    # (9) format the return dictionary to be in the format {function_signature: results}
     results = {
         function_to_run: {
             "energy_data": energy_data,
@@ -278,7 +266,7 @@ def after_execution(
         }
     }
         
-    # (9) Write the method details to the execution log file with a time stamp (to keep entries unique)
+    # (10) Write the method details to the execution log file with a time stamp (to keep entries unique)
     # This triggers the reload of perf & nvidia-smi, clearing the energy data from the execution of this function
     # (see tool.measurement.start_measurement for the implementation of this process) 
     with open(EXECUTION_LOG_FILE, 'a') as f:
