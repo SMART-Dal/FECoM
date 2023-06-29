@@ -120,7 +120,7 @@ def before_execution(experiment_file_path: str, function_to_run: str = None):
     Insert directly before the function call in the script.
     """
     # check if we should skip this call (e.g. if it doesn't consume energy)
-    if(should_skip_call(experiment_file_path, function_to_run)):
+    if(function_to_run and should_skip_call(experiment_file_path, function_to_run)):
         return
 
     # re-try finding stable state in a loop
@@ -163,7 +163,7 @@ def after_execution(
     by the patcher.
     """
     # check if we should skip this call (e.g. if it doesn't consume energy)
-    if(should_skip_call(experiment_file_path, function_to_run)):
+    if(function_to_run and should_skip_call(experiment_file_path, function_to_run)):
         return
     
     # (3b) Get the end times from the files and also save their exact value.
