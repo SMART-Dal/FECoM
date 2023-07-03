@@ -1,17 +1,16 @@
-import tensorflow as tf
-from tensorflow.keras import datasets, layers, models
-
-from tool.measurement.function_details import build_function_details
 from tool.patching.patching_config import EXPERIMENT_DIR
 from tool.experiment.experiments import DataSizeExperiment
 from tool.experiment.run import run_experiments
 
-raise DeprecationWarning("This module needs to be updated to work with the new local execution environment")
+# raise DeprecationWarning("This module needs to be updated to work with the new local execution environment")
 
-def run_keras_classification_model_fit_datasize_experiment():
+def run_images_cnn_model_fit_datasize_experiment():
     # (1) setup like in the original project
 
-    #### begin copied code (from keras/classification)
+    #### begin copied code (from images/cnn)
+    import tensorflow as tf
+    from tensorflow.keras import datasets, layers, models
+
     (train_images, train_labels), (test_images, test_labels) = datasets.cifar10.load_data()
 
     # Normalize pixel values to be between 0 and 1
@@ -47,43 +46,40 @@ def run_keras_classification_model_fit_datasize_experiment():
     assert test_labels.shape == (10000, 1)
 
     # (3) build function details for function
-    function_details = build_function_details(
-        imports = "import tensorflow as tf\nfrom tensorflow.keras import datasets, layers, models",
-        function_to_run = "obj.fit(*args,**kwargs)",
-        kwargs = {
-            "epochs": 10,
-            "validation_data": (test_images, test_labels)
-        },
-        method_object = model,
-        max_wait_secs = MAX_WAIT_S,
-        wait_after_run_secs = WAIT_AFTER_RUN_S,
-        object_signature = "tf.keras.Sequential"
-    )
+    function_to_run = "obj.fit(*args, **kwargs)"
+    function_args = [train_images, train_labels]
+    function_kwargs = {
+        "epochs": 10,
+        "validation_data": (test_images, test_labels)
+    }
+    method_object = model
+    function_signature = "tf.keras.Sequential.fit()"
 
-    vary_args = [train_images, train_labels]
+    def vary_arg_sizes(fraction: float, function_args: list, function_kwargs: dict) -> tuple:
+        """
+        E.g. if an arg in vary_args has shape (100,10,10) and fraction=0.5, return an array of shape (50,10,10).
+        So this method only scales the first dimension of the array by the given fraction.
+        """
+        varied_args = [arg[:int(arg.shape[0]*fraction)] for arg in function_args]
+        
+        return varied_args, function_kwargs
+
 
     # (4) Initialise and run the experiment
     experiment = DataSizeExperiment(
-        project = "keras/classification",
+        project = "images/cnn",
         experiment_dir = EXPERIMENT_DIR,
         n_runs = 10,
-        function_details = function_details,
-        vary_args = vary_args,
-        start_at = 6
+        vary_arg_sizes = vary_arg_sizes,
+        function_to_run = function_to_run,
+        function_signature = function_signature,
+        function_args = function_args,
+        function_kwargs = function_kwargs,
+        method_object = method_object
     )
 
-    # TODO continue with running experiments 4-10, already reflected in settings below
-    run_experiments(experiment, count=1, start=9)
-
-    experiment = DataSizeExperiment(
-        project = "keras/classification",
-        experiment_dir = EXPERIMENT_DIR,
-        n_runs = 10,
-        function_details = function_details,
-        vary_args = vary_args
-    )
-    run_experiments(experiment, count=1, start=10)
+    run_experiments(experiment, count=10, start=1)
 
 
 if __name__ == "__main__":
-    run_keras_classification_model_fit_datasize_experiment()
+    run_images_cnn_model_fit_datasize_experiment()

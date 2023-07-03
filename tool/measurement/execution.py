@@ -25,9 +25,9 @@ from tool.measurement.measurement_config import PERF_FILE, NVIDIA_SMI_FILE, EXEC
 
 from tool.experiment.experiments import ExperimentKinds
 
+
 def print_exec(message: str):
     custom_print("execution", message)
-
 
 
 def prepare_state():
@@ -63,6 +63,7 @@ def prepare_state():
     
     return start_time_perf, start_time_nvidia, start_time_execution, begin_stable_check_time, begin_temperature_check_time
 
+
 def load_skip_calls(skip_calls_file_path: Path):
     """
     Get the list of calls to skip from the file.
@@ -74,7 +75,9 @@ def load_skip_calls(skip_calls_file_path: Path):
         skip_calls = []
     return skip_calls
 
+
 def should_skip_call(experiment_file_path: str, function_to_run: str = None):
+    assert experiment_file_path is not None, "If experiment_file_path is None, skip calls should not be enabled."
 
     skip_calls = load_skip_calls(experiment_file_path.parent / "skip_calls.json")
     
@@ -83,6 +86,7 @@ def should_skip_call(experiment_file_path: str, function_to_run: str = None):
 
     # if( start_time_nvidia and end_time_nvidia and start_time_perf and end_time_nvidia and (start_time_nvidia == end_time_nvidia or start_time_perf == end_time_perf)):
     #     return True
+
 
 def store_data(data: dict, experiment_file_path: Path):
     """
@@ -115,12 +119,15 @@ def store_data(data: dict, experiment_file_path: Path):
 Core functions
 """
 
-def before_execution(experiment_file_path: str, function_to_run: str = None):
+def before_execution(experiment_file_path: str, function_to_run: str = None, enable_skip_calls: bool = True):
     """
     Insert directly before the function call in the script.
+    If enable_skip_calls is False, then no skipped_calls file will be checked. This is useful for
+    - project-level experiments
+    - data-size experiments
     """
     # check if we should skip this call (e.g. if it doesn't consume energy)
-    if(function_to_run and should_skip_call(experiment_file_path, function_to_run)):
+    if enable_skip_calls and function_to_run and should_skip_call(experiment_file_path, function_to_run):
         return
 
     # re-try finding stable state in a loop
@@ -151,7 +158,8 @@ def before_execution(experiment_file_path: str, function_to_run: str = None):
 
 def after_execution(
         start_times: dict, experiment_file_path: str, function_to_run: str = None,
-        method_object: str = None, function_args: list = None, function_kwargs: dict = None):
+        method_object: str = None, function_args: list = None, function_kwargs: dict = None,
+        enable_skip_calls: bool = True):
     """
     Insert directly after the function call in the script.
 
@@ -163,7 +171,7 @@ def after_execution(
     by the patcher.
     """
     # check if we should skip this call (e.g. if it doesn't consume energy)
-    if(function_to_run and should_skip_call(experiment_file_path, function_to_run)):
+    if enable_skip_calls and function_to_run and should_skip_call(experiment_file_path, function_to_run):
         return
     
     # (3b) Get the end times from the files and also save their exact value.
@@ -212,16 +220,17 @@ def after_execution(
     }
 
     # (6) if the runtime is below 0.5s, there is no energy data for this method so add it to the skip_calls list
-    skip_calls = load_skip_calls(experiment_file_path.parent / "skip_calls.json")
+    if enable_skip_calls:
+        skip_calls = load_skip_calls(experiment_file_path.parent / "skip_calls.json")
 
-    if(start_time_nvidia_normalised == end_time_nvidia_normalised or start_times["start_time_perf"] == end_time_perf):
-        if function_to_run not in skip_calls:
-            skip_calls.append(function_to_run)
-            with open(experiment_file_path.parent / "skip_calls.json", 'w') as f:
-                json.dump(skip_calls, f)
-            print_exec('skipping call added, current list is: ', skip_calls)
-        else:
-            print_exec('Skipping call already exists.')
+        if(start_time_nvidia_normalised == end_time_nvidia_normalised or start_times["start_time_perf"] == end_time_perf):
+            if function_to_run not in skip_calls:
+                skip_calls.append(function_to_run)
+                with open(experiment_file_path.parent / "skip_calls.json", 'w') as f:
+                    json.dump(skip_calls, f)
+                print_exec('skipping call added, current list is: ', skip_calls)
+            else:
+                print_exec('Skipping call already exists.')
 
     # (7) collect all relevant settings
     settings = {
