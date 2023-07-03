@@ -2,7 +2,7 @@ from pathlib import Path
 from statistics import median, mean
 
 from tool.experiment.analysis import init_project_energy_data, create_summary, export_summary_to_latex, build_total_energy_df
-from tool.experiment.experiments import ExperimentKinds
+from tool.experiment.experiment_kinds import ExperimentKinds
 
 from executed_experiments import EXECUTED_EXPERIMENTS
 

@@ -7,7 +7,7 @@ from typing import List, Dict, Tuple
 from pathlib import Path
 
 from tool.experiment.data import DataLoader, FunctionEnergyData, ProjectEnergyData
-from tool.experiment.experiments import ExperimentKinds
+from tool.experiment.experiment_kinds import ExperimentKinds
 from tool.patching.patching_config import EXPERIMENT_DIR
 
 

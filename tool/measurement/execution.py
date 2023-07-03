@@ -23,7 +23,7 @@ from tool.measurement.measurement_config import WAIT_PER_STABLE_CHECK_LOOP_S, CH
 # file paths and separators
 from tool.measurement.measurement_config import PERF_FILE, NVIDIA_SMI_FILE, EXECUTION_LOG_FILE, START_TIMES_FILE, CPU_TEMPERATURE_FILE
 
-from tool.experiment.experiments import ExperimentKinds
+from tool.experiment.experiment_kinds import ExperimentKinds
 
 
 def print_exec(message: str):

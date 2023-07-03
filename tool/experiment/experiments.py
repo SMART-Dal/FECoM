@@ -6,15 +6,9 @@ An Experiment contains the logic needed to run one kind of experiment for one sp
 import subprocess, os
 from abc import ABC, abstractmethod
 from pathlib import Path
-from enum import Enum
 
 from tool.measurement.execution import before_execution, after_execution
-
-
-class ExperimentKinds(Enum):
-    METHOD_LEVEL = "method-level"
-    PROJECT_LEVEL = "project-level"
-    DATA_SIZE = "data-size"
+from tool.experiment.experiment_kinds import ExperimentKinds
 
 
 def format_full_output_dir(output_dir: Path, experiment_kind: str, project: str):

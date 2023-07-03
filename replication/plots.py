@@ -3,7 +3,7 @@ Replication code for plots used in the paper. Currently only used for Tim's Fina
 """
 
 from tool.experiment.data import DataLoader
-from tool.experiment.experiments import ExperimentKinds
+from tool.experiment.experiment_kinds import ExperimentKinds
 from tool.experiment.analysis import init_project_energy_data
 from tool.patching.patching_config import EXPERIMENT_DIR
 from tool.experiment.plot import plot_single_energy_with_times, plot_total_energy_vs_execution_time, plot_total_energy_vs_data_size_boxplot, plot_total_unnormalised_energy_vs_data_size_boxplot
