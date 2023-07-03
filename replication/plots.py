@@ -4,11 +4,11 @@ Replication code for plots used in the paper. Currently only used for Tim's Fina
 
 from tool.experiment.data import DataLoader
 from tool.experiment.experiment_kinds import ExperimentKinds
-from tool.experiment.analysis import init_project_energy_data
+from tool.experiment.analysis import init_project_energy_data, build_total_energy_df
 from tool.patching.patching_config import EXPERIMENT_DIR
-from tool.experiment.plot import plot_single_energy_with_times, plot_total_energy_vs_execution_time, plot_total_energy_vs_data_size_boxplot, plot_total_unnormalised_energy_vs_data_size_boxplot
+from tool.experiment.plot import plot_single_energy_with_times, plot_total_energy_vs_execution_time, plot_total_energy_vs_data_size_boxplot, plot_total_unnormalised_energy_vs_data_size_boxplot, plot_project_level_energy_vs_method_level_energy
 
-from executed_experiments import EXECUTED_EXPERIMENTS
+from replication.executed_experiments import EXECUTED_EXPERIMENTS
 
 def implementation_plot_GPU_energy_with_times():
     """
@@ -32,6 +32,16 @@ def rq1_plot_total_energy_vs_time():
             raise e
 
     plot_total_energy_vs_execution_time(experiments_data, title=True)
+
+def rq1_plot_project_level_energy_vs_method_level_energy():
+    total_energy_projects = {}
+    for project_name in EXECUTED_EXPERIMENTS:
+        method_level_data = init_project_energy_data(project_name, ExperimentKinds.METHOD_LEVEL, first_experiment=1)
+        project_level_data = init_project_energy_data(project_name, ExperimentKinds.PROJECT_LEVEL, first_experiment=1)
+        total_energy_df = build_total_energy_df(method_level_data, project_level_data)
+        total_energy_projects[project_name] = total_energy_df
+    
+    plot_project_level_energy_vs_method_level_energy(total_energy_projects)
 
 
 def rq1_plot_tail_power_states_cpu():
@@ -91,7 +101,8 @@ if __name__ == "__main__":
     ### commented code has already been run, uncomment to replicate
 
     # implementation_plot_GPU_energy_with_times()
-    rq1_plot_total_energy_vs_time()
+    # rq1_plot_total_energy_vs_time()
+    rq1_plot_project_level_energy_vs_method_level_energy()
     # rq1_plot_tail_power_states_gpu()
     # rq1_plot_tail_power_states_cpu()
     # rq1_plot_tail_power_states_ram()

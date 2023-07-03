@@ -227,7 +227,48 @@ def plot_total_energy_vs_execution_time(method_level_energies: List[ProjectEnerg
         plt.scatter(total_df.loc[:,"run time"], total_df.loc[:, scatter_1])
         plt.scatter(total_df.loc[:,"run time"], total_df.loc[:, scatter_2])
         plt.legend([scatter_1, scatter_2])
+    plt.savefig('energy_vs_time_plot.png')
+    plt.show()
 
+def plot_project_level_energy_vs_method_level_energy(total_energy_projects):
+    x = []
+    y_method = []
+    y_project = []
+    
+    for project_name, total_energy_df in total_energy_projects.items():
+        project_data = total_energy_df[total_energy_df['function'].isin(['project-level', 'method-level (sum)'])]
+    
+        # Check if 'method-level (sum)' is present in the project_data
+        if 'method-level (sum)' not in project_data['function'].values:
+            # Add a row with function as 'method-level (sum)' and all columns as 0
+            project_data = project_data.append({'function': 'method-level (sum)'} , ignore_index=True)
+            project_data.fillna(0, inplace=True)
+        print(project_name,"+++",project_data)
+        # Plot the data for the project
+        x.append(project_name)
+        y_method.append(project_data.loc[project_data['function'] == 'method-level (sum)', 'RAM (mean)'].tolist()[0])
+        y_project.append(project_data.loc[project_data['function'] == 'project-level', 'RAM (mean)'].tolist()[0])
+
+    attributes = ['Method-Level (sum)', 'Project-Level']
+    measurements = [y_method, y_project]
+
+    x_pos = np.arange(len(x))  # the label locations
+    bar_width = 0.35  # the width of the bars
+
+    fig, ax = plt.subplots()
+
+    for i, measurement in enumerate(measurements):
+        ax.bar(x_pos + (i * bar_width), measurement, bar_width, label=attributes[i])
+
+    ax.set_xlabel('Project Name')
+    ax.set_ylabel('Energy Consumption (Joules)')
+    ax.set_title('RAM Project-Level Energy vs Method-Level Energy')
+    ax.set_xticks(x_pos)
+    ax.set_xticklabels(x, rotation=45, ha='right', fontsize='small')
+    ax.legend()
+
+    plt.tight_layout()
+    plt.savefig('project_vs_method_energy_plot.png')
     plt.show()
 
 

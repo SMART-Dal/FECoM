@@ -174,6 +174,31 @@ def prepare_total_energy_from_project(project_energy_data: ProjectEnergyData) ->
 
     return data_list, column_names
 
+def prepare_total_energy_and_size_from_project(project_energy_data: ProjectEnergyData) -> Tuple[List[list], List[str]]:
+    """
+    Given a ProjectEnergyData object, construct a list of lists for constructing a DataFrame
+    that contains total normalised energy data. Also return the column names for this DataFrame.
+    """
+    data_list = []
+    for cpu, ram, gpu in zip(project_energy_data.cpu_data, project_energy_data.ram_data, project_energy_data.gpu_data):
+        assert cpu.name == ram.name and cpu.name == gpu.name, "The hardware components should list the functions in the same order."
+        data_list.append([
+            cpu.name,
+            cpu.mean_execution_time,
+            cpu.mean_total_normalised,
+            cpu.median_total_normalised,
+            ram.mean_total_normalised,
+            ram.median_total_normalised,
+            gpu.mean_total_normalised,
+            gpu.median_total_normalised,
+            cpu.mean_total_args_size,
+            cpu.median_total_args_size
+        ])
+    
+    column_names = ["function", "run time", "CPU (mean)", "CPU (median)", "RAM (mean)", "RAM (median)", "GPU (mean)", "GPU (median)", "Args Size (mean)", "Args Size (median)"]
+
+    return data_list, column_names
+
 
 def build_total_energy_df(method_level_energy: ProjectEnergyData, project_level_energy: ProjectEnergyData) -> pd.DataFrame:
     """
@@ -185,6 +210,16 @@ def build_total_energy_df(method_level_energy: ProjectEnergyData, project_level_
     
     data_list_project_level, _ = prepare_total_energy_from_project(project_level_energy)
     total_energy_df.loc[len(total_energy_df)] = data_list_project_level[0]
+    
+    return total_energy_df
+
+def build_total_energy_and_size_df(method_level_energy: ProjectEnergyData) -> pd.DataFrame:
+    """
+    Construct a DataFrame containing total normalised method-level and project-level energy.
+    Used to evaluate RQ1.
+    """
+    data_list, column_names = prepare_total_energy_and_size_from_project(method_level_energy)
+    total_energy_df = pd.DataFrame(data_list, columns=column_names)
     
     return total_energy_df
 
@@ -235,18 +270,18 @@ def create_summary(project_energy_data: ProjectEnergyData) -> Dict[str, pd.DataF
 
 if __name__ == "__main__":
     project_name = "images/cnn"
-    method_level_data = init_project_energy_data(project_name, ExperimentKinds.METHOD_LEVEL, first_experiment=6)
+    method_level_data = init_project_energy_data(project_name, ExperimentKinds.METHOD_LEVEL, first_experiment=1)
     print(method_level_data.no_energy_functions)
     print(f"Number of functions: {len(method_level_data)}")
     # create_summary(method_level_data)
 
-    project_level_data = init_project_energy_data(project_name, ExperimentKinds.PROJECT_LEVEL, first_experiment=6)
+    project_level_data = init_project_energy_data(project_name, ExperimentKinds.PROJECT_LEVEL, first_experiment=1)
     print(build_total_energy_df(method_level_data, project_level_data))
 
     method_level_energies = [method_level_data]
 
     project_name = "keras/classification"
-    method_level_data = init_project_energy_data(project_name, ExperimentKinds.METHOD_LEVEL, first_experiment=6)
+    method_level_data = init_project_energy_data(project_name, ExperimentKinds.METHOD_LEVEL, first_experiment=1)
     method_level_energies.append(method_level_data)
 
     from tool.experiment.plot import plot_total_energy_vs_execution_time

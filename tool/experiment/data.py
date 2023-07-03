@@ -86,6 +86,10 @@ class FunctionEnergyData():
         return mean(self.execution_time)
     
     @property
+    def mean_total_args_size(self):
+        return mean(self.total_args_size)
+    
+    @property
     def mean_mean_power(self):
         return mean(self.mean_power)
     
@@ -121,6 +125,10 @@ class FunctionEnergyData():
     @property
     def median_execution_time(self):
         return median(self.execution_time)
+    
+    @property
+    def median_total_args_size(self):
+        return median(self.total_args_size)
     
     @property
     def median_median_power(self):
