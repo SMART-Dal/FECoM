@@ -118,6 +118,30 @@ def format_ax_gpu(energy_data: EnergyData, ax: plt.Axes, graph_stable_mean=False
 
     return ax
 
+def plot_args_size_vs_gpu_mean(total_energy_dfs):
+    function_values = set()
+
+    for df in total_energy_dfs:
+        function_values.update(df['function'].unique())
+
+    for function in function_values:
+        fig, ax = plt.subplots(figsize=(8, 6))
+
+        for df in total_energy_dfs:
+            data = df[df['function'] == function]
+            args_size_mean = data['Args Size (mean)']
+            gpu_mean = data['GPU (mean)']
+            ax.plot(args_size_mean, gpu_mean, marker='o', linestyle='-', label=f'Project: {df.iloc[0]["Project Name"]}')
+
+        ax.set_xlabel('Args Size (mean)')
+        ax.set_ylabel('GPU (mean)')
+        ax.set_title(f'Function: {function}')
+        ax.legend()
+
+        plt.tight_layout()
+        plt.savefig(f'./rq2_analysis/plot_args_size_vs_gpu_mean_{function}.png')
+        plt.close()
+
 
 def plot_single_energy_with_times(energy_data: EnergyData, hardware_component: str = "gpu", start_at_stable_state = False, title = True, graph_stable_mean = False):
     """

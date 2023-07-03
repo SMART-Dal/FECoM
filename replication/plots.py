@@ -4,9 +4,9 @@ Replication code for plots used in the paper. Currently only used for Tim's Fina
 
 from tool.experiment.data import DataLoader
 from tool.experiment.experiment_kinds import ExperimentKinds
-from tool.experiment.analysis import init_project_energy_data, build_total_energy_df
+from tool.experiment.analysis import init_project_energy_data, build_total_energy_df, build_total_energy_and_size_df
 from tool.patching.patching_config import EXPERIMENT_DIR
-from tool.experiment.plot import plot_single_energy_with_times, plot_total_energy_vs_execution_time, plot_total_energy_vs_data_size_boxplot, plot_total_unnormalised_energy_vs_data_size_boxplot, plot_project_level_energy_vs_method_level_energy
+from tool.experiment.plot import plot_single_energy_with_times, plot_total_energy_vs_execution_time, plot_total_energy_vs_data_size_boxplot, plot_total_unnormalised_energy_vs_data_size_boxplot, plot_project_level_energy_vs_method_level_energy, plot_args_size_vs_gpu_mean
 
 from replication.executed_experiments import EXECUTED_EXPERIMENTS
 
@@ -96,13 +96,29 @@ def rq2_plot_largest_data_size_ram():
     print(f"Total args size: {energy_data_list[-1].total_args_size}")
     plot_single_energy_with_times(energy_data_list[-1], hardware_component="ram", start_at_stable_state=True, title=False, graph_stable_mean=True)
 
+def rq2_plot_args_size_vs_gpu_mean():
+    total_energy_dfs = []
+
+    for project_name in EXECUTED_EXPERIMENTS:
+        print(f"Project: {project_name}")
+        method_level_data = init_project_energy_data(project_name, ExperimentKinds.METHOD_LEVEL, first_experiment=1)
+        total_energy_df = build_total_energy_and_size_df(method_level_data)
+
+        # Add the project name as the first column in the DataFrame
+        total_energy_df.insert(0, 'Project Name', project_name)
+
+        if not total_energy_df.empty:
+            total_energy_dfs.append(total_energy_df)
+
+    plot_args_size_vs_gpu_mean(total_energy_dfs)
+    
 
 if __name__ == "__main__":
     ### commented code has already been run, uncomment to replicate
 
     # implementation_plot_GPU_energy_with_times()
     # rq1_plot_total_energy_vs_time()
-    rq1_plot_project_level_energy_vs_method_level_energy()
+    # rq1_plot_project_level_energy_vs_method_level_energy()
     # rq1_plot_tail_power_states_gpu()
     # rq1_plot_tail_power_states_cpu()
     # rq1_plot_tail_power_states_ram()
@@ -110,4 +126,5 @@ if __name__ == "__main__":
     # rq2_plot_smallest_data_size_ram()
     # rq2_plot_largest_data_size_ram()
     # rq2_plot_data_size_vs_unnormalised_energy()
+    rq2_plot_args_size_vs_gpu_mean()
     pass
