@@ -124,7 +124,7 @@ class DataSizeExperiment(Experiment):
         eval(self.function_to_run)
 
         after_execution(start_times=start_times,
-                        experiment_file_path=None,
+                        experiment_file_path=self.output_file,
                         function_to_run=self.function_signature, # function signature is the pretty form of the function_to_run
                         method_object=self.method_object,
                         function_args=self.function_args,
