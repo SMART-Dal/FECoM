@@ -74,32 +74,23 @@ class PatchedExperiment(Experiment):
 
 
 class DataSizeExperiment(Experiment):
-    # TODO make it clear that n_runs is the theoretical number of runs, which is smaller when start_at > 1
-    # TODO adopt to local execution
-    def __init__(self, project: str, experiment_dir: Path, n_runs: int, vary_arg_sizes: callable,
-                 function_to_run: str, function_signature: str, start_at: int = 1,
-                 function_args: list = None, function_kwargs: dict = None, method_object = None):
+    def __init__(self, project: str, experiment_dir: Path, n_runs: int, prepare_experiment: callable,
+                 function_to_run: str, function_signature: str, start_at: int = 1):
         """
         args:
-            - n_runs (int): the total number of runs per experiment
-            - vary_arg_sizes (callable): a function that takes a fraction (float) and varies the arguments sizes accordingly
+            - n_runs (int): the total number of runs per experiment (if start_at > 1, the actual number of runs is smaller)
+            - prepare_experiments (callable): a function that takes a fraction (float) and returns function_args, function_kwarg and method_object with adjusted data size
             - function_to_run (str): a string such as obj.fit(*args, **kwargs) that can be executed with eval()
             - function_signature (str): the pretty name of the function_to_run, i.e. the full function signature without *args etc.
             - start_at (int) (optional): if specified, this should be a number between 1 and n_runs, and the run() method will start at this number instead of at 1.
-            - method_object (object) (optional): the object that the function_to_run is called on, if it is a method
-            - function_args (list) (optional): the arguments that the function_to_run is called with
-            - function_kwargs (dict) (optional): the keyword arguments that the function_to_run is called with
         """
         super().__init__(ExperimentKinds.DATA_SIZE, project, experiment_dir)
         assert start_at > 0 and start_at <= n_runs
         self.n_runs = n_runs
         self.start_at = start_at
-        self.vary_arg_sizes = vary_arg_sizes
         self.function_to_run = function_to_run
         self.function_signature = function_signature
-        self.function_args = function_args
-        self.function_kwargs = function_kwargs
-        self.method_object = method_object
+        self.prepare_experiment = prepare_experiment
     
     def run(self, exp_number):
         self.number = exp_number
@@ -108,16 +99,14 @@ class DataSizeExperiment(Experiment):
         for run_number in range(self.start_at, self.n_runs+1):
             fraction = run_number / self.n_runs
             assert fraction > 0 and fraction <= 1
-            print(f"Begin run [{run_number}] with data size {fraction} of original")
+            print(f"Begin run [{run_number}] with data size {fraction} for {self.function_signature}")
 
-            self.function_args, self.function_kwargs = self.vary_arg_sizes(fraction, self.function_args, self.function_kwargs)
+            function_args, function_kwargs, method_object = self.prepare_experiment(fraction)
 
-            self.execute_function()
+            self.execute_function(function_args, function_kwargs, method_object)
     
-    def execute_function(self):
-        args = self.function_args
-        kwargs = self.function_kwargs
-        obj = self.method_object
+    def execute_function(self, args, kwargs, obj):
+        # args, kwargs and obj appear unused but are used in the eval() call
 
         start_times = before_execution(experiment_file_path=None, enable_skip_calls=False)
 
@@ -126,10 +115,7 @@ class DataSizeExperiment(Experiment):
         after_execution(start_times=start_times,
                         experiment_file_path=self.output_file,
                         function_to_run=self.function_signature, # function signature is the pretty form of the function_to_run
-                        method_object=self.method_object,
-                        function_args=self.function_args,
-                        function_kwargs=self.function_kwargs,
+                        method_object=obj,
+                        function_args=args,
+                        function_kwargs=kwargs,
                         enable_skip_calls=False)
-
-
-    
