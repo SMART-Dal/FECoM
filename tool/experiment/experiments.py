@@ -8,7 +8,12 @@ from abc import ABC, abstractmethod
 from pathlib import Path
 
 from tool.measurement.execution import before_execution, after_execution
+from tool.measurement.utilities import custom_print
 from tool.experiment.experiment_kinds import ExperimentKinds
+
+
+def print_exp(message: str):
+    custom_print("experiment", message)
 
 
 def format_full_output_dir(output_dir: Path, experiment_kind: str, project: str):
@@ -99,7 +104,7 @@ class DataSizeExperiment(Experiment):
         for run_number in range(self.start_at, self.n_runs+1):
             fraction = run_number / self.n_runs
             assert fraction > 0 and fraction <= 1
-            print(f"Begin run [{run_number}] with data size {fraction} for {self.function_signature}")
+            print_exp(f"Begin run [{run_number}] with data size {fraction} for {self.function_signature}")
 
             function_args, function_kwargs, method_object = self.prepare_experiment(fraction)
 
