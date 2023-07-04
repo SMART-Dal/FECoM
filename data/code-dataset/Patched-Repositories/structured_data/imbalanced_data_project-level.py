@@ -6,7 +6,7 @@ from tool.experiment.experiment_kinds import ExperimentKinds
 experiment_number = sys.argv[1]
 experiment_project = sys.argv[2]
 EXPERIMENT_FILE_PATH = EXPERIMENT_DIR / ExperimentKinds.PROJECT_LEVEL.value / experiment_project / f'experiment-{experiment_number}.json'
-start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT(enable_skip_calls=False)
 import tensorflow as tf
 from tensorflow import keras
 import os
@@ -268,4 +268,4 @@ plot_prc('Test Weighted', test_labels, test_predictions_weighted, color=colors[1
 plot_prc('Train Resampled', train_labels, train_predictions_resampled, color=colors[2])
 plot_prc('Test Resampled', test_labels, test_predictions_resampled, color=colors[2], linestyle='--')
 plt.legend(loc='lower right')
-after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH)
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, enable_skip_calls=False)

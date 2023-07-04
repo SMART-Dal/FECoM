@@ -6,7 +6,7 @@ from tool.experiment.experiment_kinds import ExperimentKinds
 experiment_number = sys.argv[1]
 experiment_project = sys.argv[2]
 EXPERIMENT_FILE_PATH = EXPERIMENT_DIR / ExperimentKinds.PROJECT_LEVEL.value / experiment_project / f'experiment-{experiment_number}.json'
-start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT(enable_skip_calls=False)
 import tensorflow as tf
 from tensorflow.keras import layers
 from tensorflow.keras import regularizers
@@ -101,4 +101,4 @@ combined_model = tf.keras.Sequential([layers.Dense(512, kernel_regularizer=regul
 regularizer_histories['combined'] = compile_and_fit(combined_model, 'regularizers/combined')
 plotter.plot(regularizer_histories)
 plt.ylim([0.5, 0.7])
-after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH)
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, enable_skip_calls=False)

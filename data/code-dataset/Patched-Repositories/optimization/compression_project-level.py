@@ -6,7 +6,7 @@ from tool.experiment.experiment_kinds import ExperimentKinds
 experiment_number = sys.argv[1]
 experiment_project = sys.argv[2]
 EXPERIMENT_FILE_PATH = EXPERIMENT_DIR / ExperimentKinds.PROJECT_LEVEL.value / experiment_project / f'experiment-{experiment_number}.json'
-start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT(enable_skip_calls=False)
 import matplotlib.pyplot as plt
 import tensorflow as tf
 import tensorflow_compression as tfc
@@ -356,4 +356,4 @@ decompressed_classifier = tf.keras.models.clone_model(compressed_classifier, clo
 decompressed_accuracy = train_model(decompressed_classifier, training_dataset, validation_dataset, epochs=1)
 print(f'Accuracy of the compressed classifier: {compressed_accuracy:0.4f}')
 print(f'Accuracy of the decompressed classifier after one more epoch of training: {decompressed_accuracy:0.4f}')
-after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH)
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, enable_skip_calls=False)

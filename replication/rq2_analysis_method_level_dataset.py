@@ -10,7 +10,7 @@ import matplotlib.pyplot as plt
 
 if __name__ == '__main__':
     total_energy_dfs = []
-    csv_file = 'rq2_analysis.csv'
+    csv_file = './rq2_analysis/rq2_analysis.csv'
     if os.path.exists(csv_file):
         os.remove(csv_file)
 

@@ -6,7 +6,7 @@ from tool.experiment.experiment_kinds import ExperimentKinds
 experiment_number = sys.argv[1]
 experiment_project = sys.argv[2]
 EXPERIMENT_FILE_PATH = EXPERIMENT_DIR / ExperimentKinds.PROJECT_LEVEL.value / experiment_project / f'experiment-{experiment_number}.json'
-start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT()
+start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT(enable_skip_calls=False)
 import tensorflow as tf
 import tensorflow_datasets as tfds
 from tensorflow.experimental import dtensor
@@ -143,4 +143,4 @@ print(model.layers[1].kernel.layout)
 with tf.keras.dtensor.experimental.layout_map_scope(layout_map):
     model = tf.keras.Sequential([tf.keras.layers.Dense(16, name='feature', input_shape=(16,)), tf.keras.layers.Dropout(0.1), tf.keras.layers.Dense(32, name='feature_2')])
 print(model.layers[2].kernel.layout)
-after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH)
+after_execution_INSERTED_INTO_SCRIPT(start_times=start_times_INSERTED_INTO_SCRIPT, experiment_file_path=EXPERIMENT_FILE_PATH, enable_skip_calls=False)
