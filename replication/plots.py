@@ -8,7 +8,7 @@ from tool.experiment.analysis import init_project_energy_data, build_total_energ
 from tool.patching.patching_config import EXPERIMENT_DIR
 from tool.experiment.plot import plot_single_energy_with_times, plot_total_energy_vs_execution_time, plot_total_energy_vs_data_size_boxplot, plot_total_unnormalised_energy_vs_data_size_boxplot, plot_project_level_energy_vs_method_level_energy, plot_args_size_vs_gpu_mean
 
-from replication.executed_experiments import EXECUTED_EXPERIMENTS
+from executed_experiments import EXECUTED_EXPERIMENTS
 
 def implementation_plot_GPU_energy_with_times():
     """
@@ -73,7 +73,7 @@ def rq1_plot_tail_power_states_gpu():
     
 ### RQ 2 PLOTS
 def rq2_plot_data_size_vs_energy():
-    project_name = "keras/classification"
+    project_name = "images/cnn_evaluate"
     project_data = init_project_energy_data(project_name, ExperimentKinds.DATA_SIZE, first_experiment=1, last_experiment=7)
     plot_total_energy_vs_data_size_boxplot(project_data, title=False)
 
@@ -97,6 +97,7 @@ def rq2_plot_largest_data_size_ram():
     plot_single_energy_with_times(energy_data_list[-1], hardware_component="ram", start_at_stable_state=True, title=False, graph_stable_mean=True)
 
 def rq2_plot_args_size_vs_gpu_mean():
+    # this method is used for analysis of argsize vs energy for rq2 method-level dataset
     total_energy_dfs = []
 
     for project_name in EXECUTED_EXPERIMENTS:
@@ -126,5 +127,6 @@ if __name__ == "__main__":
     # rq2_plot_smallest_data_size_ram()
     # rq2_plot_largest_data_size_ram()
     # rq2_plot_data_size_vs_unnormalised_energy()
-    rq2_plot_args_size_vs_gpu_mean()
+    # rq2_plot_args_size_vs_gpu_mean()
+    rq2_plot_data_size_vs_energy()
     pass

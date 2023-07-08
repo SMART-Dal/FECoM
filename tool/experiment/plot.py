@@ -350,6 +350,7 @@ def plot_total_energy_vs_data_size_boxplot(project_energy: ProjectEnergyData, ti
         plt.ylabel("Total normalised energy consumption (Joules)")
         plt.boxplot(total_energies, labels=args_sizes)
 
+    plt.savefig(f'./rq2_analysis/plot_total_energy_vs_data_size_boxplot_{project_energy.name.replace("/","_",1)}.png')
     plt.show()
 
 
