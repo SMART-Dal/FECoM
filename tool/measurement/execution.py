@@ -15,7 +15,7 @@ from tool.measurement.start_measurement import start_sensors, quit_process, unre
 from tool.measurement.stable_check import run_check_loop, server_is_stable_check, temperature_is_low_check
 from tool.measurement.measurement_parse import get_current_times, get_energy_data, get_cpu_temperature_data
 
-from tool.measurement.measurement_config import DEBUG
+from tool.measurement.measurement_config import DEBUG, SKIP_CALLS_FILE_NAME
 # stable state constants
 from tool.measurement.measurement_config import MAX_WAIT_S, WAIT_AFTER_RUN_S, CPU_STD_TO_MEAN, RAM_STD_TO_MEAN, GPU_STD_TO_MEAN, CPU_MAXIMUM_TEMPERATURE, GPU_MAXIMUM_TEMPERATURE
 # stable state settings
@@ -79,7 +79,7 @@ def load_skip_calls(skip_calls_file_path: Path):
 def should_skip_call(experiment_file_path: str, function_to_run: str = None):
     assert experiment_file_path is not None, "If experiment_file_path is None, skip calls should not be enabled."
 
-    skip_calls = load_skip_calls(experiment_file_path.parent / "skip_calls.json")
+    skip_calls = load_skip_calls(experiment_file_path.parent / SKIP_CALLS_FILE_NAME)
     
     if function_to_run in skip_calls:
         return True
@@ -221,12 +221,13 @@ def after_execution(
 
     # (6) if the runtime is below 0.5s, there is no energy data for this method so add it to the skip_calls list
     if enable_skip_calls:
-        skip_calls = load_skip_calls(experiment_file_path.parent / "skip_calls.json")
+        skip_calls_file_path = experiment_file_path.parent / SKIP_CALLS_FILE_NAME
+        skip_calls = load_skip_calls(skip_calls_file_path)
 
         if(start_time_nvidia_normalised == end_time_nvidia_normalised or start_times["start_time_perf"] == end_time_perf):
             if function_to_run not in skip_calls:
                 skip_calls.append(function_to_run)
-                with open(experiment_file_path.parent / "skip_calls.json", 'w') as f:
+                with open(skip_calls_file_path, 'w') as f:
                     json.dump(skip_calls, f)
                 print_exec('skipping call added, current list is: ', skip_calls)
             else:

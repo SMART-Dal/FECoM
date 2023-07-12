@@ -21,83 +21,96 @@ def init_project_energy_data(project: str, experiment_kind: ExperimentKinds, fir
     """
     # input sanity check
     assert last_experiment >= first_experiment
+    assert first_experiment >= 1
 
     dl = DataLoader(project, EXPERIMENT_DIR, experiment_kind)
     # get all experiment data files for this project
-    experiment_files = dl.get_all_data_files()
 
-    # initialse the project energy data holder object with the number of functions in the first experiment
-    function_count = len(dl.load_single_file(experiment_files[0]))
-    project_energy_data = ProjectEnergyData(function_count, project, experiment_kind, (last_experiment-first_experiment+1))
+    # maintain backwards compatibility for experiments run without skip_calls functionality
+    if not dl.skip_calls:
+        function_count = len(dl.load_single_file(dl.experiment_files[0]))
 
-    # experiment 1 has index 0, so subtract 1 from the first_experiment variable
-    # TODO the current indexing into experiment_files is buggy if first_experiment is not 1!
-    for exp_file in experiment_files[first_experiment-1:last_experiment]:
+    project_energy_data = ProjectEnergyData(project, experiment_kind, (last_experiment-first_experiment+1))
+
+    # loop through the experiment files for this project
+    for exp_file in dl.experiment_files[first_experiment-1:last_experiment]:  # experiment 1 has index 0, so subtract 1 from the first_experiment variable
         # exp_data is a list of EnergyData objects for this experiment. Each list entry corresponds to a unique function executed in this experiment.
         exp_data = dl.load_single_file(exp_file)
-        # the number of functions executed should be the same for every experiment, otherwise something went wrong
-        # TODO we have to weaken this assumption for skip_calls experiments, where we skip some functions
-        assert len(exp_data) == function_count, f"{experiment_kind.value}/{project}/{exp_file} contains data for {len(exp_data)} functions, but it should contain {function_count}!"
-        for function_number, function_data in enumerate(exp_data):
-            
-            # add the execution time to the list of execution times for this function, create a new list if this is the first experiment
-            project_energy_data.execution_times.setdefault(function_data.function_name, []).append(function_data.execution_time_s)
+    
+        if not dl.skip_calls:
+            # if no calls were skipped, the number of functions executed should be the same for every experiment, otherwise something went wrong
+            assert len(exp_data) == function_count, f"{experiment_kind.value}/{project}/{exp_file} contains data for {len(exp_data)} functions, but it should contain {function_count}!"
+        
+        # loop through the individual functions measured in the experiment
+        for function_name, energy_data in exp_data.items():
 
-            # skip a function if it has no energy data, but keep track of it
-            if not function_data.has_energy_data:
-                project_energy_data.no_energy_functions.add(function_data.function_name)
+            # maintain backwards compatibility for experiments run without skip_calls functionality
+            if not dl.skip_calls:
+                # add the execution time to the list of execution times for this function, create a new list if this is the first experiment
+                project_energy_data.execution_times.setdefault(function_name, []).append(energy_data.execution_time_s)
+
+                # skip a function if it has no energy data, but keep track of it
+                if not energy_data.has_energy_data:
+                    project_energy_data.no_energy_functions.add(function_name)
+                    continue
+            elif function_name in dl.skip_calls:
+                # skip a function if it is in the skip_calls file, and keep track of it
+                project_energy_data.no_energy_functions.add(function_name)
                 continue
 
             ### add CPU data
             # general data
-            project_energy_data.cpu[function_number].name = function_data.function_name
-            project_energy_data.cpu[function_number].execution_time.append(function_data.execution_time_s)
-            project_energy_data.cpu[function_number].total_args_size.append(function_data.total_args_size)
-            project_energy_data.cpu[function_number].total_input_size.append(function_data.total_input_size)
+            # initialise FunctionEnergyData objects if empty
+            project_energy_data.cpu.setdefault(function_name, FunctionEnergyData()).name = energy_data.function_name
+            project_energy_data.cpu[function_name].execution_time.append(energy_data.execution_time_s)
+            project_energy_data.cpu[function_name].total_args_size.append(energy_data.total_args_size)
+            project_energy_data.cpu[function_name].total_input_size.append(energy_data.total_input_size)
             # device-specific data
-            project_energy_data.cpu[function_number].total.append(function_data.total_cpu)
-            project_energy_data.cpu[function_number].total_normalised.append(function_data.total_cpu_normalised)
-            project_energy_data.cpu[function_number].lag_time.append(function_data.cpu_lag_time)
-            project_energy_data.cpu[function_number].lag.append(function_data.cpu_lag)
-            project_energy_data.cpu[function_number].lag_normalised.append(function_data.cpu_lag_normalised)
-            project_energy_data.cpu[function_number].total_lag_normalised.append(function_data.total_cpu_lag_normalised)
-            project_energy_data.cpu[function_number].stdev_power.append(function_data.stdev_power_cpu)
-            project_energy_data.cpu[function_number].mean_power.append(function_data.mean_power_cpu)
-            project_energy_data.cpu[function_number].median_power.append(function_data.median_power_cpu)
+            project_energy_data.cpu[function_name].total.append(energy_data.total_cpu)
+            project_energy_data.cpu[function_name].total_normalised.append(energy_data.total_cpu_normalised)
+            project_energy_data.cpu[function_name].lag_time.append(energy_data.cpu_lag_time)
+            project_energy_data.cpu[function_name].lag.append(energy_data.cpu_lag)
+            project_energy_data.cpu[function_name].lag_normalised.append(energy_data.cpu_lag_normalised)
+            project_energy_data.cpu[function_name].total_lag_normalised.append(energy_data.total_cpu_lag_normalised)
+            project_energy_data.cpu[function_name].stdev_power.append(energy_data.stdev_power_cpu)
+            project_energy_data.cpu[function_name].mean_power.append(energy_data.mean_power_cpu)
+            project_energy_data.cpu[function_name].median_power.append(energy_data.median_power_cpu)
 
             ### add RAM data
             # general data
-            project_energy_data.ram[function_number].name = function_data.function_name
-            project_energy_data.ram[function_number].execution_time.append(function_data.execution_time_s)
-            project_energy_data.ram[function_number].total_args_size.append(function_data.total_args_size)
-            project_energy_data.ram[function_number].total_input_size.append(function_data.total_input_size)
+            # initialise FunctionEnergyData objects if empty
+            project_energy_data.ram.setdefault(function_name, FunctionEnergyData()).name = energy_data.function_name
+            project_energy_data.ram[function_name].execution_time.append(energy_data.execution_time_s)
+            project_energy_data.ram[function_name].total_args_size.append(energy_data.total_args_size)
+            project_energy_data.ram[function_name].total_input_size.append(energy_data.total_input_size)
             # device-specific data
-            project_energy_data.ram[function_number].total.append(function_data.total_ram)
-            project_energy_data.ram[function_number].total_normalised.append(function_data.total_ram_normalised)
-            project_energy_data.ram[function_number].lag_time.append(function_data.ram_lag_time)
-            project_energy_data.ram[function_number].lag.append(function_data.ram_lag)
-            project_energy_data.ram[function_number].lag_normalised.append(function_data.ram_lag_normalised)
-            project_energy_data.ram[function_number].total_lag_normalised.append(function_data.total_ram_lag_normalised)
-            project_energy_data.ram[function_number].stdev_power.append(function_data.stdev_power_ram)
-            project_energy_data.ram[function_number].mean_power.append(function_data.mean_power_ram)
-            project_energy_data.ram[function_number].median_power.append(function_data.median_power_ram)
+            project_energy_data.ram[function_name].total.append(energy_data.total_ram)
+            project_energy_data.ram[function_name].total_normalised.append(energy_data.total_ram_normalised)
+            project_energy_data.ram[function_name].lag_time.append(energy_data.ram_lag_time)
+            project_energy_data.ram[function_name].lag.append(energy_data.ram_lag)
+            project_energy_data.ram[function_name].lag_normalised.append(energy_data.ram_lag_normalised)
+            project_energy_data.ram[function_name].total_lag_normalised.append(energy_data.total_ram_lag_normalised)
+            project_energy_data.ram[function_name].stdev_power.append(energy_data.stdev_power_ram)
+            project_energy_data.ram[function_name].mean_power.append(energy_data.mean_power_ram)
+            project_energy_data.ram[function_name].median_power.append(energy_data.median_power_ram)
 
             ### add GPU data
             # general data
-            project_energy_data.gpu[function_number].name = function_data.function_name
-            project_energy_data.gpu[function_number].execution_time.append(function_data.execution_time_s)
-            project_energy_data.gpu[function_number].total_args_size.append(function_data.total_args_size)
-            project_energy_data.gpu[function_number].total_input_size.append(function_data.total_input_size)
+            # initialise FunctionEnergyData objects if empty
+            project_energy_data.gpu.setdefault(function_name, FunctionEnergyData()).name = energy_data.function_name
+            project_energy_data.gpu[function_name].execution_time.append(energy_data.execution_time_s)
+            project_energy_data.gpu[function_name].total_args_size.append(energy_data.total_args_size)
+            project_energy_data.gpu[function_name].total_input_size.append(energy_data.total_input_size)
             # device-specific data
-            project_energy_data.gpu[function_number].total.append(function_data.total_gpu)
-            project_energy_data.gpu[function_number].total_normalised.append(function_data.total_gpu_normalised)
-            project_energy_data.gpu[function_number].lag_time.append(function_data.gpu_lag_time)
-            project_energy_data.gpu[function_number].lag.append(function_data.gpu_lag)
-            project_energy_data.gpu[function_number].lag_normalised.append(function_data.gpu_lag_normalised)
-            project_energy_data.gpu[function_number].total_lag_normalised.append(function_data.total_gpu_lag_normalised)
-            project_energy_data.gpu[function_number].stdev_power.append(function_data.stdev_power_gpu)
-            project_energy_data.gpu[function_number].mean_power.append(function_data.mean_power_gpu)
-            project_energy_data.gpu[function_number].median_power.append(function_data.median_power_gpu)
+            project_energy_data.gpu[function_name].total.append(energy_data.total_gpu)
+            project_energy_data.gpu[function_name].total_normalised.append(energy_data.total_gpu_normalised)
+            project_energy_data.gpu[function_name].lag_time.append(energy_data.gpu_lag_time)
+            project_energy_data.gpu[function_name].lag.append(energy_data.gpu_lag)
+            project_energy_data.gpu[function_name].lag_normalised.append(energy_data.gpu_lag_normalised)
+            project_energy_data.gpu[function_name].total_lag_normalised.append(energy_data.total_gpu_lag_normalised)
+            project_energy_data.gpu[function_name].stdev_power.append(energy_data.stdev_power_gpu)
+            project_energy_data.gpu[function_name].mean_power.append(energy_data.mean_power_gpu)
+            project_energy_data.gpu[function_name].median_power.append(energy_data.median_power_gpu)
     
     return project_energy_data
 
@@ -269,20 +282,20 @@ def create_summary(project_energy_data: ProjectEnergyData) -> Dict[str, pd.DataF
 
 
 if __name__ == "__main__":
-    project_name = "images/cnn"
-    method_level_data = init_project_energy_data(project_name, ExperimentKinds.METHOD_LEVEL, first_experiment=1)
+    project_name = "distribute/custom_training"
+    method_level_data = init_project_energy_data(project_name, ExperimentKinds.METHOD_LEVEL)
     print(method_level_data.no_energy_functions)
     print(f"Number of functions: {len(method_level_data)}")
-    # create_summary(method_level_data)
+    create_summary(method_level_data)
 
     project_level_data = init_project_energy_data(project_name, ExperimentKinds.PROJECT_LEVEL, first_experiment=1)
     print(build_total_energy_df(method_level_data, project_level_data))
 
-    method_level_energies = [method_level_data]
+    # method_level_energies = [method_level_data]
 
-    project_name = "keras/classification"
-    method_level_data = init_project_energy_data(project_name, ExperimentKinds.METHOD_LEVEL, first_experiment=1)
-    method_level_energies.append(method_level_data)
+    # project_name = "keras/classification"
+    # method_level_data = init_project_energy_data(project_name, ExperimentKinds.METHOD_LEVEL, first_experiment=1)
+    # method_level_energies.append(method_level_data)
 
-    from tool.experiment.plot import plot_total_energy_vs_execution_time
-    plot_total_energy_vs_execution_time(method_level_energies)
+    # from tool.experiment.plot import plot_total_energy_vs_execution_time
+    # plot_total_energy_vs_execution_time(method_level_energies)

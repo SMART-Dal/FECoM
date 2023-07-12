@@ -9,12 +9,13 @@ import os
 import json
 import re
 from pathlib import Path
-from typing import List
+from typing import List, Dict
 from statistics import mean, median, stdev
 
 import pandas as pd
 
 from tool.experiment.experiments import format_full_output_dir, ExperimentKinds
+from tool.measurement.measurement_config import SKIP_CALLS_FILE_NAME
 
 NS_CONVERSION = 1_000_000_000 # 1 second = 1,000,000,000 seconds
 MB_CONVERSION = 1_048_576 # 1 Megabyte = 1,048,576 bytes
@@ -42,6 +43,9 @@ class FunctionEnergyData():
     
     def __len__(self):
         return len(self.total)
+    
+    def __str__(self):
+        return f"FunctionEnergyData of {self.name} \nTotal energy consumptions: {self.total}"
     
     @property
     def name(self):
@@ -144,13 +148,13 @@ class ProjectEnergyData():
     Contains three lists of FunctionEnergyData objects, one list each for CPU, RAM and GPU.
     The index of a function's data in the list corresponds to its index in the experiment file.
     """
-    def __init__(self, function_count: int, project: str, experiment_kind: ExperimentKinds, experiment_count: int):
+    def __init__(self, project: str, experiment_kind: ExperimentKinds, experiment_count: int):
         self.name = project
         self.experiment_kind = experiment_kind
         self.experiment_count = experiment_count
-        self.cpu = [FunctionEnergyData() for _ in range(function_count)]
-        self.ram = [FunctionEnergyData() for _ in range(function_count)]
-        self.gpu = [FunctionEnergyData() for _ in range(function_count)]
+        self.cpu = {}
+        self.ram = {}
+        self.gpu = {}
         # keep track of functions without energy 
         self.no_energy_functions = set()
         # dict of format {function_name: [execution_time_exp1, execution_time_exp2, ...]}
@@ -165,7 +169,7 @@ class ProjectEnergyData():
         The FunctionEnergyData objects where there is energy data for all experiments.
         Each object contains CPU data for one function.
         """
-        return [data for data in self.cpu if len(data) == self.experiment_count]
+        return [data for data in self.cpu.values() if len(data) == self.experiment_count]
     
     @property
     def ram_data(self) -> List[FunctionEnergyData]:
@@ -173,7 +177,7 @@ class ProjectEnergyData():
         The FunctionEnergyData objects where there is energy data for all experiments.
         Each object contains RAM data for one function.
         """
-        return [data for data in self.ram if len(data) == self.experiment_count]
+        return [data for data in self.ram.values() if len(data) == self.experiment_count]
     
     @property
     def gpu_data(self) -> List[FunctionEnergyData]:
@@ -181,7 +185,7 @@ class ProjectEnergyData():
         The FunctionEnergyData objects where there is energy data for all experiments.
         Each object contains GPU data for one function.
         """
-        return [data for data in self.gpu if len(data) == self.experiment_count]
+        return [data for data in self.gpu.values() if len(data) == self.experiment_count]
     
     @property
     def total_function_count(self) -> int:
@@ -409,7 +413,7 @@ class EnergyData():
     def total_gpu(self):
         # for the gpu data we have slightly weaker assumptions than for the cpu data, since we "normalise"
         # the gpu time_elapsed & start/end times and limited floating point precision can lead to slight differences in the values
-        assert self.gpu_energy_in_execution["time_elapsed"].iloc[0] >= self.start_time_nvidia
+        assert round(self.gpu_energy_in_execution["time_elapsed"].iloc[0], 6) >= round(self.start_time_nvidia, 6)
         assert self.gpu_energy_in_execution["time_elapsed"].iloc[-1] <= self.end_time_nvidia
         return self.gpu_energy_in_execution["power_draw (W)"].sum() * self.measurement_interval_s # convert power to joules
     
@@ -644,11 +648,22 @@ class EnergyData():
     ### Helper methods
     def __baseline_consumption(self, comparable_df: pd.DataFrame, stable_mean):
         return len(comparable_df) * stable_mean
-
+    
+    ## this was the previous implementation which had floating point errors
+    # def __energy_in_execution(self, energy_df: pd.DataFrame, start_time: float, end_time: float):
+    #     # get the energy data in between execution start and end time
+    #     energy_in_execution = energy_df.loc[(energy_df["time_elapsed"] >= start_time) & (
+    #         energy_df["time_elapsed"] < end_time)].copy()
+    #     return energy_in_execution
+    
     def __energy_in_execution(self, energy_df: pd.DataFrame, start_time: float, end_time: float):
-        # get the energy data in between execution start and end time
-        energy_in_execution = energy_df.loc[(energy_df["time_elapsed"] >= start_time) & (
-            energy_df["time_elapsed"] < end_time)].copy()
+        # Get the index of the closest value to start_time and end_time
+        start_idx = (energy_df["time_elapsed"] - start_time).abs().idxmin()
+        end_idx = (energy_df["time_elapsed"] - end_time).abs().idxmin()
+
+        # Get the energy data in between execution start and end time (inclusive of start time, exclusive of end time)
+        energy_in_execution = energy_df.loc[start_idx:end_idx-1].copy() if end_idx > start_idx else pd.DataFrame()
+        
         return energy_in_execution
     
     def __energy_post_execution(self, energy_df: pd.DataFrame, end_time: float):
@@ -710,15 +725,21 @@ class DataLoader():
         self.project_name = project
         self.__data_dir = format_full_output_dir(
             output_dir, experiment_kind.value, project)
+        self.experiment_files = self.__get_all_data_files()
+        self.skip_calls = self.__load_skip_calls()
 
-    def get_all_data_files(self) -> List[str]:
+    def __get_all_data_files(self) -> List[str]:
         """
         Get all non-empty data file names as a list of strings
         """
         all_data_files = []
+
+        # get a list of only experiment file names (filter out the skip calls file)
+        experiment_file_names = list(filter(lambda file_name: file_name != SKIP_CALLS_FILE_NAME, os.listdir(self.__data_dir)))
+
         # the custom sort key extracts the experiment number from the file name, such that
         # 'experiment-10.json' does not appear before 'experiment-2.json' in the sorted list
-        for data_file in sorted(os.listdir(self.__data_dir), key=lambda file_name: int(file_name.split('-')[1].split('.')[0])):
+        for data_file in sorted(experiment_file_names, key=lambda file_name: int(file_name.split('-')[1].split('.')[0])):
             file_path = self.__data_dir / data_file
             try:
                 with open(file_path, 'r') as f:
@@ -728,27 +749,36 @@ class DataLoader():
             if len(data) != 0:
                 all_data_files.append(data_file)
         return all_data_files
+    
+    def __load_skip_calls(self):
+        skip_calls_file_path = self.__data_dir / SKIP_CALLS_FILE_NAME
+        if skip_calls_file_path.exists():
+            with open(skip_calls_file_path, 'r') as f:
+                skip_calls = json.load(f)
+            return skip_calls
+        else:
+            return None
 
 
-    def load_single_file(self, file_name: str) -> List[EnergyData]:
+    def load_single_file(self, file_name: str) -> Dict[str, EnergyData]:
         """
-         returns a list of EnergyData objects where EnergyData.function_name is
+         returns a dict of EnergyData objects where the key is
             - the function name (method-level experiment) or
-            - "project-level" (project-level experiment), in this case there is only one dict in the list
+            - "project-level" (project-level experiment), in this case there is only one EnergyData object in the dict
         """
 
         file_path = self.__data_dir / file_name
         with open(file_path, 'r') as f:
             raw_data_list = json.load(f)
 
-        data_samples = []
+        data_samples = {}
 
         # iterate through all samples in the file and create EnergyData objects for them
         for data_dict in raw_data_list:
             # data_dict has only one key, the function name
             function_name = list(data_dict.keys())[0]
             energy_data = data_dict[function_name]["energy_data"]
-            data_samples.append(EnergyData(
+            data_samples[function_name] = EnergyData(
                 function_name,
                 self.project_name,
                 self.convert_json_dict_to_df(energy_data["cpu"]),
@@ -757,7 +787,7 @@ class DataLoader():
                 data_dict[function_name]["times"],
                 data_dict[function_name]["input_sizes"],
                 data_dict[function_name]["settings"]
-            ))
+            )
 
         return data_samples
 

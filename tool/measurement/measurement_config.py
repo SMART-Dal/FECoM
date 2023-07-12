@@ -65,6 +65,9 @@ EXECUTION_LOG_FILE = energy_data_dir/"execution_log.txt"
 WAIT_UNTIL_PRINTING_STATS_S = 120
 
 
+SKIP_CALLS_FILE_NAME = "skip_calls.json"
+
+
 """
 TEMPERATURE MEASUREMENT CONFIG
 """
