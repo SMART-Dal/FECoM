@@ -1,12 +1,13 @@
 from pathlib import Path
 from statistics import median, mean
+import os
 
 from tool.experiment.analysis import init_project_energy_data, create_summary, export_summary_to_latex, build_total_energy_df
 from tool.experiment.experiment_kinds import ExperimentKinds
 
 from executed_experiments import EXECUTED_EXPERIMENTS
 
-LATEX_OUTPUT_PATH = Path("out/latex")
+LATEX_OUTPUT_PATH = Path("rq1_analysis/latex")
 
 def create_summary_and_save_to_latex(project_name: str, experiment_kind: ExperimentKinds, first_experiment: int, last_experiment: int):
     data = init_project_energy_data(project_name, experiment_kind, first_experiment, last_experiment)
@@ -32,19 +33,40 @@ def results_rq1_total_energy_consumption():
     first_exp = 1
     last_exp = 10
 
-    project_name = "keras/classification"
-    method_level  = init_project_energy_data(project_name, ExperimentKinds.METHOD_LEVEL, first_experiment=first_exp, last_experiment=last_exp)
-    project_level = init_project_energy_data(project_name, ExperimentKinds.PROJECT_LEVEL, first_experiment=first_exp, last_experiment=last_exp)
-    df = build_total_energy_df(method_level, project_level)
-    print(df)
-    df.style.format(precision=2).to_latex(buf = LATEX_OUTPUT_PATH/sub_dir/project_name.replace('/','-')/file_name)
+    # project_name = "keras/classification"
+    # method_level  = init_project_energy_data(project_name, ExperimentKinds.METHOD_LEVEL, first_experiment=first_exp, last_experiment=last_exp)
+    # project_level = init_project_energy_data(project_name, ExperimentKinds.PROJECT_LEVEL, first_experiment=first_exp, last_experiment=last_exp)
+    # df = build_total_energy_df(method_level, project_level)
+    # print(df)
+    # df.style.format(precision=2).to_latex(buf = LATEX_OUTPUT_PATH/sub_dir/project_name.replace('/','-')/file_name)
 
-    project_name = "images/cnn"
-    method_level  = init_project_energy_data(project_name, ExperimentKinds.METHOD_LEVEL, first_experiment=first_exp, last_experiment=last_exp)
-    project_level = init_project_energy_data(project_name, ExperimentKinds.PROJECT_LEVEL, first_experiment=first_exp, last_experiment=last_exp)
-    df = build_total_energy_df(method_level, project_level)
-    print(df)
-    df.style.format(precision=2).to_latex(buf = LATEX_OUTPUT_PATH/sub_dir/project_name.replace('/','-')/file_name)
+    # project_name = "images/cnn"
+    # method_level  = init_project_energy_data(project_name, ExperimentKinds.METHOD_LEVEL, first_experiment=first_exp, last_experiment=last_exp)
+    # project_level = init_project_energy_data(project_name, ExperimentKinds.PROJECT_LEVEL, first_experiment=first_exp, last_experiment=last_exp)
+    # df = build_total_energy_df(method_level, project_level)
+    # print(df)
+    # df.style.format(precision=2).to_latex(buf = LATEX_OUTPUT_PATH/sub_dir/project_name.replace('/','-')/file_name)
+
+    for project_name in EXECUTED_EXPERIMENTS:
+        try:
+            print("Project: ", project_name)
+            method_level  = init_project_energy_data(project_name, ExperimentKinds.METHOD_LEVEL, first_experiment=first_exp, last_experiment=last_exp)
+            project_level = init_project_energy_data(project_name, ExperimentKinds.PROJECT_LEVEL, first_experiment=first_exp, last_experiment=last_exp)
+            df = build_total_energy_df(method_level, project_level)
+            print(df)
+
+            # Specify the file path
+            file_path = os.path.join(LATEX_OUTPUT_PATH, sub_dir, project_name.replace('/', '-'), file_name)
+
+            # Create the directory structure if it doesn't exist
+            os.makedirs(os.path.dirname(file_path), exist_ok=True)
+
+            # Save the DataFrame as LaTeX to the file
+            df.style.format(precision=2).to_latex(buf=file_path)
+            # df.style.format(precision=2).to_latex(buf = LATEX_OUTPUT_PATH/sub_dir/project_name.replace('/','-')/file_name)
+        except Exception as e:
+            print("Exception in project: ", project_name)
+            raise e
 
 
 def calculate_function_counts():
@@ -103,8 +125,8 @@ if __name__ == "__main__":
     ### commented code has already been run, uncomment to replicate
     
     # appendix_rq1_summary_dfs_all_experiments()
-    # results_rq1_total_energy_consumption()
+    results_rq1_total_energy_consumption()
 
     # calculate_function_counts()
-    calculate_no_energy_functions_execution_time_stats()
+    # calculate_no_energy_functions_execution_time_stats()
     pass

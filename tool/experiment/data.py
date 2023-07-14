@@ -142,6 +142,18 @@ class FunctionEnergyData():
     def median_stdev_power(self):
         return median(self.stdev_power)
     
+    # max values
+
+    @property
+    def max_total_normalised(self):
+        return max(self.total_normalised)
+    
+    # min values
+
+    @property
+    def min_total_normalised(self):
+        return min(self.total_normalised)
+    
 
 class ProjectEnergyData():
     """

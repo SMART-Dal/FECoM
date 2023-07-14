@@ -3,9 +3,10 @@ import matplotlib.lines as mlines
 import matplotlib.patches as mpatches
 import pandas as pd
 from typing import List
+import numpy as np
 
 from tool.experiment.data import EnergyData, ProjectEnergyData
-from tool.experiment.analysis import prepare_total_energy_from_project
+from tool.experiment.analysis import prepare_total_energy_from_project, prepare_total_energy_and_size_from_project
 
 
 def get_perf_times(energy_data: EnergyData) -> list:
@@ -170,7 +171,7 @@ def plot_single_energy_with_times(energy_data: EnergyData, hardware_component: s
     figure = plt.gcf() # get current figure
     figure.set_size_inches(12, 6)
     plt.tight_layout()
-    plt.savefig('energy_plot.png', dpi=200, bbox_inches='tight')
+    plt.savefig(f'./rq2_analysis/tail_state_plot_{hardware_component}.png', dpi=200, bbox_inches='tight')
 
     plt.show()
 
@@ -251,49 +252,108 @@ def plot_total_energy_vs_execution_time(method_level_energies: List[ProjectEnerg
         plt.scatter(total_df.loc[:,"run time"], total_df.loc[:, scatter_1])
         plt.scatter(total_df.loc[:,"run time"], total_df.loc[:, scatter_2])
         plt.legend([scatter_1, scatter_2])
-    plt.savefig('energy_vs_time_plot.png')
+        plt.savefig(f'{hardware}_energy_vs_time_plot.png')
+        plt.show()
+
+def plot_combined_total_energy_vs_execution_time(method_level_energies: List[ProjectEnergyData], title=True):
+    """
+    Takes a list of ProjectEnergyData objects, and plots the total normalised energy consumption
+    versus mean execution time for all functions in the ProjectEnergyData objects.
+    """
+    data_list = []
+    for method_level_energy in method_level_energies:
+        # project_data_list, column_names = prepare_total_energy_from_project(method_level_energy)
+        project_data_list, column_names = prepare_total_energy_and_size_from_project(method_level_energy)
+        data_list.extend(project_data_list)
+
+    total_df = pd.DataFrame(data_list, columns=column_names)
+    sorted_total_df = total_df.sort_values(by='run time')
+
+
+    fig, axes = plt.subplots(1, 3, figsize=(36, 12))
+    if title:
+        fig.suptitle("Total normalized energy consumption vs time", fontsize=16)
+
+    hardware_labels = ["CPU", "RAM", "GPU"]
+    scatter_labels = ["(mean)", "(median)","(min)","(max)"]
+
+    for i, ax in enumerate(axes):
+        hardware = hardware_labels[i]
+        scatter_1 = f"{hardware} {scatter_labels[0]}"
+        scatter_2 = f"{hardware} {scatter_labels[1]}"
+        scatter_min = f"{hardware} {scatter_labels[2]}"
+        scatter_max = f"{hardware} {scatter_labels[3]}"
+        # ax.plot(total_df.loc[:, "run time"], total_df.loc[:, scatter_1], label=scatter_1)
+        # ax.plot(total_df.loc[:, "run time"], total_df.loc[:, scatter_2], label=scatter_2)
+        ax.plot(sorted_total_df["run time"], sorted_total_df[scatter_1], label=scatter_1)
+        # ax.plot(sorted_total_df["run time"], sorted_total_df[scatter_2], label=scatter_2)
+        ax.fill_between(sorted_total_df["run time"], sorted_total_df[scatter_min], sorted_total_df[scatter_max], alpha=0.2)
+        
+        ax.set_xlabel("Mean execution time (s)", fontsize=24)
+        ax.set_ylabel("Normalized energy consumption (Joules)", fontsize=24)
+        ax.set_title(hardware, fontsize=28)
+
+        ax.legend()
+
+    
+    plt.yticks(fontsize=18)
+    plt.xticks(fontsize=18)
+    plt.legend(fontsize=20)
+    plt.tight_layout()
+    plt.savefig("energy_vs_time_combined_plot.pdf")
     plt.show()
+
+
 
 def plot_project_level_energy_vs_method_level_energy(total_energy_projects):
     x = []
-    y_method = []
-    y_project = []
-    
+    y_cpu_method = []
+    y_cpu_project = []
+    y_gpu_method = []
+    y_gpu_project = []
+    y_ram_method = []
+    y_ram_project = []
+
     for project_name, total_energy_df in total_energy_projects.items():
         project_data = total_energy_df[total_energy_df['function'].isin(['project-level', 'method-level (sum)'])]
-    
-        # Check if 'method-level (sum)' is present in the project_data
-        if 'method-level (sum)' not in project_data['function'].values:
-            # Add a row with function as 'method-level (sum)' and all columns as 0
-            project_data = project_data.append({'function': 'method-level (sum)'} , ignore_index=True)
-            project_data.fillna(0, inplace=True)
-        print(project_name,"+++",project_data)
-        # Plot the data for the project
-        x.append(project_name)
-        y_method.append(project_data.loc[project_data['function'] == 'method-level (sum)', 'RAM (mean)'].tolist()[0])
-        y_project.append(project_data.loc[project_data['function'] == 'project-level', 'RAM (mean)'].tolist()[0])
 
-    attributes = ['Method-Level (sum)', 'Project-Level']
-    measurements = [y_method, y_project]
+        if 'method-level (sum)' not in project_data['function'].values:
+            project_data = project_data.append({'function': 'method-level (sum)'}, ignore_index=True)
+            project_data.fillna(0, inplace=True)
+
+        x.append(project_name)
+        y_cpu_method.append(project_data.loc[project_data['function'] == 'method-level (sum)', 'CPU (mean)'].tolist()[0])
+        y_cpu_project.append(project_data.loc[project_data['function'] == 'project-level', 'CPU (mean)'].tolist()[0])
+        y_gpu_method.append(project_data.loc[project_data['function'] == 'method-level (sum)', 'GPU (mean)'].tolist()[0])
+        y_gpu_project.append(project_data.loc[project_data['function'] == 'project-level', 'GPU (mean)'].tolist()[0])
+        y_ram_method.append(project_data.loc[project_data['function'] == 'method-level (sum)', 'RAM (mean)'].tolist()[0])
+        y_ram_project.append(project_data.loc[project_data['function'] == 'project-level', 'RAM (mean)'].tolist()[0])
+
+    attributes = ['CPU Method-Level', 'CPU Project-Level', 'GPU Method-Level', 'GPU Project-Level', 'RAM Method-Level', 'RAM Project-Level']
+    measurements = [y_cpu_method, y_cpu_project, y_gpu_method, y_gpu_project, y_ram_method, y_ram_project]
 
     x_pos = np.arange(len(x))  # the label locations
-    bar_width = 0.35  # the width of the bars
+    bar_width = 0.4  # the width of the bars
+    spacing = 0.04  # spacing between grouped bars
 
-    fig, ax = plt.subplots()
+    fig, axes = plt.subplots(3, 1, figsize=(8, 10), sharex=True)
 
-    for i, measurement in enumerate(measurements):
-        ax.bar(x_pos + (i * bar_width), measurement, bar_width, label=attributes[i])
+    for i, ax in enumerate(axes):
+        for j in range(2):
+            measurement = measurements[i * 2 + j]
+            ax.bar(x_pos + j * (bar_width + spacing), measurement, bar_width, label=attributes[i * 2 + j])
 
-    ax.set_xlabel('Project Name')
-    ax.set_ylabel('Energy Consumption (Joules)')
-    ax.set_title('RAM Project-Level Energy vs Method-Level Energy')
-    ax.set_xticks(x_pos)
-    ax.set_xticklabels(x, rotation=45, ha='right', fontsize='small')
-    ax.legend()
+        ax.set_ylabel('Energy Consumption (Joules)')
+        ax.set_title(attributes[i * 2] + ' vs ' + attributes[i * 2 + 1])
+        ax.margins(x=0.01)
+        ax.legend(bbox_to_anchor=(1, 1))
 
+    axes[-1].set_xlabel('Project Name')
+    plt.xticks(x_pos, x, rotation=45, ha='right', fontsize='small')
     plt.tight_layout()
-    plt.savefig('project_vs_method_energy_plot.png')
+    plt.savefig('project_vs_method_energy_plot.png', bbox_inches='tight')
     plt.show()
+
 
 
 def plot_total_energy_vs_data_size_scatter(project_energy: ProjectEnergyData, title=True):
@@ -335,6 +395,7 @@ def plot_total_energy_vs_data_size_boxplot(project_energy: ProjectEnergyData, ti
         hardware_label = hardware.upper()
         # function_energies = project_energy.cpu
         function_energies = getattr(project_energy, hardware)
+        print(len(function_energies))
         total_energies = []
         args_sizes = []
         for function_energy in function_energies:
@@ -349,9 +410,10 @@ def plot_total_energy_vs_data_size_boxplot(project_energy: ProjectEnergyData, ti
         plt.xlabel("Total args size (MB)")
         plt.ylabel("Total normalised energy consumption (Joules)")
         plt.boxplot(total_energies, labels=args_sizes)
-
-    plt.savefig(f'./rq2_analysis/plot_total_energy_vs_data_size_boxplot_{project_energy.name.replace("/","_",1)}.png')
+    plt.savefig(f'./rq2_analysis/plot_total_energy_vs_data_size_boxplot_{hardware_label}_{project_energy.name.replace("/","_",1)}.png')
     plt.show()
+
+    
 
 
 def plot_total_unnormalised_energy_vs_data_size_boxplot(project_energy: ProjectEnergyData, title=True):

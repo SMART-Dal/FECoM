@@ -6,7 +6,7 @@ from tool.experiment.data import DataLoader
 from tool.experiment.experiment_kinds import ExperimentKinds
 from tool.experiment.analysis import init_project_energy_data, build_total_energy_df, build_total_energy_and_size_df
 from tool.patching.patching_config import EXPERIMENT_DIR
-from tool.experiment.plot import plot_single_energy_with_times, plot_total_energy_vs_execution_time, plot_total_energy_vs_data_size_boxplot, plot_total_unnormalised_energy_vs_data_size_boxplot, plot_project_level_energy_vs_method_level_energy, plot_args_size_vs_gpu_mean
+from tool.experiment.plot import plot_single_energy_with_times, plot_combined_total_energy_vs_execution_time, plot_total_energy_vs_execution_time, plot_total_energy_vs_data_size_boxplot, plot_total_unnormalised_energy_vs_data_size_boxplot, plot_project_level_energy_vs_method_level_energy, plot_args_size_vs_gpu_mean
 
 from executed_experiments import EXECUTED_EXPERIMENTS
 
@@ -31,7 +31,19 @@ def rq1_plot_total_energy_vs_time():
             print("Exception in project: ", project_name)
             raise e
 
-    plot_total_energy_vs_execution_time(experiments_data, title=True)
+    plot_total_energy_vs_execution_time(experiments_data, title=False)
+
+def rq1_plot_total_energy_vs_time_combined():
+    experiments_data = []
+    for project_name in EXECUTED_EXPERIMENTS:
+        try:
+            data = init_project_energy_data(project_name, ExperimentKinds.METHOD_LEVEL, first_experiment=1, last_experiment=10)
+            experiments_data.append(data)
+        except Exception as e:
+            print("Exception in project: ", project_name)
+            raise e
+
+    plot_combined_total_energy_vs_execution_time(experiments_data, title=False)
 
 def rq1_plot_project_level_energy_vs_method_level_energy():
     total_energy_projects = {}
@@ -74,7 +86,7 @@ def rq1_plot_tail_power_states_gpu():
 ### RQ 2 PLOTS
 def rq2_plot_data_size_vs_energy():
     project_name = "images/cnn_evaluate"
-    project_data = init_project_energy_data(project_name, ExperimentKinds.DATA_SIZE, first_experiment=1, last_experiment=7)
+    project_data = init_project_energy_data(project_name, ExperimentKinds.DATA_SIZE, first_experiment=1, last_experiment=10)
     plot_total_energy_vs_data_size_boxplot(project_data, title=False)
 
 def rq2_plot_data_size_vs_unnormalised_energy():
@@ -97,7 +109,7 @@ def rq2_plot_largest_data_size_ram():
     plot_single_energy_with_times(energy_data_list[-1], hardware_component="ram", start_at_stable_state=True, title=False, graph_stable_mean=True)
 
 def rq2_plot_args_size_vs_gpu_mean():
-    # this method is used for analysis of argsize vs energy for rq2 method-level dataset
+    # this method is used for analysis of argsize vs energy for rq2 method-level dataset using rq1 data
     total_energy_dfs = []
 
     for project_name in EXECUTED_EXPERIMENTS:
@@ -119,14 +131,15 @@ if __name__ == "__main__":
 
     # implementation_plot_GPU_energy_with_times()
     # rq1_plot_total_energy_vs_time()
+    # rq1_plot_total_energy_vs_time_combined()
     # rq1_plot_project_level_energy_vs_method_level_energy()
     # rq1_plot_tail_power_states_gpu()
     # rq1_plot_tail_power_states_cpu()
     # rq1_plot_tail_power_states_ram()
-    # rq2_plot_data_size_vs_energy()
+    rq2_plot_data_size_vs_energy()
     # rq2_plot_smallest_data_size_ram()
     # rq2_plot_largest_data_size_ram()
     # rq2_plot_data_size_vs_unnormalised_energy()
     # rq2_plot_args_size_vs_gpu_mean()
-    rq2_plot_data_size_vs_energy()
+    # rq2_plot_data_size_vs_energy()
     pass

@@ -19,7 +19,7 @@ EXECUTED_EXPERIMENTS = [
     "keras/regression",
     "keras/save_and_load",
     "load_data/numpy",
-    "load_data/tfrecord" # using skip_calls
+    "load_data/tfrecord", # using skip_calls
     "quickstart/advanced",
     "quickstart/beginner",
     "structured_data/feature_columns",

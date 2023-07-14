@@ -200,15 +200,21 @@ def prepare_total_energy_and_size_from_project(project_energy_data: ProjectEnerg
             cpu.mean_execution_time,
             cpu.mean_total_normalised,
             cpu.median_total_normalised,
+            cpu.max_total_normalised,
+            cpu.min_total_normalised,
             ram.mean_total_normalised,
             ram.median_total_normalised,
+            ram.max_total_normalised,
+            ram.min_total_normalised,
             gpu.mean_total_normalised,
             gpu.median_total_normalised,
+            gpu.max_total_normalised,
+            gpu.min_total_normalised,
             cpu.mean_total_args_size,
             cpu.median_total_args_size
         ])
     
-    column_names = ["function", "run time", "CPU (mean)", "CPU (median)", "RAM (mean)", "RAM (median)", "GPU (mean)", "GPU (median)", "Args Size (mean)", "Args Size (median)"]
+    column_names = ["function", "run time", "CPU (mean)", "CPU (median)","CPU (max)", "CPU (min)" ,"RAM (mean)", "RAM (median)", "RAM (max)", "RAM (min)","GPU (mean)", "GPU (median)", "GPU (max)", "GPU (min)", "Args Size (mean)", "Args Size (median)"]
 
     return data_list, column_names
 
