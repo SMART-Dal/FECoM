@@ -395,7 +395,6 @@ def plot_total_energy_vs_data_size_boxplot(project_energy: ProjectEnergyData, ti
         hardware_label = hardware.upper()
         # function_energies = project_energy.cpu
         function_energies = getattr(project_energy, hardware)
-        print(len(function_energies))
         total_energies = []
         args_sizes = []
         for function_energy in function_energies:
@@ -410,8 +409,8 @@ def plot_total_energy_vs_data_size_boxplot(project_energy: ProjectEnergyData, ti
         plt.xlabel("Total args size (MB)")
         plt.ylabel("Total normalised energy consumption (Joules)")
         plt.boxplot(total_energies, labels=args_sizes)
-    plt.savefig(f'./rq2_analysis/plot_total_energy_vs_data_size_boxplot_{hardware_label}_{project_energy.name.replace("/","_",1)}.png')
-    plt.show()
+        plt.savefig(f'./rq2_analysis/plot_total_energy_vs_data_size_boxplot_{hardware_label}_{project_energy.name.replace("/","_",1)}.png')
+        plt.show()
 
     
 
