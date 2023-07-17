@@ -164,7 +164,7 @@ class ProjectEnergyData():
         self.name = project
         self.experiment_kind = experiment_kind
         self.experiment_count = experiment_count
-        self.cpu = {}
+        self.cpu = {} # dict of format {function_name: FunctionEnergyData}
         self.ram = {}
         self.gpu = {}
         # keep track of functions without energy 

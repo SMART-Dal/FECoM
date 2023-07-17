@@ -393,8 +393,9 @@ def plot_total_energy_vs_data_size_boxplot(project_energy: ProjectEnergyData, ti
     """
     for hardware in ["cpu", "ram", "gpu"]:
         hardware_label = hardware.upper()
-        # function_energies = project_energy.cpu
-        function_energies = getattr(project_energy, hardware)
+        # below is same as function_energies = project_energy.cpu_data
+        function_energies = getattr(project_energy, f"{hardware}_data")
+        print(function_energies)
         total_energies = []
         args_sizes = []
         for function_energy in function_energies:
