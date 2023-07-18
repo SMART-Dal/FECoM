@@ -4,7 +4,7 @@ from tool.experiment.run import run_experiments
 
 # raise DeprecationWarning("This module needs to be updated to work with the new local execution environment")
 
-# This is for energy consumption of tensorflow.keras.Sequential.fit() api in images/cnn
+# This is for energy consumption of tensorflow.keras.models.Sequential.fit() api in images/cnn
 def run_images_cnn_model_fit_datasize_experiment():
     # (1) create prepare_experiment function
     def prepare_experiment(fraction: float):
@@ -63,7 +63,7 @@ def run_images_cnn_model_fit_datasize_experiment():
     
     # (2) create function details
     function_to_run = "obj.fit(*args, **kwargs)"
-    function_signature = "tf.keras.Sequential.fit()"
+    function_signature = "tensorflow.keras.models.Sequential.fit()"
 
     # (3) Initialise and run the experiment
     experiment = DataSizeExperiment(
