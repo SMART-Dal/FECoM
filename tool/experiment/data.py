@@ -786,19 +786,27 @@ class DataLoader():
         data_samples = {}
 
         # iterate through all samples in the file and create EnergyData objects for them
-        for data_dict in raw_data_list:
+        for i, data_dict in enumerate(raw_data_list):
             # data_dict has only one key, the function name
-            function_name = list(data_dict.keys())[0]
-            energy_data = data_dict[function_name]["energy_data"]
+            original_function_name = list(data_dict.keys())[0]
+            energy_data = data_dict[original_function_name]["energy_data"]
+
+            # if it is a data size experiment, we want to treat each function (even though they have the same name)
+            # as a separate function, such that we group by data size and not just function name
+            # TODO: maybe we should do the same for method-level experiments, since there could be a call of the same
+            # function but with different inputs
+            if self.experiment_kind == ExperimentKinds.DATA_SIZE:
+                function_name = f"{original_function_name}_{i}"
+            
             data_samples[function_name] = EnergyData(
                 function_name,
                 self.project_name,
                 self.convert_json_dict_to_df(energy_data["cpu"]),
                 self.convert_json_dict_to_df(energy_data["ram"]),
                 self.convert_json_dict_to_df(energy_data["gpu"]),
-                data_dict[function_name]["times"],
-                data_dict[function_name]["input_sizes"],
-                data_dict[function_name]["settings"]
+                data_dict[original_function_name]["times"],
+                data_dict[original_function_name]["input_sizes"],
+                data_dict[original_function_name]["settings"]
             )
 
         return data_samples

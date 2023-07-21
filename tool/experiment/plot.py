@@ -393,13 +393,12 @@ def plot_total_energy_vs_data_size_boxplot(project_energy: ProjectEnergyData, ti
     """
     for hardware in ["cpu", "ram", "gpu"]:
         hardware_label = hardware.upper()
-        # below is same as function_energies = project_energy.cpu_data
+        # below is same as function_energies = project_energy.cpu_data (and same for ram and gpu)
         function_energies = getattr(project_energy, f"{hardware}_data")
-        print(function_energies)
         total_energies = []
         args_sizes = []
         for function_energy in function_energies:
-            assert len(set(function_energy.total_args_size)) == 1, "The argument size of the same function should be the same across experiments."
+            assert len(set(function_energy.total_args_size)) == 1, f"The argument size of the same function call ({function_energy.name}) should be the same across experiments."
             args_sizes.append(int(function_energy.total_args_size[0]))
             total_energies.append(function_energy.total_normalised)
 
