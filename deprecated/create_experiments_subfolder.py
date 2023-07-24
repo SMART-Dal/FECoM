@@ -26,7 +26,7 @@ import json
 
 
 for i in range(1, 11):
-    experiment_dir = "/users/grad/srajput/GreenAI-extension/data/energy-dataset/data-size/images/cnn/"
+    experiment_dir = "/home/saurabh/code-energy-consumption/data/energy-dataset/data-size/quickstart/beginner_fit/"
     os.makedirs(experiment_dir, exist_ok=True)
     experiment_file_path = os.path.join(experiment_dir, f'experiment-{i}.json')
     with open(experiment_file_path, 'w') as f:

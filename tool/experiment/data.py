@@ -790,6 +790,7 @@ class DataLoader():
             # data_dict has only one key, the function name
             original_function_name = list(data_dict.keys())[0]
             energy_data = data_dict[original_function_name]["energy_data"]
+            function_name = original_function_name
 
             # if it is a data size experiment, we want to treat each function (even though they have the same name)
             # as a separate function, such that we group by data size and not just function name
