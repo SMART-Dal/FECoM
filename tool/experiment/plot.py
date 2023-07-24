@@ -318,7 +318,7 @@ def plot_project_level_energy_vs_method_level_energy(total_energy_projects):
         project_data = total_energy_df[total_energy_df['function'].isin(['project-level', 'method-level (sum)'])]
 
         if 'method-level (sum)' not in project_data['function'].values:
-            project_data = project_data.append({'function': 'method-level (sum)'}, ignore_index=True)
+            project_data = pd.concat([project_data, pd.DataFrame({'function': ['method-level (sum)']})], ignore_index=True)
             project_data.fillna(0, inplace=True)
 
         x.append(project_name)
@@ -424,8 +424,8 @@ def plot_total_unnormalised_energy_vs_data_size_boxplot(project_energy: ProjectE
     """
     for hardware in ["cpu", "ram", "gpu"]:
         hardware_label = hardware.upper()
-        # function_energies = project_energy.cpu
-        function_energies = getattr(project_energy, hardware)
+        # below is same as function_energies = project_energy.cpu_data (and same for ram and gpu)
+        function_energies = getattr(project_energy, f"{hardware}_data")
         total_energies = []
         args_sizes = []
         for function_energy in function_energies:
@@ -440,5 +440,5 @@ def plot_total_unnormalised_energy_vs_data_size_boxplot(project_energy: ProjectE
         plt.xlabel("Total args size (MB)")
         plt.ylabel("Total energy consumption (Joules)")
         plt.boxplot(total_energies, labels=args_sizes)
-
-    plt.show()
+        plt.savefig(f'./rq2_analysis/plot_total_unnormalised_energy_vs_data_size_boxplot_{hardware_label}_{project_energy.name.replace("/","_",1)}.png')
+        plt.show()

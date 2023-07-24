@@ -14,11 +14,11 @@ def implementation_plot_GPU_energy_with_times():
     """
     create the GPU plot used in Design & Implementation, Processed Data Representation
     """
+    function_name = "tensorflow.keras.Sequential.fit()"
     dl = DataLoader("keras/classification", EXPERIMENT_DIR, ExperimentKinds.METHOD_LEVEL)
-    energy_data_list = dl.load_single_file("experiment-6.json")
-    for energy_data in energy_data_list:
-        if energy_data.function_name == "tf.keras.Sequential.fit(*args, **kwargs)":
-            plot_single_energy_with_times(energy_data, hardware_component="gpu")
+    energy_data_dict = dl.load_single_file("experiment-6.json")
+    energy_data = energy_data_dict[function_name]
+    plot_single_energy_with_times(energy_data, hardware_component="gpu")
 
 ### RQ 1 PLOTS
 def rq1_plot_total_energy_vs_time():
@@ -57,56 +57,54 @@ def rq1_plot_project_level_energy_vs_method_level_energy():
 
 
 def rq1_plot_tail_power_states_cpu():
+    function_name = "tensorflow.keras.models.Sequential.fit()"
     dl = DataLoader("images/cnn", EXPERIMENT_DIR, ExperimentKinds.METHOD_LEVEL)
-    energy_data_list = dl.load_single_file("experiment-1.json")
-    for energy_data in energy_data_list:
-        if energy_data.function_name == "tensorflow.keras.models.Sequential.fit()":
-            plot_single_energy_with_times(energy_data, hardware_component="cpu", graph_stable_mean=True, start_at_stable_state=True, title=True)
-            return
-    print("could not find function")
+    energy_data_dict = dl.load_single_file("experiment-1.json")
+    energy_data = energy_data_dict[function_name]
+    plot_single_energy_with_times(energy_data, hardware_component="cpu", graph_stable_mean=True, start_at_stable_state=True, title=True)
 
 def rq1_plot_tail_power_states_ram():
+    function_name = "tensorflow.keras.models.Sequential.fit()"
     dl = DataLoader("images/cnn", EXPERIMENT_DIR, ExperimentKinds.METHOD_LEVEL)
-    energy_data_list = dl.load_single_file("experiment-1.json")
-    for energy_data in energy_data_list:
-        if energy_data.function_name == "tensorflow.keras.models.Sequential.fit()":
-            plot_single_energy_with_times(energy_data, hardware_component="ram", graph_stable_mean=True, start_at_stable_state=True, title=True)
-            return
-    print("could not find function")
+    energy_data_dict = dl.load_single_file("experiment-1.json")
+    energy_data = energy_data_dict[function_name]
+    plot_single_energy_with_times(energy_data, hardware_component="ram", graph_stable_mean=True, start_at_stable_state=True, title=True)
 
 def rq1_plot_tail_power_states_gpu():
+    function_name = "tensorflow.keras.models.Sequential.fit()"
     dl = DataLoader("images/cnn", EXPERIMENT_DIR, ExperimentKinds.METHOD_LEVEL)
-    energy_data_list = dl.load_single_file("experiment-1.json")
-    for energy_data in energy_data_list:
-        if energy_data.function_name == "tensorflow.keras.models.Sequential.fit()":
-            plot_single_energy_with_times(energy_data, hardware_component="gpu", graph_stable_mean=True, start_at_stable_state=True, title=True)
-            return
-    print("could not find function")
+    energy_data_dict = dl.load_single_file("experiment-1.json")
+    energy_data = energy_data_dict[function_name]
+    plot_single_energy_with_times(energy_data, hardware_component="gpu", graph_stable_mean=True, start_at_stable_state=True, title=True)
     
 ### RQ 2 PLOTS
 def rq2_plot_data_size_vs_energy():
-    project_name = "images/cnn_evaluate"
+    project_name = "images/cnn_fit"
     project_data = init_project_energy_data(project_name, ExperimentKinds.DATA_SIZE, first_experiment=1, last_experiment=10)
-    plot_total_energy_vs_data_size_boxplot(project_data, title=False)
+    plot_total_energy_vs_data_size_boxplot(project_data, title=True)
 
 def rq2_plot_data_size_vs_unnormalised_energy():
-    project_name = "keras/classification"
+    project_name = "images/cnn_fit"
     project_data = init_project_energy_data(project_name, ExperimentKinds.DATA_SIZE, first_experiment=1, last_experiment=7)
     plot_total_unnormalised_energy_vs_data_size_boxplot(project_data, title=False)
 
 def rq2_plot_smallest_data_size_ram():
-    dl = DataLoader("keras/classification", EXPERIMENT_DIR, ExperimentKinds.DATA_SIZE)
-    energy_data_list = dl.load_single_file("experiment-1.json")
+    # if there are 10 experiments, _0 is the smallest data size
+    function_name = 'tensorflow.keras.models.Sequential.fit()_0'
+    dl = DataLoader("images/cnn_fit", EXPERIMENT_DIR, ExperimentKinds.DATA_SIZE)
+    energy_data_dict = dl.load_single_file("experiment-1.json")
     # first sample of a data-size experiment has the smallest data size
-    print(f"Total args size: {energy_data_list[0].total_args_size}")
-    plot_single_energy_with_times(energy_data_list[0], hardware_component="ram", start_at_stable_state=True, title=False, graph_stable_mean=True)
+    print(f"Total args size: {energy_data_dict[function_name].total_args_size}")
+    plot_single_energy_with_times(energy_data_dict[function_name], hardware_component="ram", start_at_stable_state=True, title=False, graph_stable_mean=True)
 
 def rq2_plot_largest_data_size_ram():
-    dl = DataLoader("keras/classification", EXPERIMENT_DIR, ExperimentKinds.DATA_SIZE)
-    energy_data_list = dl.load_single_file("experiment-1.json")
+    # if there are 10 experiments, _9 is the largest data size
+    function_name = 'tensorflow.keras.models.Sequential.fit()_9'
+    dl = DataLoader("images/cnn_fit", EXPERIMENT_DIR, ExperimentKinds.DATA_SIZE)
+    energy_data_dict = dl.load_single_file("experiment-1.json")
     # last sample of a data-size experiment has the largest data size
-    print(f"Total args size: {energy_data_list[-1].total_args_size}")
-    plot_single_energy_with_times(energy_data_list[-1], hardware_component="ram", start_at_stable_state=True, title=False, graph_stable_mean=True)
+    print(f"Total args size: {energy_data_dict[function_name].total_args_size}")
+    plot_single_energy_with_times(energy_data_dict[function_name], hardware_component="ram", start_at_stable_state=True, title=False, graph_stable_mean=True)
 
 def rq2_plot_args_size_vs_gpu_mean():
     # this method is used for analysis of argsize vs energy for rq2 method-level dataset using rq1 data
@@ -136,7 +134,7 @@ if __name__ == "__main__":
     # rq1_plot_tail_power_states_gpu()
     # rq1_plot_tail_power_states_cpu()
     # rq1_plot_tail_power_states_ram()
-    rq2_plot_data_size_vs_energy()
+    # rq2_plot_data_size_vs_energy()
     # rq2_plot_smallest_data_size_ram()
     # rq2_plot_largest_data_size_ram()
     # rq2_plot_data_size_vs_unnormalised_energy()
