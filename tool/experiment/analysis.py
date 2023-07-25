@@ -31,12 +31,15 @@ def init_project_energy_data(project: str, experiment_kind: ExperimentKinds, fir
         function_count = len(dl.load_single_file(dl.experiment_files[0]))
 
     project_energy_data = ProjectEnergyData(project, experiment_kind, (last_experiment-first_experiment+1))
+    
+    project_energy_data.skip_calls = dl.skip_calls
 
     # loop through the experiment files for this project
     for exp_file in dl.experiment_files[first_experiment-1:last_experiment]:  # experiment 1 has index 0, so subtract 1 from the first_experiment variable
         # exp_data is a list of EnergyData objects for this experiment. Each list entry corresponds to a unique function executed in this experiment.
         exp_data = dl.load_single_file(exp_file)
     
+        # dl.skip_calls is False if the experiment was run without the skip_calls functionality or if the skip_calls file is empty
         if not dl.skip_calls:
             # if no calls were skipped, the number of functions executed should be the same for every experiment, otherwise something went wrong
             assert len(exp_data) == function_count, f"{experiment_kind.value}/{project}/{exp_file} contains data for {len(exp_data)} functions, but it should contain {function_count}!"

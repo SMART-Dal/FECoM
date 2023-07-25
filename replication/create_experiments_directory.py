@@ -1,5 +1,8 @@
+"""
+Run this script to create the directory structure for the experiment data.
+"""
+
 import os
-import shutil
 from tool.patching.patching_config import UNPATCHED_CODE_DIR, EXPERIMENT_DIR
 
 def create_experiment_json_files(folder_path):
@@ -26,8 +29,13 @@ def scan_directory(source_dir, target_dir):
                     os.makedirs(subfolder_path)
                 create_experiment_json_files(subfolder_path)
 
-source_directory = UNPATCHED_CODE_DIR
-# change this below path to 'method-level' and 'project-level' to create the respective directories
-target_directory = EXPERIMENT_DIR/'method-level'
 
-scan_directory(source_directory, target_directory)
+if __name__ == "__main__":
+    source_directory = UNPATCHED_CODE_DIR
+
+    method_level_target_directory = EXPERIMENT_DIR/'method-level'
+    project_level_target_directory = EXPERIMENT_DIR/'project-level'
+
+    scan_directory(source_directory, method_level_target_directory)
+    scan_directory(source_directory, project_level_target_directory)
+

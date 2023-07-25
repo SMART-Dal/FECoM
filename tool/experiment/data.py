@@ -171,6 +171,7 @@ class ProjectEnergyData():
         self.no_energy_functions = set()
         # dict of format {function_name: [execution_time_exp1, execution_time_exp2, ...]}
         self.execution_times = {}
+        self.skip_calls = False # bool to indicate whether skip calls was used or not
     
     def __len__(self):
         return len(self.cpu_data)
@@ -227,10 +228,13 @@ class ProjectEnergyData():
         Calculate stats about the execution times of functions without energy data.
         Returns a list of tuples of the form (stdev_time, median_time, range_time) for each function without energy data.
         """
+        if self.skip_calls:
+            raise ValueError("Cannot calculate execution time stats for functions with skip calls")
         # only consider functions without energy data
         filtered_execution_times = {function_name: self.execution_times[function_name] for function_name in self.no_energy_functions}
+    
         execution_times_stats = []
-        for function_name, execution_times in filtered_execution_times.items():
+        for execution_times in filtered_execution_times.values():
             # TODO this assumption doesn't hold if there are multiple calls to the same function in one experiment
             # assert len(execution_times) == self.experiment_count, f"Function {function_name} has {len(execution_times)} execution times but there are {self.experiment_count} experiments"
             stdev_time = stdev(execution_times)
@@ -239,7 +243,7 @@ class ProjectEnergyData():
             min_time = min(execution_times)
             range_time = max_time - min_time
             execution_times_stats.append((stdev_time, median_time, range_time, max_time, min_time))
-
+        
         return execution_times_stats
 
 

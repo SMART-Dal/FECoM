@@ -2,7 +2,6 @@
 Methods for calculating some of the settings.
 """
 from pathlib import Path
-import pandas as pd
 from matplotlib import pyplot as plt
 from tool.measurement.idle_stats import create_combined_df, calc_stats_for_split_data, calc_stdev_mean_ratios
 from tool.measurement.measurement_parse import parse_cpu_temperature
@@ -42,6 +41,6 @@ def cpu_temperature():
 if __name__ == "__main__":
     ### commented code has already been run, uncomment to replicate
 
-    stdev_mean_ratios()
+    # stdev_mean_ratios()
     # cpu_temperature()
     pass

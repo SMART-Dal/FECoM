@@ -1,3 +1,7 @@
+"""
+Analyse the experimental data.
+"""
+
 from pathlib import Path
 from statistics import median, mean
 import os
@@ -9,43 +13,23 @@ from executed_experiments import EXECUTED_EXPERIMENTS
 
 LATEX_OUTPUT_PATH = Path("rq1_analysis/latex")
 
+# helper method to create a summary table and save it to latex for one project
 def create_summary_and_save_to_latex(project_name: str, experiment_kind: ExperimentKinds, first_experiment: int, last_experiment: int):
     data = init_project_energy_data(project_name, experiment_kind, first_experiment, last_experiment)
     summary_dfs = create_summary(data)
     export_summary_to_latex(LATEX_OUTPUT_PATH/experiment_kind.value/project_name.replace('/','-'), summary_dfs=summary_dfs)
 
 
-def appendix_rq1_summary_dfs_all_experiments():
-    first_exp = 1
-    last_exp = 10
-    project_name = "keras/classification"
-    create_summary_and_save_to_latex(project_name, ExperimentKinds.METHOD_LEVEL, first_exp, last_exp)
-    create_summary_and_save_to_latex(project_name, ExperimentKinds.PROJECT_LEVEL, first_exp, last_exp)
-
-    project_name = "images/cnn"
-    create_summary_and_save_to_latex(project_name, ExperimentKinds.METHOD_LEVEL, first_exp, last_exp)
-    create_summary_and_save_to_latex(project_name, ExperimentKinds.PROJECT_LEVEL, first_exp, last_exp)
-
-
 def results_rq1_total_energy_consumption():
+    """
+    Compare project and method-level total normalised energy consumption for all projects
+    and save the results to latex.
+    """
+
     file_name = "total_energy_df.tex"
     sub_dir = "combined"
     first_exp = 1
     last_exp = 10
-
-    # project_name = "keras/classification"
-    # method_level  = init_project_energy_data(project_name, ExperimentKinds.METHOD_LEVEL, first_experiment=first_exp, last_experiment=last_exp)
-    # project_level = init_project_energy_data(project_name, ExperimentKinds.PROJECT_LEVEL, first_experiment=first_exp, last_experiment=last_exp)
-    # df = build_total_energy_df(method_level, project_level)
-    # print(df)
-    # df.style.format(precision=2).to_latex(buf = LATEX_OUTPUT_PATH/sub_dir/project_name.replace('/','-')/file_name)
-
-    # project_name = "images/cnn"
-    # method_level  = init_project_energy_data(project_name, ExperimentKinds.METHOD_LEVEL, first_experiment=first_exp, last_experiment=last_exp)
-    # project_level = init_project_energy_data(project_name, ExperimentKinds.PROJECT_LEVEL, first_experiment=first_exp, last_experiment=last_exp)
-    # df = build_total_energy_df(method_level, project_level)
-    # print(df)
-    # df.style.format(precision=2).to_latex(buf = LATEX_OUTPUT_PATH/sub_dir/project_name.replace('/','-')/file_name)
 
     for project_name in EXECUTED_EXPERIMENTS:
         try:
@@ -88,10 +72,14 @@ def calculate_function_counts():
     print("Total number of projects: ", len(energy_function_counts))
     print("Total number of functions with energy data: ", sum(energy_function_counts))
     print("Total number of functions without energy data: ", sum(no_energy_function_counts))
-    print("Median number of functions with energy data: ", median(energy_function_counts))
-    print("Median number of functions without energy data: ", median(no_energy_function_counts))
+    print("Median number of functions with energy data in one project: ", median(energy_function_counts))
+    print("Median number of functions without energy data in one project: ", median(no_energy_function_counts))
+
 
 def calculate_no_energy_functions_execution_time_stats():
+    """
+    Calculate statistics about the execution times of functions without energy data.
+    """
     stdev_times = []
     median_times = []
     range_times = []
@@ -101,6 +89,9 @@ def calculate_no_energy_functions_execution_time_stats():
     for project_name in EXECUTED_EXPERIMENTS:
         try:
             project_energy_data = init_project_energy_data(project_name, ExperimentKinds.METHOD_LEVEL, first_experiment=1, last_experiment=10)
+            # this data is not available for projects that use skip_calls
+            if project_energy_data.skip_calls:
+                continue
             execution_time_stats = project_energy_data.no_energy_functions_execution_time_stats
             stdev_times.extend([stats_tuple[0] for stats_tuple in execution_time_stats])
             median_times.extend([stats_tuple[1] for stats_tuple in execution_time_stats])
@@ -111,7 +102,6 @@ def calculate_no_energy_functions_execution_time_stats():
             print("Exception in project: ", project_name)
             raise e
     
-    print(stdev_times)
     print("Median stdev of execution times: ", round(mean(stdev_times), 3))
     print("Median execution time: ", round(median(median_times), 3))
     print("Median range of execution times: ", round(median(range_times), 3))
@@ -120,13 +110,14 @@ def calculate_no_energy_functions_execution_time_stats():
     
 
 if __name__ == "__main__":
+    ### below code can be used to suppress certain warnings occuring in pandas
     # import warnings
     # warnings.simplefilter(action='ignore', category=FutureWarning)
+    
     ### commented code has already been run, uncomment to replicate
     
     # appendix_rq1_summary_dfs_all_experiments()
-    results_rq1_total_energy_consumption()
-
+    # results_rq1_total_energy_consumption()
     # calculate_function_counts()
     # calculate_no_energy_functions_execution_time_stats()
     pass

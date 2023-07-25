@@ -1,9 +1,13 @@
-from tool.experiment.analysis import init_project_energy_data, build_total_energy_df, build_total_energy_and_size_df
+"""
+Create a CSV file of all methods that consume a significant amount of energy.
+This is useful for finding methods that are worth investigating further with
+data size experiments for RQ2.
+"""
+
+from tool.experiment.analysis import init_project_energy_data, build_total_energy_and_size_df
 from tool.experiment.experiments import ExperimentKinds
 from replication.executed_experiments import EXECUTED_EXPERIMENTS
 import os
-
-import matplotlib.pyplot as plt
 
 # This is for initial analysis of same method call across different projects, and compare the energy consumption and data size from method-level energy dataset.
 

@@ -1,8 +1,11 @@
+"""
+Run data size experiments for RQ2.
+"""
+
 from tool.patching.patching_config import EXPERIMENT_DIR
 from tool.experiment.experiments import DataSizeExperiment
 from tool.experiment.run import run_experiments
 
-# raise DeprecationWarning("This module needs to be updated to work with the new local execution environment")
 
 # This is for energy consumption of tensorflow.keras.models.Sequential.fit() api in images/cnn
 def run_images_cnn_model_fit_datasize_experiment():
@@ -377,6 +380,8 @@ def run_quickstart_beginner_model_fit_datasize_experiment():
     run_experiments(experiment, count=10, start=1)
 
 if __name__ == "__main__":
+    ### commented code has already been run, uncomment to replicate
+    
     # run_images_cnn_model_fit_datasize_experiment()
     # run_generative_autoencoder_fit_datasize_experiment()
     # run_images_cnn_model_evaluate_datasize_experiment()
