@@ -80,13 +80,14 @@ class PatchedExperiment(Experiment):
 
 class DataSizeExperiment(Experiment):
     def __init__(self, project: str, experiment_dir: Path, n_runs: int, prepare_experiment: callable,
-                 function_to_run: str, function_signature: str, start_at: int = 1):
+                 function_to_run: str, function_signature: str, imports: str = None, start_at: int = 1):
         """
         args:
             - n_runs (int): the total number of runs per experiment (if start_at > 1, the actual number of runs is smaller)
             - prepare_experiments (callable): a function that takes a fraction (float) and returns function_args, function_kwarg and method_object with adjusted data size
             - function_to_run (str): a string such as obj.fit(*args, **kwargs) that can be executed with eval()
             - function_signature (str): the pretty name of the function_to_run, i.e. the full function signature without *args etc.
+            - imports (str) (optional): a string with imports that have to be executed before the function_to_run (e.g. imports = "import tensorflow as tf")
             - start_at (int) (optional): if specified, this should be a number between 1 and n_runs, and the run() method will start at this number instead of at 1.
         """
         super().__init__(ExperimentKinds.DATA_SIZE, project, experiment_dir)
@@ -96,6 +97,7 @@ class DataSizeExperiment(Experiment):
         self.function_to_run = function_to_run
         self.function_signature = function_signature
         self.prepare_experiment = prepare_experiment
+        self.imports = imports
     
     def run(self, exp_number):
         self.number = exp_number
@@ -112,6 +114,8 @@ class DataSizeExperiment(Experiment):
     
     def execute_function(self, args, kwargs, obj):
         # args, kwargs and obj appear unused but are used in the eval() call
+        if self.imports is not None:
+            exec(self.imports)
 
         start_times = before_execution(experiment_file_path=None, enable_skip_calls=False)
 

@@ -273,7 +273,7 @@ def run_quickstart_beginner_model_fit_datasize_experiment():
 
         #### end copied code
 
-        # (1b) check data as described in tensorflow documentation: https://www.tensorflow.org/api_docs/python/tf/keras/datasets/cifar10/load_data
+        # (1b) check data as described in tensorflow documentation: https://www.tensorflow.org/api_docs/python/tf/keras/datasets/mnist/load_data
         assert x_train.shape == (60000, 28, 28)
         assert x_test.shape == (10000, 28, 28)
         assert y_train.shape == (60000,)
@@ -309,72 +309,62 @@ def run_quickstart_beginner_model_fit_datasize_experiment():
 
     run_experiments(experiment, count=10, start=1)
 
-# This is for energy consumption of tensorflow.keras.Model.save() api in quickstart/beginner
-def run_quickstart_beginner_model_fit_datasize_experiment():
+# This is for energy consumption of tensorflow.data.Dataset.from_tensor_slices api in load_data/numpy
+def run_loaddata_numpy_Dataset_from_tensor_slices_datasize_experiment():
+    
     # (1) create prepare_experiment function
     def prepare_experiment(fraction: float):
         # (1a) setup like in the original project
 
         #### begin copied code (from quickstart/beginner)
+        import numpy as np
         import tensorflow as tf
-        print("TensorFlow version:", tf.__version__)
-        mnist = tf.keras.datasets.mnist
+        DATA_URL = 'https://storage.googleapis.com/tensorflow/tf-keras-datasets/mnist.npz'
 
-        (x_train, y_train), (x_test, y_test) = mnist.load_data()
-        x_train, x_test = x_train / 255.0, x_test / 255.0
-        model = tf.keras.models.Sequential([
-        tf.keras.layers.Flatten(input_shape=(28, 28)),
-        tf.keras.layers.Dense(128, activation='relu'),
-        tf.keras.layers.Dropout(0.2),
-        tf.keras.layers.Dense(10)
-        ])
-        predictions = model(x_train[:1]).numpy()
-        predictions
-        tf.nn.softmax(predictions).numpy()
-        loss_fn = tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True)
-        loss_fn(y_train[:1], predictions).numpy()
-        model.compile(optimizer='adam',
-                    loss=loss_fn,
-                    metrics=['accuracy'])
-        
-        ## commented out relevant method call
-        # model.fit(x_train, y_train, epochs=5)
+        path = tf.keras.utils.get_file('mnist.npz', DATA_URL)
+        with np.load(path) as data:
+            train_examples = data['x_train']
+            train_labels = data['y_train']
+            test_examples = data['x_test']
+            test_labels = data['y_test']
+
+        ## commented out relevant method call    
+        # train_dataset = tf.data.Dataset.from_tensor_slices((train_examples, train_labels))
         ## end comment
 
         #### end copied code
 
-        # (1b) check data as described in tensorflow documentation: https://www.tensorflow.org/api_docs/python/tf/keras/datasets/cifar10/load_data
-        assert x_train.shape == (60000, 28, 28)
-        assert x_test.shape == (10000, 28, 28)
-        assert y_train.shape == (60000,)
-        assert y_test.shape == (10000,)
+        # (1b) check data as described in tensorflow documentation: https://www.tensorflow.org/api_docs/python/tf/keras/datasets/mnist/load_data
+        assert train_examples.shape == (60000, 28, 28)
+        assert test_examples.shape == (10000, 28, 28)
+        assert train_labels.shape == (60000,)
+        assert test_labels.shape == (10000,)
 
         # (1c) build function details for function
-        original_args = [x_train, y_train]
-        function_kwargs = {
-            "epochs": 5
-        }
-        method_object = model
+        original_args = [(train_examples, train_labels)]
+        function_kwargs = None
+        method_object = None
 
         # (1d) vary the data size
         # E.g. if an arg in vary_args has shape (100,10,10) and fraction=0.5, return an array of shape (50,10,10).
         # So this method only scales the first dimension of the array by the given fraction.
-        function_args = [arg[:int(arg.shape[0]*fraction)] for arg in original_args]
+        function_args = [(arg[0][:int(arg[0].shape[0]*fraction)], arg[1][:int(arg[1].shape[0]*fraction)]) for arg in original_args]
 
         return function_args, function_kwargs, method_object
     
     # (2) create function details
-    function_to_run = "obj.fit(*args, **kwargs)"
-    function_signature = "tensorflow.keras.models.Sequential.fit()"
+    function_to_run = "tf.data.Dataset.from_tensor_slices(*args)"
+    function_signature = "tensorflow.data.Dataset.from_tensor_slices()"
 
     # (3) Initialise and run the experiment
     experiment = DataSizeExperiment(
-        project = "quickstart/beginner_fit",
+        project = "load_data/numpy",
         experiment_dir = EXPERIMENT_DIR,
         n_runs = 10,
         prepare_experiment = prepare_experiment,
         function_to_run = function_to_run,
-        function_signature = function_signature
+        function_signature = function_signature,
+        imports = "import tens"
     )
 
     run_experiments(experiment, count=10, start=1)
@@ -386,4 +376,5 @@ if __name__ == "__main__":
     # run_generative_autoencoder_fit_datasize_experiment()
     # run_images_cnn_model_evaluate_datasize_experiment()
     # run_quickstart_beginner_model_fit_datasize_experiment()
+    run_loaddata_numpy_Dataset_from_tensor_slices_datasize_experiment()
     pass
