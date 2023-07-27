@@ -364,7 +364,7 @@ def run_loaddata_numpy_Dataset_from_tensor_slices_datasize_experiment():
         prepare_experiment = prepare_experiment,
         function_to_run = function_to_run,
         function_signature = function_signature,
-        imports = "import tens"
+        imports = "import tensorflow as tf"
     )
 
     run_experiments(experiment, count=10, start=1)
