@@ -1,7 +1,7 @@
 # Tool package
-Configure all settings in `/server/measurement_config.py` and `client/patching_config.py`. Otherwise, you can find
-- the patching modules in `/client`
+Configure all settings in `/measurement/measurement_config.py` and `/patching/patching_config.py`. Otherwise, you can find
 - experiment running, data analysis and plotting modules in `/experiment`
-- the server & energy measurement modules in `/server`
+- the patching modules in `/patching`
+- the energy measurement modules in `/measurement`
 
-In `/server` you will also find `start_measurement.py`, the module you need to run to start the server application.
+In `/measurement` you will also find `start_measurement.py`, the module you need to run to start the energy measurement tools.

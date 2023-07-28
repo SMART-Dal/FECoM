@@ -1,8 +1,7 @@
 """
 Start the energy measurement scripts by running this python module.
 
-This has the same effect as running bash energy_measurement.sh,
-but is more useful for gathering precise start/end times of perf
+It is useful for gathering precise start/end times of perf
 & nvidia-smi, which helps to synchronise time measurements with
 the execution script.
 """

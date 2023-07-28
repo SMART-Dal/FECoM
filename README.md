@@ -1,13 +1,18 @@
 # GreenAI-extension
 
-Our tool calculates the energy consumed by each individual ML method from a given script.
+Our tool can calculate the energy consumption
+- of an entire Tensorflow script (project-level experiments)
+- of each individual TensorFlow function/method from a given script (method-level experiments)
+- of different configurations of the same function/method (data-size experiments)
 
 ## Directory Structure
 This repository has the following main directories:
-- **data**: the `code-dataset` subdirectory contains patched and original projects from the used repository, `energy-dataset` contains all experimental energy data, `other` contains failed experimental data or data used for calculating settings.
+- **data**: contains all input and output data used in the study and has three subdirectories:
+    - `code-dataset` contains patched and original projects from the third-party source code repository
+    - `energy-dataset` contains all experimental energy data
+    - `other` contains failed experimental data or data used for calculating settings
 - **deprecated**: old code that is no longer used, but could be useful again at some point.
 - **replication**: replication package for the study.
-- **tests**: see *Testing* below for more information.
 - **tool**: source code for the energy measurement tool. 
 
 ## Environment Setup
@@ -23,7 +28,7 @@ sudo apt install lm-sensors
 This tool also makes use of the [NVIDIA System Management Interface](https://developer.nvidia.com/nvidia-system-management-interface) or `nvidia-smi` to measure GPU energy consumption.  
    
 ### Python environment
-Install [miniconda3](https://docs.conda.io/en/latest/miniconda.html). Then open the `environment.yml` file in a text editor and change the paths stored as `prefix:` and `variables:` to point at your miniconda installation. If you keep the environment name the same (`tf2`), you will likely only need to replace `/home/tim`.  
+Install [miniconda3](https://docs.conda.io/en/latest/miniconda.html). Then open the `environment.yml` file (provided in this directory) in a text editor and change the paths stored as `prefix:` and `variables:` to point at your miniconda installation. 
   
 Finally, in this directory, run the following command to create the required TensorFlow environment from the specified `environment.yml` file:  
 ```conda env create -f environment.yml```   
@@ -38,9 +43,6 @@ In this (top-level) directory, run
 ```pip install .```  
 to install the tool. If you make any changes, for example to the configuration files, you need to repeat this step such that all changes are loaded.
 
-### Testing
-To test if you have setup everything correctly, go to the `tests` directory and follow the instructions in that directory's README file to run all tests. Make sure to do this in a new terminal with the activated environment. 
-
 ## Configuration
 All constants and settings for the measurement script can be found in `tool/measurement/measurement_config.py`, and for the patching script in `tool/patching/patching_config.py`. These files are the single source of truth for all used constants.
 
@@ -49,21 +51,17 @@ All constants and settings for the measurement script can be found in `tool/meas
 - Energy measurements
 - Temperature measurements
 
-`patching_config.py` contains patching script file paths. 
+`patching_config.py` contains patching script file paths. You will certainly need to change these file paths!
 
 Some of these constants are critical settings for the experiments. 
 
 ## Run Energy Consumption Experiments
-Start the server by following the instructions below, wait a few seconds and then start sending requests from the client.  
+Start the energy measurement processes by following the instructions below. Detailed instructions on how to run experiments can be found in `replication/README.md`.
 
-
-With the activated venv, navigate to `tool/measurement` and run this command to start the server. This will also start `perf` and `nvidia-smi` (energy measurement tools) as well as `sensors` (cpu temperature tool, run inside the wrapper `cpu_temperature.py`):  
+With the activated conda environment, navigate to `tool/measurement` and run this command to start `perf` and `nvidia-smi` (energy measurement tools) as well as `sensors` (cpu temperature tool, which is run inside the wrapper `cpu_temperature.py`):  
 ```python3 start_measurement.py```  
   
 The application can be terminated by pressing Control-C.  
-  
-If you would just like to run the server, run:  
-```python3 server.py```  
 
 ## Contributing
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
