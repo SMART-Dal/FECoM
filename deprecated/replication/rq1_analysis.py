@@ -1,6 +1,6 @@
 from tool.experiment.analysis import init_project_energy_data, build_total_energy_df
 from tool.experiment.experiments import ExperimentKinds
-from executed_experiments import EXECUTED_EXPERIMENTS
+from executed_experiments import EXECUTED_RQ1_EXPERIMENTS
 
 if __name__ == '__main__':
     # project_name = "images/cnn" -- DONE
@@ -13,7 +13,7 @@ if __name__ == '__main__':
     # project_name = "quickstart/beginner"  # -- DONE
      # project_name = "audio/transfer_learning_audio"  # -- 
 
-    for project_name in EXECUTED_EXPERIMENTS:
+    for project_name in EXECUTED_RQ1_EXPERIMENTS:
         print(f"Project: {project_name}")
         method_level_data = init_project_energy_data(project_name, ExperimentKinds.METHOD_LEVEL, first_experiment=1)
         print(method_level_data.no_energy_functions)

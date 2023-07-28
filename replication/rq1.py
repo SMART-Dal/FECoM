@@ -23,6 +23,7 @@ def run_rq1_experiments(project, start=START, count=COUNT):
 
 
 if __name__ == "__main__":
+    ### commented code has already been run, uncomment to replicate
     # run_rq1_experiments("estimator/keras_model_to_estimator")
     # run_rq1_experiments("generative/autoencoder")
     # run_rq1_experiments("audio/simple_audio")
@@ -33,4 +34,8 @@ if __name__ == "__main__":
     # run_rq1_experiments("load_data/numpy")
     # run_rq1_experiments("keras/regression")
     # run_rq1_experiments("quickstart/beginner")
+
+    ### if you would like to run all experiments in the study (this will likely take days of time), uncomment the following code
+    # for project in EXECUTED_RQ1_EXPERIMENTS:
+    #     run_rq1_experiments(project)
     pass

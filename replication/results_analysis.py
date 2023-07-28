@@ -6,10 +6,10 @@ from pathlib import Path
 from statistics import median, mean
 import os
 
-from tool.experiment.analysis import init_project_energy_data, create_summary, export_summary_to_latex, build_total_energy_df
+from tool.experiment.analysis import init_project_energy_data, create_summary, export_summary_to_latex, build_total_energy_df, build_total_energy_and_size_df
 from tool.experiment.experiment_kinds import ExperimentKinds
 
-from executed_experiments import EXECUTED_EXPERIMENTS
+from executed_experiments import EXECUTED_RQ1_EXPERIMENTS
 
 LATEX_OUTPUT_PATH = Path("rq1_analysis/latex")
 
@@ -31,7 +31,7 @@ def results_rq1_total_energy_consumption():
     first_exp = 1
     last_exp = 10
 
-    for project_name in EXECUTED_EXPERIMENTS:
+    for project_name in EXECUTED_RQ1_EXPERIMENTS:
         try:
             print("Project: ", project_name)
             method_level  = init_project_energy_data(project_name, ExperimentKinds.METHOD_LEVEL, first_experiment=first_exp, last_experiment=last_exp)
@@ -60,7 +60,7 @@ def calculate_function_counts():
     energy_function_counts = []
     no_energy_function_counts = []
 
-    for project_name in EXECUTED_EXPERIMENTS:
+    for project_name in EXECUTED_RQ1_EXPERIMENTS:
         try:
             project_energy_data = init_project_energy_data(project_name, ExperimentKinds.METHOD_LEVEL, first_experiment=1, last_experiment=10)
             energy_function_counts.append(project_energy_data.energy_function_count)
@@ -86,7 +86,7 @@ def calculate_no_energy_functions_execution_time_stats():
     min_times = []
     max_times = []
 
-    for project_name in EXECUTED_EXPERIMENTS:
+    for project_name in EXECUTED_RQ1_EXPERIMENTS:
         try:
             project_energy_data = init_project_energy_data(project_name, ExperimentKinds.METHOD_LEVEL, first_experiment=1, last_experiment=10)
             # this data is not available for projects that use skip_calls
@@ -107,6 +107,34 @@ def calculate_no_energy_functions_execution_time_stats():
     print("Median range of execution times: ", round(median(range_times), 3))
     print("Min execution time: ", round(min(min_times), 3))
     print("Max execution time: ", round(max(max_times), 3))
+
+
+def collect_significant_energy_consumption_functions():
+    """
+    Create a CSV file of all functions that consume a significant amount of energy.
+    This is useful for finding functions that are worth investigating further with
+    data size experiments for RQ2.
+    """
+    csv_file = './rq2_analysis/rq2_analysis.csv'
+    if os.path.exists(csv_file):
+        os.remove(csv_file)
+
+    for project_name in EXECUTED_RQ1_EXPERIMENTS:
+        print(f"Project: {project_name}")
+        method_level_data = init_project_energy_data(project_name, ExperimentKinds.METHOD_LEVEL, first_experiment=1)
+        # create_summary(method_level_data)
+
+        total_energy_df = build_total_energy_and_size_df(method_level_data)
+        print(total_energy_df)
+
+        # Add the project name as the first column in the DataFrame
+        total_energy_df.insert(0, 'Project Name', project_name)
+
+        # Append the data to rq2_analysis.csv if the file already exists, otherwise create a new file
+        if os.path.exists(csv_file):
+            total_energy_df.to_csv(csv_file, mode='a', index=False, header=False)
+        else:
+            total_energy_df.to_csv(csv_file, index=False)
     
 
 if __name__ == "__main__":
@@ -120,4 +148,5 @@ if __name__ == "__main__":
     # results_rq1_total_energy_consumption()
     # calculate_function_counts()
     # calculate_no_energy_functions_execution_time_stats()
+    collect_significant_energy_consumption_functions()
     pass

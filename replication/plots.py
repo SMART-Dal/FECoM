@@ -8,7 +8,7 @@ from tool.experiment.analysis import init_project_energy_data, build_total_energ
 from tool.patching.patching_config import EXPERIMENT_DIR
 from tool.experiment.plot import plot_single_energy_with_times, plot_combined_total_energy_vs_execution_time, plot_total_energy_vs_execution_time, plot_total_energy_vs_data_size_boxplot, plot_total_unnormalised_energy_vs_data_size_boxplot, plot_project_level_energy_vs_method_level_energy, plot_args_size_vs_gpu_mean
 
-from executed_experiments import EXECUTED_EXPERIMENTS
+from executed_experiments import EXECUTED_RQ1_EXPERIMENTS
 
 def implementation_plot_GPU_energy_with_times():
     """
@@ -23,7 +23,7 @@ def implementation_plot_GPU_energy_with_times():
 ### RQ 1 PLOTS
 def rq1_plot_total_energy_vs_time():
     experiments_data = []
-    for project_name in EXECUTED_EXPERIMENTS:
+    for project_name in EXECUTED_RQ1_EXPERIMENTS:
         try:
             data = init_project_energy_data(project_name, ExperimentKinds.METHOD_LEVEL, first_experiment=1, last_experiment=10)
             experiments_data.append(data)
@@ -35,7 +35,7 @@ def rq1_plot_total_energy_vs_time():
 
 def rq1_plot_total_energy_vs_time_combined():
     experiments_data = []
-    for project_name in EXECUTED_EXPERIMENTS:
+    for project_name in EXECUTED_RQ1_EXPERIMENTS:
         try:
             data = init_project_energy_data(project_name, ExperimentKinds.METHOD_LEVEL, first_experiment=1, last_experiment=10)
             experiments_data.append(data)
@@ -47,7 +47,7 @@ def rq1_plot_total_energy_vs_time_combined():
 
 def rq1_plot_project_level_energy_vs_method_level_energy():
     total_energy_projects = {}
-    for project_name in EXECUTED_EXPERIMENTS:
+    for project_name in EXECUTED_RQ1_EXPERIMENTS:
         method_level_data = init_project_energy_data(project_name, ExperimentKinds.METHOD_LEVEL, first_experiment=1)
         project_level_data = init_project_energy_data(project_name, ExperimentKinds.PROJECT_LEVEL, first_experiment=1)
         total_energy_df = build_total_energy_df(method_level_data, project_level_data)
@@ -110,7 +110,7 @@ def rq2_plot_args_size_vs_gpu_mean():
     # this method is used for analysis of argsize vs energy for rq2 method-level dataset using rq1 data
     total_energy_dfs = []
 
-    for project_name in EXECUTED_EXPERIMENTS:
+    for project_name in EXECUTED_RQ1_EXPERIMENTS:
         print(f"Project: {project_name}")
         method_level_data = init_project_energy_data(project_name, ExperimentKinds.METHOD_LEVEL, first_experiment=1)
         total_energy_df = build_total_energy_and_size_df(method_level_data)
