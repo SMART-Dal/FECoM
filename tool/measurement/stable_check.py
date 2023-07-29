@@ -1,5 +1,5 @@
 """
-Energy & temperature data loaders for stable check
+Perform stable check for energy and temperature, run before every energy measurement experiment.
 """
 
 import time
@@ -13,6 +13,9 @@ from tool.measurement.utilities import custom_print
 def print_stable(message: str):
     custom_print("stable check", message)
 
+"""
+Energy & temperature data loaders for stable check
+"""
 
 def load_last_n_cpu_temperatures(n: int, cpu_temperature_file: Path) -> list:
     """

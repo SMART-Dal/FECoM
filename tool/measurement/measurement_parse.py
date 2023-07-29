@@ -1,13 +1,13 @@
+"""
+Functions to parse the measurement tool output files and load them into dataframes
+"""
+
 from datetime import datetime
 import pandas as pd
 import matplotlib.pyplot as plt
 from pathlib import Path
 
 from tool.measurement.measurement_config import CPU_FILE_SEPARATOR
-
-"""
-Functions to parse the measurement tool output files and load them into dataframes
-"""
 
 def parse_nvidia_smi(filepath: Path) -> pd.DataFrame:
     """
