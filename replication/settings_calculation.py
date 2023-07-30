@@ -12,7 +12,7 @@ IDLE_DATA_DIR = Path("../data/other/settings/idle_data/")
 OUTPUT_DIR = Path("settings")
 
 # code used to calculate the standard deviation to mean ratios 
-# gathered data by running the server application, nothing else
+# gathered data by running start_measurement.py, nothing else
 def stdev_mean_ratios(plot_data=False):
     combined_df = create_combined_df(directory=IDLE_DATA_DIR)
     mean_stats = calc_stats_for_split_data(CHECK_LAST_N_POINTS, combined_df)
@@ -31,7 +31,7 @@ def stdev_mean_ratios(plot_data=False):
         plt.show()
 
 # code used to calculate the maximum cpu temperature
-# gathered data by running the server application and cpu_temperature.py, nothing else
+# gathered data by running start_measurement.py and cpu_temperature.py, nothing else
 def cpu_temperature():
     df_cpu_temp = parse_cpu_temperature(IDLE_DATA_DIR/"cpu_temperature.txt")
     with open(OUTPUT_DIR / "idle_cpu_temperature_stats.txt", 'w') as f:

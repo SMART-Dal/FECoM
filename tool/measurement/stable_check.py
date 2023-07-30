@@ -43,7 +43,7 @@ def load_last_n_gpu_temperatures(n: int, nvidia_smi_file: Path) -> list:
 
 def load_last_n_cpu_ram_gpu_energies(n: int, perf_file: Path, nvidia_smi_file: Path) -> tuple:
     """
-    Helper method for server_is_stable_check to load the last n energy data points
+    Helper method for machine_is_stable_check to load the last n energy data points
     for CPU, RAM and GPU (in this order)
     """
 
@@ -85,7 +85,7 @@ def temperature_is_low(data: List[int], maximum_temperature: int):
     return is_low
 
 
-def server_is_stable_check(check_last_n_points: int, tolerance: float, cpu_std_to_mean: float, ram_std_to_mean: float, gpu_std_to_mean: float) -> bool:
+def machine_is_stable_check(check_last_n_points: int, tolerance: float, cpu_std_to_mean: float, ram_std_to_mean: float, gpu_std_to_mean: float) -> bool:
     """
     Return True if all the energy data series are stable
     Settings that determine what "stable" means can be found in measurement_config.py.
@@ -96,10 +96,10 @@ def server_is_stable_check(check_last_n_points: int, tolerance: float, cpu_std_t
         energy_is_stable(cpu_energies, tolerance, cpu_std_to_mean) and
         energy_is_stable(ram_energies, tolerance, ram_std_to_mean)
     ):
-        print_stable("Success: Server is stable.")
+        print_stable("Success: Machine is stable.")
         return True
     else:
-        print_stable("Server is not stable yet.")
+        print_stable("Machine is not stable yet.")
         return False
 
 

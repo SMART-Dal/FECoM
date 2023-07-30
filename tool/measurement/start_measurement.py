@@ -190,17 +190,17 @@ if __name__ == "__main__":
             with open(EXECUTION_LOG_FILE, 'r') as f:
                 latest_execution = f.readlines()[-1]
             
-            # When the server adds a new execution to the log file, we want to to restart perf & nvidia-smi to clear the energy measurement files
+            # When the execution environment adds a new function to the log file, we want to to restart perf & nvidia-smi to clear the energy measurement files
             if latest_execution != previous_execution:
                 # restart all programs, and update the references to point at the new processes
                 perf_stat, nvidia_smi = restart_measurements(perf_stat, nvidia_smi, latest_execution.split(";")[0])
                 previous_execution = latest_execution
             
-            # this is half the time the server waits after receiving a request, which gives the system enough time to restart in between method calls.
+            # this is half the time the execution environment waits before starting execution, which gives the system enough time to restart in between function calls.
             time.sleep(5)
             time_counter += 5
             continue
     except KeyboardInterrupt:
-        print_main("\n\nKeyboardInterrupt by User. Shutting down the server application.\n")
+        print_main("\n\nKeyboardInterrupt by User. Shutting down the measurement application.\n")
 
     

@@ -10,7 +10,6 @@ import re
 from pathlib import Path
 
 from patching_config import PATCHED_REPO_DIR, SOURCE_REPO_DIR, METHOD_LEVEL_PATCHING_SCRIPT_PATH, PROJECT_LEVEL_PATCHING_SCRIPT_PATH
-# from server.send_request import send_request, send_single_thread_request
 
 
 def copy_directory_contents(src, dst):

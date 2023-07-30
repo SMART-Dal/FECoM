@@ -29,9 +29,8 @@ ENV/*
 patched-code/*
 # Repositories/*
 
-# server
+# measurement
 *.pth
-flask.log
 tool/measurement/out/*
 
 # package

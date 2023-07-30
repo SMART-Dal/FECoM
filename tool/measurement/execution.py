@@ -12,7 +12,7 @@ from datetime import datetime
 from tool.measurement.utilities import custom_print
 from tool.measurement.start_measurement import start_sensors, quit_process, unregister_and_quit_process
 
-from tool.measurement.stable_check import run_check_loop, server_is_stable_check, temperature_is_low_check
+from tool.measurement.stable_check import run_check_loop, machine_is_stable_check, temperature_is_low_check
 from tool.measurement.measurement_parse import get_current_times, get_energy_data, get_cpu_temperature_data
 
 from tool.measurement.measurement_config import DEBUG, SKIP_CALLS_FILE_NAME
@@ -32,7 +32,7 @@ def print_exec(message: str):
 
 def prepare_state():
     """
-    Ensure the server is in the right state before starting execution
+    Ensure the machine is in the right state before starting execution
     """
 
     # (1) start the cpu temperature measurement process
@@ -53,11 +53,11 @@ def prepare_state():
 
     # (2b) check that the CPU, RAM and GPU energy consumption is stable
     begin_stable_check_time = time.time_ns()
-    if not run_check_loop(False, MAX_WAIT_S, WAIT_PER_STABLE_CHECK_LOOP_S, "stable state", server_is_stable_check, CHECK_LAST_N_POINTS, STABLE_CHECK_TOLERANCE, CPU_STD_TO_MEAN, RAM_STD_TO_MEAN, GPU_STD_TO_MEAN):
-        raise TimeoutError(f"Server could not reach a stable state within {MAX_WAIT_S} seconds")
+    if not run_check_loop(False, MAX_WAIT_S, WAIT_PER_STABLE_CHECK_LOOP_S, "stable state", machine_is_stable_check, CHECK_LAST_N_POINTS, STABLE_CHECK_TOLERANCE, CPU_STD_TO_MEAN, RAM_STD_TO_MEAN, GPU_STD_TO_MEAN):
+        raise TimeoutError(f"Could not reach a stable state within {MAX_WAIT_S} seconds")
 
     # (3a) Get the start times from the files and also save their exact value.
-    # TODO potentially correct here for the small time offset created by fetching the times for the files. We can use the server times for this.
+    # TODO potentially correct here for the small time offset created by fetching the times from the files. We can use the execution times for this.
     start_time_perf, start_time_nvidia = get_current_times(PERF_FILE, NVIDIA_SMI_FILE)
     start_time_execution = time.time_ns()
     
@@ -83,9 +83,6 @@ def should_skip_call(experiment_file_path: str, function_to_run: str = None):
     
     if function_to_run in skip_calls:
         return True
-
-    # if( start_time_nvidia and end_time_nvidia and start_time_perf and end_time_nvidia and (start_time_nvidia == end_time_nvidia or start_time_perf == end_time_perf)):
-    #     return True
 
 
 def store_data(data: dict, experiment_file_path: Path):

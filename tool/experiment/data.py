@@ -2,7 +2,7 @@
 This module contains four classes for handling experiment data
 1. FunctionEnergyData: a data structure for accumulating data for one function, but from multiple experiments for one hardware component (CPU, RAM or GPU)
 2. ProjectEnergyData: a data structure for accumulating all data associated with one project
-3. EnergyData: a data structure for storing all data associated with one function and one experiment, i.e. one server response
+3. EnergyData: a data structure for storing all data associated with one single energy measurement (one function call in one experiment)
 4. DataLoader: a helper class for loading the json data into EnergyData objects
 """
 import os
@@ -248,7 +248,7 @@ class ProjectEnergyData():
 
 class EnergyData():
     """
-    Initialised with the raw data for one sample, as obtained from one server response.
+    Initialised with the raw data for one sample, as obtained from one JSON data.
     This class has a range of useful properties that return statistics calculated from the raw data.
     """
     def __init__(self, function_name, project_name, cpu_energy: pd.DataFrame, ram_energy: pd.DataFrame, gpu_energy: pd.DataFrame, times: dict, input_sizes: dict, settings: dict):
@@ -287,7 +287,7 @@ class EnergyData():
     @property
     def stable_check_waiting_time_s(self):
         """
-        How long did the server check for stable state?
+        How long did the application check for stable state?
         """
         return (self.times["start_time_execution"]-self.times["begin_stable_check_time"]) / NS_CONVERSION
     
@@ -362,7 +362,7 @@ class EnergyData():
 
     ### Mean stable state energy consumption
     # stable state is defined as the last <wait_per_stable_check_loop_s> seconds of energy data before execution,
-    # i.e. the interval of energy data which was deemed "stable" by the server
+    # i.e. the interval of energy data which was deemed "stable" by the stable check
 
     @property
     def stable_cpu_energy_mean(self):
@@ -398,7 +398,7 @@ class EnergyData():
     @property
     def total_cpu(self):
         # make sure that the filtering works: first time stamp must be start_time_perf and last time stamp must be end_time_perf,
-        # since the server reads these times from the perf files
+        # since these times are read from the perf file
         try:
             assert round(self.cpu_energy_in_execution["time_elapsed"].iloc[0], 6) >= round(self.start_time_perf, 6)
         except AssertionError:
@@ -418,7 +418,7 @@ class EnergyData():
     @property
     def total_ram(self):
         # make sure that the filtering works: first time stamp must be start_time_perf and last time stamp must be end_time_perf,
-        # since the server reads these times from the perf files
+        # since these times are read from the perf file
         assert round(self.ram_energy_in_execution["time_elapsed"].iloc[0], 6) >= round(self.start_time_perf, 6)
         assert self.ram_energy_in_execution["time_elapsed"].iloc[-1] <= self.end_time_perf
         # return the total energy consumption
@@ -687,7 +687,7 @@ class EnergyData():
     def __stable_energy_pre_execution(self, energy_df: pd.DataFrame, start_time: float):
         """
         Return a slice of the given energy dataframe. This slice corresponds to the energy data
-        from the last stable check interval before execution, which was thus deemed stable by the server.
+        from the last stable check interval before execution, which was thus deemed stable.
         """
         pre_execution_df = energy_df[(energy_df["time_elapsed"] < start_time)].copy()
         # number of values to consider for stable energy before execution

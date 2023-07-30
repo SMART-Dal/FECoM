@@ -1,9 +1,12 @@
 """
-An Experiment contains the logic needed to run one kind of experiment for one specific project on the server.
+A concrete Experiment instance contains the logic needed to run
+one kind of experiment for one specific project.
+- PatchedExperiment: used for method-level and project-level experiments (RQ1)
+- DataSizeExperiment: used for data-size experiments (RQ2)
 
 """
 
-import subprocess, os
+import subprocess
 from abc import ABC, abstractmethod
 from pathlib import Path
 

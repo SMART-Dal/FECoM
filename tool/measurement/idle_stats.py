@@ -44,7 +44,7 @@ def calc_stats_for_split_data(n: int, combined_df: pd.DataFrame):
     """ 
     The given combined energy data is split into dataframes containing n consecutive values.
     For each dataframe, the mean & standard deviation (stdev) is calculated.
-    This is supposed to emulate the behaviour of the server's stable checking mechanism,
+    This is supposed to emulate the behaviour of the stable checking mechanism,
     which considers the last n values only, which can increase standard deviation due to
     the smaller sample size.
     
