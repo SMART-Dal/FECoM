@@ -467,6 +467,107 @@ def run_keras_classification_sequential_fit_datasize_experiment():
     run_experiments(experiment, count=10, start=1)
 
 
+# This is for energy consumption of tensorflow.keras.Sequential.evaluate() api in keras/classification
+def run_keras_classification_sequential_evaluate_datasize_experiment():
+    # (1) create prepare_experiment function
+    def prepare_experiment(fraction: float):
+        # (1a) setup like in the original project
+
+        #### begin copied code (from keras/classification)
+        import tensorflow as tf
+
+        import numpy as np
+        import matplotlib.pyplot as plt
+
+        print(tf.__version__)
+        fashion_mnist = tf.keras.datasets.fashion_mnist
+
+        (train_images, train_labels), (test_images, test_labels) = fashion_mnist.load_data()
+        ## commented out irrelevant data visualisation code
+        # class_names = ['T-shirt/top', 'Trouser', 'Pullover', 'Dress', 'Coat',
+        #             'Sandal', 'Shirt', 'Sneaker', 'Bag', 'Ankle boot']
+        # train_images.shape
+        # len(train_labels)
+        # train_labels
+        # test_images.shape
+        # len(test_labels)
+        # plt.figure()
+        # plt.imshow(train_images[0])
+        # plt.colorbar()
+        # plt.grid(False)
+        # plt.show()
+        ## end comment
+        train_images = train_images / 255.0
+
+        test_images = test_images / 255.0
+
+        ## commented out irrelevant data visualisation code
+        # plt.figure(figsize=(10,10))
+        # for i in range(25):
+        #     plt.subplot(5,5,i+1)
+        #     plt.xticks([])
+        #     plt.yticks([])
+        #     plt.grid(False)
+        #     plt.imshow(train_images[i], cmap=plt.cm.binary)
+        #     plt.xlabel(class_names[train_labels[i]])
+        # plt.show()
+        ## end comment
+
+        model = tf.keras.Sequential([
+            tf.keras.layers.Flatten(input_shape=(28, 28)),
+            tf.keras.layers.Dense(128, activation='relu'),
+            tf.keras.layers.Dense(10)
+        ])
+        model.compile(optimizer='adam',
+                    loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True),
+                    metrics=['accuracy'])
+        
+        model.fit(train_images, train_labels, epochs=10)
+        
+        ## commented out relevant method call
+        # test_loss, test_acc = model.evaluate(test_images,  test_labels, verbose=2)
+        ## end comment
+
+        #### end copied code
+
+        # (1b) check data as described in tensorflow documentation: https://www.tensorflow.org/api_docs/python/tf/keras/datasets/fashion_mnist/load_data
+        assert train_images.shape == (60000, 28, 28)
+        assert test_images.shape == (10000, 28, 28)
+        assert train_labels.shape == (60000,)
+        assert test_labels.shape == (10000,)
+
+        # (1c) build function details for function
+        original_args = [test_images, test_labels]
+        function_kwargs = {
+            "verbose": 2
+        }
+        method_object = model
+
+        # (1d) vary the data size
+        # E.g. if an arg in vary_args has shape (100,10,10) and fraction=0.5, return an array of shape (50,10,10).
+        # So this method only scales the first dimension of the array by the given fraction.
+        function_args = [arg[:int(arg.shape[0]*fraction)] for arg in original_args]
+
+        return function_args, function_kwargs, method_object
+    
+    # (2) create function details
+    function_to_run = "obj.evaluate(*args, **kwargs)"
+    function_signature = "tensorflow.keras.Sequential.evaluate()"
+
+    # (3) Initialise and run the experiment
+    experiment = DataSizeExperiment(
+        project = "keras/classification_evaluate",
+        experiment_dir = EXPERIMENT_DIR,
+        n_runs = 10,
+        prepare_experiment = prepare_experiment,
+        function_to_run = function_to_run,
+        function_signature = function_signature
+    )
+
+    run_experiments(experiment, count=10, start=1)
+
+
+
 
 if __name__ == "__main__":
     ### commented code has already been run, uncomment to replicate
@@ -476,5 +577,6 @@ if __name__ == "__main__":
     # run_images_cnn_model_evaluate_datasize_experiment()
     # run_quickstart_beginner_model_fit_datasize_experiment()
     # run_loaddata_numpy_Dataset_from_tensor_slices_datasize_experiment()
-    run_keras_classification_sequential_fit_datasize_experiment()
+    # run_keras_classification_sequential_fit_datasize_experiment()
+    run_keras_classification_sequential_evaluate_datasize_experiment()
     pass
