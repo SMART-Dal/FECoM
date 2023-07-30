@@ -1,56 +1,45 @@
 # RQ3 Issue Log
-This file provides a detailed list of issues faced, arranged by categories and subcategories.
+This file provides a detailed list of issues faced.
+The list of issues faced are grouped into 4 categories:
+1. [Energy Measurement](#energy-measurement)
+2. [Patching](#patching)
+3. [Execution Environment](#execution-environment)
+4. [Framework Design and Implementation](#framework-design-and-implementation)
+
+Within each category, the issues are further grouped into subcategories.
+## Energy Measurement
+This category details issues that hinder effective energy
+measurement.
+
+| Subcategory                       | Issue                       | Details                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
+|-----------------------------------|-----------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Instrumentation Challenges        | Code instrumentation        |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+| Instrumentation Challenges        | Noise in measurement        |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+| Hardware Variability              | Energy Measurement Accuracy |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+| Hardware Variability              | Calibration Issues          |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+| Hardware Variability              | GPU Usage                   | Errors in environment configuration may occur such that TensorFlow may not be utilizing the GPU, leading to incorrect and inconsistent energy data collection.<br>One way to reduce the probability of such errors occurring is to read the [official TensorFlow documentation](https://www.tensorflow.org/install/pip) and verify the GPU setup before initiating the experiments, using the command:<pre>python3 -c "import tensorflow as tf; print(tf.config.list_physical_devices('GPU'))"</pre>A successful installation of TensorFlow should return a list of GPU devices. |
+| Granularity of energy attribution | Precision limits            | Intel RAPL only allows energy measurements at intervals of [up to 1ms](https://www.intel.com/content/www/us/en/developer/articles/technical/software-security-guidance/advisory-guidance/running-average-power-limit-energy-reporting.html).                                                                                                                                                                                                                                                                                                                                     |
+| Granularity of energy attribution | Precision overhead balance  |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
 
 ## Patching
-### Patch Generation
+The issues and challenges listed below discuss
+the considerations related to static instrumentation of code.
 
-#### Correctness of Patches
+| Subcategory      | Issue                  | Details |
+|------------------|------------------------|---------|
+| Patch Generation | Correctness of Patches |         |
+| Patch Generation | Patch coverage         |         |
 
-#### Patch Granularity
+## Execution Environment
+This category deals with issues related to execution environment, which may hinder effective measurement of consumed energy.
 
-## Energy Measurement
-### Instrumentation Challenges
-
-#### Code instrumentation
-
-#### Noise in measurement
-
-### Hardware Variability
-
-#### Energy Measurement Accuracy
-
-#### Calibration Issues
-
-#### GPU Usage
-
-### Granularity of Energy Attribution
-
-#### Precision Level
-
-#### Precision Limits
+| Subcategory              | Issue             | Details                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
+|--------------------------|-------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Hardware incompatibility | -                 |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
+| GPU challenges           | Memory Management | A CUDA runtime error stating that the GPU has ran out of memory occurs when a process cannot be allocated sufficient memory:<pre>std::bad_alloc: CUDA error at: ../include/rmm/mr/device/cuda_memory_resource.hpp:70: cudaErrorMemoryAllocation out of memory</pre>                                                                                                                                                                                                                                                                                                    |
+| GPU challenges           | Container Issues  | This issue was encountered while experimenting with the NVIDIA [DeepLearningExamples](https://github.com/NVIDIA/DeepLearningExamples/tree/master) dataset. The examples in the dataset are provided in Docker containers. However, for some examples, the specified version of the TensorFlow container is not compatible with the GPU, resulting in the following error: <pre>WARNING: Detected NVIDIA NVIDIA GeForce RTX 3070 Ti GPU, which is not yet supported in this version of the container<br>ERROR: No supported GPU(s) detected to run this container</pre> |
 
 ## Framework Design and Implementation
-### Framework Extensibilty
+This category covers the issues that should be considered during the designing process of the framework.
 
-## Environment
-### Hardware incompatibility
-
-### GPU challenges
-
-#### Memory Management
-
-#### Container Issues
-This issue was encountered while experimenting with the NVIDIA [DeepLearningExamples](https://github.com/NVIDIA/DeepLearningExamples/tree/master) dataset.
-The examples in the dataset are provided in Docker containers.
-However, for some examples, the specified version of the TensorFlow container is not compatible with the GPU, resulting in the following error:
-```
-  WARNING: Detected NVIDIA NVIDIA GeForce RTX 3070 Ti GPU, which is not yet supported in this version of the container
-  ERROR: No supported GPU(s) detected to run this container
-  ```
-Following exact specified instructions to run projects on Docker container is sometimes not possible, due to incompatibility with GPU (see error log).
-But modifying (choosing a newer version) the tensorflow image version can cause runtime errors too
-
-## Data Handling
-### Large Datasets
-
-### Serialisation
+### Framework Extensibility

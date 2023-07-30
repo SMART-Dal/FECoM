@@ -34,7 +34,6 @@ class FunctionEnergyData():
         self.lag_normalised = []
         self.total_lag_normalised = []
         self.execution_time = []
-        # TODO size values are not used so far. Look into how they should be used.
         self.total_args_size = []
         self.total_input_size = []
         self.stdev_power = []

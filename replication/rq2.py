@@ -567,6 +567,82 @@ def run_keras_classification_sequential_evaluate_datasize_experiment():
     run_experiments(experiment, count=10, start=1)
 
 
+# This is for energy consumption of tensorflow.keras.estimator.model_to_estimator.train() api in estimator/keras_model_to_estimator
+def run_estimator_keras_model_to_estimator_train_datasize_experiment():
+    # (1) create prepare_experiment function
+    def prepare_experiment(fraction: float):
+        # (1a) setup like in the original project
+
+        #### begin copied code (from keras/classification)
+        import tensorflow as tf
+
+        import numpy as np
+        import tensorflow_datasets as tfds
+        model = tf.keras.models.Sequential([
+            tf.keras.layers.Dense(16, activation='relu', input_shape=(4,), name="dense"), ## added name to layer to prevent auto-generated names with incremented numbers
+            tf.keras.layers.Dropout(0.2, name="dropout"), ## added name to layer to prevent auto-generated names with incremented numbers
+            tf.keras.layers.Dense(3, name="output") ## added name to layer to prevent auto-generated names with incremented numbers
+        ],
+        name="sequential_model") ## added name to layer to prevent auto-generated names with incremented numbers
+        model.compile(loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True),
+                    optimizer='adam')
+        model.summary()
+        def input_fn():
+            import tensorflow_datasets as tfds
+
+            ## MODIFIED CODE (1d) vary the data size (due to the way the data is loaded with an input_fn, we need to vary the data size here)
+            # split = tfds.Split.TRAIN
+            split = 'train[:{}%]'.format(int(fraction * 100))
+            ## END MODIFIED CODE
+        
+            dataset = tfds.load('iris', split=split, as_supervised=True)
+            dataset = dataset.map(lambda features, labels: ({'dense_input':features}, labels))
+            dataset = dataset.batch(32).repeat()
+            return dataset
+        
+        ## commented out irrelevant data visualisation code
+        # for features_batch, labels_batch in input_fn().take(1):
+        #     print(features_batch)
+        #     print(labels_batch)
+        ## end comment
+
+        import tempfile
+        model_dir = tempfile.mkdtemp()
+        keras_estimator = tf.keras.estimator.model_to_estimator(
+            keras_model=model, model_dir=model_dir)
+        
+        ## commented out relevant method call
+        # keras_estimator.train(input_fn=input_fn, steps=500)
+        ## end comment
+
+        #### end copied code
+
+        # (1c) build function details for function
+        function_kwargs = {
+            "input_fn": input_fn,
+            "steps": 500
+        }
+        method_object = keras_estimator
+
+        function_args = None
+
+        return function_args, function_kwargs, method_object
+    
+    # (2) create function details
+    function_to_run = "obj.train(**kwargs)"
+    function_signature = "tensorflow.keras.estimator.model_to_estimator.train()"
+
+    # (3) Initialise and run the experiment
+    experiment = DataSizeExperiment(
+        project = "estimator/keras_model_to_estimator_train",
+        experiment_dir = EXPERIMENT_DIR,
+        n_runs = 10,
+        prepare_experiment = prepare_experiment,
+        function_to_run = function_to_run,
+        function_signature = function_signature
+    )
+
+    run_experiments(experiment, count=10, start=1)
 
 
 if __name__ == "__main__":
@@ -578,5 +654,6 @@ if __name__ == "__main__":
     # run_quickstart_beginner_model_fit_datasize_experiment()
     # run_loaddata_numpy_Dataset_from_tensor_slices_datasize_experiment()
     # run_keras_classification_sequential_fit_datasize_experiment()
-    run_keras_classification_sequential_evaluate_datasize_experiment()
+    # run_keras_classification_sequential_evaluate_datasize_experiment()
+    run_estimator_keras_model_to_estimator_train_datasize_experiment()
     pass
