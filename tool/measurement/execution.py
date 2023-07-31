@@ -260,14 +260,22 @@ def after_execution(
     }
 
     # (8) Add size data using pickle, if possible
+    # some objects cannot be pickled, so catch any exceptions and set the size to None for those objects
     try:
         args_size = len(pickle.dumps(function_args)) if function_args is not None else None
-        kwargs_size = len(pickle.dumps(function_kwargs)) if function_kwargs is not None else None
-        object_size = len(pickle.dumps(method_object)) if method_object is not None else None
-    # when the function args or object cannot be pickled, this error is raised.
     except Exception as e:
-        print_exec(f"Could not pickle function args or method object. Error: \n {e} \n Sizes will be None for this function. Execution will continue normally.")
-        args_size, kwargs_size, object_size = (None, None, None)
+        print_exec(f"Could not pickle function args. Error: \n {e} \n Args Size will be None for this function. Execution will continue normally.")
+        args_size = None
+    try:
+        kwargs_size = len(pickle.dumps(function_kwargs)) if function_kwargs is not None else None
+    except Exception as e:
+        print_exec(f"Could not pickle function kwargs. Error: \n {e} \n Kwargs Size will be None for this function. Execution will continue normally.")
+        kwargs_size = None
+    try:
+        object_size = len(pickle.dumps(method_object)) if method_object is not None else None
+    except Exception as e:
+        print_exec(f"Could not pickle method object. Error: \n {e} \n Object Size will be None for this function. Execution will continue normally.")
+        object_size = None
 
     input_sizes = {
         "args_size": args_size,
