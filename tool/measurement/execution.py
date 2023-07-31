@@ -119,8 +119,6 @@ def store_data(data: dict, experiment_file_path: Path):
         existing_data = []
 
     existing_data.append(data)
-    if DEBUG:
-        print_exec("Data loaded from response")
     with open(experiment_file_path, 'w') as f:
         json.dump(existing_data, f)
     if DEBUG:
