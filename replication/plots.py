@@ -6,9 +6,9 @@ from tool.experiment.data import DataLoader
 from tool.experiment.experiment_kinds import ExperimentKinds
 from tool.experiment.analysis import init_project_energy_data, build_total_energy_df, build_total_energy_and_size_df
 from tool.patching.patching_config import EXPERIMENT_DIR
-from tool.experiment.plot import plot_single_energy_with_times, plot_combined_total_energy_vs_execution_time, plot_total_energy_vs_execution_time, plot_total_energy_vs_data_size_boxplot, plot_total_unnormalised_energy_vs_data_size_boxplot, plot_project_level_energy_vs_method_level_energy, plot_args_size_vs_gpu_mean
+from tool.experiment.plot import plot_single_energy_with_times, plot_total_energy_vs_data_size_scatter_combined, plot_total_energy_vs_data_size_scatter,plot_combined_total_energy_vs_execution_time, plot_total_energy_vs_execution_time, plot_total_energy_vs_data_size_boxplot, plot_total_unnormalised_energy_vs_data_size_boxplot, plot_project_level_energy_vs_method_level_energy, plot_args_size_vs_gpu_mean
 
-from executed_experiments import EXECUTED_RQ1_EXPERIMENTS
+from executed_experiments import EXECUTED_RQ1_EXPERIMENTS, EXECUTED_RQ2_EXPERIMENTS
 
 def implementation_plot_GPU_energy_with_times():
     """
@@ -83,6 +83,17 @@ def rq2_plot_data_size_vs_energy():
     project_data = init_project_energy_data(project_name, ExperimentKinds.DATA_SIZE, first_experiment=1, last_experiment=10)
     plot_total_energy_vs_data_size_boxplot(project_data, title=True)
 
+def rq2_plot_data_size_vs_energy_scatter():
+    project_name = "images/cnn_fit"
+    project_data = init_project_energy_data(project_name, ExperimentKinds.DATA_SIZE, first_experiment=1, last_experiment=10)
+    plot_total_energy_vs_data_size_scatter(project_data, title=True)
+
+def rq2_plot_data_size_vs_energy_scatter_combined():
+    project_data = []
+    for project_name in EXECUTED_RQ2_EXPERIMENTS:
+        project_data.append(init_project_energy_data(project_name, ExperimentKinds.DATA_SIZE, first_experiment=1, last_experiment=10))
+    plot_total_energy_vs_data_size_scatter_combined(project_data, title=True)
+
 def rq2_plot_data_size_vs_unnormalised_energy():
     project_name = "images/cnn_fit"
     project_data = init_project_energy_data(project_name, ExperimentKinds.DATA_SIZE, first_experiment=1, last_experiment=7)
@@ -138,6 +149,7 @@ if __name__ == "__main__":
     # rq2_plot_smallest_data_size_ram()
     # rq2_plot_largest_data_size_ram()
     # rq2_plot_data_size_vs_unnormalised_energy()
+    rq2_plot_data_size_vs_energy_scatter_combined()
     # rq2_plot_args_size_vs_gpu_mean()
     # rq2_plot_data_size_vs_energy()
     pass

@@ -4,6 +4,7 @@ import matplotlib.patches as mpatches
 import pandas as pd
 from typing import List
 import numpy as np
+import matplotlib.ticker as ticker
 
 from tool.experiment.data import EnergyData, ProjectEnergyData
 from tool.experiment.analysis import prepare_total_energy_from_project, prepare_total_energy_and_size_from_project
@@ -228,6 +229,33 @@ def plot_combined(energy_data: EnergyData):
     plt.show()
 
 
+# def plot_total_energy_vs_execution_time(method_level_energies: List[ProjectEnergyData], title=True):
+#     """
+#     Takes a list of ProjectEnergyData objects, and plots the total normalised energy consumption
+#     versus mean execution time for all functions in the ProjectEnergyData objects.
+#     """
+#     data_list = []
+#     for method_level_energy in method_level_energies:
+#         project_data_list, column_names = prepare_total_energy_from_project(method_level_energy)
+#         data_list.extend(project_data_list)
+    
+#     total_df = pd.DataFrame(data_list, columns=column_names)
+
+#     for hardware in ["CPU", "RAM", "GPU"]:
+#         plt.figure(f"{hardware}_total")
+#         # allow the option to not set a title for graphs included in a report
+#         if title:
+#             plt.title(f"Total normalised energy consumption vs time ({hardware})", fontsize=16)
+#         plt.xlabel("Mean execution time (s)")
+#         plt.ylabel("Normalised energy consumption (Joules)")
+#         scatter_1 = f"{hardware} (mean)"
+#         scatter_2 = f"{hardware} (median)"
+#         plt.scatter(total_df.loc[:,"run time"], total_df.loc[:, scatter_1])
+#         plt.scatter(total_df.loc[:,"run time"], total_df.loc[:, scatter_2])
+#         plt.legend([scatter_1, scatter_2])
+#         plt.savefig(f'{hardware}_energy_vs_time_plot.png')
+#         plt.show()
+
 def plot_total_energy_vs_execution_time(method_level_energies: List[ProjectEnergyData], title=True):
     """
     Takes a list of ProjectEnergyData objects, and plots the total normalised energy consumption
@@ -240,20 +268,31 @@ def plot_total_energy_vs_execution_time(method_level_energies: List[ProjectEnerg
     
     total_df = pd.DataFrame(data_list, columns=column_names)
 
+    plt.figure("Total Energy vs Time")
+    # allow the option to not set a title for graphs included in a report
+    if title:
+        plt.title("Total normalised energy consumption vs time", fontsize=16)
+    plt.xlabel("Mean execution time (s)",fontsize=12)
+    plt.ylabel("Net Energy consumption (Joules)",fontsize=12)
+
     for hardware in ["CPU", "RAM", "GPU"]:
-        plt.figure(f"{hardware}_total")
-        # allow the option to not set a title for graphs included in a report
-        if title:
-            plt.title(f"Total normalised energy consumption vs time ({hardware})", fontsize=16)
-        plt.xlabel("Mean execution time (s)")
-        plt.ylabel("Normalised energy consumption (Joules)")
-        scatter_1 = f"{hardware} (mean)"
-        scatter_2 = f"{hardware} (median)"
-        plt.scatter(total_df.loc[:,"run time"], total_df.loc[:, scatter_1])
-        plt.scatter(total_df.loc[:,"run time"], total_df.loc[:, scatter_2])
-        plt.legend([scatter_1, scatter_2])
-        plt.savefig(f'{hardware}_energy_vs_time_plot.png')
-        plt.show()
+        scatter_col = f"{hardware} (mean)"
+        plt.scatter(total_df.loc[:, "run time"], total_df.loc[:, scatter_col], label=hardware, alpha=0.4 )
+        # scatter_col = f"{hardware} (median)"
+        # plt.scatter(total_df.loc[:, "run time"], total_df.loc[:, scatter_col], label=hardware, marker="*")
+        
+    plt.legend()
+    # Function to format y-axis tick labels to show values in thousands (K)
+    def format_y_axis(value, _):
+        if value >= 1000:
+            return f"{value/1000:.0f}K"
+        return value
+
+    # Apply the custom formatter to the y-axis
+    plt.gca().yaxis.set_major_formatter(ticker.FuncFormatter(format_y_axis))
+    plt.tight_layout()
+    plt.savefig('energy_vs_time_plot.png')
+    plt.show()
 
 def plot_combined_total_energy_vs_execution_time(method_level_energies: List[ProjectEnergyData], title=True):
     """
@@ -318,7 +357,7 @@ def plot_project_level_energy_vs_method_level_energy(total_energy_projects):
         project_data = total_energy_df[total_energy_df['function'].isin(['project-level', 'method-level (sum)'])]
 
         if 'method-level (sum)' not in project_data['function'].values:
-            project_data = pd.concat([project_data, pd.DataFrame({'function': ['method-level (sum)']})], ignore_index=True)
+            project_data = project_data.append({'function': 'method-level (sum)'}, ignore_index=True)
             project_data.fillna(0, inplace=True)
 
         x.append(project_name)
@@ -331,57 +370,63 @@ def plot_project_level_energy_vs_method_level_energy(total_energy_projects):
 
     attributes = ['CPU Method-Level', 'CPU Project-Level', 'GPU Method-Level', 'GPU Project-Level', 'RAM Method-Level', 'RAM Project-Level']
     measurements = [y_cpu_method, y_cpu_project, y_gpu_method, y_gpu_project, y_ram_method, y_ram_project]
+    hardware = ['CPU', 'GPU', 'RAM']
 
     x_pos = np.arange(len(x))  # the label locations
     bar_width = 0.4  # the width of the bars
     spacing = 0.04  # spacing between grouped bars
 
-    fig, axes = plt.subplots(3, 1, figsize=(8, 10), sharex=True)
+    fig, axes = plt.subplots(3, 1, figsize=(8, 10), sharex=True, gridspec_kw={'hspace': 0.04})
 
     for i, ax in enumerate(axes):
         for j in range(2):
             measurement = measurements[i * 2 + j]
             ax.bar(x_pos + j * (bar_width + spacing), measurement, bar_width, label=attributes[i * 2 + j])
-
-        ax.set_ylabel('Energy Consumption (Joules)')
-        ax.set_title(attributes[i * 2] + ' vs ' + attributes[i * 2 + 1])
+        
+        if i == 1:
+            ax.set_ylabel('Energy consumption (Joules)', fontsize=12)
+        
+        # ax.set_title(attributes[i * 2] + ' vs ' + attributes[i * 2 + 1])
         ax.margins(x=0.01)
-        ax.legend(bbox_to_anchor=(1, 1))
+        if i == 0:
+            ax.legend(labels=['Method-Level', 'Project-Level'], bbox_to_anchor=(0.02, 0.98), loc='upper left')
 
-    axes[-1].set_xlabel('Project Name')
-    plt.xticks(x_pos, x, rotation=45, ha='right', fontsize='small')
+        ax.text(0.98, 0.94, hardware[i], transform=ax.transAxes, fontsize=12, ha='right', va='top')
+
+    axes[-1].set_xlabel('Project', fontsize=12)
+    plt.xticks(x_pos, ["P" + str(x + 1) for x in x_pos], rotation=45, ha='right', fontsize='small')
     plt.tight_layout()
     plt.savefig('project_vs_method_energy_plot.png', bbox_inches='tight')
     plt.show()
 
 
 
-def plot_total_energy_vs_data_size_scatter(project_energy: ProjectEnergyData, title=True):
-    """
-    Takes a ProjectEnergyData object from any kind of experiment (typically data-size),
-    and plots the total normalised energy consumption versus total args size for all
-    data points (every experiment for every function) in the ProjectEnergyData object.
-    Creates 3 plots, one for each hardware device.
-    """
-    raise DeprecationWarning("Reconsider using this function. The plot_total_energy_vs_data_size_boxplot function is preferrable.")
-    for hardware in ["cpu", "ram", "gpu"]:
-        hardware_label = hardware.upper()
-        function_energies = getattr(project_energy, hardware)
-        args_sizes = []
-        total_energies = []
-        for function_energy in function_energies:
-            args_sizes.extend(function_energy.total_args_size)
-            total_energies.extend(function_energy.total_normalised)
+# def plot_total_energy_vs_data_size_scatter(project_energy: ProjectEnergyData, title=True):
+#     """
+#     Takes a ProjectEnergyData object from any kind of experiment (typically data-size),
+#     and plots the total normalised energy consumption versus total args size for all
+#     data points (every experiment for every function) in the ProjectEnergyData object.
+#     Creates 3 plots, one for each hardware device.
+#     """
+#     raise DeprecationWarning("Reconsider using this function. The plot_total_energy_vs_data_size_boxplot function is preferrable.")
+#     for hardware in ["cpu", "ram", "gpu"]:
+#         hardware_label = hardware.upper()
+#         function_energies = getattr(project_energy, hardware)
+#         args_sizes = []
+#         total_energies = []
+#         for function_energy in function_energies:
+#             args_sizes.extend(function_energy.total_args_size)
+#             total_energies.extend(function_energy.total_normalised)
 
-        plt.figure(f"{hardware_label}_total_vs_data_size")
-        # allow the option to not set a title for graphs included in a report
-        if title:
-            plt.title(f"Total normalised energy consumption vs args size ({hardware_label})", fontsize=16)
-        plt.xlabel("Total args size (MB)")
-        plt.ylabel("Normalised energy consumption (Joules)")
-        plt.scatter(args_sizes, total_energies)
+#         plt.figure(f"{hardware_label}_total_vs_data_size")
+#         # allow the option to not set a title for graphs included in a report
+#         if title:
+#             plt.title(f"Total normalised energy consumption vs args size ({hardware_label})", fontsize=16)
+#         plt.xlabel("Total args size (MB)")
+#         plt.ylabel("Normalised energy consumption (Joules)")
+#         plt.scatter(args_sizes, total_energies)
 
-    plt.show()
+#     plt.show()
 
 
 def plot_total_energy_vs_data_size_boxplot(project_energy: ProjectEnergyData, title=True):
@@ -413,7 +458,110 @@ def plot_total_energy_vs_data_size_boxplot(project_energy: ProjectEnergyData, ti
         plt.show()
 
     
+def plot_total_energy_vs_data_size_scatter(project_energy: ProjectEnergyData, title=True):
+    """
+    Takes a ProjectEnergyData object from any kind of experiment (typically data-size),
+    and plots the total normalised energy consumption versus total args size as a boxplot.
+    It draws a box of the different data points for every datasize.
+    Creates 3 plots, one for each hardware device.
+    """
+    plt.figure(f"total_vs_data_size")
+        # allow the option to not set a title for graphs included in a report
+    if title:
+        plt.title(f"Energy consumption vs args size", fontsize=16)
+    plt.xlabel("Total args size (MB)")
+    plt.ylabel("Energy consumption (Joules)")
+    for hardware in ["cpu", "ram", "gpu"]:
+        hardware_label = hardware.upper()
+        # function_energies = project_energy.cpu
+        function_energies = getattr(project_energy, hardware)
+        total_energies = []
+        args_sizes = []
+        for function_energy in function_energies:
+            assert len(set(function_energy.total_args_size)) == 1, "The argument size of the same function should be the same across experiments."
+            args_sizes.append(int(function_energy.total_args_size[0]))
+            total_energies.append(function_energy.mean_total_normalised)
 
+        plt.scatter(args_sizes, total_energies,label=hardware_label)
+    plt.legend()
+    plt.savefig(f'./rq2_analysis/plot_total_energy_vs_data_size_scatterplot.png')
+    plt.show()
+
+def plot_total_energy_vs_data_size_scatter_combined(project_energy_list, title=True):
+    """
+    Takes a ProjectEnergyData object list from any kind of experiment (typically data-size),
+    and plots the total normalised energy consumption versus total args size as a boxplot.
+    It draws a box of the different data points for every datasize.
+    Creates 3 plots, one for each hardware device.
+    """
+    plt.figure(f"total_vs_data_size")
+        # allow the option to not set a title for graphs included in a report
+    if title:
+        plt.title(f"Energy consumption vs args size", fontsize=16)
+    plt.xlabel("Total args size (MB)")
+    plt.ylabel("Net Energy consumption (Joules)")
+    for hardware in ["cpu", "ram", "gpu"]:
+        hardware_label = hardware.upper()
+        # function_energies = project_energy.cpu
+
+        for i, project_energy in enumerate(project_energy_list):
+            function_energies = getattr(project_energy, hardware)
+            total_energies = []
+            args_sizes = []
+            for function_energy in function_energies:
+                # assert len(set(function_energy.total_args_size)) == 1, "The argument size of the same function should be the same across experiments."
+                args_sizes.append(int(function_energy.total_args_size[0]))
+                total_energies.append(function_energy.mean_total_normalised)
+
+            plt.scatter(args_sizes, total_energies,label=hardware_label+"_P"+str(i))
+    plt.legend()
+    plt.savefig(f'./rq2_analysis/plot_total_energy_vs_data_size_scatterplot_combined.png')
+    plt.show()
+
+def plot_total_energy_vs_data_size_scatter_combined(project_energy_list, title=True):
+    """
+    Takes a ProjectEnergyData object list from any kind of experiment (typically data-size),
+    and plots the total normalised energy consumption versus total args size as a boxplot.
+    It draws a box of the different data points for every datasize.
+    Creates 3 plots, one for each hardware device.
+    """
+    plt.figure(f"total_vs_data_size")
+        # allow the option to not set a title for graphs included in a report
+    if title:
+        plt.title(f"Energy consumption vs args size", fontsize=16)
+    plt.xlabel("Total args size (MB)")
+    plt.ylabel("Net Energy consumption (Joules)")
+    for hardware in ["cpu", "ram", "gpu"]:
+        hardware_label = hardware.upper()
+        # function_energies = project_energy.cpu
+        total_energies = []
+        args_sizes = []
+        for i, project_energy in enumerate(project_energy_list):
+            function_energies = getattr(project_energy, hardware)
+            print("function_energies:---->",function_energies)
+            for function_name, function_energy in function_energies.items():
+                print("function_name:>>>>>>>",function_name)
+                assert len(set(function_energy.total_args_size)) == 1, "The argument size of the same function should be the same across experiments."
+                args_sizes.append(int(function_energy.total_args_size[0]))
+                total_energies.append(function_energy.mean_total_normalised)
+       
+        # Convert energy consumption values to a common scale (Min-Max normalization)
+        # total_energies = np.array(total_energies)
+        # normalized_total_energies = (total_energies - np.min(total_energies)) / (np.max(total_energies) - np.min(total_energies))
+        # normalized_total_energies = (total_energies - np.mean(total_energies)) / np.std(total_energies)
+
+        plt.scatter(args_sizes, total_energies,label=hardware_label, alpha=0.4)
+    plt.legend()
+    def format_y_axis(value, _):
+        if value >= 1000:
+            return f"{value/1000:.0f}K"
+        return value
+
+    # Apply the custom formatter to the y-axis
+    plt.gca().yaxis.set_major_formatter(ticker.FuncFormatter(format_y_axis))
+    plt.tight_layout()
+    plt.savefig(f'./rq2_analysis/plot_total_energy_vs_data_size_scatterplot_combined.png')
+    plt.show()
 
 def plot_total_unnormalised_energy_vs_data_size_boxplot(project_energy: ProjectEnergyData, title=True):
     """
