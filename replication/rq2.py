@@ -654,6 +654,7 @@ def run_estimator_keras_model_to_estimator_train_datasize_experiment():
 def run_keras_regression_sequential_predict_datasize_experiment():
     # (1) create prepare_experiment function
     def prepare_experiment(fraction: float):
+        #### begin copied code (from keras/regression)
         import matplotlib.pyplot as plt
         import numpy as np
         import pandas as pd
@@ -846,6 +847,90 @@ def run_keras_regression_sequential_predict_datasize_experiment():
     run_experiments(experiment, count=10, start=1)
 
 
+# This is for energy consumption of tensorflow.keras.layers.Normalization.adapt() api in keras/regression
+def run_keras_regression_normalization_adapt_datasize_experiment():
+    # (1) create prepare_experiment function
+    def prepare_experiment(fraction: float):
+        #### begin copied code (from keras/regression)
+        import matplotlib.pyplot as plt
+        import numpy as np
+        import pandas as pd
+        import seaborn as sns
+
+        np.set_printoptions(precision=3, suppress=True)
+        import tensorflow as tf
+
+        from tensorflow import keras
+        from tensorflow.keras import layers
+
+        print(tf.__version__)
+        url = 'http://archive.ics.uci.edu/ml/machine-learning-databases/auto-mpg/auto-mpg.data'
+        column_names = ['MPG', 'Cylinders', 'Displacement', 'Horsepower', 'Weight',
+                        'Acceleration', 'Model Year', 'Origin']
+
+        raw_dataset = pd.read_csv(url, names=column_names,
+                                na_values='?', comment='\t',
+                                sep=' ', skipinitialspace=True)
+        dataset = raw_dataset.copy()
+        dataset.tail()
+        dataset.isna().sum()
+        dataset = dataset.dropna()
+        dataset['Origin'] = dataset['Origin'].map({1: 'USA', 2: 'Europe', 3: 'Japan'})
+        dataset = pd.get_dummies(dataset, columns=['Origin'], prefix='', prefix_sep='')
+        dataset.tail()
+        train_dataset = dataset.sample(frac=0.8, random_state=0)
+        test_dataset = dataset.drop(train_dataset.index)
+        sns.pairplot(train_dataset[['MPG', 'Cylinders', 'Displacement', 'Weight']], diag_kind='kde')
+        train_dataset.describe().transpose()
+        train_features = train_dataset.copy()
+        test_features = test_dataset.copy()
+
+        train_labels = train_features.pop('MPG')
+        test_labels = test_features.pop('MPG')
+        train_dataset.describe().transpose()[['mean', 'std']]
+        normalizer = tf.keras.layers.Normalization(axis=-1)
+        
+        ## commented out relevant method call
+        # normalizer.adapt(np.array(train_features))
+        ## end comment
+
+        #### end copied code
+
+        # (1b) check the dataset (https://archive.ics.uci.edu/dataset/9/auto+mpg)
+        assert train_features.shape == (314, 9)
+        assert test_features.shape == (78, 9)
+        assert train_labels.shape == (314,)
+        assert test_labels.shape == (78,)
+
+        # (1c) build function details for function
+        original_args = [np.array(train_features)]
+        function_kwargs = None
+        method_object = normalizer
+
+        # (1d) vary the data size
+        # E.g. if an arg in vary_args has shape (100,10,10) and fraction=0.5, return an array of shape (50,10,10).
+        # So this method only scales the first dimension of the array by the given fraction.
+        function_args = [arg[:int(arg.shape[0]*fraction)] for arg in original_args]
+
+        return function_args, function_kwargs, method_object
+    
+    # (2) create function details
+    function_to_run = "obj.adapt(*args)"
+    function_signature = "tensorflow.keras.layers.Normalization.adapt()"
+
+    # (3) Initialise and run the experiment
+    experiment = DataSizeExperiment(
+        project = "keras/regression_adapt",
+        experiment_dir = EXPERIMENT_DIR,
+        n_runs = 10,
+        prepare_experiment = prepare_experiment,
+        function_to_run = function_to_run,
+        function_signature = function_signature
+    )
+
+    run_experiments(experiment, count=10, start=1)
+
+
 if __name__ == "__main__":
     ### commented code has already been run, uncomment to replicate
     
@@ -857,5 +942,6 @@ if __name__ == "__main__":
     # run_keras_classification_sequential_fit_datasize_experiment()
     # run_keras_classification_sequential_evaluate_datasize_experiment()
     # run_estimator_keras_model_to_estimator_train_datasize_experiment()
-    run_keras_regression_sequential_predict_datasize_experiment()
+    # run_keras_regression_sequential_predict_datasize_experiment()
+    run_keras_regression_normalization_adapt_datasize_experiment()
     pass
