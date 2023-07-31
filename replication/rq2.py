@@ -80,6 +80,7 @@ def run_images_cnn_model_fit_datasize_experiment():
 
     run_experiments(experiment, count=10, start=1)
 
+
 # This is for energy consumption of tensorflow.keras.models.Model.fit() api in generative/autoencoder
 def run_generative_autoencoder_fit_datasize_experiment():
     
@@ -165,6 +166,7 @@ def run_generative_autoencoder_fit_datasize_experiment():
 
     run_experiments(experiment, count=10, start=1)
 
+
 # This is for energy consumption of tensorflow.keras.models.Sequential.evaluate() api in images/cnn
 def run_images_cnn_model_evaluate_datasize_experiment():
     # (1) create prepare_experiment function
@@ -239,6 +241,7 @@ def run_images_cnn_model_evaluate_datasize_experiment():
 
     run_experiments(experiment, count=10, start=1)
 
+
 # This is for energy consumption of tensorflow.keras.models.Sequential.fit() api in quickstart/beginner
 def run_quickstart_beginner_model_fit_datasize_experiment():
     # (1) create prepare_experiment function
@@ -309,6 +312,7 @@ def run_quickstart_beginner_model_fit_datasize_experiment():
 
     run_experiments(experiment, count=10, start=1)
 
+
 # This is for energy consumption of tensorflow.data.Dataset.from_tensor_slices api in load_data/numpy
 def run_loaddata_numpy_Dataset_from_tensor_slices_datasize_experiment():
     
@@ -368,6 +372,7 @@ def run_loaddata_numpy_Dataset_from_tensor_slices_datasize_experiment():
     )
 
     run_experiments(experiment, count=10, start=1)
+
 
 # This is for energy consumption of tensorflow.keras.Sequential.fit() api in keras/classification
 def run_keras_classification_sequential_fit_datasize_experiment():
@@ -645,6 +650,202 @@ def run_estimator_keras_model_to_estimator_train_datasize_experiment():
     run_experiments(experiment, count=10, start=1)
 
 
+# This is for energy consumption of tensorflow.keras.Sequential.predict() api in keras/regression
+def run_keras_regression_sequential_predict_datasize_experiment():
+    # (1) create prepare_experiment function
+    def prepare_experiment(fraction: float):
+        import matplotlib.pyplot as plt
+        import numpy as np
+        import pandas as pd
+        import seaborn as sns
+
+        np.set_printoptions(precision=3, suppress=True)
+        import tensorflow as tf
+
+        from tensorflow import keras
+        from tensorflow.keras import layers
+
+        print(tf.__version__)
+        url = 'http://archive.ics.uci.edu/ml/machine-learning-databases/auto-mpg/auto-mpg.data'
+        column_names = ['MPG', 'Cylinders', 'Displacement', 'Horsepower', 'Weight',
+                        'Acceleration', 'Model Year', 'Origin']
+
+        raw_dataset = pd.read_csv(url, names=column_names,
+                                na_values='?', comment='\t',
+                                sep=' ', skipinitialspace=True)
+        dataset = raw_dataset.copy()
+        dataset.tail()
+        dataset.isna().sum()
+        dataset = dataset.dropna()
+        dataset['Origin'] = dataset['Origin'].map({1: 'USA', 2: 'Europe', 3: 'Japan'})
+        dataset = pd.get_dummies(dataset, columns=['Origin'], prefix='', prefix_sep='')
+        dataset.tail()
+        train_dataset = dataset.sample(frac=0.8, random_state=0)
+        test_dataset = dataset.drop(train_dataset.index)
+        sns.pairplot(train_dataset[['MPG', 'Cylinders', 'Displacement', 'Weight']], diag_kind='kde')
+        train_dataset.describe().transpose()
+        train_features = train_dataset.copy()
+        test_features = test_dataset.copy()
+
+        train_labels = train_features.pop('MPG')
+        test_labels = test_features.pop('MPG')
+        train_dataset.describe().transpose()[['mean', 'std']]
+        normalizer = tf.keras.layers.Normalization(axis=-1)
+        normalizer.adapt(np.array(train_features))
+        ## commented out irrelevant code
+        # print(normalizer.mean.numpy())
+        # first = np.array(train_features[:1])
+
+        # with np.printoptions(precision=2, suppress=True):
+        #     print('First example:', first)
+        #     print()
+        #     print('Normalized:', normalizer(first).numpy())
+        # horsepower = np.array(train_features['Horsepower'])
+
+        # horsepower_normalizer = layers.Normalization(input_shape=[1,], axis=None)
+        # horsepower_normalizer.adapt(horsepower)
+        # horsepower_model = tf.keras.Sequential([
+        #     horsepower_normalizer,
+        #     layers.Dense(units=1)
+        # ])
+
+        # horsepower_model.summary()
+        # horsepower_model.predict(horsepower[:10])
+        # horsepower_model.compile(
+        #     optimizer=tf.keras.optimizers.Adam(learning_rate=0.1),
+        #     loss='mean_absolute_error')
+        # history = horsepower_model.fit(
+        #     train_features['Horsepower'],
+        #     train_labels,
+        #     epochs=100,
+        #     verbose=0,
+        #     validation_split = 0.2)
+        # hist = pd.DataFrame(history.history)
+        # hist['epoch'] = history.epoch
+        # hist.tail()
+        # def plot_loss(history):
+        #     plt.plot(history.history['loss'], label='loss')
+        #     plt.plot(history.history['val_loss'], label='val_loss')
+        #     plt.ylim([0, 10])
+        #     plt.xlabel('Epoch')
+        #     plt.ylabel('Error [MPG]')
+        #     plt.legend()
+        #     plt.grid(True)
+        # plot_loss(history)
+        test_results = {}
+
+        # test_results['horsepower_model'] = horsepower_model.evaluate(
+        #     test_features['Horsepower'],
+        #     test_labels, verbose=0)
+        # x = tf.linspace(0.0, 250, 251)
+        # y = horsepower_model.predict(x)
+        # def plot_horsepower(x, y):
+        #     plt.scatter(train_features['Horsepower'], train_labels, label='Data')
+        #     plt.plot(x, y, color='k', label='Predictions')
+        #     plt.xlabel('Horsepower')
+        #     plt.ylabel('MPG')
+        #     plt.legend()
+        # plot_horsepower(x, y)
+        # linear_model = tf.keras.Sequential([
+        #     normalizer,
+        #     layers.Dense(units=1)
+        # ])
+        # linear_model.predict(train_features[:10])
+        # linear_model.layers[1].kernel
+        # linear_model.compile(
+        #     optimizer=tf.keras.optimizers.Adam(learning_rate=0.1),
+        #     loss='mean_absolute_error')
+        # history = linear_model.fit(
+        #     train_features,
+        #     train_labels,
+        #     epochs=100,
+        #     verbose=0,
+        #     validation_split = 0.2)
+        # plot_loss(history)
+        # test_results['linear_model'] = linear_model.evaluate(
+        #     test_features, test_labels, verbose=0)
+        ## end comment
+        def build_and_compile_model(norm):
+            model = keras.Sequential([
+                norm,
+                layers.Dense(64, activation='relu'),
+                layers.Dense(64, activation='relu'),
+                layers.Dense(1)
+            ])
+
+            model.compile(loss='mean_absolute_error',
+                            optimizer=tf.keras.optimizers.Adam(0.001))
+            return model
+        ## commented out irrelevant code
+        # dnn_horsepower_model = build_and_compile_model(horsepower_normalizer)
+        # dnn_horsepower_model.summary()
+        # history = dnn_horsepower_model.fit(
+        #     train_features['Horsepower'],
+        #     train_labels,
+        #     validation_split=0.2,
+        #     verbose=0, epochs=100)
+        # plot_loss(history)
+        # x = tf.linspace(0.0, 250, 251)
+        # y = dnn_horsepower_model.predict(x)
+        # plot_horsepower(x, y)
+        # test_results['dnn_horsepower_model'] = dnn_horsepower_model.evaluate(
+        #     test_features['Horsepower'], test_labels,
+        #     verbose=0)
+        ## end comment
+        dnn_model = build_and_compile_model(normalizer)
+        dnn_model.summary()
+        history = dnn_model.fit(
+            train_features,
+            train_labels,
+            validation_split=0.2,
+            verbose=0, epochs=100)
+        ## commented out irrelevant data visualisation code
+        # plot_loss(history)
+        ## end comment
+        test_results['dnn_model'] = dnn_model.evaluate(test_features, test_labels, verbose=0)
+        pd.DataFrame(test_results, index=['Mean absolute error [MPG]']).T
+        
+        ## commented out relevant method call
+        # test_predictions = dnn_model.predict(test_features).flatten()
+        ## end comment
+
+        #### end copied code
+
+        # (1b) check the dataset (https://archive.ics.uci.edu/dataset/9/auto+mpg)
+        assert train_features.shape == (314, 9)
+        assert test_features.shape == (78, 9)
+        assert train_labels.shape == (314,)
+        assert test_labels.shape == (78,)
+
+        # (1c) build function details for function
+        original_args = [test_features]
+        function_kwargs = None
+        method_object = dnn_model
+
+        # (1d) vary the data size
+        # E.g. if an arg in vary_args has shape (100,10,10) and fraction=0.5, return an array of shape (50,10,10).
+        # So this method only scales the first dimension of the array by the given fraction.
+        function_args = [arg[:int(arg.shape[0]*fraction)] for arg in original_args]
+
+        return function_args, function_kwargs, method_object
+    
+    # (2) create function details
+    function_to_run = "obj.predict(*args)"
+    function_signature = "tensorflow.keras.Sequential.predict()"
+
+    # (3) Initialise and run the experiment
+    experiment = DataSizeExperiment(
+        project = "keras/regression_predict",
+        experiment_dir = EXPERIMENT_DIR,
+        n_runs = 10,
+        prepare_experiment = prepare_experiment,
+        function_to_run = function_to_run,
+        function_signature = function_signature
+    )
+
+    run_experiments(experiment, count=10, start=1)
+
+
 if __name__ == "__main__":
     ### commented code has already been run, uncomment to replicate
     
@@ -655,5 +856,6 @@ if __name__ == "__main__":
     # run_loaddata_numpy_Dataset_from_tensor_slices_datasize_experiment()
     # run_keras_classification_sequential_fit_datasize_experiment()
     # run_keras_classification_sequential_evaluate_datasize_experiment()
-    run_estimator_keras_model_to_estimator_train_datasize_experiment()
+    # run_estimator_keras_model_to_estimator_train_datasize_experiment()
+    run_keras_regression_sequential_predict_datasize_experiment()
     pass
