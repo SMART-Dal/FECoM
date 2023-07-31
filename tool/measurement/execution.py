@@ -6,6 +6,7 @@ import time
 import pickle
 import atexit
 import json
+import psutil
 from pathlib import Path
 from datetime import datetime
 
@@ -15,7 +16,7 @@ from tool.measurement.start_measurement import start_sensors, quit_process, unre
 from tool.measurement.stable_check import run_check_loop, machine_is_stable_check, temperature_is_low_check
 from tool.measurement.measurement_parse import get_current_times, get_energy_data, get_cpu_temperature_data
 
-from tool.measurement.measurement_config import DEBUG, SKIP_CALLS_FILE_NAME
+from tool.measurement.measurement_config import DEBUG, SKIP_CALLS_FILE_NAME, MEASUREMENT_MODULE_NAME
 # stable state constants
 from tool.measurement.measurement_config import MAX_WAIT_S, WAIT_AFTER_RUN_S, CPU_STD_TO_MEAN, RAM_STD_TO_MEAN, GPU_STD_TO_MEAN, CPU_MAXIMUM_TEMPERATURE, GPU_MAXIMUM_TEMPERATURE
 # stable state settings
@@ -30,10 +31,24 @@ def print_exec(message: str):
     custom_print("execution", message)
 
 
+
+def is_measurement_running():
+    for process in psutil.process_iter(attrs=['name', 'cmdline']):
+        # Checking if the process name is python or python3
+        if 'python' in process.info['name']:
+            # Checking the command line arguments to see if the measurement module name is present
+            if any(MEASUREMENT_MODULE_NAME in part for part in process.info['cmdline']):
+                return True
+    return False
+
+
 def prepare_state():
     """
     Ensure the machine is in the right state before starting execution
     """
+    # (0) check that the measurement script is running
+    if not is_measurement_running():
+        raise RuntimeError(f"Please start the measurement program before running experiments. If you are running the measurement program, please check that the module name ({MEASUREMENT_MODULE_NAME}) is correct in the measurement_config.py file.")
 
     # (1) start the cpu temperature measurement process
     sensors = start_sensors(print_exec)
