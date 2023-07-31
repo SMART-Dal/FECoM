@@ -56,7 +56,8 @@ def init_project_energy_data(project: str, experiment_kind: ExperimentKinds, fir
                 if not energy_data.has_energy_data:
                     project_energy_data.no_energy_functions.add(function_name)
                     continue
-            elif function_name in dl.skip_calls:
+            # skip_calls can be None, so only check if the function is in this list if skip_calls is not None (checked in previous if statement)
+            elif function_name in dl.skip_calls or not energy_data.has_energy_data: # 2nd condition: there are cases where a function is not in skip_calls but still has no energy data
                 # skip a function if it is in the skip_calls file, and keep track of it
                 project_energy_data.no_energy_functions.add(function_name)
                 continue

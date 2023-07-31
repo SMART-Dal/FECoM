@@ -6,7 +6,7 @@ their data can be analysed and plotted.
 # Executed project-level and method-level experiments for RQ1,
 # found in energy-dataset/project-level and energy-dataset/method-level.
 EXECUTED_RQ1_EXPERIMENTS = [
-    # "audio/simple_audio", # missing data for some methods in some experiments
+    "audio/simple_audio", # using skip_calls
     "audio/transfer_learning_audio",
     "distribute/custom_training", # using skip_calls
     "estimator/keras_model_to_estimator",
@@ -31,9 +31,11 @@ EXECUTED_RQ1_EXPERIMENTS = [
 # Executed data-size experiments for RQ2,
 # found in energy-dataset/data-size.
 EXECUTED_RQ2_EXPERIMENTS = [
+    "estimator/keras_model_to_estimator_train",
     "generative/autoencoder",
     "images/cnn_evaluate",
     "images/cnn_fit",
+    "keras/classification_evaluate",
     "keras/classification_fit",
     "load_data/numpy",
     "quickstart/beginner_fit"
