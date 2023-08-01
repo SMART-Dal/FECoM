@@ -16,7 +16,7 @@ import sys
 
 from fecom.measurement.idle_stats import calc_ratios_from_data
 from fecom.measurement.measurement_config import MEASUREMENT_INTERVAL_MS, CPU_FILE_SEPARATOR, WAIT_UNTIL_PRINTING_STATS_S
-from fecom.measurement.measurement_config import NVIDIA_SMI_FILE, PERF_FILE, START_TIMES_FILE, EXECUTION_LOG_FILE, CPU_TEMPERATURE_MODULE
+from fecom.measurement.measurement_config import ENERGY_DATA_DIR, NVIDIA_SMI_FILE, PERF_FILE, START_TIMES_FILE, EXECUTION_LOG_FILE, CPU_TEMPERATURE_MODULE
 from fecom.measurement.measurement_config import CHECK_LAST_N_POINTS, CPU_STD_TO_MEAN, RAM_STD_TO_MEAN, GPU_STD_TO_MEAN, STABLE_CHECK_TOLERANCE
 from fecom.measurement.utilities import custom_print
 
@@ -163,6 +163,9 @@ def print_stdev_mean_ratios(wait_until_printing_stats: int):
 if __name__ == "__main__":
     print_experiment_settings()
     atexit.register(print_main, "Successfully terminated the measurement application")
+
+    # (0) Create the "out" directory if it doesn't exist
+    ENERGY_DATA_DIR.mkdir(parents=True, exist_ok=True)
     
     # (1) Start the energy measurement programs (perf stat & nvidia-smi).
     # Keep a reference to perf stat & nvidia-smi such that they can be terminated by the program.

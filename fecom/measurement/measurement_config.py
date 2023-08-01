@@ -48,13 +48,14 @@ MEASUREMENT_INTERVAL_MS = 500
 # having the measurement interval in seconds is useful for converting power to energy and vice versa
 MEASUREMENT_INTERVAL_S = MEASUREMENT_INTERVAL_MS / 1000
 # path to find energy data relative to the measurement package
-energy_data_dir = PROJECT_PATH / "fecom/measurement/out" # local execution
-PERF_FILE = energy_data_dir/"perf.txt"
-NVIDIA_SMI_FILE = energy_data_dir/"nvidia_smi.txt"
+ENERGY_DATA_DIR = PROJECT_PATH / "fecom/measurement/out"
+# store perf & nvidia-smi output here
+PERF_FILE = ENERGY_DATA_DIR/"perf.txt"
+NVIDIA_SMI_FILE = ENERGY_DATA_DIR/"nvidia_smi.txt"
 # store start times here
-START_TIMES_FILE = energy_data_dir/"start_times.txt"
+START_TIMES_FILE = ENERGY_DATA_DIR/"start_times.txt"
 # keep track of executed functions in this file
-EXECUTION_LOG_FILE = energy_data_dir/"execution_log.txt"
+EXECUTION_LOG_FILE = ENERGY_DATA_DIR/"execution_log.txt"
 
 # seconds to wait until printing stability stats after starting energy measurement processes
 WAIT_UNTIL_PRINTING_STATS_S = 120
@@ -71,7 +72,7 @@ CPU_TEMPERATURE_MODULE = PROJECT_PATH / "fecom/measurement/cpu_temperature.py"
 # the actual interval will be a few milliseconds greater, due to processing time
 CPU_TEMPERATURE_INTERVAL_S = 1
 # store CPU temperatures in this file, populated by cpu_temperature.py
-CPU_TEMPERATURE_FILE = energy_data_dir/"cpu_temperature.txt"
+CPU_TEMPERATURE_FILE = ENERGY_DATA_DIR/"cpu_temperature.txt"
 # the maximum average temperature in degrees Celsius that we allow the CPU & GPU to be before executing a method (to determine stable state)
 CPU_MAXIMUM_TEMPERATURE = 55 # see replication package for how we arrived at this value
 GPU_MAXIMUM_TEMPERATURE = 40
