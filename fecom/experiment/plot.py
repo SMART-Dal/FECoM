@@ -535,11 +535,9 @@ def plot_total_energy_vs_data_size_scatter_combined(project_energy_list, title=T
         # function_energies = project_energy.cpu
         total_energies = []
         args_sizes = []
-        for i, project_energy in enumerate(project_energy_list):
+        for project_energy in project_energy_list:
             function_energies = getattr(project_energy, hardware)
-            print("function_energies:---->",function_energies)
-            for function_name, function_energy in function_energies.items():
-                print("function_name:>>>>>>>",function_name)
+            for function_energy in function_energies.values():
                 assert len(set(function_energy.total_args_size)) == 1, "The argument size of the same function should be the same across experiments."
                 args_sizes.append(int(function_energy.total_args_size[0]))
                 total_energies.append(function_energy.mean_total_normalised)

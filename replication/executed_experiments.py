@@ -38,7 +38,7 @@ EXECUTED_RQ2_EXPERIMENTS = [
     "keras/classification_evaluate",
     "keras/classification_fit",
     "keras/regression_adapt",
-    "keras/regression_predict"
+    "keras/regression_predict",
     "load_data/numpy",
     "quickstart/beginner_fit"
 ]
