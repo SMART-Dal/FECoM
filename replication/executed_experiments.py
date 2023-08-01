@@ -16,6 +16,7 @@ EXECUTED_RQ1_EXPERIMENTS = [
     "generative/autoencoder",
     "generative/cvae", # using skip_calls
     "images/cnn",
+    "images/classification",
     "keras/classification",
     "keras/overfit_and_underfit",
     "keras/regression",

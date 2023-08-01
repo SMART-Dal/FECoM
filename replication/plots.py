@@ -92,7 +92,7 @@ def rq2_plot_data_size_vs_energy_scatter_combined():
     project_data = []
     for project_name in EXECUTED_RQ2_EXPERIMENTS:
         project_data.append(init_project_energy_data(project_name, ExperimentKinds.DATA_SIZE, first_experiment=1, last_experiment=10))
-    plot_total_energy_vs_data_size_scatter_combined(project_data, title=True)
+    plot_total_energy_vs_data_size_scatter_combined(project_data, title=False)
 
 def rq2_plot_data_size_vs_unnormalised_energy():
     project_name = "images/cnn_fit"

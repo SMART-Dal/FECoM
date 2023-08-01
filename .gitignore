@@ -29,7 +29,7 @@ ENV/*
 patched-code/*
 # Repositories/*
 
-# measurement
+# server
 *.pth
 fecom/measurement/out/*
 
@@ -40,3 +40,37 @@ build
 fecom/measurement/flickr8k/*
 fecom/measurement/datasets/*
 fecom/measurement/test_data/*
+data/code-dataset/Patched-Repositories/audio/datasets/*
+replication/datasets/*
+replication/dogs_and_cats_yamnet/*
+data/code-dataset/Patched-Repositories/audio/test_data/*
+data/code-dataset/Patched-Repositories/audio/dogs_and_cats_yamnet/*
+replication/test_data/*
+data/code-dataset/Patched-Repositories/load_data/UCF101_subset
+data/code-dataset/Patched-Repositories/generative/image_at_epoch_*.png
+data/code-dataset/Patched-Repositories/keras/dnn_model
+data/code-dataset/Patched-Repositories/load_data/images.tfrecords
+data/code-dataset/Patched-Repositories/load_data/test.tfrecord
+data/code-dataset/Patched-Repositories/generative/cvae.gif
+replication/image_at_epoch_0000.png
+replication/test.tfrecord
+replication/dnn_model
+replication/saved_model
+replication/training_2
+replication/training_1
+data/code-dataset/Patched-Repositories/keras/training_2
+data/code-dataset/Patched-Repositories/keras/training_1
+replication/checkpoints
+replication/my_model.h5
+data/code-dataset/Patched-Repositories/keras/saved_model
+data/code-dataset/Patched-Repositories/keras/checkpoints/my_checkpoint.index
+data/code-dataset/Patched-Repositories/keras/my_model.h5
+data/code-dataset/Patched-Repositories/keras/checkpoints/checkpoint
+data/code-dataset/Patched-Repositories/keras/checkpoints/my_checkpoint.data-00000-of-00001
+data/code-dataset/Patched-Repositories/keras/aclImdb
+replication/image_at_epoch_*
+replication/cvae.gif
+replication/training_checkpoints
+data/code-dataset/Patched-Repositories/distribute/training_checkpoints
+replication/images.tfrecords
+replication/model.tflite

@@ -486,6 +486,39 @@ def plot_total_energy_vs_data_size_scatter(project_energy: ProjectEnergyData, ti
     plt.savefig(f'./rq2_analysis/plot_total_energy_vs_data_size_scatterplot.png')
     plt.show()
 
+# def plot_total_energy_vs_data_size_scatter_combined(project_energy_list, title=True):
+#     """
+#     Takes a ProjectEnergyData object list from any kind of experiment (typically data-size),
+#     and plots the total normalised energy consumption versus total args size as a boxplot.
+#     It draws a box of the different data points for every datasize.
+#     Creates 3 plots, one for each hardware device.
+#     """
+#     plt.figure(f"total_vs_data_size")
+#         # allow the option to not set a title for graphs included in a report
+#     if title:
+#         plt.title(f"Energy consumption vs args size", fontsize=16)
+#     plt.xlabel("Total args size (MB)",fontsize=22)
+#     plt.ylabel("Net Energy consumption (Joules)",fontsize=22)
+#     for hardware in ["cpu", "ram", "gpu"]:
+#         hardware_label = hardware.upper()
+#         # function_energies = project_energy.cpu
+
+#         for i, project_energy in enumerate(project_energy_list):
+#             function_energies = getattr(project_energy, hardware)
+#             total_energies = []
+#             args_sizes = []
+#             for function_name, function_energy in function_energies.items():
+#                 # assert len(set(function_energy.total_args_size)) == 1, "The argument size of the same function should be the same across experiments."
+#                 args_sizes.append(int(function_energy.total_args_size[0]))
+#                 total_energies.append(function_energy.mean_total_normalised)
+
+#             plt.scatter(args_sizes, total_energies,label=hardware_label+"_P"+str(i))
+#     plt.legend(fontsize=16)
+#     plt.xticks(fontsize=16)
+#     plt.yticks(fontsize=16)
+#     plt.savefig(f'./rq2_analysis/plot_total_energy_vs_data_size_scatterplot_combined.png')
+#     plt.show()
+
 def plot_total_energy_vs_data_size_scatter_combined(project_energy_list, title=True):
     """
     Takes a ProjectEnergyData object list from any kind of experiment (typically data-size),
@@ -497,39 +530,8 @@ def plot_total_energy_vs_data_size_scatter_combined(project_energy_list, title=T
         # allow the option to not set a title for graphs included in a report
     if title:
         plt.title(f"Energy consumption vs args size", fontsize=16)
-    plt.xlabel("Total args size (MB)")
-    plt.ylabel("Net Energy consumption (Joules)")
-    for hardware in ["cpu", "ram", "gpu"]:
-        hardware_label = hardware.upper()
-        # function_energies = project_energy.cpu
-
-        for i, project_energy in enumerate(project_energy_list):
-            function_energies = getattr(project_energy, hardware)
-            total_energies = []
-            args_sizes = []
-            for function_energy in function_energies:
-                # assert len(set(function_energy.total_args_size)) == 1, "The argument size of the same function should be the same across experiments."
-                args_sizes.append(int(function_energy.total_args_size[0]))
-                total_energies.append(function_energy.mean_total_normalised)
-
-            plt.scatter(args_sizes, total_energies,label=hardware_label+"_P"+str(i))
-    plt.legend()
-    plt.savefig(f'./rq2_analysis/plot_total_energy_vs_data_size_scatterplot_combined.png')
-    plt.show()
-
-def plot_total_energy_vs_data_size_scatter_combined(project_energy_list, title=True):
-    """
-    Takes a ProjectEnergyData object list from any kind of experiment (typically data-size),
-    and plots the total normalised energy consumption versus total args size as a boxplot.
-    It draws a box of the different data points for every datasize.
-    Creates 3 plots, one for each hardware device.
-    """
-    plt.figure(f"total_vs_data_size")
-        # allow the option to not set a title for graphs included in a report
-    if title:
-        plt.title(f"Energy consumption vs args size", fontsize=16)
-    plt.xlabel("Total args size (MB)")
-    plt.ylabel("Net Energy consumption (Joules)")
+    plt.xlabel("Total args size (MB)",fontsize=16)
+    plt.ylabel("Net Energy consumption (Joules)",fontsize=16)
     for hardware in ["cpu", "ram", "gpu"]:
         hardware_label = hardware.upper()
         # function_energies = project_energy.cpu
@@ -548,7 +550,10 @@ def plot_total_energy_vs_data_size_scatter_combined(project_energy_list, title=T
         # normalized_total_energies = (total_energies - np.mean(total_energies)) / np.std(total_energies)
 
         plt.scatter(args_sizes, total_energies,label=hardware_label, alpha=0.4)
-    plt.legend()
+    # plt.legend()
+    plt.legend(fontsize=14)
+    plt.xticks(fontsize=14)
+    plt.yticks(fontsize=14)
     def format_y_axis(value, _):
         if value >= 1000:
             return f"{value/1000:.0f}K"
