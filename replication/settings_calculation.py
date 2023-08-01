@@ -3,9 +3,9 @@ Methods for calculating some of the settings.
 """
 from pathlib import Path
 from matplotlib import pyplot as plt
-from tool.measurement.idle_stats import create_combined_df, calc_stats_for_split_data, calc_stdev_mean_ratios
-from tool.measurement.measurement_parse import parse_cpu_temperature
-from tool.measurement.measurement_config import CHECK_LAST_N_POINTS
+from fecom.measurement.idle_stats import create_combined_df, calc_stats_for_split_data, calc_stdev_mean_ratios
+from fecom.measurement.measurement_parse import parse_cpu_temperature
+from fecom.measurement.measurement_config import CHECK_LAST_N_POINTS
 
 
 IDLE_DATA_DIR = Path("../data/other/settings/idle_data/")

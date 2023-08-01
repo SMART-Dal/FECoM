@@ -4,7 +4,7 @@ This has to be run once before starting to run the experiments.
 """
 
 import os
-from tool.patching.patching_config import UNPATCHED_CODE_DIR, EXPERIMENT_DIR
+from fecom.patching.patching_config import UNPATCHED_CODE_DIR, EXPERIMENT_DIR
 from executed_experiments import EXECUTED_RQ2_EXPERIMENTS
 
 def create_experiment_json_files(folder_path):

@@ -1,4 +1,4 @@
-from tool.experiment.experiments import Experiment
+from fecom.experiment.experiments import Experiment
 
 def run_experiments(experiment: Experiment, count: int, start: int = 1): # experiments start with 1
     """

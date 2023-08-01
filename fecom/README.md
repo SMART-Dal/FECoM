@@ -1,4 +1,4 @@
-# Tool package
+# FECoM package
 Configure all settings in `/measurement/measurement_config.py` and `/patching/patching_config.py`. Otherwise, you can find
 - experiment running, data analysis and plotting modules in `/experiment`
 - the patching modules in `/patching`

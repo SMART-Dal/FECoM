@@ -43,4 +43,4 @@ This category deals with issues related to execution environment, which may hind
 This category covers the issues that should be considered during the designing process of the framework.
 
 ### Framework Extensibility
-Ensuring the tool framework can handle various programming languages, platforms, and frameworks while working seamlessly across different operating systems and hardware configurations while accommodating future enhancements and additions.
+Ensuring the FECoM framework can handle various programming languages, platforms, and frameworks while working seamlessly across different operating systems and hardware configurations while accommodating future enhancements and additions.

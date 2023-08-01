@@ -21,8 +21,8 @@ tests/test_data
 .pytest_cache
 
 # client
-from tool/patching/sample.py
-from tool/patching/data
+from fecom/patching/sample.py
+from fecom/patching/data
 .idea/*
 ENV/*
 .ipynb_checkpoints/
@@ -31,12 +31,12 @@ patched-code/*
 
 # measurement
 *.pth
-tool/measurement/out/*
+fecom/measurement/out/*
 
 # package
 *.egg-info
 build
 
-tool/measurement/flickr8k/*
-tool/measurement/datasets/*
-tool/measurement/test_data/*
+fecom/measurement/flickr8k/*
+fecom/measurement/datasets/*
+fecom/measurement/test_data/*

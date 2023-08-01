@@ -6,9 +6,9 @@ import pandas as pd
 from typing import List, Dict, Tuple
 from pathlib import Path
 
-from tool.experiment.data import DataLoader, FunctionEnergyData, ProjectEnergyData
-from tool.experiment.experiment_kinds import ExperimentKinds
-from tool.patching.patching_config import EXPERIMENT_DIR
+from fecom.experiment.data import DataLoader, FunctionEnergyData, ProjectEnergyData
+from fecom.experiment.experiment_kinds import ExperimentKinds
+from fecom.patching.patching_config import EXPERIMENT_DIR
 
 
 SUMMARY_DF_COLUMNS = ['function', 'exec time (s)', 'total', 'total (normalised)', 'lag time (s)', 'lag', 'lag (normalised)', 'total + lag (normalised)', 'stdev power', 'avg power']
@@ -307,5 +307,5 @@ if __name__ == "__main__":
     # method_level_data = init_project_energy_data(project_name, ExperimentKinds.METHOD_LEVEL, first_experiment=1)
     # method_level_energies.append(method_level_data)
 
-    # from tool.experiment.plot import plot_total_energy_vs_execution_time
+    # from fecom.experiment.plot import plot_total_energy_vs_execution_time
     # plot_total_energy_vs_execution_time(method_level_energies)

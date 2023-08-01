@@ -12,7 +12,7 @@ This repository has the following main directories:
     - `energy-dataset` contains all experimental energy data
     - `other` contains failed experimental data or data used for calculating settings
 - **replication**: replication package for the FECoM study.
-- **tool**: source code for the FECoM tool. 
+- **fecom**: source code for the FECoM tool. 
 
 ## Environment Setup
 ### Energy measurement libraries
@@ -37,13 +37,13 @@ Check if the GPU is setup correctly by running
 ```python3 -c "import tensorflow as tf; print(tf.config.list_physical_devices('GPU'))"```  
 This might give some warnings about missing TensorRT libraries, but as long as the output is `[PhysicalDevice(name='/physical_device:GPU:0', device_type='GPU')]` there is a good chance that the GPU has been setup correctly. Despite this, an issue faced was an error message that `libdevice is required by this HLO module but was not found`. A fix for this is highlighted [here](https://discuss.tensorflow.org/t/cant-find-libdevice-directory-cuda-dir-nvvm-libdevice/11896/5).
 
-### Install Tool
+### Install FECoM
 In this (top-level) directory, run  
 ```pip install .```  
-to install the tool. If you make any changes, for example to the configuration files, you need to repeat this step such that all changes are loaded.
+to install the FECoM tool. If you make any changes, for example to the configuration files, you need to repeat this step such that all changes are loaded.
 
 ## Configuration
-All constants and settings for the measurement script can be found in `tool/measurement/measurement_config.py`, and for the patching script in `tool/patching/patching_config.py`. These files are the single source of truth for all used constants.
+All constants and settings for the measurement script can be found in `fecom/measurement/measurement_config.py`, and for the patching script in `fecom/patching/patching_config.py`. These files are the single source of truth for all used constants.
 
 `measurement_config.py` contains configurations regarding
 - Stable state checking
@@ -57,7 +57,7 @@ All constants and settings for the measurement script can be found in `tool/meas
 ## Run Energy Consumption Experiments
 Start the energy measurement processes by following the instructions below. Detailed instructions on how to run experiments can be found in `replication/README.md`.
 
-With the activated conda environment, navigate to `tool/measurement` and run this command to start `perf` and `nvidia-smi` (energy measurement tools) as well as `sensors` (cpu temperature tool, which is run inside the wrapper `cpu_temperature.py`):  
+With the activated conda environment, navigate to `fecom/measurement` and run this command to start `perf` and `nvidia-smi` (energy measurement tools) as well as `sensors` (cpu temperature tool, which is run inside the wrapper `cpu_temperature.py`):  
 ```python3 start_measurement.py```  
   
 The application can be terminated by pressing Control-C.  

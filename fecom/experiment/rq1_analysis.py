@@ -1,5 +1,5 @@
-from tool.experiment.analysis import init_project_energy_data, build_total_energy_df
-from tool.experiment.experiment_kinds import ExperimentKinds
+from fecom.experiment.analysis import init_project_energy_data, build_total_energy_df
+from fecom.experiment.experiment_kinds import ExperimentKinds
 
 if __name__ == '__main__':
     # project_name = "images/cnn" -- DONE

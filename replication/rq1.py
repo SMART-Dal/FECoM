@@ -3,9 +3,9 @@ Replicate experiments for data gathered for RQ1.
 These are the method-level and project-level experiments.
 """
 
-from tool.experiment.experiment_kinds import ExperimentKinds, PatchedExperiment
-from tool.experiment.run import run_experiments
-from tool.patching.patching_config import EXPERIMENT_DIR, CODE_DIR
+from fecom.experiment.experiment_kinds import ExperimentKinds, PatchedExperiment
+from fecom.experiment.run import run_experiments
+from fecom.patching.patching_config import EXPERIMENT_DIR, CODE_DIR
 
 ### DO NOT CHANGE THESE VALUES 
 # number of the first experiment

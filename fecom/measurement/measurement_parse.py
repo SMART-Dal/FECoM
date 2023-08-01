@@ -7,7 +7,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from pathlib import Path
 
-from tool.measurement.measurement_config import CPU_FILE_SEPARATOR
+from fecom.measurement.measurement_config import CPU_FILE_SEPARATOR
 
 def parse_nvidia_smi(filepath: Path) -> pd.DataFrame:
     """

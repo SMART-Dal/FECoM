@@ -32,7 +32,7 @@ These is the exact sequence of steps followed by the researchers to run all proj
 ```python3 -c "import tensorflow as tf; print(tf.config.list_physical_devices('GPU'))"```  
 The last output line should be  
 ```[PhysicalDevice(name='/physical_device:GPU:0', device_type='GPU')]```
-4. Install the tool by running `pip install .` in the top-level directory of this repo.
+4. Install the FECoM tool by running `pip install .` in the top-level directory of this repo.
 5. Navigate to the relevant project directory in `data/code-dataset/Patched-Repositories`. Check the import statements to see if there are any non-standard libraries required by the project. Install these libraries and record them on the spreadsheet.
 6. Run the original project file with `python3 <project_name>_original.py`. Make sure that the GPU is used by confirming that there is the following output printed in your terminal at some point:
     ```
@@ -46,7 +46,7 @@ The last output line should be
     # changed above line to below (01/06/23)
     dataset = dataset.map(lambda features, labels: ({'dense_input': features}, labels))
     ```
-    To apply these fixes to the patched scripts, run `python3 repo-patching.py` in the `tool/patching` directory.
+    To apply these fixes to the patched scripts, run `python3 repo-patching.py` in the `fecom/patching` directory.
     If you cannot fix the errors, record them on the spreadsheet, mark the project as "experiencing errors" and start working on a new project.
 8. If you reached this step you can run the original project as in step 5 with no errors. Mark the project on the spreadsheet as "Successfully tested, ready to run experiments" and record the approximate execution time.
 9. Run the method-level & project-level experiments for RQ1 as follows. This might take a while, so make sure your terminal does not shut down in the middle of running experiments. If it does shut down, you can selectively run the missing experiments but this will be a little tedious.    
@@ -58,7 +58,7 @@ The last output line should be
         Make sure this is the only function call that is uncommented. If you need to selectively run experiments, you can specify which experiments to run by modifying the `run_rq1_experiments` function.
     2. Make sure that the energy data `json` files in `data/energy-dataset` associated with the project are empty.
     3. Ensure that there are no background processes running that consume significant resources (it is important to close your VSCode Remote Connection if you previously used it to modify files). You can confirm this by running `ps aux` and checking the `%CPU` and `%MEM` columns: significant processes will have a non-zero value in at least one of these columns. You might need to kill these processes.
-    4. Start the energy measurement processes by running `python3 start_measurement.py` in the `tool/measurement` directory. Wait for the specified number of seconds (default is 120) to check that the machine is in a stable state. If the stdev/mean ratios are larger than the config ones, you might need to revisit the previous step.
+    4. Start the energy measurement processes by running `python3 start_measurement.py` in the `fecom/measurement` directory. Wait for the specified number of seconds (default is 120) to check that the machine is in a stable state. If the stdev/mean ratios are larger than the config ones, you might need to revisit the previous step.
     5. Mark the project on the spreadsheet as "running experiments". In a new terminal with activated conda environment, run `python3 rq1.py` in the `replication` directory and wait until the first experiment completes.
     6. Check that there were no run-time errors by inspecting the standard output & error. If there was an error, there is likely an issue in the `measurement.execution` module which needs to be reported. If there are no errors, wait for all experiments to complete.
 10. Check that the GPU was used. For this it is recommended to use the VSCode "format document" function to format one of the json files in the `data/energy-dataset` directory into a more easily readible format. Then check that the GPU energy data (best checked for a training call) rises from about 20 to about 70 Watts. If this check fails, revisit steps 1 and 2 (environment setup). 

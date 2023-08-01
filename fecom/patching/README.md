@@ -1,6 +1,6 @@
 # Energy Consumption Measurement Framework - Patching Module
 
-The Patching module, included in the "tool" directory of the replication package, serves as the foundation of our framework, providing two types of patching scripts: one for the method level and another for the project level. Both are integrated into the "repo-patching" program. This module enables users to provide Python scripts and specify target frameworks as inputs for energy measurement, allowing precise energy measurement at both the method and project levels.
+The Patching module, included in the "fecom" directory of the replication package, serves as the foundation of our framework, providing two types of patching scripts: one for the method level and another for the project level. Both are integrated into the "repo-patching" program. This module enables users to provide Python scripts and specify target frameworks as inputs for energy measurement, allowing precise energy measurement at both the method and project levels.
 
 ## Usage
 
@@ -33,6 +33,6 @@ The Patching module, included in the "tool" directory of the replication package
 
    The patched files will send method requests to the measurement module, retrieve the energy consumption data, and store it in `~/data/energy-dataset`.
 
-7. After execution, you will have a list of JSON objects for each method call. For more information on the format of these objects, refer to `~/tool/measurement/README.md`.
+7. After execution, you will have a list of JSON objects for each method call. For more information on the format of these objects, refer to `~/fecom/measurement/README.md`.
 
 Thank you!

@@ -6,8 +6,8 @@ from pathlib import Path
 from statistics import median, mean
 import os
 
-from tool.experiment.analysis import init_project_energy_data, create_summary, export_summary_to_latex, build_total_energy_df, build_total_energy_and_size_df
-from tool.experiment.experiment_kinds import ExperimentKinds
+from fecom.experiment.analysis import init_project_energy_data, create_summary, export_summary_to_latex, build_total_energy_df, build_total_energy_and_size_df
+from fecom.experiment.experiment_kinds import ExperimentKinds
 
 from executed_experiments import EXECUTED_RQ1_EXPERIMENTS
 

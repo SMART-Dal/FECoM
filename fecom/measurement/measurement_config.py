@@ -1,5 +1,5 @@
 from pathlib import Path
-from tool.patching.patching_config import PROJECT_PATH
+from fecom.patching.patching_config import PROJECT_PATH
 
 # set this to False to surpress some print outs
 DEBUG = True
@@ -29,7 +29,7 @@ CPU_STD_TO_MEAN = 0.03
 RAM_STD_TO_MEAN = 0.03
 GPU_STD_TO_MEAN = 0.01
 
-# used by tool.experiment.analysis
+# used by fecom.experiment.analysis
 STABLE_CPU_ENERGY_STDEV = 0.402764
 STABLE_CPU_ENERGY_MEAN = 17.049285
 STABLE_RAM_ENERGY_STDEV = 0.083274
@@ -48,7 +48,7 @@ MEASUREMENT_INTERVAL_MS = 500
 # having the measurement interval in seconds is useful for converting power to energy and vice versa
 MEASUREMENT_INTERVAL_S = MEASUREMENT_INTERVAL_MS / 1000
 # path to find energy data relative to the measurement package
-energy_data_dir = PROJECT_PATH / "tool/measurement/out" # local execution
+energy_data_dir = PROJECT_PATH / "fecom/measurement/out" # local execution
 PERF_FILE = energy_data_dir/"perf.txt"
 NVIDIA_SMI_FILE = energy_data_dir/"nvidia_smi.txt"
 # store start times here
@@ -66,7 +66,7 @@ SKIP_CALLS_FILE_NAME = "skip_calls.json"
 """
 TEMPERATURE MEASUREMENT CONFIG
 """
-CPU_TEMPERATURE_MODULE = PROJECT_PATH / "tool/measurement/cpu_temperature.py"
+CPU_TEMPERATURE_MODULE = PROJECT_PATH / "fecom/measurement/cpu_temperature.py"
 # set cpu temperature measurement interval for sensors in seconds
 # the actual interval will be a few milliseconds greater, due to processing time
 CPU_TEMPERATURE_INTERVAL_S = 1

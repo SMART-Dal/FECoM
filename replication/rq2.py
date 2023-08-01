@@ -2,9 +2,9 @@
 Run data size experiments for RQ2.
 """
 
-from tool.patching.patching_config import EXPERIMENT_DIR
-from tool.experiment.experiments import DataSizeExperiment
-from tool.experiment.run import run_experiments
+from fecom.patching.patching_config import EXPERIMENT_DIR
+from fecom.experiment.experiments import DataSizeExperiment
+from fecom.experiment.run import run_experiments
 
 
 # This is for energy consumption of tensorflow.keras.models.Sequential.fit() api in images/cnn

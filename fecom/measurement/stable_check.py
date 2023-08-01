@@ -7,8 +7,8 @@ from statistics import mean, stdev
 from pathlib import Path
 from typing import List
 
-from tool.measurement.measurement_config import DEBUG, PERF_FILE, NVIDIA_SMI_FILE, CPU_TEMPERATURE_FILE, CPU_FILE_SEPARATOR
-from tool.measurement.utilities import custom_print
+from fecom.measurement.measurement_config import DEBUG, PERF_FILE, NVIDIA_SMI_FILE, CPU_TEMPERATURE_FILE, CPU_FILE_SEPARATOR
+from fecom.measurement.utilities import custom_print
 
 def print_stable(message: str):
     custom_print("stable check", message)
