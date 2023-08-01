@@ -234,8 +234,6 @@ class ProjectEnergyData():
     
         execution_times_stats = []
         for execution_times in filtered_execution_times.values():
-            # TODO this assumption doesn't hold if there are multiple calls to the same function in one experiment
-            # assert len(execution_times) == self.experiment_count, f"Function {function_name} has {len(execution_times)} execution times but there are {self.experiment_count} experiments"
             stdev_time = stdev(execution_times)
             median_time = median(execution_times)
             max_time = max(execution_times)
@@ -334,7 +332,6 @@ class EnergyData():
     
     @property
     def begin_temperature_check_time_perf(self):
-        # TODO: this might not exist for older data, add try/except
         return (self.times["begin_temperature_check_time"] - self.times["sys_start_time_perf"]) / NS_CONVERSION
     
     ### nvidia-calibrated times
@@ -356,7 +353,6 @@ class EnergyData():
     
     @property
     def begin_temperature_check_time_nvidia(self):
-        # TODO: this might not exist for older data, add try/except
         return (self.times["begin_temperature_check_time"] - self.times["sys_start_time_nvidia"]) / NS_CONVERSION
     
 
@@ -797,8 +793,8 @@ class DataLoader():
 
             # if it is a data size experiment, we want to treat each function (even though they have the same name)
             # as a separate function, such that we group by data size and not just function name
-            # TODO: maybe we should do the same for method-level experiments, since there could be a call of the same
-            # function but with different inputs
+            # TODO: something similar could be done for method-level experiments, since there could be a call of the same
+            # function but with different inputs. It depends on the use case whether this is desired or not.
             if self.experiment_kind == ExperimentKinds.DATA_SIZE:
                 function_name = f"{original_function_name}_{i}"
             

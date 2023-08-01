@@ -1,5 +1,5 @@
 """
-Replication code for plots used in the paper. Currently only used for Tim's Final Year Project Report.
+Replication code for plots used in the paper.
 """
 
 from tool.experiment.data import DataLoader

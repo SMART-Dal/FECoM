@@ -19,7 +19,7 @@ def run_sensors_once(time_zero = None):
     # go through each line in the sensors output and check if it's the package CPU temperature reading,
     # which always starts with "Package" and has the following format:
     # Package id 0:  +49.0°C  (high = +92.0°C, crit = +102.0°C)
-    # TODO note key assumption: the machine has one CPU, so we can break after finding "Package id 0"
+    # Note a key assumption: the machine has one CPU, so we can break after finding "Package id 0"
     package_temperature = None
     for line in sensor_output:
         line_items = line.strip().split()

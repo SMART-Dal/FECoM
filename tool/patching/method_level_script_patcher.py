@@ -549,8 +549,6 @@ class Analyzer(ast.NodeVisitor):
                     self.importMap[alias.asname] = node.module + "." + alias.name
                 elif alias.name == "*":
                     pass
-                    # TODO: Need to find a way to get all the methods from the module without installing the libraries if possible
-                    # print("Star import not supported and is not required for this script")
                 else:
                     self.stats["required"].append(alias.name)
                     self.importMap[alias.name] = node.module + "." + alias.name

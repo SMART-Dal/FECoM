@@ -205,7 +205,6 @@ def plot_combined(energy_data: EnergyData):
     Concatenates the three energy dataframes from the EnergyData object into one containing only energy consumption of each hardware component
     as well as the sum of these three values over time. It does not attempt to merge the perf and nvidia-smi data
     in a way that synchronises the measurements in same rows to be at the same time.
-    TODO implement that.
     """
     min_len = min([len(energy_data.gpu_energy), len(energy_data.cpu_energy), len(energy_data.ram_energy)]) - 1
     print(min_len)

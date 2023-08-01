@@ -1,4 +1,4 @@
-# GreenAI-extension
+# FECoM Tool
 
 Our tool can calculate the energy consumption
 - of an entire Tensorflow script (project-level experiments)
@@ -11,17 +11,16 @@ This repository has the following main directories:
     - `code-dataset` contains patched and original projects from the third-party source code repository
     - `energy-dataset` contains all experimental energy data
     - `other` contains failed experimental data or data used for calculating settings
-- **deprecated**: old code that is no longer used, but could be useful again at some point.
-- **replication**: replication package for the study.
-- **tool**: source code for the energy measurement tool. 
+- **replication**: replication package for the FECoM study.
+- **tool**: source code for the FECoM tool. 
 
 ## Environment Setup
-### Energy measurement tools
-First verify that [perf](https://perf.wiki.kernel.org/index.php/Main_Page), a tool to measure CPU and RAM energy consumption, is already available in you Linux system, if not then install separately:
+### Energy measurement libraries
+First verify that [perf](https://perf.wiki.kernel.org/index.php/Main_Page), a library to measure CPU and RAM energy consumption, is already available in you Linux system, if not then install separately:
 ```bash
 sudo apt install linux-tools-`uname -r`
 ```  
-Also make sure the [lm-sensors](https://wiki.archlinux.org/title/lm_sensors) CPU temperature measurement tool is installed:
+Also make sure the [lm-sensors](https://wiki.archlinux.org/title/lm_sensors) CPU temperature measurement library is installed:
 ```
 sudo apt install lm-sensors
 ```
@@ -51,9 +50,9 @@ All constants and settings for the measurement script can be found in `tool/meas
 - Energy measurements
 - Temperature measurements
 
-`patching_config.py` contains patching script file paths. You will certainly need to change these file paths!
-
-Some of these constants are critical settings for the experiments. 
+`patching_config.py` contains patching script file paths. 
+  
+**_You will need to add your own file paths in `patching_config`!_**
 
 ## Run Energy Consumption Experiments
 Start the energy measurement processes by following the instructions below. Detailed instructions on how to run experiments can be found in `replication/README.md`.
@@ -65,5 +64,3 @@ The application can be terminated by pressing Control-C.
 
 ## Contributing
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
-
-Please make sure to update tests as appropriate.

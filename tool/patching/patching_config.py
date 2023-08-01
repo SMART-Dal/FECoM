@@ -6,15 +6,12 @@ PATCHING CONFIG
 
 # (!) add your own data path here (!)
 # change this to the absolute path to the top-level project directory on your machine
-# before running anything in Patched-Repositories
-# data_path_saurabh = Path('/home/srajput/projects/def-tusharma/srajput/GreenAI-extension/data/')
-project_path_saurabh = Path('/home/saurabh/code-energy-consumption/')
-project_path_tim = Path('/Users/tim.widmayer/UCL_local/GreenAI-extension/')
-project_path_tim_compute_canada = Path('/home/timw/GreenAI-extension/')
-project_path_tim_falcon = Path('/home/tim/GreenAI-extension/')
+# before running anything
+raise NotImplementedError("Change this to the absolute path to the top-level project directory on your machine before running anything")
+your_project_path = Path('/home/sample_user/sample_repo_name')
 
 # (!) Change this to the relevant path variable (!)
-PROJECT_PATH = project_path_saurabh
+PROJECT_PATH = your_project_path
 
 # directory where to store data, an Experiment will append to this the experiment kind
 # (e.g. project-level) and after that the subdirectory structure will be equivalent to the code dataset

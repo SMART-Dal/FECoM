@@ -9,13 +9,11 @@ with open('LICENSE') as f:
     license = f.read()
 
 setup(
-    name='greenAI-tool',
+    name='FECoM-tool',
     version='1.0.0',
-    description='GreenAI tool to measure energy consumption of Python code, in particular for machine learning with TensorFlow',
+    description='The FECoM tool (Fine-grained Energy Consumption Measurement) can measure energy consumption of Python code at method-level precision, in particular for machine learning with TensorFlow',
     long_description=readme,
-    author='Tim Widmayer',
-    author_email='tim.widmayer.20@ucl.ac.uk',
-    url='https://github.com/mkechagia/GreenAI-extension/tree/main/tool',
+    author='FECoM-Authors',
     license=license,
-    packages=find_packages(exclude=('data', 'deprecated', 'replication'))
+    packages=find_packages(exclude=('data', 'replication'))
 )
