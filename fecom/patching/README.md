@@ -1,4 +1,4 @@
-# Energy Consumption Measurement Framework - Patching Module
+# Patching Module
 
 The Patching module, included in the "fecom" directory of the replication package, serves as the foundation of our framework, providing two types of patching scripts: one for the method level and another for the project level. Both are integrated into the "repo-patching" program. This module enables users to provide Python scripts and specify target frameworks as inputs for energy measurement, allowing precise energy measurement at both the method and project levels.
 
