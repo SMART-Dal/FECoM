@@ -5,7 +5,6 @@ import tensorflow as tf
 from sklearn.metrics import accuracy_score, precision_score, recall_score
 from sklearn.model_selection import train_test_split
 
-# Define the AnomalyDetector model as shown in the code snippet
 
 class AnomalyDetector(tf.keras.Model):
     def __init__(self):
@@ -65,7 +64,6 @@ class TestAnomalyDetector(unittest.TestCase):
         test_loss = tf.keras.losses.mae(reconstructions, self.anomalous_test_data)
         threshold = np.mean(test_loss) + np.std(test_loss)
         preds = tf.math.less(test_loss, threshold)
-        # Convert continuous values to binary based on the threshold
         binary_preds = preds.numpy().astype(int)
         binary_labels = np.ones_like(binary_preds)
 

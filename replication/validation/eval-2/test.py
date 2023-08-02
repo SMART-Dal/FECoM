@@ -2,8 +2,6 @@ import unittest
 import pandas as pd
 import tensorflow as tf
 
-# Rest of the code remains unchanged
-
 class TestTitanicClassification(unittest.TestCase):
     def setUp(self):
         dftrain = pd.read_csv('https://storage.googleapis.com/tf-datasets/titanic/train.csv')

@@ -8,7 +8,6 @@ import pathlib
 
 class TestYourFunctions(unittest.TestCase):
     def setUp(self):
-        # Set up any common resources required for the tests.
         seed = 42
         tf.random.set_seed(seed)
         np.random.seed(seed)
@@ -30,7 +29,6 @@ class TestYourFunctions(unittest.TestCase):
             num_parallel_calls=tf.data.AUTOTUNE)
 
     def create_sample_model(self, num_labels):
-        # Define your model architecture here (similar to your_main_script)
         model = tf.keras.Sequential([
             tf.keras.layers.Input(shape=(124, 129, 1)),
             tf.keras.layers.Conv2D(32, 3, activation='relu'),
@@ -44,7 +42,6 @@ class TestYourFunctions(unittest.TestCase):
         return model
 
     def train_model(self, model, train_ds, val_ds):
-        # Define your training process here (similar to your_main_script)
         model.compile(
             optimizer=tf.keras.optimizers.Adam(),
             loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True),
@@ -60,11 +57,8 @@ class TestYourFunctions(unittest.TestCase):
         return history
 
     def evaluate_model(self, model, test_ds):
-        # Define your evaluation process here (similar to your_main_script)
         evaluation_result = model.evaluate(test_ds, return_dict=True)
         return evaluation_result
-
-    # Other test functions similar to what you had previously...
 
 if __name__ == '__main__':
     unittest.main()
