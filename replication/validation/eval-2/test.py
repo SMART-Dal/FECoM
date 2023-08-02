@@ -38,17 +38,14 @@ class TestTitanicClassification(unittest.TestCase):
 
     def test_input_fn_output_shape(self):
         train_ds = self.train_input_fn()
-        # Rest of the test code
 
     def test_linear_model_evaluation(self):
         linear_est = tf.estimator.LinearClassifier(feature_columns=self.feature_columns)
         linear_est.train(input_fn=self.train_input_fn)
-        # Rest of the test code
 
     def test_roc_curve(self):
         linear_est = tf.estimator.LinearClassifier(feature_columns=self.feature_columns)
         linear_est.train(input_fn=self.train_input_fn)
-        # Rest of the test code
 
 if __name__ == '__main__':
     unittest.main()

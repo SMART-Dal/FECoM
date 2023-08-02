@@ -34,7 +34,6 @@ def create_model(num_classes):
 class TestYamnetModel(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        # Load the test data and model only once for all test cases
         cls.testing_wav_file_name = tf.keras.utils.get_file('miaow_16k.wav',
                                                            'https://storage.googleapis.com/audioset/miaow_16k.wav',
                                                            cache_dir='./',
@@ -46,13 +45,11 @@ class TestYamnetModel(unittest.TestCase):
         cls.testing_wav_data = load_wav_16k_mono(cls.testing_wav_file_name)
 
     def test_load_wav_16k_mono(self):
-        # Test if the audio is loaded and resampled correctly
         wav_data = load_wav_16k_mono(self.testing_wav_file_name)
         self.assertTrue(isinstance(wav_data, tf.Tensor))
         self.assertEqual(wav_data.shape, (107698,))
 
     def test_reduce_mean_layer(self):
-        # Test the custom ReduceMeanLayer
         layer = ReduceMeanLayer(axis=0)
         input_data = tf.constant([[1, 2], [3, 4]], dtype=tf.float32)
         expected_output = tf.constant([2, 3], dtype=tf.float32)
@@ -60,12 +57,10 @@ class TestYamnetModel(unittest.TestCase):
         tf.debugging.assert_near(output, expected_output)
 
     def test_create_model(self):
-        # Test if the custom model is created correctly
         num_classes = 2  # 'dog' and 'cat'
         model = create_model(num_classes)
         self.assertIsInstance(model, tf.keras.Model)
 
-    # Add more test cases as needed to verify your patched code
 
 if __name__ == '__main__':
     unittest.main()
