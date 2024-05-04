@@ -1,0 +1,352 @@
+[
+    {
+        "content": "But the actual implementation may vary across hardware.\r\n\r\nSo as to the questions:\r\n\r\n&gt; 1. Should we ALWAYS prefer now Bitmap.Config.HARDWARE over Bitmap.Config.RGB_565...?\r\n\r\nFor SDK &gt;= 26, `HARDWARE` configuration can improve the low level bitmap drawing by preventing the need to copy the pixel data to the GPU every time the same bitmap returns to the screen. I guess it can prevent losing some frames when a bitmap is added to the screen.\r\n\r\nThe memory is not counted against your app, and my test confirmed this.\r\n\r\nThe native library docs say it will return `null` if memory allocation was unsuccessful.\r\nWithout the source code, it is not clear what the Java implementation (the API implementors) will do in this case - it might decide to throw `OutOfMemoryException` or fallback to a different type of allocation. \r\n\r\n**Update:** Experiment reveals that no OutOfMemoryException is thrown. While the allocation is successful - everything works fine. Upon failed allocation - the emulator crashed (just gone). On other occasions I&#39;ve got  a weird `NullPointerException` when allocating Bitmap in app memory.",
+        "score": 26.984375,
+        "rank": 1,
+        "document_id": "3b4819e1-5dae-4bc1-931c-1fe8fbfbfe35",
+        "passage_id": 282751
+    },
+    {
+        "content": "For example reading some configuration from a file needs to be done once, wether you run 100 or 10000 iterations of some algorithm. With this assumptions, `P = p(N)` and `S = constant`, one can conclude that increasing the workload, `N`, improves the utilization of the hardware. You might see this effect when using a smaller vector will lead to increasing time already for smaller number of threads, while using a bigger vector you might see increasing time only for larger number of threads.",
+        "score": 26.859375,
+        "rank": 2,
+        "document_id": "308d2941-5c75-4723-86db-1128d6358d3e",
+        "passage_id": 132325
+    },
+    {
+        "content": "That is your best mechanism for supporting different hardware configurations - no `sdkconfig` and instead different variants of `sdkconfig.defaults` for each hardware you wish to support.  \r\n\r\nAs an example, assume you have two different HW versions described in `sdkconfig.defaults.hw_ver1` and `sdkconfig.defaults.hw_ver2` and you wish to build for HW ver2 configuration:\r\n```\r\n$ rm sdkconfig &amp;&amp; cp sdkconfig.defaults.hw_ver2 sdkconfig.defaults\r\n$ idf.py reconfigure\r\n```\r\n\r\nNow you can build for this configuration like you usually would:\r\n```\r\n$ idf.py build\r\n```\r\n\r\nWhen you wish to build for the other FW configuration, re-execute the previous commands with `sdkconfig.defaults.hw_ver1`\r\n\r\nAll this is rather thoroughly documented in the [Build System documentation][1], so feel free to dig in.\r\n\r\n\r\n  [1]: https://docs.espressif.com/projects/esp-idf/en/latest/esp32/api-guides/build-system.html",
+        "score": 26.4375,
+        "rank": 3,
+        "document_id": "f7e0d560-a097-4228-9d30-f5ced27f5e40",
+        "passage_id": 140383
+    },
+    {
+        "content": "If you&#39;re having a problem on one particular device, then it is likely a hardware + software bug, and simply simulating the hardware configuration will not solve your problem.\r\n\r\nThat said, you can always duplicate the hardware by setting the RAM, screen size, storage etc. to its specifications. You probably won&#39;t get the same processing speed due to the fact that you&#39;re on an emulator.",
+        "score": 25.953125,
+        "rank": 4,
+        "document_id": "6e19cd1c-fc0c-4a0e-a25f-d0c0ec3c305c",
+        "passage_id": 416289
+    },
+    {
+        "content": "Several factors can make the results different. I hesitate to mention them because they are the kind of things people tend to reject, but I have experienced them all and had some confirmed by msft.\r\n\r\nFirst, the person who suggested you look at execution plans is on the right track. That is likely to at least give you a clue as to what&#39;s different.\r\n\r\nReasons (assuming size and content of data are identical)\r\n\r\n1. Statistics are different on the two servers, causing different execution plans.\r\n2. Hardware performance is different. Slower or faster CPUs (different generation for example, even if clock speed is close), slower or faster disk. More cores vs. one core (leads to parallel plans vs. serial plans)\r\n3. Hardware configuration is different (e.g. perormance difference). One uses a SAN one has direct storage. Sometimes matters a lot. Sometimes makes no difference once data is in cache.\r\n4. Data storage is physically different. One server has greatly fragmented and sparse data blocks/pages in the table(s) or indexes you care about. One has compact and fast. This can occur due to different scenarios used to load data in the two systems.",
+        "score": 25.90625,
+        "rank": 5,
+        "document_id": "6157b40d-7cd6-4709-878c-aa11260e002d",
+        "passage_id": 344730
+    },
+    {
+        "content": "No tool will give you that kind of metric because the best configuration depends greatly on your php scripts. If you have 4 cores and each request consumes 100% of one core for 1 second, the server will handle 4 request per second in the best case regardless of your mpm and php configuration. The type of hardware you have is also important. Some CPUs perform multiple times better than others.\r\n\r\nSince you are using php_fpm, the apache mpm configuration will have little effect on performance. You just need to make sure the server doesn&#39;t crash with too many requests and have more apache threads than php processes. Note that the RAM is not the only thing that can make a server unreachable. Trying to execute more process than the CPU can handle will increase the load and the number of context switches, decrease the CPU cache efficiency and result in even lower performance.\r\n\r\nThe ideal number of php processes depends on how your scripts use CPU and other resources. If each script uses 50% of the time with I/O operations for example, 2 processes per core may be ideal. Assuming that those I/O operations can be done in parallel without blocking each other.",
+        "score": 25.625,
+        "rank": 6,
+        "document_id": "bfda426e-f622-4ff0-8b8b-d98cf00dca22",
+        "passage_id": 187697
+    },
+    {
+        "content": "There is an (any CPU) configuration in VS then there is a build target dropdown (in 2012) Project-&gt;Properties-&gt;Buid tab. Build Target often times will be set to x86 and you will see Out of Memory exceptions being thrown when there is still plenty of ram available.  For instance you can have the any cpu configuration set and still be building for x86, via the build target option. This will cause Out of Memory Exceptions to occur when you hit 2GB of RAM usage.",
+        "score": 25.390625,
+        "rank": 7,
+        "document_id": "d8cd0419-635d-41b4-9908-af8feb102885",
+        "passage_id": 388239
+    },
+    {
+        "content": "Warp Allocation Granularity is a constraint in the hardware resource allocation.\r\n\r\nOn SM1.x-2.x resources are allocated 2 warps at a time.\r\n\r\nOn SM3.x-5.x resources are allocated 4 warps at a time.\r\n\r\nIf the kernel configuration is N then the hardware allocates resources for N rounded up to a multiple of WarpAllocationGranularity.\r\n\r\nThis limitation reduces the control logic and allocation table sizes thus reducing area and power.",
+        "score": 25.375,
+        "rank": 8,
+        "document_id": "57af1378-76ab-46a8-a7a2-3861ee11ded1",
+        "passage_id": 24295
+    },
+    {
+        "content": "If you run the same application on the same machine, with the same JVM, the heap and GC parameters will be the same.  \r\n\r\nErgonomics was a feature introduced way back in JDK 5.0 to try and take some of the guesswork out of GC tuning.  A server-class machine (2 or more cores and 2 or more Gb of memory) will use 1/4 of physical memory (up to 1Gb) for both the initial and maximum heap sizes (see https://docs.oracle.com/javase/8/docs/technotes/guides/vm/gctuning/ergonomics.html).  So different machines may have different configurations by default.\r\n\r\nTo find out exactly what flags you have set, use:\r\n`java -XX:+PrintFlagsFinal -version`\r\n\r\nThe difference in memory usage pattern is simply the non-deterministic behaviour of your application.  Even with the exact same set of inputs, I doubt you&#39;d see exactly the same memory behaviour just down to so many other OS and hardware effects (cache, core affinity, etc.)",
+        "score": 25.21875,
+        "rank": 9,
+        "document_id": "77fa15b8-eb8d-4046-bc1c-a47c9bb1ba43",
+        "passage_id": 245161
+    },
+    {
+        "content": "It could well be the OS installation configuration varies.  Perhaps the slow system is configured to disallow multiple threads from your process being scheduled simultaneously.  If some other high priority process were always (or mostly) ready to run, the only alternative is for your threads to be run sequentially, not in parallel.",
+        "score": 24.9375,
+        "rank": 10,
+        "document_id": "12996b39-38ab-4487-8efe-8b440b1d9830",
+        "passage_id": 428072
+    },
+    {
+        "content": "setting default values in case the environment doesn&#39;t set anything.\r\n\r\nSecondly, the more powerful configuration tool for ESP IDF is the menuconfig target and  `sdkconfig` file. As you&#39;ve already noticed, playing with `sdkconfig` directly is not so easy. In my projects I consider this a generated temporary file and I never commit it to git. Instead I delete it. When `sdkconfig` is missing, idf.py will take file `sdkconfig.defaults`, copy it into `sdkconfig` and work with this. That is your best mechanism for supporting different hardware configurations - no `sdkconfig` and instead different variants of `sdkconfig.defaults` for each hardware you wish to support.",
+        "score": 24.875,
+        "rank": 11,
+        "document_id": "f7e0d560-a097-4228-9d30-f5ced27f5e40",
+        "passage_id": 140382
+    },
+    {
+        "content": "The choice of the correct parallelization configuration for a real application code is never trivial. The optimal mapping of MPI processes and OpenMP threads onto a multiprocessor node depends on the specific implementation of the algorithm, the OpenMP runtime, the internal organization of the cache memory hierarchy and other factors related to the processor architecture.\r\n\r\nTherefore users are advised to run different configurations on their specific hardware to find the optimal assignment. You could find a number of reports on such studies among technical reports of research computing facilities and HPC consultancies.\r\n\r\nOn an `m x n` node where `m` is the number of processor sockets and `n` is the number of CPU cores such an experiment would involve running the code for all possible integral values of the number of MPI processes `p` and OpenMP threads `q` such that `p x q = m x n` for each available compiler.\r\n\r\nHere is a plot of the parallel speedup obtained for different combinations of `p` and `q` for a 4 x 12 AMD Opteron node. Data taken from HiPERiSM Consulting LLC [technical report HCTR-2011-2][1] by George Delic, 2010.\r\n!",
+        "score": 24.84375,
+        "rank": 12,
+        "document_id": "80e3187f-bd6c-4298-aec7-e8117c31674c",
+        "passage_id": 412198
+    },
+    {
+        "content": "[Hardware_platform specified][1]\r\n\r\n\r\n  [1]: https://i.stack.imgur.com/k8xef.png\r\n\r\n- One of the reasons that were causing this problem was a different hardware platform associated with the debug configurations wrt to the one you want to use.\r\n\r\nAs we make some changes in the IPs and update them, when the bitstream is exported to SDK, a new hardware platform gets created . Say if the older one is ````TOP_WRAPPER_hw_platform_0````, now a new one is created ````TOP_WRAPPER_hw_platform_1````.\r\n\r\nThis new platform should be updated in the debug configuration settings ````Hardware platform````. \r\n\r\nfurther in debug config settings the following needed to be ticked on\r\nUnder Target Setup\r\n \r\n\r\n - Reset entire system \r\n - Program FPGA\r\n\r\nUnder Application tab\r\n\r\n -  Download Application\r\n   \r\n - Stop at &#39;main&#39;",
+        "score": 24.828125,
+        "rank": 13,
+        "document_id": "e62be16e-987c-4aa9-81ef-37761f64d3cb",
+        "passage_id": 231451
+    },
+    {
+        "content": "And the optimal settings for the tuning parameters are likely to be platform / hardware specific, as well as application dependent. \r\n\r\nThere are no easy answers.\r\n\r\nAnd there is certainly no one-size-fits-all configuration to minimize latency.  Not even for a specific JVM version, operating system and hardware platform.\r\n\r\n\r\n  [1]: http://rtjava.blogspot.com.au/2009/07/real-time-java-vms.html",
+        "score": 24.8125,
+        "rank": 14,
+        "document_id": "2b37d7c1-d34c-4ef0-8c01-3aabe48d7126",
+        "passage_id": 428110
+    },
+    {
+        "content": "In CUDA, when specifying the [kernel execution configuration arguments](https://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html#execution-configuration), the grid configuration comes first, followed by the block configuration.\r\n\r\nTherefore, given the definition and usage of the variables `dimGrid` and `dimBlock`,  this is incorrect:\r\n\r\n        Jacobi&lt;&lt;&lt;dimBlock, dimGrid&gt;&gt;&gt;\r\n\r\n\r\nit should be: \r\n\r\n        Jacobi&lt;&lt;&lt;dimGrid, dimBlock&gt;&gt;&gt;\r\n\r\nThe grid and block configuration variables have different limits, so as it happens the first launch failure that occurred due to the mixup violating a hardware limit occurred at problem dimensions of 520,520",
+        "score": 24.796875,
+        "rank": 15,
+        "document_id": "f65a18f0-0004-4113-95bb-13c4b0b907c7",
+        "passage_id": 9273
+    },
+    {
+        "content": "Finally the problem was caused because I had a wrong configuration of my ImageReaders, depending of the Hardware level of the Phone, the camera can allow different types of imageReaders with different sizes for each one.\r\nFor example, a `INFO_SUPPORTED_HARDWARE_LEVEL == FULL` doesn&#39;t support a JPEG image reader configurated to the max size of the device and another one with YUV format over the preview size in that moment. Anyway, sometimes it can work, and sometimes fail.\r\n\r\n&gt; If an application tries to create a session using a set of targets that exceed the limits described in the below tables, one of three possibilities may occur. First, the session may be successfully created and work normally. Second, the session may be successfully created, but the camera device won&#39;t meet the frame rate guarantees as described in getOutputMinFrameDuration(int, Size). Or third, if the output set cannot be used at all, session creation will fail entirely, with onConfigureFailed(CameraCaptureSession) being invoked.",
+        "score": 24.578125,
+        "rank": 16,
+        "document_id": "1fdcb7c7-4dcc-4aad-803d-0d4387d0401d",
+        "passage_id": 267131
+    },
+    {
+        "content": "4. Data storage is physically different. One server has greatly fragmented and sparse data blocks/pages in the table(s) or indexes you care about. One has compact and fast. This can occur due to different scenarios used to load data in the two systems.\r\n5. SQLServer configuration settings: Limited Memory configuration on one system, for example.\r\n6. Competing workload on one of the systems.\r\n7. Missing or different indexes.\r\n8. Different collation settings resulting in different index statistics and different plans.\r\n9. Slightly different software version.\r\n10. Size of data is about the same but content is different, changing query plan.\r\n\r\netc.\r\n\r\nThe time difference involved suggests a different execution plan is most likely.\r\n\r\nIf all else (indexes, etc.) is &#39;the same&#39;, sometimes it is worth forcing SQLServer to rerun statistics, then try the query again. Historically SQLServer has automatically updated statistics based on the volume of changes to data in a table. Sometimes this leads to statistics that are temporarily bad, as one table hits the threshold for an update but other tables do not, and the optimizer chooses bad plans.",
+        "score": 24.5625,
+        "rank": 17,
+        "document_id": "6157b40d-7cd6-4709-878c-aa11260e002d",
+        "passage_id": 344731
+    },
+    {
+        "content": "Different configurations and versions of operating systems and kernels can handle memory allocations failures differently.\r\n\r\nIn one case the process&#39;s memory allocation call fails, and you see the behavior you&#39;ve observed on your server.\r\n\r\nBut what can also happen is that [the kernel kills the process that&#39;s eating all the memory][1]. That&#39;s the behavior you&#39;ve observed.\r\n\r\nYou might be able to force the `set_new_handler` behavior by using the `ulimit` command to artificially limit the amount of memory that a single process can use.\r\n\r\n\r\n\r\n  [1]: https://neo4j.com/developer/kb/linux-out-of-memory-killer/",
+        "score": 24.515625,
+        "rank": 18,
+        "document_id": "922cbeb9-9f40-4b65-8870-425669384979",
+        "passage_id": 134155
+    },
+    {
+        "content": "There is no MemSQL configuration option to limit the number of cores. The cpu utilization decrease you observed from reducing your `maximum_memory` is indicative of the system using less machine resources overall (you reduced memory availablilty to the system by 80%). \r\n\r\nIf you want to limit the number of CPUs being used by MemSQL, use [taskset](http://linuxcommand.org/man_pages/taskset1.html).",
+        "score": 24.4375,
+        "rank": 19,
+        "document_id": "aa6ac3da-2353-4f07-93d5-0a75a024fc10",
+        "passage_id": 345559
+    },
+    {
+        "content": "We don&#39;t publish physical hardware specs, because we use DWUs to smooth the differences between different generations of hardware.\r\n\r\nAny DWU scale less than 500 should really be considered a dev/test platform. You&#39;re on shared infrastructure, and the benefits of MPP for which you are paying won&#39;t be achieved.\r\n\r\nBut once you get to DWU1000c and above, you&#39;re getting huge performance gains over SMP SQL Server, Azure SQL, etc. 1000c is the lower end of performance, but I recall one exercise I was involved in last year where it was 30x faster than Azure SQL and SQL MI for the workload in question.\r\n\r\nIf you have an OLTP workload, or a mixed workload, use SMP. If you have a DW workload and your performance objectives are met by a DWU100c configuration then you are probably better off using Azure SQL, because your concurrency will be much better. At multi-terabyte scale, however, MPP will always be faster.",
+        "score": 24.3125,
+        "rank": 20,
+        "document_id": "31793bee-946f-4b95-ae51-747205a13e3f",
+        "passage_id": 177301
+    },
+    {
+        "content": "There may be a difference in the compiler&#39;s ability to translate the code to avoid an extra memory access. This will clearly depend on the actual code (e.g. will the compiler inline function containing the for-loop, does it inline the `readonlyfunc` code, etc, etc. If so, the static allocation can be translated from the pointer variant (which loads the address of the pointer to get the address of the data) into a constant address calculation. It probably doesn&#39;t make a huge difference in such a large loop as this. \r\n\r\nAlways, when it comes to performance, sometimes small things can make big differences, so if this is really important, do some experiments, using YOUR compiler, YOUR actual code. We can only give relatively speculative advice, based on our experience. Different compilers do different things with the same code, different processors do different things with the same machine code (both different actual architectures (whether it&#39;s instruction set architecture ARM vs X86, or implementation of the architecture such as AMD Opteron vs Intel Atom or ARM Cortex A15 vs Cortex M3). Memory configurations on your particular system will also affect things, how big caches are, etc, etc.",
+        "score": 24.265625,
+        "rank": 21,
+        "document_id": "5f971641-2e6d-4be4-9196-943115c8a182",
+        "passage_id": 391843
+    },
+    {
+        "content": "Overview\r\n---\r\n\r\nThis answer provides probable explanations. Put it shortly, all parallel workload does not infinitely scale. When many cores compete for the same shared resource (eg. DRAM), using too many cores is often detrimental because **there is a point where there are enough cores to saturate a given shared resource and using more core only increase the overheads**.\r\n\r\nMore specifically, in your case, the L3 cache and the IMCs are likely the problem. Enabling **Sub-NUMA Clustering** and **non-temporal prefetch** should improve a bit the performances and the scalability of your benchmark. Still, there are other architectural hardware limitations that can cause the benchmark not to scale well. The next section describes how Intel Skylake SP processors deal with memory accesses and how to find the bottlenecks.\r\n\r\n-----\r\n\r\nUnder the hood\r\n---\r\n\r\nThe layout of Intel Xeon Skylake SP processors is like the following in your case:\r\n\r\n[![processor-configuration][1]][1]\r\n\r\n[!",
+        "score": 24.203125,
+        "rank": 22,
+        "document_id": "d20f4722-b1c8-44da-b365-677a11433dd2",
+        "passage_id": 153776
+    },
+    {
+        "content": "Xcode&#39;s default behavior is to use a debug build when running your project in Xcode and to use a release build when profiling the project in Instruments. Debug and release builds can have different amounts of memory usage.\r\n\r\nYou can check and change the build configuration from Xcode&#39;s scheme editor.\r\n\r\n[![enter image description here][1]][1]\r\n\r\n\r\n  [1]: https://i.stack.imgur.com/xGbYZ.png\r\n\r\nIf that doesn&#39;t solve your issue, you&#39;re going to have a tough time getting a definitive answer. The people who know the inner workings and the differences between the debugger and Instruments are Apple engineers.",
+        "score": 24.15625,
+        "rank": 23,
+        "document_id": "ac464efd-f38d-49db-a6a8-164c1dd5c55c",
+        "passage_id": 256366
+    },
+    {
+        "content": "The PostgreSQL configuration on the two machines is quite different, so it is not surprising that the query plans are different. Particularly `random_page_cost` has a big impact.\r\n\r\nYou definitely should benchmark your workload with different `shared_buffers` settings: yours is probably way too high (normally, 8GB is appropriate).\r\n\r\nBut I think that *both* your query plans are terrible, and your problem is in a different spot.\r\n\r\nThe optimizer misestimates the amount of rows returned from an index scan on `showtimes.mappable_program`, and this misestimate causes even worse misestimates and bad plan choices later on.\r\n\r\nTry increasing the density of the statistics on the column:\r\n\r\n    ALTER TABLE showtimes.mappable_program ALTER mapping_scheme_id\r\n       SET STATISTICS 1000;\r\n\r\nThen `ANALYZE` the table.\r\n\r\nIf that doesn&#39;t do the trick, modify the query by replacing\r\n\r\n    WHERE COALESCE(mp2.ignore::integer, 0) = 0\r\n\r\nwith\r\n\r\n    WHERE mp2.ignore = &#39;0&#39; OR mp2.ignore IS NULL\r\n\r\nThat might help the optimizer estimate the condition better.",
+        "score": 24.15625,
+        "rank": 24,
+        "document_id": "a29fd295-9452-4a49-b010-446b7c1c03d6",
+        "passage_id": 266830
+    },
+    {
+        "content": "In the project properties dialog, select &quot;All Configuations&quot; or &quot;Multiple Configurations&quot; from the configuration dropdown box.\r\n\r\nCaution: The dialog will then only show empty property values for those which differ in the selected configurations. You might overwrite something there accidentally.",
+        "score": 24.078125,
+        "rank": 25,
+        "document_id": "58bc1bb1-3b22-4846-802f-c0f9499e60bd",
+        "passage_id": 30037
+    },
+    {
+        "content": "The two plans have almost the same estimated cost, so it could be randomness. Remember that you used `random()` to generate data. Does the plan remain stable per machine across several test runs?\r\n\r\nThe observed difference may well be a caching effect. The slow plan performs a lot of I/O, while the fast plan had everything cached.\r\n\r\nTo get even more from your execution plans, set `track_io_timing` to `on`.\r\n\r\nConfiguration parameters that influence the plan choice here are `effective_cache_size` (high valurs favor index scans) and `random_page_cost` (low values favor index scans).",
+        "score": 24.046875,
+        "rank": 26,
+        "document_id": "ee590d76-bb08-4bfa-a657-fbcce63b9aa4",
+        "passage_id": 58653
+    },
+    {
+        "content": "As indicated in [this MSDN documentation on the gcserver setting][1], and particularly in the configuration section for `GCNoAffinitize`\r\n\r\nWhen enabled, one of the effects of the gcserver setting is to have one heap per processor (read here : by processor core), which would explain the observed behaviour based on the hardware reported.\r\n\r\nIn our case 118Mo (Heap with gcserver disabled) * 12 cores = 1.4Go, which is matching the observed difference between the two captured states.\r\n\r\n\r\n  [1]: https://learn.microsoft.com/en-us/dotnet/framework/configure-apps/file-schema/runtime/gcserver-element",
+        "score": 23.96875,
+        "rank": 27,
+        "document_id": "e17eddaf-4142-4b45-888b-9d311e087f21",
+        "passage_id": 146065
+    },
+    {
+        "content": "To change the static configuration constants you modify the source and recompile. \r\nWhat if at some point in future, your program needs maintain more than one configuration, or to alternate between configurations as it processes different files, or even runs one thread with one configuration and another thread with a different configuration. You won\u2019t be able to use that technique. \r\nSo for better designs you store constants which never change as static constants in Class definition.These are loaded as soon as Class is loaded in memory.\r\nIn other case which i described earlier (Resource loading) you keep these in various properties files which can be loaded in JAVA Properties object. Examples for such cases can be  JDBC connection related information, etc...",
+        "score": 23.890625,
+        "rank": 28,
+        "document_id": "363892d6-1f0c-405b-a921-8fa4264a05b1",
+        "passage_id": 444577
+    },
+    {
+        "content": "To be honest, here&#39;s no clear cut answer for you. 90% of the performance is defined by database design and implementation, not the actual version of MySQL used.\r\n\r\nThe ability to handle load and stress is mostly the same between versions. Some things under the same configurations may be performing better on the newer version, some other things on older.\r\n\r\nMost metric in your list (handling, thread, pooling, max user, max connection, processing, CPU usage, memory, etc) are usually fine tuneable on both my.cnf and OS sysctl level. Even kernel tweaks can have an effect.\r\n\r\nSo, in general, 90% of people can&#39;t see the performance difference. On the other hand, 90% also fail at doing proper performance tests too.",
+        "score": 23.875,
+        "rank": 29,
+        "document_id": "7c50664f-565d-4e4f-8975-081027f18005",
+        "passage_id": 246127
+    },
+    {
+        "content": "To some degree the specifics may depend on the machine configuration, and the GPU in use.\r\n\r\nI&#39;m not sure how effective it will be in your case.  I don&#39;t think that it can be advanced as a &quot;guarantee&quot; of avoiding a TDR event without a lot more experimentation. Your mileage may vary.",
+        "score": 23.84375,
+        "rank": 30,
+        "document_id": "0256daaf-cf5f-4626-ba3a-e51ae11f588f",
+        "passage_id": 23278
+    },
+    {
+        "content": "&gt;For some configurations, threads may load or store inputs or outputs in any order, and cuFFT does not guarantee that the inputs or outputs handled by a given thread will be contiguous. These characteristics may vary with transform size, transform type (e.g. C2C vs C2R), number of dimensions, and GPU architecture. These variations may also change from one library version to the next.\r\n\r\nThis gives some additional clues that we ought not to expect a nice contiguous treatment of all the output data, in every case.  And the indicated variability may depend on exact transform parameters, as well as CUFFT library version.\r\n\r\nSo let&#39;s get down to brass tacks.  Is CUFFT calling the store callback more than once per output point?  It is not.  To prove this, let&#39;s modify your store callback as follows:\r\n\r\n    static __device__ void stor_cb(void *a, size_t index, cufftComplex z,\r\n                                   void *cb_info, void *sharedmem) {\r\n    \r\n        // Print the index. Each index should appear exactly once.",
+        "score": 23.84375,
+        "rank": 31,
+        "document_id": "5057ef0e-24e7-4b28-af3b-baf14c8cfe47",
+        "passage_id": 16225
+    },
+    {
+        "content": "Yes, a JVM can take advantage of that much RAM and processors.  In fact I have a machine with a nearly identical configuration as you describe except it&#39;s running RedHat.  Keep in mind that your application would need to be multithreaded to use all the processor cores.\r\n\r\nAs for hardware limitations, there are always caching issues that can be pretty complicated, but a rule of thumb is that if all your threads are randomly accessing multiple areas of RAM, you&#39;re likely to get low cache coherency.  If they&#39;re hitting roughly the same areas of RAM, it&#39;s likely you&#39;ll get better cache hits.\r\n\r\nFor specifics, it would be nice to know what sort of applications you&#39;re planning on writing.",
+        "score": 23.78125,
+        "rank": 32,
+        "document_id": "c15b17e6-afe4-4fad-9472-393e0289a7b8",
+        "passage_id": 464759
+    },
+    {
+        "content": "There are multiple factors which play a role here, though the weights of each of these can differ on a case by case basis.\r\n\r\n- As [nicely pointed out](https://stackoverflow.com/questions/44225732/improving-sql-query-using-spark-multi-clusters#comment75462357_44225732) by [mtoto](https://stackoverflow.com/users/4964651/mtoto), increasing number of workers on a single machine, is unlikely to bring any performance gains.\r\n\r\n  Multiple workers on a single machine have access to the same fixed pool of resources. Since worker doesn&#39;t participate in the processing itself, you just use a higher fraction of this pool for management.\r\n\r\n There legitimate cases when we prefer a higher number of executor JVMs, but it is not the same as increasing number of workers (the former one is an application resource, the latter one is a cluster resource).\r\n\r\n- It is not clear if you use the same number of cores for baseline and multi-worker configuration, nevertheless cores are not the only resource you have to consider working with Spark. Typical Spark jobs are IO (mostly network and disk) bound.",
+        "score": 23.78125,
+        "rank": 33,
+        "document_id": "b8097957-5b4a-47b2-835f-ea784c6618f7",
+        "passage_id": 296439
+    },
+    {
+        "content": "Static fields are are initialized during the initialization phase during class loading.\r\n\r\nBut if a primitive type or a String is defined as a constant and the value is known at compile time, the compiler replaces the constant name everywhere in the code with its value. This is called a compile-time constant. If the value of the constant in the outside world changes (for example, if it is legislated that pi actually should be 3.975), you will need to recompile any classes that use this constant to get the current value.\r\nThis is when String Literals for unique string&#39;s will be created which are defined as values of constants.\r\n\r\nBut it is similar as loading constants from resources in Properties object (writing code for same). Constants definitely consume memory.\r\nString pool behavior wont change.\r\n\r\n\r\nSome thought on design approach:\r\n\r\n\r\nIt is very easy to put all configuration constants in a class, then refer to them throughout the app. \r\nTo change the static configuration constants you modify the source and recompile. \r\nWhat if at some point in future, your program needs maintain more than one configuration, or to alternate between configurations as it processes different files, or even runs one thread with one configuration and another thread with a different configuration.",
+        "score": 23.75,
+        "rank": 34,
+        "document_id": "363892d6-1f0c-405b-a921-8fa4264a05b1",
+        "passage_id": 444576
+    },
+    {
+        "content": "I&#39;d say the only reason to put your constants into resources is need to set different values for different device configurations. For example, different strings for different device locales, different text sizes or margins for different device resolutions.\r\n\r\nIf it&#39;s &quot;realy constant&quot;, I don&#39;t see any need to put it inside resource. Because it means additional problem like getting value only through context (application context is applicable though). And as **Think Twice Code Once** mentioned in comment it can lead some problems in testing modules.\r\n\r\nAnd since you asking about memory leaks I think you&#39;re not understanding it properly. Holding `String`, `int` and other simple constant can&#39;t raise any leak because they can&#39;t hold any object that should be cleared. But if you hold static `Activity`, for example, it causes a big leak, as after it finishes it can&#39;t be cleared from memory because of reference in that static variable.",
+        "score": 23.671875,
+        "rank": 35,
+        "document_id": "a55d3421-1273-4977-b928-89b41e1f7d79",
+        "passage_id": 230528
+    },
+    {
+        "content": "Designing a realistic Stress Test/Load Test in SQL Server is an art.\r\n\r\nThere are many factors that can impact performance:\r\n\r\n - **Hardware**: You need to run your tests against the the same hardware that you have defined your target (20 call per second). This includes disk configuration, redundancy, clustering, ... This is not always possible so you need to make it as close as possible however the more different your test environment becomes, the more unrealistic results can be. This means, for example, if you use 2 CPUs instead of 4, you cannot adjust the parameters accordingly.\r\n\r\n - **Data load**: in terms of number of the records you need to test, it is ideal to have around 30%-40% more of the maximum rows you expect in the tables.\r\n\r\n - **Data and index distribution**: It is a common mistake to load the server with a *preset* or *completely random* data. **Both are wrong**. The distribution of the values need to be realistic. For example distribution of the marital status is not the same across all possible values so you need to design your data generation to include this.\r\n\r\n - **Index fragmentation**: this is a tough one.",
+        "score": 23.640625,
+        "rank": 36,
+        "document_id": "a62e89e2-379e-464d-949c-e21c66fc356d",
+        "passage_id": 469421
+    },
+    {
+        "content": "According to the documentation:\r\n\r\n&gt; Setting `-Xms` and `-Xmx` to the same value increases predictability by\r\n&gt; removing the most important sizing decision from the virtual machine.\r\n&gt; However, the virtual machine is then unable to compensate if you make\r\n&gt; a poor choice.\r\n\r\nGenerally, on larger heap GC run less frequent. But there are some case when larger heap may cause performance degradation (for example libs that scan memory for object).\r\nAlso with larger heap, startup is little longer, but there are no need to heap resize on runtime.\r\n\r\n\r\nMostly the difference is so little, that noone can recognise.\r\nBut the best way to find the best jvm configuration is always the measurement.\r\nThere are lot of good tool to measure performance, memory etc, for example JHM, JMC, VisualVm etc..\r\nEvery apps are different, so there are no best choice in common.",
+        "score": 23.609375,
+        "rank": 37,
+        "document_id": "9f73d086-1291-47bd-a0d2-ce0fd466730a",
+        "passage_id": 207389
+    },
+    {
+        "content": "**Each consumption unit has the ability to process many messages in parallel.** Often times we see that the problem people have is not the number of allocated consumption units, but the default concurrency configuration for their workload. Take a look at the **batchSize** and **newBatchThreshold** settings which can be tweaked in your host.json file. Depending on your workload, you may find that you get significantly better throughput when you change these values (in some cases, *reducing* concurrency has been shown to dramatically increase throughput). For example, you may observe this if each function execution requires a lot of memory or if your functions depend on an external resource (like a database) which can only handle limited concurrent access. More documentation on these concurrency controls can be found here: https://github.com/Azure/azure-webjobs-sdk-script/wiki/host.json.\r\n\r\nAs I hinted at above, playing with per-consumption unit concurrency may help with the memory pressure issues you&#39;ve been encountering. Each consumption unit has its own pool of memory (e.g. its own 1.5 GB).",
+        "score": 23.59375,
+        "rank": 38,
+        "document_id": "a08bb16f-3f4a-4a5f-adcc-e9cb8b0c4610",
+        "passage_id": 302258
+    },
+    {
+        "content": "**Re-Resolve Unresolved Includes** only updates those files in the selection for which configuration info (such as specified include paths) has changed, and the change resulted in an include that was previously unresolved now being resolved.\r\n\r\n---\r\n\r\nThe performance characteristics can vary a lot depending on the project size and the kind of machine you&#39;re running on. I work on a very large project (millions of lines) for which a **Rebuild** can take 20-30 minutes on a relatively modern desktop. The operation is typically CPU-bound, but the indexer is currently single-threaded, so it will only use up one CPU core.\r\n\r\n---\r\n\r\nFinally, I&#39;d like to mention again what I said in my comment on the question: if you configure the index to be updated automatically in `Preferences | C/C++ | Indexer`, you shouldn&#39;t need to manually invoke these commands at all, at least in theory. In practice, I find an occasional **Rebuild** is necessary (say once every few weeks), especially after a configuration change (e.g. adding a new include path).",
+        "score": 23.578125,
+        "rank": 39,
+        "document_id": "be1537d2-a104-434f-804b-347cc8c0dcb3",
+        "passage_id": 73118
+    },
+    {
+        "content": "If the configuration option is very constant and rarely changes, for example changes only when switching platforms, on windows it&#39;s something on linux it&#39;s something else, then maybe I would consider option 2, but I believe I would prefer to go option 3 anyway. Using a file is easier to track in control version systems and build systems will recompile only files that depend on a header that sees that definition. A macro passed on command line is harder to track which files use it (ie. spaghetti code) and usually when you change it&#39;s value, you have to recompile the whole project.",
+        "score": 23.546875,
+        "rank": 40,
+        "document_id": "61117097-08f9-41dc-942d-1023013e31e8",
+        "passage_id": 184217
+    },
+    {
+        "content": "Actually I find that builds spend most of their time doing IO of some sort.  So increasing the number of CPUs doesn&#39;t help as much as you would think.\r\nHowever, additional machines will have additional disks and network bandwidth. So they may help more. However, you can improve the configuration of a single box and possibly get the same performance.\r\n\r\nHow many builds you you typically have running at once?  If you typically have 2 builds queued now (and 2 running) then having four builds running at once is an improvement. But more than that isn&#39;t going to make much difference.\r\n\r\nEight core machines with 64 GB of memory are surprisingly standard for a new server these days.  In this configuration, I would suggest getting an SSD drive to improve disk access times and running four to eight builders/agents and that could be enough for if you typically have eight builds waiting at any time or less.",
+        "score": 23.53125,
+        "rank": 41,
+        "document_id": "0d5d8e62-fd5e-4b0d-b3a6-7d5aa787b89c",
+        "passage_id": 449539
+    },
+    {
+        "content": "&gt;Why is it so ? \r\n\r\nIt&#39;s likely due to a registers per thread issue.  Code generation is significantly different between release and debug versions, and this affects the registers used per GPU thread.  If you use too many, a kernel will not launch.\r\n\r\nYou can quickly confirm this by modifying this particular command line switch:\r\n\r\n    -maxrregcount=0 \r\n\r\nto some other value.  This is possible to do in one of the Visual Studio project configuration fields.   I would start with a value of something like 20 for this.  If that causes the release project to run, then you have a registers per thread issue.  You can get more info about that by studying some of the answers discussing it already, such as the answer [here](https://stackoverflow.com/questions/29297960/cuda-ptx-registers-declaration-and-using/29382675?s=1|0.0000#29382675)\r\n\r\nNote that this problem is not necessarily just pertinent to release vs. debug.  *Anything* that affects code generation could lead to a similar problem, such as 32bit/64bit, or other project or compiler setting differences.  The solution path is the same.",
+        "score": 23.484375,
+        "rank": 42,
+        "document_id": "fb860c8a-8cac-44ad-96fe-d7f23805feee",
+        "passage_id": 22459
+    },
+    {
+        "content": "I strongly suspect you may find that you get different results running this code with and without the debugger, and in release configuration vs in debug configuration.\r\n\r\nIn the first version, you&#39;re comparing two expressions. The C# language allows those expressions to be evaluated in higher precision arithmetic than the source types.   \r\n\r\nIn the second version, you&#39;re assigning the addition result to a local variable. *In some scenarios*, that will force the result to be truncated down to 32 bits - leading to a different result. In other scenarios, the CLR or C# compiler will realize that it can optimize away the local variable.\r\n\r\nFrom section 4.1.6 of the C# 4 spec:\r\n\r\n&gt; Floating point operations may be performed with higher precision than the result type of the operation. For example, some hardware architectures support an &quot;extended&quot; or &quot;long double&quot; floating point type with greater range and precision than the `double` type, and implicitly perform all floating point operations with the higher precision type. Only at excessive cost in performance can such hardware architectures be made to perform floating point operations with *less* precision.",
+        "score": 23.421875,
+        "rank": 43,
+        "document_id": "6f21b715-c371-4076-b90b-39a392b5e9a2",
+        "passage_id": 105681
+    },
+    {
+        "content": "&gt; so it&#39;s conceivable that there is a config (or configs) set on those servers that is not managed by ansible.\r\n\r\nStart from there.\r\n\r\nGather information about:\r\n\r\n - PHP version\r\n    - and configuration\r\n - Linux kernel\r\n    - and configuration (e.g. swappiness)\r\n - libc version\r\n - Web server version\r\n    - and configuration\r\n\r\nAssuming the three servers have the same amount of memory and the same processes running, any difference can only stem from those parameters.\r\n\r\nYou can also try executing a sample command line script to see whether the memory allocation anomaly appears there too. Whatever it happens, you learn something; and if it appears in the script too, it will be easier to run a single instance of the PHP binary through strace or Valgrind just the once.",
+        "score": 23.34375,
+        "rank": 44,
+        "document_id": "14d994bd-f17f-441e-9db5-59bc729f922a",
+        "passage_id": 215850
+    },
+    {
+        "content": "Once you&#39;ve reached your peak it will tell you how many requests per second you can handle at peak.\r\n\r\nYou will also notice that in most cases peak performance is not sustainable: your setup may be able to burst for short periods of time handling many more requests per second than under sustained load.\r\n\r\nAfter you get the numbers for a single server, you can start to vary in two ways:\r\n\r\n1. test with different hardware configurations (add more RAM if you&#39;re memory bound, add a better CPU if you&#39;re CPU bound, etc)\r\n\r\n2. test with multiple servers; start adding servers and see how your service scales horizontally\r\n\r\nIdeally your service should scale linearly as you add servers but you will likely find that the performance curve is not linear.\r\n\r\nGet your numbers, tweak your design. Rinse. Repeat.\r\n\r\nThere is no substitute, magic formula.",
+        "score": 23.28125,
+        "rank": 45,
+        "document_id": "612420ff-18d0-4a3e-bc64-0da76658cda1",
+        "passage_id": 313923
+    },
+    {
+        "content": "The utilisation at _runtime_ does not change the allocated number of virtual CPU cores at _runtime_. \r\n\r\nAs you already know: the number of cores depends on the amount of memory you configure. But this is a _configuration time_ allocation and has nothing to do with the _runtime_.\r\n\r\nCommenter [Anon Coward][1] already mentioned, high memory utilisation still _can_ have an impact on your Lambdas execution time. But it does not have to. It depends on what your code is actually doing.\r\n\r\nThe great thing is: you can measure all of this and you can therefore find out what the best memory size is for your Lambda function. \r\n\r\nEven better, there are already projects that help you do exactly that:\r\n\r\nhttps://github.com/alexcasalboni/aws-lambda-power-tuning\r\n\r\n\r\n  [1]: https://stackoverflow.com/users/2378643/anon-coward",
+        "score": 23.28125,
+        "rank": 46,
+        "document_id": "58c5412b-6772-49ea-abe9-97dea6344b32",
+        "passage_id": 157920
+    },
+    {
+        "content": "It is indeed coming from the Real-TimePlatform.\r\nThe memory depends on the number of measured signals, the raster speed and the dureation trigger length in the ControlDesk measurment configuration. On the hardware, a buffer is created to be able to hold one entire trigger shot, which may fail if it does not fit to the RAM.\r\nOften a long trigger duration is used causing this problem. Then, the soultion is to measure continuously, which the user most of the time wants instead.\r\nSee http://www.dspace.com/faq?408\r\n\r\n\r\n15kHz is quite fast for the ds1104, by the way, try with litte # of measurements if it works.\r\n\r\nRegards, the dspace support :)\r\n(I answered just because i found this question randomly, please contact support@dspace.de (or your local dSPACE company) if you need us!",
+        "score": 23.265625,
+        "rank": 47,
+        "document_id": "c50db0b2-33d9-4b33-ba65-ce46513536d7",
+        "passage_id": 211194
+    },
+    {
+        "content": "5. When using hardware performance counters, extra care is needed to ensure that all of the configuration data for the counters is available and described correctly.  The code above uses RDPMC to read IA32_PERF_FIXED_CTR1, which has an event name of CPU_CLK_UNHALTED.  The modifier to the event name depends on the programming of IA32_FIXED_CTR_CTRL (MSR 0x38d) bits 7:4.  There is no generally-accepted way of mapping from all possible control bits to event name modifiers, so it is best to provide the complete contents of IA32_FIXED_CTR_CTRL along with the results.\r\n 6. The CPU_CLK_UNHALTED performance counter event is the right one to use for benchmarks of portions of the processor whose behavior scales directly with processor core frequency -- such as instruction execution and data transfers involving only the L1 and L2 caches.  Memory bandwidth involves portions of the processor whose performance does *not* scale directly with processor frequency.  In particular, using CPU_CLK_UNHALTED without also forcing fixed-frequency operation makes it impossible to compute the elapsed time (required by (1) and (3) above).",
+        "score": 23.25,
+        "rank": 48,
+        "document_id": "671e38e2-76e6-4e3f-8835-da01c90e30c1",
+        "passage_id": 218773
+    },
+    {
+        "content": "With thanks to Frederick Cheung, I did some research: https://www.phusionpassenger.com/documentation/Users%20guide%20Apache.html#PassengerMaxPoolSize\r\n\r\n&gt; 8.6.1. PassengerMaxPoolSize &lt;integer&gt;\r\n&gt; \r\n&gt; The maximum number of application processes that may simultaneously\r\n&gt; exist. A larger number results in higher memory usage, but improves\r\n&gt; the ability to handle concurrent HTTP requests. The optimal value\r\n&gt; depends on your system\u2019s hardware and your workload. You can learn\r\n&gt; more at the Phusion article Tuning Phusion Passenger\u2019s concurrency\r\n&gt; settings.\r\n&gt; \r\n&gt; If you find that your server is running out of memory then you should\r\n&gt; lower this value.\r\n&gt; \r\n&gt; This option may only occur once, in the global server configuration.\r\n&gt; The default value is 6.\r\n\r\nI set PassengerMaxPoolSize to 2 in all my virtual host files, and resolved the issue!",
+        "score": 23.234375,
+        "rank": 49,
+        "document_id": "e5428063-afbc-417c-92a7-95f33c34c659",
+        "passage_id": 381030
+    },
+    {
+        "content": "**Short anwer:** No.\r\n\r\nUnfortunately, *Spark Mesos* and *YARN* only allow giving as much resources (cores, memory, etc.) per machine as your *worst* machine has ([discussion][1]). Ideally, the cluster should be homogeneous in order to take full advantage of its resources.\r\n\r\nHowever, there might exist a workaround for your problem. According to the linked source above, *Spark* standalone allows creating multiple workers on some machines. You might modify your worker configuration to be appropriate for the *worst* machine, and start multiple workers on these.\r\n\r\nFor example, given two computers with 4G and 20G memory respectively, you could create 5 workers on the latter, each with a configuration to use just 4G of memory, as limited per the first machine.\r\n\r\n  [1]: http://apache-spark-user-list.1001560.n3.nabble.com/heterogeneous-cluster-hardware-td11567.html",
+        "score": 23.234375,
+        "rank": 50,
+        "document_id": "d3b69461-5b25-40f9-8e8d-cc2c53f024a1",
+        "passage_id": 357654
+    }
+]
