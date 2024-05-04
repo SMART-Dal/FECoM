@@ -1,0 +1,352 @@
+[
+    {
+        "content": "Such instrumentation is from 2x slow or slower, especially for memory bandwidth / latency limited core. The paper lists and explains instrumentation overhead and Caveats:\r\n\r\n&gt; **Instrumentation Overhead**: Instrumentation involves\r\ninjecting extra code dynamically or statically into the\r\ntarget application. The additional code causes an\r\napplication to spend extra time in executing the original\r\napplication ... Additionally, for multi-threaded\r\napplications, instrumentation can modify the ordering of\r\ninstructions executed between different threads of the\r\napplication. As a result, IDS with multi-threaded\r\napplications comes at the lack of some fidelity\r\n&gt;\r\n&gt; **Lack of Speculation**: Instrumentation only observes\r\ninstructions executed on the correct path of execution. As\r\na result, IDS may not be able to support wrong-path ...\r\n&gt;\r\n&gt; **User-level Traffic Only**: Current binary instrumentation\r\ntools only support user-level instrumentation. Thus,\r\napplications that are kernel intensive are unsuitable for\r\nuser-level IDS.",
+        "score": 32.96875,
+        "rank": 1,
+        "document_id": "99e9edab-d2a4-4aa3-8241-1cd37ee18d47",
+        "passage_id": 296375
+    },
+    {
+        "content": "Such instrumentation is from 2x slow or slower, especially for memory bandwidth / latency limited core. The paper lists and explains instrumentation overhead and Caveats:\r\n\r\n&gt; **Instrumentation Overhead**: Instrumentation involves\r\ninjecting extra code dynamically or statically into the\r\ntarget application. The additional code causes an\r\napplication to spend extra time in executing the original\r\napplication ... Additionally, for multi-threaded\r\napplications, instrumentation can modify the ordering of\r\ninstructions executed between different threads of the\r\napplication. As a result, IDS with multi-threaded\r\napplications comes at the lack of some fidelity\r\n&gt;\r\n&gt; **Lack of Speculation**: Instrumentation only observes\r\ninstructions executed on the correct path of execution. As\r\na result, IDS may not be able to support wrong-path ...\r\n&gt;\r\n&gt; **User-level Traffic Only**: Current binary instrumentation\r\ntools only support user-level instrumentation. Thus,\r\napplications that are kernel intensive are unsuitable for\r\nuser-level IDS. \r\n\r\n\r\n  [1]: https://software.intel.com/en-us/articles/intel-sdm",
+        "score": 32.8125,
+        "rank": 2,
+        "document_id": "49df2682-33ed-42d6-8993-472bad0685e3",
+        "passage_id": 38150
+    },
+    {
+        "content": "No fine grained timing.\r\n\r\nPS: Scholars who study SpecCPU for memory access worked with memory access dumps/traces, and dumps were generated slowly: \r\n\r\n* http://www.bu.edu/barc2015/abstracts/Karsli_BARC_2015.pdf - LLC misses recorded to offline analysis, no timing was recorded from tracing runs\r\n* http://users.ece.utexas.edu/~ljohn/teaching/382m-15/reading/gove.pdf - all load/stores instrumented by writing into additional huge tracing buffer to periodic (rare) online aggregation. Such instrumentation is from 2x slow or slower, especially for memory bandwidth / latency limited core.\r\n* http://www.jaleels.org/ajaleel/publications/SPECanalysis.pdf (by Aamer Jaleel of Intel Corporation, VSSAD) - Pin-based instrumentation - program code was modified and instrumented to write memory access metadata into buffer. Such instrumentation is from 2x slow or slower, especially for memory bandwidth / latency limited core. The paper lists and explains instrumentation overhead and Caveats:\r\n\r\n&gt; **Instrumentation Overhead**: Instrumentation involves\r\ninjecting extra code dynamically or statically into the\r\ntarget application.",
+        "score": 29.6875,
+        "rank": 3,
+        "document_id": "49df2682-33ed-42d6-8993-472bad0685e3",
+        "passage_id": 38149
+    },
+    {
+        "content": "No fine grained timing.\r\n\r\nPS: Scholars who study SpecCPU for memory access worked with memory access dumps/traces, and dumps were generated slowly: \r\n\r\n* http://www.bu.edu/barc2015/abstracts/Karsli_BARC_2015.pdf - LLC misses recorded to offline analysis, no timing was recorded from tracing runs\r\n* http://users.ece.utexas.edu/~ljohn/teaching/382m-15/reading/gove.pdf - all load/stores instrumented by writing into additional huge tracing buffer to periodic (rare) online aggregation. Such instrumentation is from 2x slow or slower, especially for memory bandwidth / latency limited core.\r\n* http://www.jaleels.org/ajaleel/publications/SPECanalysis.pdf (by Aamer Jaleel of Intel Corporation, VSSAD) - Pin-based instrumentation - program code was modified and instrumented to write memory access metadata into buffer. Such instrumentation is from 2x slow or slower, especially for memory bandwidth / latency limited core. The paper lists and explains instrumentation overhead and Caveats:\r\n\r\n&gt; **Instrumentation Overhead**: Instrumentation involves\r\ninjecting extra code dynamically or statically into the\r\ntarget application.",
+        "score": 29.6875,
+        "rank": 4,
+        "document_id": "99e9edab-d2a4-4aa3-8241-1cd37ee18d47",
+        "passage_id": 296374
+    },
+    {
+        "content": "# A word of warning\r\n\r\nUsing locks in performance measurement code is dangerous. So is memory allocation, which also often implies using locks. This means, that `start_time` has significant cost and the performance will even get worse with more threads. That doesn&#39;t even consider the cache invalidation from having one thread allocating a chunk of memory (record) and then another thread modifying it (tail pointer).\r\n\r\nNow that may be fine if the sections you measure take seconds, but it will cause great overhead and perturbation when your sections are only hundreds of cycles.\r\n\r\nTo create a scalable performance tracing facility, you must pre-allocate thread-local memory in larger chunks and have each thread write only to it&#39;s local part.\r\n\r\nYou can also chose to use some of the existing measurement infrastructures, such as [Score-P][2].\r\n\r\n# Overhead &amp; perturbation\r\n\r\nFirst, distinguish between the two (linked concepts). *Overhead* is extra time you spend, while *perturbation* refers to the impact on what you measure (i.e. you now measure something different than what happens without the measurement). Overhead is undesirable in large quantities, but perturbation is much worse.",
+        "score": 28.5625,
+        "rank": 5,
+        "document_id": "8f5b3723-01a9-4d14-b6f0-b42b5eb2795b",
+        "passage_id": 311108
+    },
+    {
+        "content": "These methods are intentionally ignored during profiling in CPU tracing mode as a means to reduce profiling overhead: \r\n\r\n&gt; CPU profiling: the range of trivial methods like getters and setters excluded from CPU tracing instrumentation for performance consideration has been extended. Now it includes methods whose bytecode satisfies the following conditions:\r\n&gt; - does not exceed 32 bytes;\r\n&gt; - does not contain cycles;\r\n&gt; - contains only these instructions: load, store and other stack operations, field access, bit and arithmetic operations, comparison operations, return. In particular, this means that these methods cannot call other methods nor create objects.\r\n\r\nYou can find more information about this in the [YourKit profiler documentation](https://www.yourkit.com/changes/yjp_2015.jsp).",
+        "score": 28.21875,
+        "rank": 6,
+        "document_id": "228fd313-1028-4c07-a666-93c33d482915",
+        "passage_id": 33644
+    },
+    {
+        "content": "Having heard of your project, I think you also have the third option: give up &quot;JVMTI only&quot; requirement and rewrite some parts of the agent in Java leveraging the power of bytecode instrumentation and JIT compilation. Yes, this may slightly change Java code being executed and probably result in more classes loaded, but does this really matter, if from the user&#39;s perspective the impact will be even less than with JVMTI-only agent? I mean, the performance impact could be significantly less when there are no Java&lt;-&gt;native switches, JVMTI overhead and so on. If the agent has low overhead and works with stock JVM, I guess it&#39;s not a big problem to make it ON in production in order to get its cool features, is it?",
+        "score": 27.90625,
+        "rank": 7,
+        "document_id": "19007483-1ee8-4c3f-aac5-7a34b7e341bf",
+        "passage_id": 252637
+    },
+    {
+        "content": "The CPU overhead BTrace adds is following:\r\n\r\n - the actual probe code \r\n  - in safe mode the overhead you can incur is minimal with exception of getting **timestamps** - it can be really sluggish, depending on the OS)\r\n  - when using the unsafe mode you are free to shoot your leg off - the overhead will depend on what you put in the probe handlers\r\n - **JMX** handling, if applicable (using a **@Property** annotated attribute)\r\n\r\nIn terms of memory **BTrace** tries its best to avoid any overhead. However, if you use aggregations, profiler or custom collections the memory footprint will grow accordingly to the amount of data you store there.\r\n\r\nAlso, **BTrace** puts some additional requirements on **PermGen** - redefining classes too often might lead to permgen depletion.",
+        "score": 27.828125,
+        "rank": 8,
+        "document_id": "fb8c0737-7485-4833-8ce3-4129fa3fa4f7",
+        "passage_id": 350648
+    },
+    {
+        "content": "Profilers can be divided into two categories: instrumenting and sampling. VisualVM includes both, but both of them have disadvantages.\r\n\r\n**Instrumenting profilers** use bytecode instrumentation to modify classes. They basically insert the special tracing code into every method entry and exit. This allows to record all executed methods and their running time. However, this approach is associated with a big overhead: first, because the tracing code itself can take much time (sometimes even more than the original code); second, because the instrumented code becomes more complicated and prevents from certain JIT optimizations that could be applied to the original code.\r\n\r\n**Sampling profilers** are different. They do not modify your application; instead they periodically take a snapshot of what the application is doing, i.e. the stack traces of currently running threads. The more often some method occurs in these stack traces - the longer (statistically) is the total execution time of this method.\r\n\r\nSampling profilers typically have much smaller overhead; furthermore, this overhead is manageable, since it directly depends on the profiling interval, i.e. how often the profiler takes thread snapshots.\r\n\r\nThe problem with sampling profilers is that JDK&#39;s public API for getting stack traces is flawed.",
+        "score": 27.765625,
+        "rank": 9,
+        "document_id": "ffd99fcc-ddd4-44dd-87d7-9e5b5d9143f9",
+        "passage_id": 210000
+    },
+    {
+        "content": "You don&#39;t seem to have asked a question that I can see, so I will assume your question is something like &quot;what is this mysterious overhead and what are my options to mitigate it?&quot;\r\n\r\nWhen the call to a `__device__` function is in a different compilation unit than the definition of that function, the compiler cannot [inline](https://stackoverflow.com/questions/34046227/does-calling-device-functions-impact-the-number-of-registers-used-in-cuda/34046510#34046510) that function (generally). \r\n\r\nThis can have a variety of performance impacts:\r\n\r\n- The call instruction creates some overhead\r\n- the function call has an ABI that reserves registers, this creates register pressure which may affect code performance\r\n- the compiler may have to transfer additional function parameters outside of registers, via the stack.  This adds additional overhead.\r\n- The compiler cannot (generally) optimize across the function call boundary.\r\n\r\nAll of these can create performance impacts to varying degrees, and you can find other questions here on the `cuda` tag which mention these.\r\n\r\nThe most common solutions I know of are:\r\n\r\n1.",
+        "score": 27.703125,
+        "rank": 10,
+        "document_id": "f98494cd-b98e-48f3-a20e-cc57bcaed681",
+        "passage_id": 5600
+    },
+    {
+        "content": "It may also be the case that blocks are limited by some other factor, such as registers or shared memory usage.  It&#39;s usually necessary to carefully profile as well as possibly study the generated machine code to fully answer such a question.  But it may be that the loop overhead measurably impacts your comparison, which is basically my case 2 vs. my case 1 above.\r\n\r\n(note the memory indices in my &quot;pseudo&quot; machine code example are not what you would expect for a well written grid-striding copy loop - they are just for example purposes to demonstrate unrolling and the benefit it can have via compiler instruction reordering).",
+        "score": 27.5,
+        "rank": 11,
+        "document_id": "4239322c-6fe6-44b9-8b23-15b4841bb2c1",
+        "passage_id": 17402
+    },
+    {
+        "content": "Firstly, I would like to express my gratitude to [Holger](https://stackoverflow.com/users/2711488/holger) and [boneill](https://stackoverflow.com/users/458561/boneill) for their help in pinpointing the original problem and in identifying the root cause of the issue.\r\n\r\nThe actual problem lies not with the JIT compiler or build optimizations. Holger&#39;s comment provides a clear and concise explanation of it:\r\n&gt;  This is not how a JIT compiler works. After the profiler injected the code, it is part of the method and inlining the method implies retaining the behaviour of the entire code, including the injected code. \r\n\r\nSo, the issue clearly lies with the YourKit profiler, which incorporates a concept of &quot;trivial methods&quot;. These methods are intentionally ignored during profiling in CPU tracing mode as a means to reduce profiling overhead: \r\n\r\n&gt; CPU profiling: the range of trivial methods like getters and setters excluded from CPU tracing instrumentation for performance consideration has been extended.",
+        "score": 27.484375,
+        "rank": 12,
+        "document_id": "228fd313-1028-4c07-a666-93c33d482915",
+        "passage_id": 33643
+    },
+    {
+        "content": "As pointed out in the comments, performing computations on the GPU is not necessarily faster. Instead, the impact on performance depends on the additional overhead of data conversion and transfer.\r\n\r\nUsually, the overhead can be influenced via the batch size, but the [trainAutoencoder](https://ch.mathworks.com/help/nnet/ref/trainautoencoder.html) function does not provide that option.\r\n\r\nFor general measurement and improvement of GPU performance in MATLAB, see [this link](https://ch.mathworks.com/help/distcomp/measure-and-improve-gpu-performance.html).",
+        "score": 27.375,
+        "rank": 13,
+        "document_id": "92a59931-94f6-495e-bf45-2d9576f23645",
+        "passage_id": 17751
+    },
+    {
+        "content": "Clearly the first approach is simpler and shorter - both for reading and definitely in performance and memory aspects. \r\n\r\nIn the second code, the two extra constructs will cause a little overhead.",
+        "score": 27.0625,
+        "rank": 14,
+        "document_id": "aa4f7628-0fc7-4884-80f3-cc08c451f383",
+        "passage_id": 284865
+    },
+    {
+        "content": "Basically, the problem is that decompilers are &quot;incomplete&quot; in that they can&#39;t handle all possible binaries.  Then too, with both decompilers and binary instrumentation, there&#39;s the problem of determining what in the binary is code and what is data -- it&#39;s generally undecidable and you just want to instrument the code, not alter the data.\r\n\r\nWith binary instrumentation, you can more readily deal with this incrementally, only instrumenting what you know to be code, with &quot;instrumentation&quot; where execution might leave the known code to interrupt and instrument more (or when what was thought to be code is accessed as data, &quot;undo&quot; the instrumentation for the access).\r\n\r\nAs with everything, there are performance tradeoffs -- the most extreme instrumentation is using an emulator to execute the code while extracting information, but the cost of that is high.  Partial instrumentation by inserting breakpoints or inserting code has much lower cost, but is less complete.  Decompiling and recompiling may allow for lower runtime cost but higher up-front cost.",
+        "score": 27.0,
+        "rank": 15,
+        "document_id": "3813342c-f0d5-4d9e-9192-5ef3e92239a3",
+        "passage_id": 210616
+    },
+    {
+        "content": "Notes:\r\n\r\n1-\tI do not have such powerful system available to me, so I cannot reproduce every issue mentioned.\r\n\r\n2-\tAll the comments are being summarized here\r\n\r\n3- It was stated that machine received an upgrade: `EBS to provisioned SSD w/ 6000 IOPs/sec`, however the issue persists\r\n\r\nPossible issues:\r\n\r\nA-\tif memory swap starts to happen then you are nor purely working with `RAM` anymore and I think `R` would have harder and harder time to find available continues memory spaces.\r\n\r\nB- work load and the time it takes to finish the workload, compared to the number of cores\r\n\r\nc- `parallel` set up, and `fork cluster`\r\n\r\nPossible solutions and troubleshooting:\r\n\r\n\r\nB-\tLimiting memory usage\r\n\r\nC-\tLimiting number of cores\r\n\r\nD-\tIf the code runs fine on a smaller machine like personal desktop than issue is with how the parallel usage is setup, or something with fork cluster.\r\n\r\nThings to still try:\r\n\r\nA-\tIn general running jobs in `parallel` incurs `overhead`, now more `cores` you have, you will see the effects more.",
+        "score": 26.90625,
+        "rank": 16,
+        "document_id": "457f1f68-0c9c-4d1d-8f5b-ccd8b5040ac1",
+        "passage_id": 284639
+    },
+    {
+        "content": "In this case `table.concat` could give you *worse* performance because:\r\n * you must create a table (which usually you would throw away);\r\n * you have to call the function `table.concat` (the function call overhead impacts performance more than using the built-in `..` operator a few times).\r\n+ Use `table.concat`, if you need to concatenate many strings, especially if one or more of the following conditions are met:\r\n * you must do it in subsequent steps (the `..` optimization works only inside the same expression);\r\n * you are in a tight loop;\r\n * the strings are large (say, several kBs or more).\r\n\r\nNote that these are just rules of thumb. Where performance is really paramount you should profile your code. \r\n\r\nAnyway Lua is quite fast compared with other scripting languages when dealing with strings, so usually you don&#39;t need to care so much.",
+        "score": 26.75,
+        "rank": 17,
+        "document_id": "e7bf104b-c282-4890-a937-48b0fc44d183",
+        "passage_id": 139439
+    },
+    {
+        "content": "Since `rand` is not thread safe, this can cause undefined results (probably a race condition). Moreover, please note that using a `single` directive does not make the `rand` call atomic.\r\n\r\nIn order to avoid race conditions, you can use synchronization directives such as `barrier` or `taskwait`. You can also use mutual exclusion using `critical` or atomic instructions using `atomic`.\r\nSynchronizations directives should be avoided (when it is possible) as they often cause scalability issues. `atomic` instructions can only be applied on specific cases. For example, you cannot use `atomic` directives on the `rand` calls in the code above. However, you can use `critical` sections to *protect* these calls (while keeping the `single` and `master` sections that can be executed in parallel). \r\n\r\n`atomic` should be preferred over `critical` when both make sense because the overhead of `atomic` instructions is generally smaller.\r\nAn `atomic` directive cannot be replaced by only a `single` directive because the `atomic` is performed by each thread of the parallel section while the `single` section is executed by only one.",
+        "score": 26.734375,
+        "rank": 18,
+        "document_id": "5840691e-f966-4906-baa7-1eba206bc939",
+        "passage_id": 216724
+    },
+    {
+        "content": "I don&#39;t see why this would not be possible from managed code. Array access code turns into normal x86 memory instructions. It&#39;s a thin abstraction. In particular I don&#39;t see why you would need a customized OS.\r\n\r\nYou should be able to test sequential memory speed by performing memcpy on big arrays. They must be bigger than the last level cache size.\r\n\r\nYou can test random access by randomly indexing into a big array. The index calculation must be cheap, unpredictable and there must be a dependency chain that serializes the memory instructions so that the CPU cannot parallelize them.\r\n\r\n&gt; Honestly I don&#39;t think its possible. RAM benchmarks usually run off of dedicated OS&#39;s\r\n\r\nRAM testing is different from RAM benchmarking.\r\n\r\n&gt; C# doesn&#39;t give you that kind of control over RAM\r\n\r\nOf course, just new up a big array and access it. Also, understand the overheads that are present. The only overhead is a range check.\r\n\r\nThe GC has no impact during the benchmark. It might be triggered by an allocation.",
+        "score": 26.6875,
+        "rank": 19,
+        "document_id": "4c51e98d-3356-4b1c-9eac-e8f129410596",
+        "passage_id": 348952
+    },
+    {
+        "content": "&gt; Is this still a good idea, or is that coding standard outdated?\r\n\r\nThe RTTI is most definitely the most notorious violation of the zero-overhead principle, because it incurs a static cost (executable size, and initialization code) that is proportional to the number of polymorphic classes (i.e., classes with at least one virtual function), and it does not depend on how much you use it, if at all. But there is no way to really provide RTTI without some per-class overhead. That&#39;s why you can disable RTTI on most compilers if you don&#39;t need it at all, or if you want replace it with an RTTI system you have more control over (as the LLVM guys did). Nevertheless, if you have RTTI enabled, and you are not using it, the overhead is only in the form of code bloat (larger executable, larger memory space needed, larger spread of code) and loading / unloading time, and so, the run-time execution overhead is almost non-existent. But in resource-deprived environments, or for small utility programs (e.g., invoked repetitively in shell scripts), that static overhead can be too much to bear.",
+        "score": 26.625,
+        "rank": 20,
+        "document_id": "27cff567-4d7a-47e1-af34-820b4efe863f",
+        "passage_id": 390136
+    },
+    {
+        "content": "Then there will be an additional method dispatch to the function&#39;s `apply` method, compared with the `match` statement.  Again this is a fixed (and common) pattern such that I expect it can be optimised quite a lot.\r\n\r\n\r\n----------\r\n\r\nEssentially, any overhead will be negligible.  As with all optimisations, it would be premature to write your code in an artificially terse/less natural way until you&#39;ve identified that it&#39;s a performance bottleneck.\r\n\r\nAnd if performance really was a critical problem here, chances are you&#39;d end up going for something a lot more optimised than *either* option.\r\n\r\nIn the meantime, relax and enjoy the &quot;niceness&quot; that first-class functions give you!",
+        "score": 26.546875,
+        "rank": 21,
+        "document_id": "1c32fa97-06d3-41ad-ba6b-16886e22f0a1",
+        "passage_id": 462843
+    },
+    {
+        "content": "Another possibility is PC sampling. Don&#39;t instrument the code at all; just interrupt the thread periodically and take a sample PC value.   If you know where the basic blocks are, a PC sample anywhere in the basic block is evidence the entire block got executed.  This won&#39;t necessarily give precise coverage data (you may miss critical PC values), but the overhead is pretty low.\r\n\r\nIf you are willing to patch *source* code, you can do better: just insert &quot;covered[i]=true;&quot; in the beginning the ith basic block, and let the compiler take care of all the various optimizations.   No patches needed.  The really cool part of this is that if you have basic blocks *inside* nested loops, and you insert source probes like this, the compiler will notice that the probe assignments are idempotent with respect to the loop and lift the probe out of the loop.  Viola, zero probe overhead inside the loop.  What more more could you want?",
+        "score": 26.46875,
+        "rank": 22,
+        "document_id": "abcabb53-8605-4ddc-ae3c-94e5e126014c",
+        "passage_id": 427413
+    },
+    {
+        "content": "&gt; Do cats and scalaz create performance overhead on application?\r\n\r\nAbsolutely.\r\n\r\nIn the same way that any line of code adds performance overhead.&lt;br&gt;\r\nSo, if that is your concern, then don&#39;t write any code _(well, actually, the world may be simpler if we had never tried all this)_.\r\n\r\nNow, dick answer outside. The proper question you should be asking is: _&quot;Is the overhead of X library harmful to my software?&quot;_; remember this applies to any library, actually to any code you write, to any algorithm you pick, etc.\r\n\r\nAnd, to answer that question, we need some things before.\r\n\r\n1. Define the SLOs the software you are writing must hold. Without those, any performance question / observation you made is pointless. It doesn&#39;t matter if something is faster / slower if you don&#39;t know if that is meaningful for you and your clients.\r\n2. Once you have SLOs, you need to perform stress tests to verify if your current version of the software satisfies those.",
+        "score": 26.375,
+        "rank": 23,
+        "document_id": "19bdd639-f3c6-40cd-bbb2-52933a8dc072",
+        "passage_id": 117381
+    },
+    {
+        "content": "The current NVIDIA tools do not currently (05/2014) support the feature you are requesting. Trying to trace every memory access would add significant overhead as you would have to trace at a maximum rate of NumSM accesses per cycle for LSU + 1/2 NumSM accesses again for texture. \r\n\r\nThe trace would generate 1-3x additional memory writes for the timing, smid, operation type, and address values. If the tool cannot statically define the output location of each operation then tool would also have to use atomics to allocate space for the trace record.\r\n\r\nThe current options for collecting this information are\r\n\r\n 1. Instrument the source code. This is not transparent to the\r\n    application.\r\n 2. Instrument the PTX. Frameworks such as [Panoptes][1] and [Lynx][2]\r\n    may be helpful.\r\n 3. Run the application on a simulator. GPU Ocelot may already support this type of instrumentation.\r\n\r\nI would encourage you to file a RFE through the NVIDIA Developer Program.\r\n\r\nUsing these methods you could get an ordered list of operations per warp.",
+        "score": 26.359375,
+        "rank": 24,
+        "document_id": "73ea514e-9fcb-468f-aa33-69b4ac7d7594",
+        "passage_id": 24625
+    },
+    {
+        "content": "Here are some reasons there&#39;s a difference between non-LINQ and LINQ code performance:\r\n\r\n1. Every call to a method has some performance overhead. Information has to be pushed onto the stack, the CPU has to jump to a different instruction line, etc. In the LINQ version you are calling into Select and FirstOrDefault, which you are not doing in the non-LINQ version.\r\n2. There is overhead, both time and memory, when you create a `Func&lt;&gt;` to pass into the Select method. The memory overhead, when multiplied many times as you do in your benchmark, can lead to the need to run the garbage collector more often, which can be slow.\r\n3. The Select LINQ method you are calling produces an object that represents its return value. This also adds a little memory consumption.\r\n\r\n&gt; why is the difference so large?\r\n\r\nIt&#39;s actually not that large. True, LINQ takes 50% longer, but honestly you&#39;re talking about only being able to complete this entire recursive operation 400 times in a *millisecond*.",
+        "score": 26.34375,
+        "rank": 25,
+        "document_id": "78e7f3f8-57fa-49da-a9e3-aadf508fbada",
+        "passage_id": 381107
+    },
+    {
+        "content": "The implementation details are more complex.\r\n\r\n&gt; Is Objectice-C&#39;s reference counting actually technically unsafe with threads?\r\n\r\nNope -- it is safe in regards to threads.\r\n\r\nIn reality, typical code will call `retain` and `release` quite infrequently, compared to other operations.   Thus, even if there were significant overhead on those code paths, it would be amortized across all the other operations in the app (where, say, pushing pixels to the screen is *really* expensive, by comparison).\r\n\r\nIf an object is shared across threads (bad idea, in general), then the locking overhead protecting the data access and manipulation will generally be vastly greater than the retain/release overhead because of the infrequency of retaining/releasing.\r\n\r\n&lt;hr/&gt;\r\n\r\nAs far as Python&#39;s GIL overhead is concerned, I would bet that it has more to do with how often the reference count is incremented and decremented as a part of normal interpreter operations.",
+        "score": 26.328125,
+        "rank": 26,
+        "document_id": "795396bf-6f69-4f47-8bda-251515d5d259",
+        "passage_id": 309349
+    },
+    {
+        "content": "There might be other standard libraries that have more overhead than some might wish to have for particular situations. Library code often has to make compromises that fall somewhere that won&#39;t please everyone. I would suspect that some of the newer libraries like thread, chrono, regex, and random, provide a bit more features or robust guarantees than are necessary in many applications, and therefore, pull in some undue overhead. But then again, many applications do benefit from those features. This is the very meaning of compromise.\r\n\r\nAs for language rules that put undue overhead, there are many small issues that impose some overhead. For one, I can think of several places where the standard has to make conservative assumptions that prevent optimizations. One notable example is the inability to [restrict](http://en.wikipedia.org/wiki/Restrict) pointer aliasing, which forces compilers to assume that any memory could be aliased by any pointer (even though, in practice, pointer aliasing is rare), limiting the opportunities for optimization. There are many similar cases where the compiler has to make the &quot;safe&quot; assumption, limiting optimizations.",
+        "score": 26.328125,
+        "rank": 27,
+        "document_id": "27cff567-4d7a-47e1-af34-820b4efe863f",
+        "passage_id": 390142
+    },
+    {
+        "content": "You are not tightly measuring time like I am (Michael Abrash: Zen of assembly language) so your interrupt latencies and overhead can have an effect here.  Personally I think from your results and from how this core works, etc the task switch time should be equal for both of these tasks for each compile at least.  Guess I am just putting up a disclaimer that you may be seeing something else in addition to the above.\r\n\r\n--------------------------------------\r\n\r\nTo the question of what, if anything, can we do about this.   Well this starts off with the answer of the premature optimization discussion.  Once you have decided for some reason that you do want to do some optimization and you have isolated that code, then what do you do.  You can sometimes just change the C code to help the compiler make something simpler or faster (remember fewer instructions does not mean faster...faster means faster...and faster is relative to the system so the same code on one system may be slower on another and vice versa).\r\n\r\nIf that does not work a common solution is to let the compiler do the work first then hand optimize.",
+        "score": 26.28125,
+        "rank": 28,
+        "document_id": "51cf1d5c-8f6f-4a1c-a9e6-8e09a0535682",
+        "passage_id": 116646
+    },
+    {
+        "content": "As noted in the [JNA FAQ][1], direct mapping would be your best performance increase, but you&#39;ve excluded that as an option.  It also notes that the calling overhead for each native call is another performance hit, which you&#39;ve partially addressed by changing `setAutoWrite()`.\r\n\r\nYou also did mention flattening your structures to an array of primitives, but rejected that due to encoding/decoding complexity.  However, moving in this direction is probably the next best choice, and it&#39;s possible that the biggest performance issue you&#39;re currently facing is a combination of JNA&#39;s `Structure` access using reflection and native reads.  [Oracle notes][2]:\r\n\r\n&gt; Because reflection involves types that are dynamically resolved,\r\n&gt; certain Java virtual machine optimizations can not be performed.\r\n&gt; Consequently, reflective operations have slower performance than their\r\n&gt; non-reflective counterparts, and should be avoided in sections of code\r\n&gt; which are called frequently in performance-sensitive applications.\r\n\r\nSince you are here asking a performance-related question and using JNA Structures, I can only assume you&#39;re writing a &quot;performance-sensitive application&quot;.",
+        "score": 26.265625,
+        "rank": 29,
+        "document_id": "352e050d-ec83-4fe3-9955-4751d14fe8f3",
+        "passage_id": 56317
+    },
+    {
+        "content": "Another factor that affects overhead is the efficiency of the allocator on your platform, which will color your results unless you can account for it.  A 15x difference between two implementations is so large it&#39;s downright suspicious \u2014 it makes me wonder how you got those numbers.\r\n\r\n*In general,* if your queues are very short, there is a lot of room for improvement over the other implementations.  If you&#39;re okay with writing your own container, you could write a circular buffer container or use [Boost&#39;s `circular_buffer`][2].  A circular buffer combines the memory efficiency of `std::vector` with the CPU efficiency of `std::deque` for deque type operations.  Kind of makes me wish it were in the STL to begin with.  Oh well.\r\n\r\n### Footnote\r\n\r\nThe actual amounts of overhead will vary with the implementation.\r\n\r\n[1]: https://stackoverflow.com/questions/4088999/what-the-heque-is-going-on-with-the-memory-overhead-of-stddeque\r\n[2]: http://www.boost.org/doc/libs/1_53_0/libs/circular_buffer/doc/circular_buffer.html",
+        "score": 26.1875,
+        "rank": 30,
+        "document_id": "b65e563d-171c-4e2e-a633-47b51010b9c4",
+        "passage_id": 427389
+    },
+    {
+        "content": "It&#39;s done&quot; reply to be sent back.\r\n\r\nThe &quot;Do nothing&quot; is just to test the overhead of the test harness.\r\n\r\nIt&#39;s clear that the overhead of launching a thread is enormous. And even the worker thread with the inter-thread queue slows things down by a factor of 20 or so on Fedora 25 in a VM, and by about 8 on native OS X.\r\n\r\nI created an OSDN chamber holding the code I used for the performance test. It can be found here: https://osdn.net/users/omnifarious/pf/launch_thread_performance/\r\n\r\n  [1]: http://www.cs.utexas.edu/~witchel/372/lectures/POSIX_Linux_Threading.pdf",
+        "score": 26.1875,
+        "rank": 31,
+        "document_id": "5b0d14e5-3492-498c-9553-0c7ca243b984",
+        "passage_id": 162423
+    },
+    {
+        "content": "Your code is easy to read here and the size is completely reasonable for a main memory test. \r\n 3. For any timed test, the absolute time should be included to enable comparison against plausible overheads of timing.  Your use of only the CORE_CYCLES_UNHALTED counter makes it impossible to compute the elapsed time directly (though the test is clearly long enough that timing overheads are negligible).\r\n\r\nOther important &quot;best practice&quot; principles:\r\n\r\n 4. Any test that employs RDPMC instructions must be bound to a single logical processor.  Results should be presented in a way that confirms to the reader that such binding was employed.  Common ways to enforce such binding in Linux include using the &quot;taskset&quot; or &quot;numactl --physcpubind=[n]&quot; commands, or including an inline call to &quot;sched_setaffinity()&quot; with a single allowed logical processor, or setting an environment variable that causes a runtime library (e.g., OpenMP) to bind the thread to a single logical processor.\r\n 5. When using hardware performance counters, extra care is needed to ensure that all of the configuration data for the counters is available and described correctly.",
+        "score": 26.15625,
+        "rank": 32,
+        "document_id": "671e38e2-76e6-4e3f-8835-da01c90e30c1",
+        "passage_id": 218772
+    },
+    {
+        "content": "If it doesn&#39;t crash on Simulator and the crash is &quot;silent&quot;, it seems to be memory overhead. And if you load all resources at once there will be no memory warnings in console. \r\n\r\nTry to run the app with Activity Monitor in Instruments - it measures real memory usage. And try to skip loading textures (inside `CCTexture2D` class comment `glTexImage2D(...)`.",
+        "score": 26.09375,
+        "rank": 33,
+        "document_id": "ee50e5a7-5e57-4d22-a69f-e6d44627a114",
+        "passage_id": 454710
+    },
+    {
+        "content": "It is always difficult to measure performance over multiple cores unless you have a significant work load that benefits from working over multiple cores. The problem is that the code needs to be shared amongst the threads and cores, which means that while there may not be huge overhead, but still a significant amount, especially for simple code, lowering the overall performance. \r\n\r\nAnd like you mentioned it would be a completely different story if you did something CPU intensive.",
+        "score": 26.078125,
+        "rank": 34,
+        "document_id": "72ca4f06-5840-4583-a6ef-26d06a3ab197",
+        "passage_id": 422401
+    },
+    {
+        "content": "When you, e.g., execute a global load instruction and the memory request cannot be served immediately (misses the cache), the GPU will switch to another thread. Once the value is ready in the cache and GPU switches back to your thread, the load instruction will have to be issued again to complete fetching the value (see also [this answer](https://stackoverflow.com/a/35593124/2064761) and [this thread](https://devtalk.nvidia.com/default/topic/497047/cuda-programming-and-performance/instructions-issued-and-instructions-executed-what-is-the-difference-between-two-events-/post/3556087/)). When you, e.g., access shared memory and there are a bank conflicts, the shared memory access will have to be replayed multiple times for different threads in the warp&amp;hellip;\r\n\r\nThe main reason to differentiate between executed and issued instructions would seem to be that the ratio of the two can serve as a measurement for the amount of overhead your code produces due to instructions that cannot be completed immediately at the time they are executed&amp;hellip;",
+        "score": 25.90625,
+        "rank": 35,
+        "document_id": "49bb216b-779e-4e80-bedc-a8160d5324ad",
+        "passage_id": 12035
+    },
+    {
+        "content": "It&#39;s not a lot of overhead, but it&#39;s there.\r\n\r\nFor single-subscription streams, that&#39;s about it.\r\n\r\nFor broadcast streams, which can have multiple listeners, there can be a little extra overhead to handle new listeners being added *while* delivering the event. Again, not a lot, but it&#39;s there. The state-space for a stream is actually quite complicated.\r\n\r\n(You can create &quot;a synchoronous `StreamController`&quot; which delivers events &quot;immediately&quot;, but most of the time, you *shouldn&#39;t*. Those are not for avoiding asynchrony, they are for avoiding adding *extra* asynchronous delays when propagating already synchronous events, and should be used very carefully to avoid breaking code assuming that they won&#39;t get events in the middle of something else. A properly implemented reactive framework will use such controllers in their implementation, but that will not get rid of the original inherent delay of delivering the original asynchronous event.)\r\n\r\nNow, performance is not absolute.",
+        "score": 25.890625,
+        "rank": 36,
+        "document_id": "6482c67e-ad5f-44ba-a61d-4aa1ead6537a",
+        "passage_id": 167592
+    },
+    {
+        "content": "semantics* it has. Essentially, the class is no longer yours.\r\n\r\nOn the other hand, inheritance is way overrated anyway. Apart from its use for public interfaces (pure virtual classes), you should generally prefer composition over inheritance.\r\n\r\nAnother, more fundamental case where a virtual destructor is undesirable is when the code you have **requires a [POD](http://en.wikipedia.org/wiki/Plain_old_data)** to work \u2013&#160;such as when using it in a `union`, when interfacing with C code or when performing POD-specific optimisations (only PODs are blittable, meaning they can be copied very efficiently).\r\n[Hat tip to Andy]\r\n\r\nA word about **performance overhead**: there are situations in which lots of small objects are created, or objects are created in tight loops. In those cases, the performance overhead of virtual destructors can be a crucial mistake.\r\n\r\nClasses which have virtual function tables are also *larger* than classes without, which can also lead to unnecessary performance impact.\r\n\r\n**All in all, there are no compelling reasons to make destructors virtual, and some compelling reasons not to.**",
+        "score": 25.875,
+        "rank": 37,
+        "document_id": "e9e230dd-9fb8-4816-a70f-4db9bd3d3b6c",
+        "passage_id": 448325
+    },
+    {
+        "content": "&gt; Is read/write small size of data performance problematic?\r\n\r\nIf you only need to read/write a small amount of data, reading/writing more is a waste of time.\r\n\r\nIf you need to read/write a large amount of data, reading/writing many small pieces means that you pay the overhead of switching between user-space and kernel many times (regardless of whether it&#39;s switches caused by kernel API calls or switches caused by things like page faults). Whether or not this is problematic depends on the scenario - e.g. for a rough prototype that&#39;s only intended to be executed 3 times it&#39;s irrelevant, but for high-performance production software that spends a lot of time on IO it can be undesirable (especially now with Spectre and Meltdown mitigation increasing the switching costs, and especially if there&#39;s no other reason, like &quot;code maintenance&quot;, that justifies the extra overhead).",
+        "score": 25.84375,
+        "rank": 38,
+        "document_id": "72e2aa94-203c-4cf2-883a-ee3329a03de0",
+        "passage_id": 237371
+    },
+    {
+        "content": "&gt;  I understand recursion just enough to be dangerous in that I do not know if this technique can cause problems when the number of promises/calls goes up. Questions of overhead and memory management come to mind\r\n\r\n[Recursive approaches to make promise calls like your `getUserList ` are OK](https://stackoverflow.com/q/29925948/1048572).\r\n\r\nThe only possible memory problem is that your `allUsersTemp` array could be growing very large, until it exceeds the limits of your browser. You should however wonder long before that whether it would really be useful to display hundredths of thousands of user entries in a single large table. At those scales where memory would become problematic, you&#39;d need more effective tools to manage your user base anyway than just listing all of them.\r\n\r\nRegarding code style, I would recommend not to declare `allUsersTemp` and `paginationToken` as mutable higher-scope variables.",
+        "score": 25.828125,
+        "rank": 39,
+        "document_id": "6f1308ce-6eca-418a-b0c7-5b493cc6a2e6",
+        "passage_id": 149260
+    },
+    {
+        "content": "Things to still try:\r\n\r\nA-\tIn general running jobs in `parallel` incurs `overhead`, now more `cores` you have, you will see the effects more. when you pass a lot of jobs that take very very little time (think smaller than second) this will results in increase of `overhead` related to constantly pushing jobs. try to limit the `core to 8` just like your desktop and try your code? does the code run fine? if yes than try to increase the workload as you increase the cores available to the program.\r\n\r\n\r\nStart with lower end of spectrum of number of cores and amount of ram an increase them as you increase the workload and see where the fall happens.\r\n\r\nB-\tI will post a summery about `Parallelism in R`, this might help you catch something that we have missed\r\n\r\nWhat worked:\r\nLimiting the number of cores has fixed the issue. As mentioned by OP, he has also made other changes to the code, however i do not have access to them.",
+        "score": 25.796875,
+        "rank": 40,
+        "document_id": "457f1f68-0c9c-4d1d-8f5b-ccd8b5040ac1",
+        "passage_id": 284640
+    },
+    {
+        "content": "A high-end Fermi GPU (e.g. a GTX 580) will likely give you the best performance among shipping cards for this. You would want all 32-bit operands to be of type &quot;unsigned int&quot; for best performance, as there is some additional overhead for the handling of signed divisions and modulos. \r\n\r\nThe compiler generates very efficient code for division and modulo with fixed divisor As I recall it is usually around three to five machine instructions instructions on Fermi and Kepler. You can check the generated SASS (machine code) with cuobjdump --dump-sass. You might be able to use templated functions with constant divisors if you only use a few different divisors. \r\n\r\nYou should see on the order of sixteen inlined SASS instructions being generated for the unsigned 32-bit operations with variable divisor, across Fermi and Kepler. The code is limited by the throughput of integer multiplies and for Fermi-class GPUs is competitive with hardware solutions. Somewhat reduced performance is seen on currently shipping Kepler-class GPUs due to their reduced integer multiply throughput.",
+        "score": 25.78125,
+        "rank": 41,
+        "document_id": "e06d6f8f-18f8-45bc-a06a-028bb728f9b9",
+        "passage_id": 28285
+    },
+    {
+        "content": "Your points about performance overhead are very good.\r\n\r\nI would ask the converse question....why WOULD you want to? \r\n\r\nI&#39;ve seen this practice in VB6 in the past. The developer stores information in user controls in an array somewhere and uses it to access information outside the lifetime on the UI which initially displays that control.\r\n\r\nThis pattern violates the separation of business logic, model, and user interface. \r\n\r\nThere&#39;s a fine line between being lazy and being sloppy....reuse and misuse. I&#39;m all about code reuse...but when a developer tells me they want to use user controls to carry information between different areas of the software, I think that falls on the side of misuse. It adversely affects maintainability.\r\n\r\nSo, if the answer to &quot;why would you want to?&quot; has something to do with using user controls to pass around information, the above would certainly apply.\r\n\r\nP.S.\r\nIt&#39;s unclear to me what the intent was in the question you linked to. Also, there are valid reasons to binding to other UI elements in the same context (usually using relative binding sources).",
+        "score": 25.765625,
+        "rank": 42,
+        "document_id": "97897502-5b4c-4546-b242-eba986a3370e",
+        "passage_id": 457345
+    },
+    {
+        "content": "There are many similar cases where the compiler has to make the &quot;safe&quot; assumption, limiting optimizations. But most of these are rather small in scope and potential benefits, and they are often justified in terms of being able to guarantee correctness of the behaviour (and repeatability, robustness, portability, etc.). Also, note that in the vast majority of those cases, it doesn&#39;t really get any better in other languages, maybe marginally better in C, but that&#39;s about it. Some of those issues can also be circumvented with compiler extensions or platform-specific features, or as a last resort, with inline assembly code, that is, if you really need to optimize down to that level.\r\n\r\nOne example that is no longer valid is the problem of requiring the compiler to produce exception-handling (stack unwinding) code even for functions that will never throw. Now, that can be solved by specifying `noexcept` on the functions in question.\r\n\r\nBut other than those microscopic issues, I can&#39;t really think of any other major source of undue overhead in C++ (aside from RTTI and exceptions).",
+        "score": 25.765625,
+        "rank": 43,
+        "document_id": "27cff567-4d7a-47e1-af34-820b4efe863f",
+        "passage_id": 390143
+    },
+    {
+        "content": "The usable memory is the same.  But there is overhead with each allocation.\r\n\r\n`1&lt;&lt;28` overheads is certainly more than 1 overhead.\r\n\r\nFurther details would required knowing the platform, compiler, and options (including packing).  The reasons would vary upon the many combinations.\r\n\r\nAs commented by [@M.M](https://stackoverflow.com/questions/35710254/difference-in-size-of-memory-used-when-using-malloc-at-once-and-calling-it-multi/35710344?noredirect=1#comment59097456_35710254), various allocators cope with bookkeeping in various ways.  Typically it is a trade-off between fast allocation/de-allocation and memory usage efficiency.\r\n\r\nPacking could affect things.  If OP can control packing options, possibility both allocation sizes will reduce - perhaps not proportionally.  The structure appears to likely be 12-byte. (not a power of 2) and thus may benefit (size) with packing yet cost reduced access performance.\r\n\r\nAnother impact is the credibility of the purported memory usage of ~4GB and ~8GB.  Smart allocators _allocate_, but do not &quot;_use_ memory until something interesting is written.",
+        "score": 25.75,
+        "rank": 44,
+        "document_id": "be9ae8ea-7f1a-404b-8370-8eafd86a4f44",
+        "passage_id": 335035
+    },
+    {
+        "content": "So some tasks would be in a wait state. The overhead of context switching depends on not only the number of tasks but also the behavior of these tasks.\r\n\r\nBoth processors architects and OS developers are aware of context switching overhead and employ a variety of techniques to alleviate it. For example, x86 provides a number of instructions that are tuned to saving the context (partially) of the current task. The OS thread scheduler uses techniques such as priorities, preemption (with possibly large time slices on servers), and priority boosting. All of these help reducing the number of context switches and therefore their overall overhead. In addition, reducing the overhead of context switching is not the only thing that matters. In particular, the responsiveness of the system is very important as well, which is at odds with that overhead.",
+        "score": 25.75,
+        "rank": 45,
+        "document_id": "7c2f3d68-2b9f-40f4-8b05-3ad045f14661",
+        "passage_id": 270855
+    },
+    {
+        "content": "Both `Module` and `Block` are quite efficient, so the overhead induced by them is only noticable when the body of a function whose variables you localize does very little. There are two major reasons for the overhead: scoping construct overhead (scoping constructs must analyze the code they enclose to resolve possible name conflicts and bind variables - this takes place for both `Module` and `Block`), and the overhead of creation and destruction of new symbols in a symbol table (only for `Module`). For this reason, `Block` is somewhat faster. To see how much faster, you can do a simple experiment:\r\n\r\n    In[14]:= \r\n    Clear[f,fm,fb,fmp]; \r\n    f[x_]:=x;\r\n    fm[x_]:=Module[{xl = x},xl];\r\n    fb[x_]:=Block[{xl = x},xl];\r\n    Module[{xl},fmp[x_]:= xl=x]\r\n\r\nWe defined here 4 functions, with the simplest body possible - just return the argument, possibly assigned to a local variable. We can expect the effect to be most pronounced here, since the body does very little.",
+        "score": 25.734375,
+        "rank": 46,
+        "document_id": "fa78211a-a176-4a60-b65d-2c809dd2e803",
+        "passage_id": 460713
+    },
+    {
+        "content": "The performance difference you observe is mostly due to the increased instruction overhead in the pitched memory indexing scheme. Because your array size is a large power of two in the major direction, it is very likely that the pitched array allocated with `cudaMalloc3D` is the same size as the na&#239;ve allocation using `cudaMalloc`. You may find that the performance difference between the two versions changes if you vary the problem size.\r\n\r\n(Take note of the comments regarding compiler regressions in CUDA 7. If you refactor your code to pass the Fourier number as a kernel parameter, you will probably get a far bigger performance change than any difference due to pitched memory).",
+        "score": 25.6875,
+        "rank": 47,
+        "document_id": "ae2256b9-1c65-4b73-8a82-8ef33346cb64",
+        "passage_id": 21553
+    },
+    {
+        "content": "Fewer threads might be more efficient if the workload is small enough that the overheads of managing many threads cause the performance degradation.\r\n\r\n...but without seeing your code it&#39;s hard to say. Personally I&#39;m more inclined to believe it&#39;s just a bug in your code.",
+        "score": 25.671875,
+        "rank": 48,
+        "document_id": "4b684245-2891-446a-9661-a02c5de52ee1",
+        "passage_id": 28536
+    },
+    {
+        "content": "Such an automatic configuration is sub-optimal but often better than not paying attention to the distribution of pages on NUMA nodes. This is I think the most probable factor impacting the load balancing of this code on server CPUs.\r\n\r\n-----\r\n\r\nHow to make the program faster\r\n---\r\n\r\nWhile the comments provide several good guidelines to follow in order to make the program better. However, they miss the biggest *performance* issue in this specific code. Indeed:\r\n- cache matters, but the current code is **compute-bound**, so one should optimize the computation so to make it less compute-bound, not less memory-bound. \r\n- `vector&lt;vector&lt;double&gt;&gt;` is generally inefficient, but compilers can generate a pretty good code because accesses are **contiguous** and the last dimension is big (ie. `1000`). This means **the overhead of `vector&lt;vector&lt;double&gt;&gt;` is negligible**.\r\n\r\nThe biggest issue is the **data-dependent read/store**. Indeed, writing in a cache line takes few cycle. Reading also takes few cycle. If you write in an array and then just read it again, you pay a significant **latency of the L1 cache**.",
+        "score": 25.625,
+        "rank": 49,
+        "document_id": "1cfa35e3-b6f0-402f-a9bd-dd28d47e2e5a",
+        "passage_id": 125575
+    },
+    {
+        "content": "&gt; Does using the final keyword in the first example affect it at all?\r\n\r\nIn terms of memory no. But `final` guarantees that throughout execution reference can&#39;t be pointed to some other object in case you are dealing with objects (if primitive types, `final` guarantees that value for that variable not going to change through out execution)\r\n\r\n&gt; Is there any difference between these two code snippets in terms of memory usage and performance/overhead\r\n\r\nBased on experience I am guessing, of course there will be overhead in first approach, because  variable need to be created and maintained (Both cases memory usage would be ALMOST same). Even though there is some overhead, with current computing infrastructure, it would be negligible.\r\n\r\nBut first approach is more readable and maintainable comparing with second approach. Let us leave micro-optimization to JVM",
+        "score": 25.625,
+        "rank": 50,
+        "document_id": "3e174940-bdcb-4e76-86fb-10fa7055bb36",
+        "passage_id": 435234
+    }
+]
