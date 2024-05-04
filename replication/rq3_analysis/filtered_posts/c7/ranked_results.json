@@ -1,0 +1,352 @@
+[
+    {
+        "content": "Your measurements seem to be directed at determining the *relative* power consumption when running with 400 different variants of the code. It does not seem critical that steady-state power consumption is achieved, just that the conditions under which each variant is tested are as equal as is practically achievable. Keep in mind that the GPU&#39;s power sensors are not designed to provide high-precision measurements, so for comparison purposes you would want to assume a noise level on the order of 5%. For an accurate comparison you may even want to average measurements from more than one GPU of the same type, as manufacturing tolerances could cause variations in power draw between multiple &quot;identical&quot; GPUs.\r\n\r\nI would therefore suggest the following protocol: Run each variant for 30 seconds, measuring power consumption close to the end of that interval. Then let the GPU idle for 30 seconds to let it cool down before running the next kernel. This should give roughly equal starting conditions for each variant. You may need to lengthen the proposed idle time a bit if you find that the temperature stays elevated for a longer time. The temperature data reported by `nvidia-smi` can guide you here.",
+        "score": 24.765625,
+        "rank": 1,
+        "document_id": "6f47dae6-71b1-4936-b66e-892d43ed3358",
+        "passage_id": 11806
+    },
+    {
+        "content": "I&#39;d suggest to use the [GetSystemTimeAsFileTime function][1]. This function has low overhead and displays ths system clock. See [this answer][2] to get some more details about the granularity of time and APIs to query timer resolutions (e.g. `NtQueryTimerResolution`). Code to find out how the system file time increments can be found there too.\r\n`Windows 8` and `Server 2012` provide the new [GetSystemTimePreciseAsFileTime function][3] which is supposed to be more accurate. MSDN states *with the highest possible level of precision (&lt;1us)*. However, this only works on W8 and Server 2012 and there is very little documentation about how this additional accuracy is obtained. Seems like MS is going a Linux alike (gettimeofday) way to combine the performace counter frequency with the system clock.\r\n[This post][4] may of interest for you too.\r\n\r\n**Edit:** As of February 2014 there is some more detailed information about time matters on MSDN: [Acquiring high-resolution time stamps][5].",
+        "score": 24.328125,
+        "rank": 2,
+        "document_id": "fbdf6fd2-e8f7-4d96-bba1-aad9e48c6a60",
+        "passage_id": 98835
+    },
+    {
+        "content": "Thanks a lot for your answers. But at last I struggled my issue myself. And about half a year it took me to sit down and write about the solution here.\r\n\r\nFor my own part, it was quite a negligent misconception of how FFT works. There is a feature consisting in that fact that the energy of the given signal is spread between the given frequency and some nearby frequencies. So if we take the magnitude of the signal at the given frequency from the results of DSP library Fourier calculation, of course, we\u2019ll get the signal loss which increases with increase of the operating frequency at the given sample rate. But if we take the root mean square value of the magnitudes of the given frequency and of some nearby frequencies, we\u2019ll get no signal loss.\r\n\r\nI studied DSP accuracy capabilities in practice \u2013 for different sample rates and for the range of frequencies between 30 Hz and 32 kHz. There is a calculable frequency dispersion in which we should calculate our signal magnitude as a root mean square value of the magnitudes of the frequencies inside the dispersion. And there is a calculable frequency definition error. The higher the sample rate, the farther is the calculated value of the signal frequency.",
+        "score": 24.15625,
+        "rank": 3,
+        "document_id": "c483e893-28fc-47e7-a876-32ff6e8b14cd",
+        "passage_id": 213468
+    },
+    {
+        "content": "Most ADCs have a 1-LSB precision, so the lowest bit will toggle randomly anyway. If you need it to be stable, either use oversampling with increased frequency, or use a 12 bit ADC, this one will have an LSB toggling as well, but bit 2 will be probably stable.\r\n\r\nWhy probably you ask? Well, if you transmission line is noisy or badly coupled, it can introduce additional toggling in LSB range, or even higher. In some bad cases noise can even corrupt your higher 5 bits of data. \r\n\r\nThere might be some analog filters / ferrite beads / something else to smoothen your signal as well, so you won&#39;t even see actual &quot;steps&quot; on analog. \r\n\r\nSo, you never know until you test it. Try looking at your signal with a scope, that might solve some of your doubts.",
+        "score": 23.890625,
+        "rank": 4,
+        "document_id": "f8e53a66-41a7-443b-b644-6ef925778164",
+        "passage_id": 75508
+    },
+    {
+        "content": "This is just down to noise and inaccuracies in the fine precision data.\r\n\r\nYou could improve this slightly by using a noise reducing algorithm which smoothes the changes in the data.\r\n\r\nTake a look at [this Wiki][1]. I did something similar to this to try to minimise the fluctuations I was getting in the readings of the device orientation.\r\n\r\n  [1]: http://en.wikipedia.org/wiki/Low-pass_filter",
+        "score": 23.46875,
+        "rank": 5,
+        "document_id": "e0e27fe2-b378-49bc-b4f7-bfd007011827",
+        "passage_id": 106151
+    },
+    {
+        "content": "Taking note of whether your &#39;anomalies&#39; are often in low-frequency skills, or lower-freqeuncy job-ids, might enable a closer look at the data causes, or some disclaimering/filtering of `most_similar()` results. (The `most_similar()` method can limit its returned rankings to the more frequent range of the known vocabulary, for cases when the long-tail or rare words are, in with their rougher vectors, intruding in higher-quality results from better-reqpresented words. See the `restrict_vocab` parameter.)\r\n\r\nThat said, tinkering with training parameters may result in rankings that better reflect your intent. A larger `min_count` might remove more tokens that, lacking sufficient varied examples, mostly just inject noise into the rest of training. A different `vector_size`, smaller or larger, might better capture the relationships you&#39;re looking for. A more-aggressive (smaller) `sample` could discard more high-frequency words that might be starving more-interesting less-frequent words of a chance to influence the model. \r\n\r\nNote that with `dbow_words=1` &amp; a large window, and records with (perhaps?)",
+        "score": 23.25,
+        "rank": 6,
+        "document_id": "d99bb8ed-585c-4471-ada8-a476a7e29a3c",
+        "passage_id": 43540
+    },
+    {
+        "content": "Looking at JMeter code, I found the section below to be the one of interest. So basically the background thread is one that sleeps for `NANOTHREAD_SLEEP` milliseconds and then when it wakes up, it asks the time.\r\n\r\nThis value has to stay as high as possible not to add to much overhead to the sampling, but has to stay as low as possible to provide sufficient accuracy.\r\n\r\nIf you don&#39;t use the nanothread, then all the times are computed using System.nanoTime() and that may or may not give extra accuracy. Generally the high precision counters are very affected by frequency variations (e.g. due to power saving modes). My opinion is that you don&#39;t need to worry about using System.nanoTime() because **you won&#39;t be able to have a repeatability of the test with an accuracy at nanosecond level**. Even millisecond seems a very tight interval for that.\r\n\r\n**Why would you use a background thread for computing time?** I think this is because if the thread only measures time, you can ask it the current time anytime you want during the execution.",
+        "score": 22.84375,
+        "rank": 7,
+        "document_id": "55cc9383-9925-40c0-807a-00d9e7fcdf23",
+        "passage_id": 92480
+    },
+    {
+        "content": "**Short answer:**\r\n\r\nYou seem to be using the code from my answer from this place: https://stackoverflow.com/a/19966776/468812 \r\nAnd it&#39;s great, but:\r\n\r\nYou can not avoid these extra frequencies in your signal. \r\n\r\nThe signal you generate (sin wave) is an infinite signal.\r\n*And if you &quot;crop it&quot; and &quot;only use a piece of the signal&quot; it introduces &quot;clipping noise&quot; at both ends.*\r\n\r\nBut you can minimize the noise by taking larger input chunks and [using windowing][1] before the FFT. The Accelerate Framework provides some good and simple windowing functions. (Ex. [Hann Function][2], [vDSP_hann_window][3] )\r\nAlso - use larger input chunks. The larger input the more precise is frequency detection.\r\n\r\n\r\n\r\nSee [this article][4], google: Spectral Leakage, window function.",
+        "score": 22.828125,
+        "rank": 8,
+        "document_id": "d6a7bd86-4e0f-427f-9e97-54b99a8623c5",
+        "passage_id": 92695
+    },
+    {
+        "content": "The frequency resolution of an FFT is limited by the length of the data sample you have. The more samples you have, the higher the frequency resolution.\r\n\r\nIn your specific case you chose frames of 5 milliseconds, which is then transformed to a number of samples on the following line:\r\n\r\n    // samples in a frame\r\n    int frameSamples = (int)(fS / (frameMsec * 1000));\r\n\r\nThis corresponds to only 8 samples at the specified 44100Hz sampling rate. The frequency resolution with such a small frame size can be computed to be\r\n\r\n    44100 / 8\r\n\r\nor 5512.5Hz, a rather poor resolution. Correspondingly, the observed frequencies will always be one of 0, 5512.5, 11025, 16537.5 or 22050Hz.\r\n\r\nTo get a higher resolution you should increase the number of samples used for analysis by increasing `frameMsec` (as suggested by the comment &quot;size of frame for analysis, you may want to play with this&quot;).",
+        "score": 22.78125,
+        "rank": 9,
+        "document_id": "64528158-e98b-4b45-bab7-d59d98f8da1d",
+        "passage_id": 64547
+    },
+    {
+        "content": "There is a calculable frequency dispersion in which we should calculate our signal magnitude as a root mean square value of the magnitudes of the frequencies inside the dispersion. And there is a calculable frequency definition error. The higher the sample rate, the farther is the calculated value of the signal frequency. By the calculated signal frequency we mean the frequency for which we see the magnitude maximum (when observing a clear sinusoidal signal). But the frequency shift is predictable and doesn\u2019t make any problem. The more important property is signal spreading. If we take it into account and calculate the signal magnitude more thoroughly it will give us excellent results. Mine are that now my calculations finely coincide with voltmeter GVT-measurements in dBm. The difference is not more than 2% in the range of -40 \u2026 +22 dBm, for frequencies (30Hz\u202632kHz).\r\n\r\nHere there&#39;re some results of magnitude calculation via a wide frequency range with voltage level 0,2Vrms. Blue line is measured with AC voltmeter. Red line is my measurements with FFT library. Number of samples \u2013 4096 and sampling rate differs for special frequency sub-ranges.",
+        "score": 22.78125,
+        "rank": 10,
+        "document_id": "c483e893-28fc-47e7-a876-32ff6e8b14cd",
+        "passage_id": 213469
+    },
+    {
+        "content": "**The heat dissipation of a CPU is mainly dependent of its power consumption which is very dependent of the workload, and more precisely the instruction being executed and the number of active cores**. Modern processors are very complex so it is very hard to predict the power consumption based on a given workload, especially when the executed code is a Python code executed in the CPython interpreter.\r\n\r\nThere are many factors that can impact the power consumption of a modern processors. The most important one is *frequency scaling*. Mainstream x86-64 processors can adapt the frequency of a core based on the kind of computation done (eg. use of wide [SIMD](https://en.wikipedia.org/wiki/Single_instruction,_multiple_data) floating-point vectors like the ZMM registers of AVX-512F VS scalar 64-bit integers), the number of active cores (the higher the number of core the lower the frequency), the current temperature of the core, the time executing instructions VS sleeping, etc. On modern processor, the memory hierarchy can take a significant amount of power so operations involving the memory controller and more generally the RAM can eat more power than the one operating on in-core registers.",
+        "score": 22.765625,
+        "rank": 11,
+        "document_id": "c9248078-bdd1-4229-82e6-75a041e1c18a",
+        "passage_id": 37304
+    },
+    {
+        "content": "Using the HPET hardware as a source for QueryPerformanceCounter (QPC) is known to be assosiated with large overheads.\r\n\r\n**QPC is an expensive call when configured with HPET.** \r\n\r\nIt provides 14.3 MHz which suggests high accuracy but as you found, it can&#39;t be called fast enough to actually resolve that frequency.\r\n\r\nTherefore Microsoft has turned into the CPUs time stamp counter (TSC) as a source for QPC whenever the hardware is capable doing so. TSC queries have much lower overhead. The associated frequency used for QPC is typically the CPU frequency divided by 1024; also typically a few MHz. \r\n\r\nThe call of QPC in TSC mode is so fast that a lot of consecutive calls may show the same result (typically approx. 20-30 calls or 15 - 20 ns/call).\r\nThis way you may obtain typical resolutions of approx. 0.3 us (on a 3.4 GHz CPU).\r\n\r\nYou observed 3.6 MHz before you switched to HPET.",
+        "score": 22.71875,
+        "rank": 12,
+        "document_id": "9ec8cc63-4fbd-41c6-b783-5fd2bc6baace",
+        "passage_id": 82450
+    },
+    {
+        "content": "Silence at cache line granularity is also less common than silence at the access level, so the number of invalidations avoided would be smaller.\r\n\r\nThe additional cache bandwidth would also be an issue. Currently Intel uses parity only on L1 caches to avoid the need for read-modify-write on small writes. Requiring *every* write to have a read in order to detect silent stores would have obvious performance and power implications. (Such reads \r\ncould be limited to shared cache lines and be performed opportunistically, exploiting cycles without full cache access utilization, but that would still have a power cost.) This also means that this cost would fall out if read-modify-write support was already present for L1 ECC support (which feature would please some users).\r\n\r\nI am not well-read on silent store elimination, so there are probably other issues (and workarounds). \r\n\r\nWith much of the low-hanging fruit for performance improvement having been taken, more difficult, less beneficial, and less general optimizations become more attractive. Since silent store optimization becomes more important with higher inter-core communication and inter-core communication will increase as more cores are utilized to work on a single task, the value of such seems likely to increase.",
+        "score": 22.421875,
+        "rank": 13,
+        "document_id": "590a08d8-994d-4b86-8912-115df40b5131",
+        "passage_id": 46993
+    },
+    {
+        "content": "Especially when using\r\n&gt; GPUs, it is common for power of 2 batch sizes to offer better runtime.\r\n&gt; Typical power of 2 batch sizes range from 32 to 256, with 16 sometimes\r\n&gt; being attempted for large models.\r\n&gt; - Small batches can offer a\r\n&gt; regularizing effect (Wilson and Martinez, 2003), perhaps due to the\r\n&gt; noise they add to the learning process. Generalization error is often\r\n&gt; best for a batch size of 1. Training with such a small batch size\r\n&gt; might require a small learning rate to maintain stability because of\r\n&gt; the high variance in the estimate of the gradient. The total runtime\r\n&gt; can be very high as a result of the need to make more steps, both\r\n&gt; because of the reduced learning rate and because it takes more steps\r\n&gt; to observe the entire training set.\r\n\r\nWhich in practice usually means &quot;*in powers of 2 and the larger the better, provided that the batch fits into your (GPU) memory*&quot;.\r\n\r\nYou might want also to consult several good posts here in Stack Exchange:\r\n\r\n - [Tradeoff batch size vs.",
+        "score": 22.390625,
+        "rank": 14,
+        "document_id": "8218327f-804f-4c5f-9768-28900b71b399",
+        "passage_id": 118764
+    },
+    {
+        "content": "This can be an advantage in case of service failures or restarts.\r\n\r\n**Drawbacks:\r\nLatency:**\r\nWhile in-memory databases are fast, they may introduce some latency compared to shared-memory IPC, especially in scenarios where extremely low latency is crucial. Shared memory communication is typically more direct and immediate.\r\n\r\n**Complexity:**\r\nIntroducing an in-memory database adds complexity to the system. You need to manage and maintain the database along with handling potential issues such as synchronization, data consistency, and access control.\r\n\r\n**Resource Consumption:**\r\nIn-memory databases consume system resources. Depending on the size of your data and the frequency of access, this could impact the overall resource usage of your microservices.\r\n\r\n**Single Point of Failure:**\r\nIf the in-memory database becomes a single point of failure, it might impact the reliability of your entire system.\r\n\r\n**Overhead:**\r\nIn-memory databases may introduce some overhead in terms of memory usage and CPU cycles, especially when compared to shared-memory IPC, which operates directly on memory without an intermediate database layer.\r\n\r\n**Recommendation:**\r\n\r\nGiven the high data rate (15 times per second, 4 KB each time), it&#39;s crucial to evaluate the performance requirements of your system.",
+        "score": 22.375,
+        "rank": 15,
+        "document_id": "952d2117-43d1-4689-88c4-64fd9012da00",
+        "passage_id": 120079
+    },
+    {
+        "content": "and precision/resolution (snapshots/sampling [aggregating writes] vs. instrumentation [recording each individual write]).\r\n\r\nIn terms of performance, doing the monitoring at the JVM level tends to be more efficient as only the actual Java heap writes have to be taken into account. Integrating your monitoring solution into the VM and taking advantage of the GC write barrier could be a low-overhead solution, but would also be the least portable one (tied to a specific JVM implementation/version).\r\n\r\nIf you need to record each individual write, you have to go the instrumentation route and it will most likely turn out to have a significant runtime overhead. You cannot aggregate writes, so there&#39;s no optimization potential.\r\n\r\nIn terms of sampling/snapshotting, implementing a JVMTI agent could be a good compromise. It provides high portability (works with many JVMs) and high flexibility (the iteration and processing can be tailored to your needs, as opposed to relying on standard HPROF heap dumps).",
+        "score": 22.375,
+        "rank": 16,
+        "document_id": "401224f3-6c9a-4f24-951a-13dca0b49c61",
+        "passage_id": 210474
+    },
+    {
+        "content": "&gt; why degrade the coordinates at the last step?\r\n\r\n... because GPUs can do a few billion texture filtering operations per second, and you really don&#39;t want to waste power and silicon area doing calculations at fp32 precision if all practical use cases need 8-bit fixed point. \r\n\r\nNote this is 8-bits of _sub-texel_ accuracy (i.e. granularity for GL_LINEAR filtering between two adjacent texels). Selecting texels is done at whatever higher precision is needed (most modern GPUs can uniquely address 16K textures, with 8-bits of subtexel accuracy).",
+        "score": 22.375,
+        "rank": 17,
+        "document_id": "9d5a9b83-5c15-4e14-8f4f-2de12051acd3",
+        "passage_id": 36333
+    },
+    {
+        "content": "The impact on accuracy of doing so is negligible. For accuracy reasons, the Horner scheme must be utilized for the high-order terms of the polynomial. Looking at the least-significant coefficients of both polynomials, one observes that both are  1.128..., and we can therefore improve accuracy slightly by splitting the coefficient into (1 + 0.128...), which facilitates the use of FMA to perform the final multiplication with x.\r\n\r\nIn the end I was able to achieve an implementation of `erff()` where each of the two code paths achieves a maximum error of just under 1 ulp, as established by exhaustive test against a higher-precision reference. The function is therefore faithfully rounded. Use of FMA is a crucial component of this success. Depending on toolchain, the C99 code shown below may be vectorizable as-is, or one could modify it manually such that both code paths are computed concurrently with a selection of the desired result at the end. High-performance math libraries include a vectorizable version of `expf()` which should be used instead of my custom function `my_expf()`.",
+        "score": 22.25,
+        "rank": 18,
+        "document_id": "059160cd-9879-4233-8a64-b5a4c5c920c8",
+        "passage_id": 40038
+    },
+    {
+        "content": "(System call + hardware I/O = higher overhead, which is part of the reason that x86&#39;s `rdtsc` instruction morphed from a profiling thing into a clocksource thing.)\r\n\r\n**All of these clock frequencies are ultimately derived from a crystal oscillator on the mobo.**  But the scale factors to extrapolate time from cycle counts can be adjusted to keep the clock in sync with atomic time, typically using the Network Time Protocol (NTP), as @Tony points out.\r\n\r\n\r\n  [1]: https://stackoverflow.com/questions/13772567/get-cpu-cycle-count/51907627#51907627",
+        "score": 22.21875,
+        "rank": 19,
+        "document_id": "6cdc39cb-0e6c-4493-b978-034921c90ae5",
+        "passage_id": 36366
+    },
+    {
+        "content": "+1 to looking at the difference sequence. We can model the difference sequence as the sum of a low frequency truth (the true rate of the samples, slowly varying over time) and high frequency noise (the random delay to get the sample into the database). You want a *low-pass filter* to remove the latter.",
+        "score": 22.171875,
+        "rank": 20,
+        "document_id": "fae38b83-1a45-43e0-a964-9c78d8177ef4",
+        "passage_id": 79606
+    },
+    {
+        "content": "The increase in register use when switching from a double-precision multiplication to a double-precision division in kernel computation is due to the fact that double-precision multiplication is a built-in hardware instruction, while double-precision division is a sizable called software subroutine (that is, a function call of sorts). This is easily verified by inspection of the generated machine code (SASS) with `cuobjdump --dump-sass`.\r\n\r\nThe reason that double-precision divisions (and in fact all divisions, including single-precision division and integer division) are emulated either by inline code or called subroutines is due to the fact that the GPU hardware has no direct support for division operations, in order to keep the individual computational cores (&quot;CUDA cores&quot;) as simple and as small as possible, which ultimately leads to higher peak performance for a given size chip. It likely also improves the efficiency of the cores as measured by the GFLOPS/watt metric.\r\n\r\nFor release builds, the typical increase in register use caused by the introduction of double-precision division is around 26 registers. These additional registers are needed to store intermediate variables in the division computation, where each double-precision temporary variable requires two 32-bit registers.",
+        "score": 22.09375,
+        "rank": 21,
+        "document_id": "ace9ec86-49a7-4890-9b48-43902012b06d",
+        "passage_id": 20101
+    },
+    {
+        "content": "&gt; Is this an issue with my signal processing understanding or my code?\r\n\r\nYour code looks fine to me.\r\n\r\nThe frequencies you want to detect are the fundamental frequencies of your pitches (the problem is also known as &quot;f0 estimation&quot;).\r\n\r\nSo before using something like `freq_from_fft` I&#39;d bandpass filter the signal to get rid of garbage transients and low frequency noise\u2014the stuff that&#39;s in the signal, but irrelevant to your problem.\r\n\r\nThink about, which range your fundamental frequencies are going to be in. For an acoustic guitar that&#39;s E2 (82 Hz) to F6 (1,397 Hz). That means you can get rid of anything below ~80 Hz and above ~1,400 Hz (for a bandpass example, see [here](https://stackoverflow.com/questions/12093594/how-to-implement-band-pass-butterworth-filter-with-scipy-signal-butter)). After filtering, do your peak detection to find the pitches (assuming the fundamental actually has the most energy).",
+        "score": 22.03125,
+        "rank": 22,
+        "document_id": "2cf04245-50e3-4332-a72b-de630db1c1ee",
+        "passage_id": 77361
+    },
+    {
+        "content": "The intensity of the sound (i.e. how loud it is) is determined by the amplitude of the sound wave. To increase or decrease the amplitude of a sine, you have to multiply it by a scale factor. Generally speaking:\r\n\r\n     A*sin(2*pi*f)\r\n\r\nyields a sine wave with a peak value (and therefore amplitude) of **A**, and frequency of **f** Hz. That, of course, in the continuous world.\r\n\r\nThat said, to control the sound intensity you have to multiply it by some constant.\r\n\r\nThen, you have to look how the `sound` function works. From the official documentation: \r\n&gt;The sound function assumes that y contains floating-point numbers between -1 and 1, and clips values outside that range.\r\n\r\nThat loosely translates to: if the amplitude y is equal to one, the soundcard will emit the loudest sound it can.",
+        "score": 22.03125,
+        "rank": 23,
+        "document_id": "d09fbfdb-e48f-4399-98b8-29c49b5a1768",
+        "passage_id": 108297
+    },
+    {
+        "content": "Sharing L2 among two cores also means that the provided bandwidth must be suitable for two highly active cores. While banking can be used to facilitate such (and extra bandwidth might be exploitable by a single active core), such increased bandwidth is not entirely free.\r\n\r\nSharing L2 would also motivate increasing the complexity of cache allocation and replacement. One would prefer to avoid one core wasting capacity (or even associativity). Such moderating mechanisms are sometimes provided for last level cache (e.g., Intel&#39;s Cache Allocation Technology), so this is not a hard barrier. Some of the moderating mechanisms could also facilitate better replacement in general, and L2 mechanisms could exploit metadata associated with L3 cache (reducing the tagging overhead for metadata tracking) to adjust behavior.\r\n\r\nSharing L2 cache also introduces complexity with respect to frequency adjustment. If one core supports a lower frequency, the interface between the core and L2 becomes more complex, increasing access latency. (In theory, a NUCA design like that mentioned above could have a small close portion running at the local frequency and only pay the clock boundary crossing penalty when accessing the more distant portion.)\r\n\r\nPower gating is also simplified when L2 cache is dedicated to a single core.",
+        "score": 22.015625,
+        "rank": 24,
+        "document_id": "7b7f294f-0920-4eac-bb7a-053a508e870c",
+        "passage_id": 206370
+    },
+    {
+        "content": "I&#39;ll propose a couple of different ideas. One is to use discrete wavelets, the other is to use the geographer&#39;s concept of prominence.\r\n\r\nWavelets: Apply some sort of wavelet decomposition to your data. There are multiple choices, with Daubechies wavelets being the most widely used. You want the low frequency peaks. Zero out the high frequency wavelet elements, reconstruct your data, and look for local extrema.\r\n\r\nProminence: Those noisy peaks and valleys are of key interest to geographers. They want to know exactly which of a mountain&#39;s multiple little peaks is tallest, the exact location of the lowest point in the valley. Find the local minima and maxima in your data set. You should have a sequence of min/max/min/max/.../min. (You might want to add an arbitrary end points that are lower than your global minimum.) Consider a min/max/min sequence. Classify each of these triples per the difference between the max and the larger of the two minima. Make a reduced sequence that replaces the smallest of these triples with the smaller of the two minima.",
+        "score": 21.96875,
+        "rank": 25,
+        "document_id": "c4098b5e-76ac-4b5f-8214-d3f44fed03f3",
+        "passage_id": 108863
+    },
+    {
+        "content": "From Hans Passant comments and additional tests on my side, here is a sounder answer:\r\n\r\nThe 15.6ms (1/64 second) limit is [well-known][2] on Windows and is the default behavior. It is possible to lower the limit (e.g. to 1ms, through a  call to `timeBeginPeriod()`) though we are not advise to do so, because this affects the global system timer resolution and the resulting [power consumption][3]. For instance, [Chrome is notorious for doing this\u200c\u200b][4]. Hence, due to the global aspect of the timer resolution, one may observe a 1ms precision without explicitly asking for, because of third party programs.\r\n\r\nBesides, be aware that `std::chrono::high_resolution_clock` does **not** have a valid behavior on windows (both in [Visual Studio][1] or MinGW context). So you cannot expect this interface to be a cross-platform solution, and the 15.625ms limit still applies.\r\n\r\n\r\nKnowing that, how can we deal with it?",
+        "score": 21.96875,
+        "rank": 26,
+        "document_id": "1b6983c7-0660-4de5-90cc-879809a6c571",
+        "passage_id": 84894
+    },
+    {
+        "content": "What exactly effect the battery is constant GPS activation in high precision mode. Like for instance If you enable GPS with kCLLocationAccuracyBest and distance-filter = 0, you can literally observe battery drainage and soon your device will also start getting hotter. \r\n\r\nIf I was you, I would go for activating GPS after every 10 minutes for 5 sec with kCLLocationAccuracyBest (or may kCLLocationAccuracyNearestTenMeters to use less battery, if accuracy is not that much important) and distance-filter = 5 (meters). Battery consumption in this case will be unnoticeable. You can play around with similar settings which can address your specific case and finally find out what is best you.  \r\n\r\nBTW: iPhone uses AGPS, A-GPS additionally uses network resources to locate and use the satellites in poor signal conditions. So, when you do startUpdatingLocation it will also use nearby cell tower information. see http://en.wikipedia.org/wiki/Assisted_GPS",
+        "score": 21.96875,
+        "rank": 27,
+        "document_id": "deb160bf-a387-4690-93c0-8635b8194cec",
+        "passage_id": 101653
+    },
+    {
+        "content": "noise&#39; stored in the double precision variable.\r\n\r\nI find it interesting that operations on mixed precision literals seems to promote all the literals to higher precision before the operation is performed. Someone with more language-spec-fu might be able to explain that.\r\n\r\nMy advice: When in doubt, be explicit. It&#39;s safer and I think it&#39;s worth the extra keystrokes.",
+        "score": 21.953125,
+        "rank": 28,
+        "document_id": "55fe78ad-cf27-4818-9eda-493b6652f97c",
+        "passage_id": 76025
+    },
+    {
+        "content": "From that same documentation:\r\n\r\n&gt;It is highly recommended to use another dimensionality reduction method (e.g. PCA for dense data or TruncatedSVD for sparse data) to reduce the number of dimensions to a reasonable amount (e.g. 50) if the number of features is very high. This will suppress some noise and speed up the computation of pairwise distances between samples.\r\n\r\nUse [`sklearn.decomposition.TruncatedSVD`](http://scikit-learn.org/stable/modules/generated/sklearn.decomposition.TruncatedSVD.html) instead.",
+        "score": 21.9375,
+        "rank": 29,
+        "document_id": "9c776879-c885-4806-b9eb-58cf1a718409",
+        "passage_id": 286156
+    },
+    {
+        "content": "1) I assume you are using a standard library for this, such as:\r\n\r\nhttps://numpy.org/doc/stable/reference/generated/numpy.linalg.eigh.html\r\n\r\nor\r\n\r\nhttps://docs.scipy.org/doc/scipy/reference/generated/scipy.linalg.eig.html\r\n\r\nwhich I would expect to employ high speed floating point operations under the hood.   \r\n\r\nAnd so the (high) precision of 64 bit IEEE floats is a bound.  \r\n\r\nFar to the right of the decimal, you may find variances in results from run to run, due to the way FPUs cache and process (higher precision) intermediate results during context switches.  Google returned a number of quick hits here, such as:\r\n\r\nhttps://indico.cern.ch/event/166141/sessions/125686/attachments/201416/282784/Corden_FP_control.pdf\r\n\r\n\r\n\r\n2) As for improving precision, your question is well discussed here, where a slower but higher resolution library is mentioned:\r\n\r\nhttps://stackoverflow.com/questions/57066407/higher-precision-eigenvalues-with-numpy\r\n\r\nYou might also consider using Mathematica.\r\n\r\nhttps://math.stackexchange.com/questions/87871/how-to-obtain-eigenvalues-with-maximum-precision-in-mathematica",
+        "score": 21.890625,
+        "rank": 30,
+        "document_id": "2333d667-bc58-4c42-a2af-2859682b1147",
+        "passage_id": 35865
+    },
+    {
+        "content": "You cannot measure to 1 nanosecond, you cannot measure to 10 nanosconds either. This is because each `action of measurement` requires a call of some kind. One of the fastest APIs is \r\nGetSystemTimeAsFileTime(). A call requires 10-15ns. But it&#39;s resolution/granularity is rather poor (in the ms regime). QueryPerformanceCounter() delivers frequencies in the MHz to GHz range, depending on the underlaying hardware. This call is not as fast but at 1MHz you get 1 microsecond resolution. At such a frequency, given by QueryPerformanceFrequency(), consecutive call will may return equal values because the call is faster than the increment rate. \r\nAnother source is the CPU time stamp counter (rdtsc). But there are some drawback with it too: Modern hardware implements adpative CPU frequency. Therefore this frequency cannot be considered as a constant. This way measurements are only posible during constant phases.\r\n\r\nIn fact none of the frequency sources delivers a constant frequency. All of these frequencies are generated by some hardware which has `offset and drift`.",
+        "score": 21.84375,
+        "rank": 31,
+        "document_id": "4301882c-1d65-4e17-9e5a-8ec57048a83c",
+        "passage_id": 102048
+    },
+    {
+        "content": "This is perfectly normal. Estimation of the fundamental matrix is sensitive to noise, so the corresponding points rarely end up exactly on the epipolar line.  Typically, you introduce some tolerance threshold to eliminate the bad matches that are too far from the corresponding epipolar lines.\r\n\r\nYou may be able to get a better result by starting out with more good matches. You may want to try a different interest point detector and/or a different descriptor. `extractFeatures` uses the FREAK descriptor with Harris corners by default. You can make it use a different descriptor by setting the &#39;Method&#39; parameter.",
+        "score": 21.8125,
+        "rank": 32,
+        "document_id": "15b638f0-d96f-4043-8186-c207ac1c3797",
+        "passage_id": 97190
+    },
+    {
+        "content": "I do not see how a static equilibrium is possible - at best, you will have a dynamic equilibrium of some sort. You have non-zero potential energy and nothing that causes damping (e.g., friction). With infinite precision, the particles will move around each other in a periodic pattern of some sort (e.g., orbit each other).\r\n\r\nInfinite-precision can&#39;t be done really on a computer, but floating-point precision is not likely to be the observed problem (though it will be, if you run the simulation long enough, anyway).\r\n\r\nI don&#39;t fully understand how you coded &#39;changes speed and position linearly&#39; in your case. Note that you cannot simply assume that the force you computed at a given time `t` will remain constant until time `t+dt` and base your speed and position changes on this assumption. That might look easy in the sense that it allows you to apply your chosen force laws directly, but no matter how small your `dt` is, it is still finite - and making this assumption will introduce an error that is quite a bit larger than any errors caused by the FP approximation.",
+        "score": 21.8125,
+        "rank": 33,
+        "document_id": "ab40bf4b-19bb-4ffe-83db-7b93f1c95a88",
+        "passage_id": 68160
+    },
+    {
+        "content": "It&#39;s almost certainly a precision issue. Your mediump based code might be executed as standard single precision float on some devices or half precision on others (or anywhere in between).\r\n\r\nHalf precision simply isn&#39;t enough to do those calculations with any degree of accuracy. \r\n\r\nYou could change your calculations to use highp, but then you&#39;ll run into the next problem which is that many older devices don&#39;t support highp in fragment shaders.\r\n\r\nI&#39;d strongly recommend you create a noise texture, and just sample from it. It&#39;ll produce much more consistent results across devices, and I&#39;d expect it to be much faster on the majority of mobile GPUs.\r\n\r\nThis is an interesting article about floating point precision: http://www.youi.tv/mobile-gpu-floating-point-accuracy-variances/ \r\n\r\nThis is the [related app][1] on the Google Play store.",
+        "score": 21.796875,
+        "rank": 34,
+        "document_id": "cf9c395c-3888-4d57-8324-4f9d0ad5455f",
+        "passage_id": 59554
+    },
+    {
+        "content": "The phenomenon appears to be called &quot;process power throttling&quot;. The following paragraphs from [Microsoft&#39;s `SetProcessInformation()` documentation][1] seem relevant:\r\n\r\n[1]: https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-setprocessinformation\r\n\r\n&gt; **ProcessPowerThrottling** enables throttling policies on a process, which can be used to balance out performance and power efficiency in cases where optimal performance is not required.\r\n&gt;\r\n&gt; When a process opts into enabling `PROCESS_POWER_THROTTLING_EXECUTION_SPEED`, the process will be classified as EcoQoS. The system will try to increase power efficiency through strategies such as reducing CPU frequency or using more power efficient cores. EcoQoS should be used when the work is not contributing to the foreground user experience, which provides longer battery life, and reduced heat and fan noise. EcoQoS should not be used for performance critical or foreground user experiences. (Prior to Windows 11, the EcoQoS level did not exist and the process was labeled as LowQoS).",
+        "score": 21.78125,
+        "rank": 35,
+        "document_id": "154a5b8d-7020-430e-9181-1ae3c711bf1a",
+        "passage_id": 32448
+    },
+    {
+        "content": "dizzy state). This is the same thing for the processor: it takes some time for the processor to switch from a low frequency (used during the sleep call) to a high frequency (using during the computing code). AFAIK, this is mainly because the processor needs to adapt its voltage. This is an expected behavior because it is not energy efficient to switch to the highest frequency directly since the target code might not run for a long time (see [hysteresis](https://en.wikipedia.org/wiki/Hysteresis)) and the *power consumption* grow with `~ frequency**3` (due to the voltage increase required by higher frequencies). \r\n\r\nThere is a way to check that easily on Linux. You can use a fixed frequency and disable any turbo-like mode.",
+        "score": 21.78125,
+        "rank": 36,
+        "document_id": "ff57cc22-a71d-4142-8af5-ddb32d834452",
+        "passage_id": 35822
+    },
+    {
+        "content": "Beware you should account for overflows as on fast machines the 32bit counter is overflowing in seconds. Also each core has separate counter so set affinity to single CPU. On variable speed clock before measurement heat upi CPU by some computation and to convert to time just divide by CPU clock frequency. To obtain it just do this:\r\n\r\n    t0=_rdtsc()\r\n    sleep(250);\r\n    t1=_rdtsc();\r\n    fcpu = (t1-t0)*4;\r\n\r\nand measurement:\r\n\r\n    t0=_rdtsc()\r\n    mesured stuff\r\n    t1=_rdtsc();\r\n    time = (t1-t0)/fcpu\r\n\r\n\r\nif `t1&lt;t0` you overflowed and you need to add the a constant to result or measure again. Also the measured process must take less than overflow period. To enhance precision ignore OS granularity. for more info see:\r\n\r\n- [Measuring Cache Latencies](https://stackoverflow.com/a/21548494/2521214)\r\n- [Cache size estimation on your system?](https://stackoverflow.com/a/21509808/2521214) setting affinity example\r\n- [Negative clock cycle measurements with back-to-back rdtsc?",
+        "score": 21.765625,
+        "rank": 37,
+        "document_id": "a7bb09f5-b5b9-4ab1-bbba-ad8504db81a7",
+        "passage_id": 56862
+    },
+    {
+        "content": "However, if you are willing to reduce the input size or the model size you might be able to use larger batch sizes. Depending on how (and what) exactly you are finetuning, reducing the model size may already be achieved by discarding learned layers or reducing the number/size of fully connected layers.\r\n\r\nThe remaining questions, i.e. how significant the batchsize influences quality/accuracy and how other parameters influence quality/accuracy, are hard to answer without knowing the concrete problem you are trying to solve. The influence of e.g. the batchsize on the achieved accuracy might depend on various factors such as the noise in your dataset, the dimensionality of your dataset, the size of your dataset as well as other parameters such as learning rate (=stepsize) or momentum parameter. For these sort of questions, I recommend the [textbook by Goodfellow et al.](http://www.deeplearningbook.org/), e.g. chapter 11 may provide some general guidelines on choosing these hyperparmeters (i.e. batchsize, learning rate etc.).",
+        "score": 21.75,
+        "rank": 38,
+        "document_id": "6547d98d-b2a8-4ad1-991a-019302ea63f6",
+        "passage_id": 318847
+    },
+    {
+        "content": "A Cepstum (or Cepstral analysis) and Harmonic Product Spectrum are two well studied algorithms that estimate the exciter frequency from an overtone series.\r\n\r\nIf the sequences of overtones are appropriately spaced, than a Cepstrum (FFT of the log of the FFT peaks) may be useful in estimating the period of the frequency spacing, which can then be used to estimate the frequency.\r\n\r\nThe Harmonic Product Spectrum basically compares the spectral peaks with nth multiple copies of themselves by decimating the spectrum by multiple low integer ratios and overlapping them.",
+        "score": 21.75,
+        "rank": 39,
+        "document_id": "fff2f11e-b780-439f-92ef-88e6142b7a28",
+        "passage_id": 109614
+    },
+    {
+        "content": "Moreover, results are much more stable (and reproducible). Note that the performance is reduced when the latency is small because the turbo-boost has been disabled (so my processor do not run at its highest possible frequency). On my machine the factor between the minimum frequency (0.8 GHz) and the maximum one (4.6 GHz) is 5.75 which is pretty big and justify a significant part of the performance gap when the frequency scaling is enabled (default).\r\n\r\n-----\r\n\r\nBiased benchmark\r\n---\r\n\r\nA **significant part of the latency is lost in the execution of the `get_time_ns`**. This is a critical point: CPython is a slow interpreter so you cannot measure the time very precisely with it. An empty function call in CPython takes ~45 ns on my machine! The expression `Decimal(str(&#39;1676949210508126547&#39;))` takes ~250 ns. This is critical to consider this point since you are measuring a latency only 10 times bigger than this in a context where such a code can be significantly slower due to many overheads (including the cache being cold -- see later).",
+        "score": 21.734375,
+        "rank": 40,
+        "document_id": "ff57cc22-a71d-4142-8af5-ddb32d834452",
+        "passage_id": 35825
+    },
+    {
+        "content": "The problem you are talking about has been tackled in many different ways in the context of Grid computing (e.g, see [Condor][1]). To discuss this more thoroughly, I think some additional information is required (homogeneity of the problems to be solved, degree of control over the nodes [i.e. is there unexpected external load etc.?]). \r\n\r\nImplementing an adaptive job dispatcher will usually require to also adjust the frequency with which you probe the available resources (otherwise the overhead due to probing could exceed the performance gains). \r\n\r\nIdeally, you might be able to use benchmark tests to come up with an empirical (statistical) model that allows you to predict the computational hardness of a given problem (requires good domain knowledge and problem features that have a high impact on execution speed and are simple to extract), and another one to predict communication overhead. Using both in combination should make it possible to implement a simple dispatcher that bases its decisions on the predictive models and improves them by taking into account actual execution times as feedback/reward (e.g., via [reinforcement learning][2]).\r\n\r\n\r\n  [1]: http://www.cs.wisc.edu/condor/\r\n  [2]: http://en.wikipedia.org/wiki/Reinforcement_learning",
+        "score": 21.703125,
+        "rank": 41,
+        "document_id": "57c25acc-20aa-4280-b2c7-d7bbcc383bcd",
+        "passage_id": 434214
+    },
+    {
+        "content": "IEEE double precision is sufficient for granularity `1e-9` on the range +/-1000, but do beware of the problem that `5.8` cannot be exactly represented in binary floating-point. So depending on how your intervals are calculated, there might be tiny &quot;gaps&quot; introduced by computation or representation errors. For this reason you might like to do some kind of rounding to the nearest billionth before you start, and/or use a base-10 rather than base-2 representation of the values involved.",
+        "score": 21.703125,
+        "rank": 42,
+        "document_id": "be625056-7389-410d-9821-719d987f3f26",
+        "passage_id": 106394
+    },
+    {
+        "content": "The random noise needs to be additive, not multiplicative:\r\n``` r\r\nset.seed(1)\r\n\r\nage &lt;- rep(1:10, 10)\r\n\r\nspeech &lt;- age + rnorm(100)\r\nmemory &lt;- age + rnorm(100)\r\n```\r\nNow we have a high correlation between speech and memory:\r\n```\r\ncor(speech, memory)\r\n#&gt; [1] 0.9067772\r\n```\r\nBut the correlation of the residuals once age is taken into account is close to zero, as expected.\r\n``` r\r\nresiduals_speech &lt;- lm(speech ~ age)$residuals\r\nresiduals_memory &lt;- lm(memory ~ age)$residuals\r\n\r\ncor(residuals_speech, residuals_memory) \r\n#&gt; [1] 0.0001755437\r\n```\r\n\r\nTo get speech and memory to be on different scales with different amounts of noise (as real data might be), you can multiply `age` and the random noise by scalar values. This will retain the high correlation caused by the confounder.",
+        "score": 21.65625,
+        "rank": 43,
+        "document_id": "34968517-6ae1-4b46-ad95-4580d6d08d84",
+        "passage_id": 142085
+    },
+    {
+        "content": "Dimensionality **curse does...** `O(2)` &amp; `O(3)` class problems are not seldom.\r\n\r\nDoable with both smart/efficient &lt;sub&gt;( read fast ... )&lt;/sub&gt; representation, even for nanosecond resolution time-stamped HFT data-stream I/O hoses.\r\n\r\nSometimes, there is even a need to reduce a numerical &quot;precision&quot; of inputs ( sub-sampling and blurring ) to avoid adverse effects of ( unreasonably computationally expensive ) high dimensionality and also to avoid a tendency to overfitting, to benefit from better generalisation abilities of the well adjusted AI/ML-Predictor.\r\n\r\n            (im)PRECISION JUST-RIGHT FOR UNCERTAINTY LEVELs MET ON .predict()-s\r\n         ___:__:___________MANTISSA|\r\n         |  v  |                  v|_____________________________________________________________________________________\r\n        0.001  |               1023|    np.float16\t    Half   precision float: 10 bits mantissa + sign bit|  5 bits exp|\r\n        1.02?",
+        "score": 21.640625,
+        "rank": 44,
+        "document_id": "1533d7a9-66c7-4845-a631-8bd0715d9b66",
+        "passage_id": 69471
+    },
+    {
+        "content": "When you scale up the number of threads for MKL/*gemm, consider\r\n\r\n - Memory /shared cache bandwidth may become a bottleneck, limiting the scalability\r\n - Turbo mode will effectively decrease the core frequency when increasing utilization. This applies even when you run at nominal frequency: On Haswell-EP processors, AVX instructions will impose a lower &quot;AVX base frequency&quot; - but the processor is allowed to exceed that when less cores are utilized / thermal headroom is available and in general even more for a short time. If you want perfectly neutral results, you would have to use the AVX base frequency, which is 1.9 GHz for you. It is documented [here][2], and explained in [one picture][3].\r\n\r\nI don&#39;t think there is a really simple way to measure how your application is affected by bad scheduling. You can expose this with `perf trace -e sched:sched_switch` and there is [some software][4] to visualize this, but this will come with a high learning curve. And then again - for parallel performance analysis you should have the threads pinned anyway.",
+        "score": 21.609375,
+        "rank": 45,
+        "document_id": "4f0504f0-2eb5-4334-bf3f-4e6d7074820e",
+        "passage_id": 80273
+    },
+    {
+        "content": "It shows the test error for different rounding schemes as well as the number of bits dedicated to the integer part of the fixed point representation. As you can see the solid red and blue lines (16 bit fixed) have a very similar error to the black line (32 bit float).\r\n\r\n[![enter image description here][3]][3]\r\n\r\nThe main benefit/driver for going to a lower precision is computational cost and storage of weights. So the higher precision hardware would not give enough of an accuracy increase to out way the cost of slower computation.\r\n\r\nStudies like this I believe are a large driver behind the specs for neural network specific processing hardware, such as [Google&#39;s new TPU][4]. Even though most GPUs don&#39;t support 16 bit floats yet Google is [working to support it][5].",
+        "score": 21.578125,
+        "rank": 46,
+        "document_id": "008c0ee4-04a2-41e9-b16a-984e33757a50",
+        "passage_id": 69541
+    },
+    {
+        "content": "Such instrumentation is from 2x slow or slower, especially for memory bandwidth / latency limited core. The paper lists and explains instrumentation overhead and Caveats:\r\n\r\n&gt; **Instrumentation Overhead**: Instrumentation involves\r\ninjecting extra code dynamically or statically into the\r\ntarget application. The additional code causes an\r\napplication to spend extra time in executing the original\r\napplication ... Additionally, for multi-threaded\r\napplications, instrumentation can modify the ordering of\r\ninstructions executed between different threads of the\r\napplication. As a result, IDS with multi-threaded\r\napplications comes at the lack of some fidelity\r\n&gt;\r\n&gt; **Lack of Speculation**: Instrumentation only observes\r\ninstructions executed on the correct path of execution. As\r\na result, IDS may not be able to support wrong-path ...\r\n&gt;\r\n&gt; **User-level Traffic Only**: Current binary instrumentation\r\ntools only support user-level instrumentation. Thus,\r\napplications that are kernel intensive are unsuitable for\r\nuser-level IDS. \r\n\r\n\r\n  [1]: https://software.intel.com/en-us/articles/intel-sdm",
+        "score": 21.53125,
+        "rank": 47,
+        "document_id": "49df2682-33ed-42d6-8993-472bad0685e3",
+        "passage_id": 38150
+    },
+    {
+        "content": "It is difficult to quantify agent overhead in relative or absolute numbers, because they depend so much on the application that is being monitored and how monitoring is configured.\r\n\r\nIn any case, the agent overhead in terms of CPU time is negligible. Agent operations only occur for high-level events like a URL invocation or a database call and only add microseconds of processing time to each such event.\r\n\r\nIn terms of memory overhead, the agent can store substantial amounts of data especially for probe data like JDBC statements. However, this is carefully capped and periodically offloaded to the perfino server.",
+        "score": 21.515625,
+        "rank": 48,
+        "document_id": "b983221a-84e5-42e5-97ab-31518e4d67aa",
+        "passage_id": 159821
+    },
+    {
+        "content": "The maximum frequency that can be represented by a digital signal is always samplerate/2. This is known as the [Nyquist frequency][1]. If you need to measure signals beyond 4kHz then the only possible solution is to increase the sampling rate.\r\n\r\nThe next issue is the frequency resolution of the FFT, which is a function of the FFT size and the sampling rate.\r\n\r\n     binWidthInHz = sampleRate / numBins;\r\n\r\n\r\nIn your case you have a sampleRate of 8000 and 256 bins so each bin is 31.25 Hz wide. The only way to increase the resolution is to a) decrease the sampling rate or b) increase the fft size.\r\n\r\nOne last point. It doesn&#39;t appear that you are applying any windowing to your signal. The result is that your peaks will be smeared out due to [spectral leakage][2]. Applying a window function such as the [Hann function][3] to your time domain signal will counter act this. In essence, the FFT algorithm treats the signal as if it were infinitely long by concatenating copies of the signal together.",
+        "score": 21.515625,
+        "rank": 49,
+        "document_id": "771c0c23-4d3a-4f78-9e2e-36e9039b527e",
+        "passage_id": 89190
+    },
+    {
+        "content": "It reports time with the millisecond precision, but the granularity is not guaranteed.  In fact, if there is no processes that requested higher granularity, you will get up to 55ms accuracy.  This is most likely what&#39;s happening with your code.  here is a quick sample that allows you to figure out the current GetSystemTime() granularity:\r\n\r\n    SYSTEMTIME t1, t2;\r\n    GetSystemTime(&amp;t1);\r\n    do {\r\n        GetSystemTime(&amp;t2);\r\n    } while (0 == memcmp(&amp;t1, &amp;t2, sizeof(SYSTEMTIME)));\r\n    std::cout &lt;&lt; &quot;timer granularity is &quot; &lt;&lt; t2.wMilliseconds - t1.wMilliseconds &lt;&lt; &quot; milliseconds&quot; &lt;&lt; std::endl;\r\n\r\nAnswering your original question, you should see at least ~700MBps System-&gt;video memory transfer, even on the very slow kinds of old PCIe v.1.0 cards.",
+        "score": 21.5,
+        "rank": 50,
+        "document_id": "644f0369-4578-4282-9afc-b6b44826bc33",
+        "passage_id": 412871
+    }
+]
