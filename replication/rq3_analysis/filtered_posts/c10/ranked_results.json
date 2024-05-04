@@ -1,0 +1,352 @@
+[
+    {
+        "content": "[![Unresolved dependency found with the tool named above][17]][17]\r\n\r\nAdressing Tensorflow CPU/GPU issues\r\n-----------------------------------\r\nOne of the possible sources for your trouble is incompatibilities with Tensorflow-GPU. This is because the default TF package contains both the CPU and GPU versions since [the TF 2.1 release][18]. \r\n\r\nTo check if this causes some of your problems, a CPU-only variant can be tried first. You could for example try to install the correct tensorflow-CPU wheel from [here][19] (this is python 3.7 and tensorflow 2.0, decide weather to use AVX or not depending on the capabilities of your processor) or [the google source][11] named above.\r\n\r\n\r\n----------\r\n\r\nFor Tensorflow-GPU, the following prerequisites have to be met:\r\n\r\nInstallation of NVIDIA cuDNN (a GPU-accelerated library of primitives for deep neural networks) as e.g. `cudnn-11.0-windows-x64-v8.0.1.13` here.\r\nAfter registration for the NVIDIA developer program, this can be accessed [here][20].\r\n\r\nPlease pay attention to the **correct versions** for a compatible CUDA Installation - see above!",
+        "score": 28.859375,
+        "rank": 1,
+        "document_id": "5ec8d0ba-e1c3-438f-9e82-ae70207fdaab",
+        "passage_id": 9678
+    },
+    {
+        "content": "Providing the solution here (Answer Section), even though it is present in the Comment Section for the benefit of the community.\r\n\r\nThis issue is due to version incompatibility. As per the [tested build configurations](https://www.tensorflow.org/install/source_windows#gpu), `Tensorflow 2.9.0` is compatible with `CUDA 11.2` and `cuDNN 8.1`.  Downgrading it to `cuDNN 8.1` and using `CUDA 11.2` will help.",
+        "score": 28.5,
+        "rank": 2,
+        "document_id": "c39f891d-a9c8-42be-9c48-5932d6d3e4b5",
+        "passage_id": 4880
+    },
+    {
+        "content": "The problem is indeed sensitive and hard to debug. I suspect it has to do with the underlying hardware on which the docker container is deployed, not with the actual custom Docker container and its corresponding dependencies.\r\n\r\nSince you have a Tesla K80, I suspect NC series video cards (upon which the environments are deployed).\r\n\r\nAs of writing this comment (10th of February 2023), the following observation is valid (https://learn.microsoft.com/en-us/azure/machine-learning/resource-curated-environments):\r\n\r\n&gt; Note\r\n&gt; \r\n&gt; Currently, due to underlying cuda and cluster incompatibilities, on NC\r\n&gt; series only AzureML-ACPT-pytorch-1.11-py38-cuda11.3-gpu with cuda 11.3\r\n&gt; can be used.\r\n\r\nTherefore, in my opinion, this can be traced back to the supported versions of CUDA + PyTorch and Python.",
+        "score": 28.125,
+        "rank": 3,
+        "document_id": "f3d7b020-8604-4138-aa5a-334bfaa7e138",
+        "passage_id": 3314
+    },
+    {
+        "content": "For everyone who comes here, I found the solution. As expected, the problem is not related to S3A output committers or library dependencies.\r\n\r\nThe UnsatisfiedLinkError exception on Java native method raised because of version incompatibility between Hadoop version in SBT dependencies and winutils.exe (HDFS wrapper) on my Windows machine.\r\n\r\nI&#39;ve downloaded corresponding version from [cdarlint/winutils][1] and it all worked. LOL\r\n\r\n\r\n  [1]: https://github.com/cdarlint/winutils",
+        "score": 27.9375,
+        "rank": 4,
+        "document_id": "18b9348a-38c1-4a74-866f-a0a1f1eb9adc",
+        "passage_id": 154209
+    },
+    {
+        "content": "You are facing incompatibility issue between Tensorflow version and CUDA, cuDNN drivers. According [Tensorflow Tested build configuration](https://www.tensorflow.org/install/source_windows#gpu) `Tensorflow 2.6` is compatible with `CUDA 11.2` and `cuDNN 8.1`.\r\n\r\nTo resolve your issue either you can install `CUDA` \r\n\r\n    conda install -c anaconda cudatoolkit=11.2 cudnn=8.1\r\n\r\n or downgrade Tensorflow version to `2.3`.",
+        "score": 27.84375,
+        "rank": 5,
+        "document_id": "cd776dc5-7d5d-4c31-b38f-18cc1986ce7e",
+        "passage_id": 6440
+    },
+    {
+        "content": "If your source code changes, for example by adding a new function parameter or changing the data members in a class type, then you will have incompatibility no matter how good (well-specified/stable) the ABI is.  .NET escapes some of these effects by the two-phase compile system -- the whole world *does* get recompiled when dependencies change, because JIT compilation is done at runtime.  But even in .NET, some changes like adding new function overloads, will need a source recompile before they take effect.\r\n\r\n---\r\n\r\nActually I&#39;m not sure, vtable-layout might also be specified at the OS level in Linux.  The important thing is that Linux C++ binary compatiblity is no longer universal, which comes as a huge surprise to a lot of developers who were actually relying on a defacto-standard compiler-provided ABI, while assuming the OS ABI guaranteed universal compatibility forever.  So Windows developers, having already learned to manage lack of binary compatibility, are in a better position.",
+        "score": 27.28125,
+        "rank": 6,
+        "document_id": "51eb6380-5833-454b-b74c-1fb973da8762",
+        "passage_id": 366148
+    },
+    {
+        "content": "Classes will only be loaded as required (referenced by other classes via `import` etc.)\r\n\r\nThe headache with multiple frameworks is that you have to manage their shared dependencies. e.g. Framework A requires Logging Framework X, but Framework B requires Logging Framework Y.\r\n\r\nThese problems aren&#39;t insurmountable, but you have to keep track of them. When you upgrade Framework A, you may well end up with a ripple effect, in which you have to update a corresponding dependency. That then requires another framework component update, and so on.\r\n\r\ne.g. Framework A gets upgraded, and requires an update to Log4J. THat then forces you to update Framework B to a version compatible with your new Log4J, and so on.\r\n\r\nIf you have multiple framework requirements, this may in fact point to a requirement to subdivide your application accordingly (into different deployables/services etc.).",
+        "score": 27.046875,
+        "rank": 7,
+        "document_id": "8fdc0d12-cac2-4518-94f4-30b2874d2dcf",
+        "passage_id": 260798
+    },
+    {
+        "content": "I&#39;ve been having a similar issue with TF 2.3.1. However, right away I can tell you that your cudnn version is incompatible. Only cudnn 7.6 is supported with the latest TF which as of right now is 2.3.1. See compatibility link below.\r\n\r\nhttps://www.tensorflow.org/install/gpu#hardware_requirements",
+        "score": 26.96875,
+        "rank": 8,
+        "document_id": "bd7b7a0a-e83c-4b37-bd97-0a15a422f1b0",
+        "passage_id": 8284
+    },
+    {
+        "content": "In the end, I had implemented it in a different way (not using ObjectOutputStream) but the problem was in JDK incompatibility -- the Android side running JDK 6 (by Google) and the server running JDK 7 (by Oracle). Perhaps there were some code changes in the streaming code and reset() compatibility wasn&#39;t kept.",
+        "score": 26.796875,
+        "rank": 9,
+        "document_id": "0eeb1e2d-efb0-4214-89e7-00012a3a6d39",
+        "passage_id": 318821
+    },
+    {
+        "content": "As Martin James points out, the problem with any such simulation is that if your actual simulator isn&#39;t VERY good, you run into &quot;compatibility problems&quot; - in particular things like hardware vs software race conditions, where your software is perfectly synchronous to the simulated hardware model, but the real hardware will do things asynchronously to the software, so your two reads of two registers will now get different values than the software model, because some arbitrary thing changed in the real hardware that your software model didn&#39;t take into account - and now you have one of those nasty bugs that only occur once in a blue moon, and only on the &quot;can&#39;t debug&quot; hardware variant, never in the software model.",
+        "score": 26.5,
+        "rank": 10,
+        "document_id": "75a216bb-74f2-4db6-8836-fe881a2ad069",
+        "passage_id": 351107
+    },
+    {
+        "content": "I got around these issues by -:\r\n\r\n 1. Installing gcc4.9 on my Ubuntu 16.04\r\n\r\n As per https://www.tensorflow.org/install/install_sources binary build packages were built using gcc4 hence there are some incompatibility issues with gcc5+\r\n\r\n\r\n           sudo apt-get install python-software-properties\r\n           sudo add-apt-repository ppa:ubuntu-toolchain-r/test\r\n           sudo apt-get update\r\n           sudo apt-get install gcc-4.9\r\n           sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-4.9 50\r\n           sudo apt-get install g++-4.9\r\n           sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-4.9 50     \r\n\r\nAnd then when running configure give path of gcc as `/usr/bin/gcc-4.9`  \r\n\r\n  2. Editing `/tensorflow/core/platform/macros.h`\r\n\r\n     See https://github.com/tensorflow/tensorflow/issues/19203\r\n     \r\n     Replace:\r\n\r\n            #define TF_PREDICT_FALSE(x) (__builtin_expect(x, 0))\r\n            #define TF_PREDICT_TRUE(x) (__builtin_expect(!!",
+        "score": 26.421875,
+        "rank": 11,
+        "document_id": "0aec91bb-8789-4e1e-8b8d-2e107ead0c71",
+        "passage_id": 14773
+    },
+    {
+        "content": "There is no guaranty that it works. If your data is only composed of a set of chars, it will probably work whatever the platforms.  \r\n\r\nOtherwise, you will encounter hardware and software problems.\r\n\r\nHardware problems include endianness and data alignment.\r\n\r\nEndianness refers to the way multibyte data types are arranged in memory. For instance an integer has 4 bytes and some architectures store it in memory by writing at the lowest address address the least significant byte (little endian like the pentium) while others store the most significant byte at the lowest address (big endian).  If endianness is different, bytes must be swapped to ensure compatibility. Note that some platforms (Arm, mips, among others) can use both endianness, but it is generally selected at boot time. Also some machines have different endianness for integers and floats.\r\n\r\nAlignment refers to the constraint on many architectures that a 2^k bytes data must be at an address multiple of 2^k. Some architectures, like the pentium, do not have this constraint and can manipulate unaligned data, but a compiler may lay out data in an aligned way to improve performances.",
+        "score": 26.328125,
+        "rank": 12,
+        "document_id": "0b8cc762-5550-47e1-90a0-3559ef1d59b8",
+        "passage_id": 235576
+    },
+    {
+        "content": "The error was caused by an incompatibility in the architecture of my Mac. Normally the software would load, but it would not start the instance because the correct software was not running.\r\n\r\nOn Mac devices with ARM architecture, the use of Rosetta 2 is essential. As of version 7.x.x of MongoDB Memory Server the package downloads the software with correct architecture, automatically.",
+        "score": 26.296875,
+        "rank": 13,
+        "document_id": "c0c5dd5d-f01a-4a52-b595-30a45fdb070f",
+        "passage_id": 122612
+    },
+    {
+        "content": "So I resolved this. Here&#39;s the solution in case it&#39;s useful to someone else. TL,DR: it&#39;s a hardware issue.\r\n\r\nSpecifically, it&#39;s a PCIe bus error, the same error as that with the most votes [here][1]. Possibly this is caused by message signalled interrupts being incompatible with the PLX switches, as suggested [here][2]. Also in that thread is what resolved the issue, setting kernel parameter `pci=nommconf` to disable the msi&#39;s. \r\n\r\nBetween Tensorflow, Torch, and Theano, tf is the only deep learning framework that triggers this issue. Why, I&#39;m not sure.\r\n\r\n\r\n  [1]: http://www.overclock.net/t/1539708/question-for-x99-board-owners-with-nvidia-cards-do-you-see-pcie-bus-errors-please-respond-to-poll\r\n  [2]: https://forums.geforce.com/default/topic/957456/gtx-1080-throwing-bad-tlp-pcie-bus-errors/",
+        "score": 26.234375,
+        "rank": 14,
+        "document_id": "f62b1780-bd07-4b31-b68b-4583551481b0",
+        "passage_id": 302743
+    },
+    {
+        "content": "A common reason for this error is incompatibility between the TensorFlow version and the CUDA version. Try looking up which CUDA version to use with your TF version (or vice-versa). Alternatively, try going one version up and down in both to see if they match.",
+        "score": 26.203125,
+        "rank": 15,
+        "document_id": "bae077dd-eff1-457e-82f1-4464f7dd4f1e",
+        "passage_id": 10403
+    },
+    {
+        "content": "So pre-C++11 `libstdc++` ABI was a defacto standard, and no one ran into trouble from mixing ABIs.  Now C++11 forced `libstdc++` to break binary compatibility, and clang&#39;s `libc++` has grown in popularity, so Linux developers are facing the problems Windows developers have been familiar with for a long time.\r\n\r\nOn Windows, no C++ standard library ever became dominant in quite the same way, partially because every version of the OS vendor tools (Microsoft Visual C++) introduced incompatibility.  Yes, some things stayed largely the same (name mangling) but others changed radically (allocators got low fragmentation heap support, containers got debug iterators, etc).\r\n\r\nThe ironic thing is that ABI standardization on Windows is now better than on Linux&lt;sup&gt;1&lt;/sup&gt;, because the Windows ABI specifies one C++ feature -- vtable layout -- to support COM.",
+        "score": 26.171875,
+        "rank": 16,
+        "document_id": "51eb6380-5833-454b-b74c-1fb973da8762",
+        "passage_id": 366145
+    },
+    {
+        "content": "I have done a lot of research on this topic. And the result I found out is that there is incompatibility of versions of java and maven that causes this problem.\r\nCurrently I was using jdk version 9.\r\nThe Solution to this problem may be change the default jdk version to jdk 8",
+        "score": 26.171875,
+        "rank": 17,
+        "document_id": "6e41aaac-ef9a-48d0-8f1b-73251a338b16",
+        "passage_id": 219394
+    },
+    {
+        "content": "The error indicates that the pre-built binary used in tensorflow, does not support the SM version (compute capability) supported by your actual hardware. \r\n\r\nYou can refer to below link for supported combinations:\r\n\r\nhttps://www.tensorflow.org/install/source_windows#gpu\r\n\r\nBased on this, both 2.1.0 and 2.3.0 require CUDNN 7.4 and CUDA 10.1. You should try with these supported combinations.\r\n\r\n[2.3.0 release/rc2/rc0 specific] from https://github.com/tensorflow/tensorflow/releases/tag/v2.3.0 - `TF 2.3 includes PTX kernels only for compute capability 7.0 to reduce the TF pip binary size. Earlier releases included PTX for a variety of older compute capabilities.`",
+        "score": 26.15625,
+        "rank": 18,
+        "document_id": "fb3863db-5240-4213-bfd4-e6379754d6e5",
+        "passage_id": 8440
+    },
+    {
+        "content": "****ISSUE RESOLVED:**** \r\n\r\nIt was actually a hardware compatibility issue. THE GRAPHICS CARD INSTALLED on my machine was not supporting system(machine) configuration. I removed the card &amp; my spring+hibernate application runs fine. pheww...great relief. :) :)",
+        "score": 26.109375,
+        "rank": 19,
+        "document_id": "397816fe-0412-4f0f-9ba2-4e40a8b7f645",
+        "passage_id": 353712
+    },
+    {
+        "content": "This is likely an incompatibility between your version of TF and Keras.  Daniel M&#246;ller got you on the right path but tf.keras is a TF2 thing, and you are using TF1, so your solution will be different.\r\n\r\nWhat you need to do is install a version of Keras that is compatible with TF 1.14. According to pypi, TF 1.14 was released June 18, 2019. \r\n\r\nhttps://pypi.org/project/tensorflow/#history\r\n\r\nYou should do a grid search of the Keras versions just before and after that date. \r\n\r\nhttps://pypi.org/project/keras/#history\r\n\r\nI&#39;d go with these Keras versions. \r\n\r\n2.2.4\r\n2.2.5\r\n2.3.1\r\n2.4.1\r\n\r\nInstall these versions using for example\r\n```\r\npip3 install --upgrade keras==2.2.4\r\n```\r\n\r\nI have run into a similar problem recently in the mismatch between TF2.7/2.8 and Keras 2.7/2.8.",
+        "score": 26.0625,
+        "rank": 20,
+        "document_id": "1291e296-9b52-4498-956e-fe2fec043ac7",
+        "passage_id": 42147
+    },
+    {
+        "content": "Because the .NET ABI is so stable, coupling to it is a viable decision, just like so many Linux developers coupled to the pre-C++11 `stdlibc++` ABI.  But you run the risk of losing all your reusable libraries if you ever break compatibility, which is why coupling to any particular Windows C++ library was considered a bad idea -- upgrading your compiler required you to have new versions of every single library.\r\nWhen having even a single component stuck on the old version prevents adopting a new compiler, you lose new development on other components which have switched.  Which is why C++ ABI coupling on Windows is widely considered a very bad idea.  And why library authors rarely distribute Linux code in binary form -- they leave it up to each distribution to pick an ABI, consistently compile using it, and serve up binary packages compatible with it.\r\n\r\nAnd of course, this only addresses changes that come from outside your source code (layout changes to library types, parameter passing order, etc).  If your source code changes, for example by adding a new function parameter or changing the data members in a class type, then you will have incompatibility no matter how good (well-specified/stable) the ABI is.",
+        "score": 26.046875,
+        "rank": 21,
+        "document_id": "51eb6380-5833-454b-b74c-1fb973da8762",
+        "passage_id": 366147
+    },
+    {
+        "content": "I think your problem come from a library conflict or incompatibility issue, you should set `LD_LIBRARY_PATH` only for the specific virtual environments that require it like TensorFlow or CUDA.",
+        "score": 25.828125,
+        "rank": 22,
+        "document_id": "ff92179c-9c95-46b0-a305-28c8ef3b5e44",
+        "passage_id": 2947
+    },
+    {
+        "content": "I&#39;d hazard a guess that you&#39;ve got some dodgy/incompatible RAM. If you can take the machine offline and let [memtest][1] run for 24 hrs you should have enough information to debug.\r\n\r\nI&#39;ve had a similar issue in the past with a machine where the RAM/Mobo combo would cause one or two errors about once every 24 hrs. The same RAM in another machine would be fine, and other brand RAM in that machine would be fine. Running the machine off of a UPS would also be fine, I guess that teeny tiny electricity fluctuations were *just enough* to highlight *minor* incompatibilities between the two pieces of hardware.\r\n\r\nIf that doesn&#39;t help I&#39;d suggest taking your question over to the InstallShield forums, last IS bug I had turned out to be a bug which was lodged, fixed and a hotfix distributed.\r\n\r\n  [1]: http://www.memtest.org/",
+        "score": 25.6875,
+        "rank": 23,
+        "document_id": "df39b17c-d040-4184-993e-9b31ca0da823",
+        "passage_id": 424892
+    },
+    {
+        "content": "The error comes from the fact that there is an incompatibility between the:\r\n\r\n - CUDA version\r\n - CuDNN version\r\n - TensorFlow version\r\n\r\nIn the answer below I have provided working combinations of tensorflow, cuda and cudnn. Please have a look at the question which is similar to yours: https://stackoverflow.com/questions/58143637/tensorflow-2-0-cant-use-gpu-something-wrong-in-cudnn-failed-to-get-convoluti/58143787#58143787\r\n\r\nEg. Cuda 10.0 + CuDNN 7.6.3 + / TensorFlow 1.13/1.14 / TensorFlow 2.0.\r\n\r\nEg2 Cuda 9 + CuDNN 7.0.5 + TensorFlow 1.10 works",
+        "score": 25.46875,
+        "rank": 24,
+        "document_id": "e6a3bbfb-fc63-48a8-9787-b2c83c9c7a78",
+        "passage_id": 6871
+    },
+    {
+        "content": "This answer / assumption also seems to be incorrect. Training the same model on UBUNTU machine with GPU / CPU also faile with identical error.\r\n\r\nFound this issue listed since 2020 on github [issue on github][1]\r\n\r\n\r\nFor future reference for self and others -\r\n\r\nOn the same machine I could successfully move ahead with my training for other categories of models and couldn&#39;t find any specific response to the question of why this error shows up for this specific model type i.e. mask_rcnn_inception_resnet. \r\n\r\nThus I concluded that since this model is not supported on TPU&#39;s yet it cannot run on Mac M2 where though its called a GPU, possibly TF sees it as a TPU due to the pluggable device pattern with tensorflow-metal. \r\n\r\n Further update -- I managed to catch hold of someone from Tensorflow official team and the update is research models are not supported i.e. Tensorflow/models/research section and we are expected to use official models.",
+        "score": 25.390625,
+        "rank": 25,
+        "document_id": "8f54847b-acc3-4a7b-83b1-e405780d8d23",
+        "passage_id": 124729
+    },
+    {
+        "content": "Sounds like you have a platform incompatibility issue with Sqlite, make sure you&#39;re using the right Sqlite package for your machine.\r\n\r\nAs for `service.SetAppHost(appHost)` the [deprecated message][1] says to use `service.SetResolver(appHost)` as **IAppHost** also implements `IResolver`, so use that.\r\n\r\n\r\n  [1]: https://github.com/ServiceStack/ServiceStack/blob/master/src/ServiceStack.ServiceInterface/Service.cs#L31",
+        "score": 25.390625,
+        "rank": 26,
+        "document_id": "08883334-bc89-430a-8a67-b5f5c4053910",
+        "passage_id": 425606
+    },
+    {
+        "content": "It seems that there are some compatibility issues of my model file with the architecture model implemented in the TensorFlowImageClassifier.java.",
+        "score": 25.375,
+        "rank": 27,
+        "document_id": "b4bba279-9d95-49d4-82a2-7407c305b2e7",
+        "passage_id": 269642
+    },
+    {
+        "content": "You could choose a few and compare your results.\r\n\r\nI dont think that that would be time well spent, though. Maybe you should approach this problem from another angle: what can you do with one of the frameworks that you can&#39;t do with the other? They both use the same drivers, so both will support fancy technologies that come out with new hardware. Thread scheduling is done in hardware, so they have the same performance there. What remains to be tested are things like:\r\n\r\n - will optimal code use all available memory bandwidth\r\n - will the compiler create efficient code\r\n - are you able to make use of all the compute units\r\n - and so forth...\r\n\r\nFrom my tests, the answer to these questions - will my code use the hardware optimally - is yes for both frameworks. So they definitely play in the same league, and even if one is 5% faster than the other for some specific problem at the moment, I thing it would not make a difference in a general view.\r\n\r\nI intentionally didn&#39;t write anything about the other use cases of OpenCL, e.g. on CPUs.",
+        "score": 25.3125,
+        "rank": 28,
+        "document_id": "aaece7ba-d9b5-40c0-80a5-4139fcd39f6e",
+        "passage_id": 28668
+    },
+    {
+        "content": "I highly recommend against it. You will definitely hit binary incompatibilities and many other subtle issues during linking stage and most importantly at runtime. Every toolchain has its purpose, so use what fits your requirements better.\r\n\r\n - Willing to give up platform dependent functionality (direct usage of POSIX in your code)? Then eliminate it and go for **[MinGW-w64][1]**.\r\n - No? You have no choice, but to use Cygwin and the GCC toolchain that comes with it. By the way they recently introduced 64-bit (x64) version of Cygwin (and the accompanying GCC toolchain) which works very well.\r\n\r\nTo me both approaches look fine. Cygwin&#39;s translation overhead is really minimal, and you don&#39;t have to distribute the whole Cygwin for your application to work, but just the runtime DLLs. Nevertheless, personally, I think that modern cross-platform applications should struggle to be truly cross-platform and not use *directly* such low-level API as POSIX as this is actually a flaw of the application in the first place which claims to be cross-platform.",
+        "score": 25.21875,
+        "rank": 29,
+        "document_id": "179e307f-9ce5-4aae-97b9-8f4edf813089",
+        "passage_id": 100120
+    },
+    {
+        "content": "It&#39;s also possible that if you use a slightly different JVM version (for example, Java 6 update X instead of Java 6 update Y) the iteration order will be different.\r\n\r\nThere is no list anywhere that lists the implementation-specific changes. If you write Java programs that depend undocumented implementation details of a specific Java version, then it&#39;s ofcourse possible that your program won&#39;t work anymore on any other Java version.\r\n\r\nOracle has a [Compatibility Guide for JDK 8](http://www.oracle.com/technetwork/java/javase/8-compatibility-guide-2156366.html) which explains in which ways exactly Java 8 has minor incompatibilities with previous versions, but this only covers changes in the Java API, not implementation details.\r\n\r\nIf you do upgrade from Java 6 to Java 8 (which is recommended anyway, because Java 6 is no longer supported), then test your programs before you put them into production.",
+        "score": 25.1875,
+        "rank": 30,
+        "document_id": "2773cad5-248e-42e4-bd66-95010ce32416",
+        "passage_id": 376680
+    },
+    {
+        "content": "If you plan to stick to PC hardware, you don&#39;t really need to worry about it (but don&#39;t forget your `ntohl`s - endianness is still a problem!)\r\n\r\nStructures make it even worse, of course - alignment representations depend on your platform. I have worked on an embedded platform in which all types have an alignment of 1 - no padding is _ever_ inserted into structures. This can result in inconsistencies when using the same structure definitions on multiple platforms. You can either manually work out the byte offsets for data structure members and reference them directly, or use a compiler-specific alignment directive to control padding.\r\n\r\nSo you must be careful when directly casting from a network buffer to native types or structures. But the aliasing itself is not a problem in this case.",
+        "score": 25.171875,
+        "rank": 31,
+        "document_id": "b22a312a-af31-4c66-abb2-09ce37f65fc8",
+        "passage_id": 461935
+    },
+    {
+        "content": "I see that your Docker image uses Ubuntu 22.04 LTS as its base. Recently base Java images were rebuilt on top of this LTS version, which caused a lot of issues on older Docker runtimes. Most likely this is what you&#39;re experiencing. It has nothing to do with memory, but rather with Docker incompatibility with a newer Linux version used as a base image.\r\n\r\nYour operational server has Docker server version 20.10.10, while the failing server has version 20.10.09. The incompatibility issue was fixed exactly in Docker 20.10.10. Some more technical details on the incompatibility issue are available [here](https://github.com/adoptium/containers/issues/215#issuecomment-1142046045).\r\n\r\nThe solution would be to upgrade the failing server to at least Docker 20.10.10.",
+        "score": 25.171875,
+        "rank": 32,
+        "document_id": "ec96f7a5-5a05-41c0-8417-6e8664d96c0e",
+        "passage_id": 132347
+    },
+    {
+        "content": "Default builds of R only include double-precision LAPACK and BLAS. I disabled the single precision build.\n\n* The levmar library is actually pure C. So my suspicion that your problems where caused by the different C++ ABIs between VC and gcc is probably not correct. Most likely there is some other incompatibility between VC and gcc concerning the layout of static libraries. \n\nRight now the only available function is your `test_levmar()`. Tested on Linux and Windows (via Appveyor and rhub).\n\n  [1]: https://www.r-bloggers.com/sodd-stackoverflow-driven-development/",
+        "score": 25.078125,
+        "rank": 33,
+        "document_id": "8f4aa891-2337-4579-94d8-e481673c116f",
+        "passage_id": 64764
+    },
+    {
+        "content": "I don&#39;t think there is currently solution for setup you describe. I was having pretty same issue happening all the time on one of my Windows Server 2008R2 SP1 virtual machine. Unfortunately I wasn&#39;t able figure out why it was happening but after I&#39;ve replaced my 2008R2 with 2012 I never hit the issue again.\r\n\r\nGiven it was crashing with reference to `wsdapi.dll` I guess it was some major in incompatibility between `VS2015` and Windows Server 2008R2 (pretty old as it was starting with `.NET 3.5`) and so upgrade is best solution. Hope it helps.",
+        "score": 25.0625,
+        "rank": 34,
+        "document_id": "413ca352-3c93-43de-9d83-4ab61ff6b455",
+        "passage_id": 305884
+    },
+    {
+        "content": "In the end this turned out to be version incompatibilities between some of spaCy&#39;s dependents. This appears to have been caused by several uninstalls and re-installs of older and newer versions of spaCy. I got a fresh environment made and installed only the most current version of spaCy and everything works great. If you are using Anaconda Navigator i would not trust the package installer from the UI. It appears to be linked to older versions and you are much better off using PIP from the terminal.",
+        "score": 25.0625,
+        "rank": 35,
+        "document_id": "45939755-0d2f-4af4-8d78-fab432f7ba54",
+        "passage_id": 227310
+    },
+    {
+        "content": "One way(and the best for me) of checking if your **tf** uses **GPU** is with *nvidia-smi*:here you see the GPU Memory Usage for my task(I have 1.6 mil of observations with 13 variables and takes ~11 GB, your&#39;s should take couple mb or GB as well(don&#39;t know how looks your pictures)) so if your system won&#39;t show this info once you start running your model than for sure is using CPU (GPU couple mins to couple hours but CPU will take longer)\r\n\r\n[![nvidia-smi info][1]][1]\r\n\r\n\r\nNote: My terminal won&#39;t output the tensorflow output stuff, that is present in IDE as follow (CUDA doesn&#39;t show there as is claimed online, that cuda issue was only when is incompatibility and can&#39;t start the GPU in tf):\r\n\r\n[![Tensorflow uses GPU][2]][2]\r\n\r\nHere is the info that the test passed once the cudnn is installed correctly:\r\n\r\n[![cudnn test pass][3]][3]\r\n\r\nP.S: Hope it helps.",
+        "score": 25.046875,
+        "rank": 36,
+        "document_id": "44339795-fd9f-441c-b098-59d0640aa62d",
+        "passage_id": 15394
+    },
+    {
+        "content": "I hope once you understand my answer to (1) you will also realize that there&#39;s no escape from the backlog even if you use threads. The hardware does not really have support for OS-level threads. Hardware threads are limited to the number of cores so at the hardware level the CPU is a thread pool. The difference between single-threaded and multi-threaded is simply multi-threaded programs can really execute several threads in parallel in hardware while single-threaded programs can use only a single CPU.\r\n\r\nThe only REAL difference between async I/O and traditional multi-threaded programs is the thread creation latency. In this sense, there&#39;s no advantage programs like node.js has over programs that use thread pools like nginx and apache2.\r\n\r\nHowever, due to the way CGI works programs like node.js will still have higher throughput because you don&#39;t have to re-initialize the interpreter and all the objects in your program for each request. This is why most languages have moved to web frameworks that runs as a HTTP service (like node&#39;s Express.js) or something like FastCGI.\r\n\r\n___________________________________\r\n\r\nNote: Do you really want to know what&#39;s the big deal about thread creation latency?",
+        "score": 25.046875,
+        "rank": 37,
+        "document_id": "23d8bccd-507e-4b67-aaf6-32af3e011802",
+        "passage_id": 226094
+    },
+    {
+        "content": "I tried several combinations of tensorflow, Cuda, and Cudnn versions in Google Colab and the following version worked [OS: Ubuntu 20.04]: \r\n\r\n    tensorflow version: 2.9.2\r\n    Cuda Version: 11.2\r\n    Cudnn version: 8\r\n\r\nTherefore, I downgrated the tensorflow version in Vertex AI from 2.10.0 to 2.9.2 and it worked (solved only the incompatibility issue). I&#39;m still searching the solution for Kernel restarting. \r\n\r\n**UPDATE::**\r\n\r\nThe problem of Kernel Restatring got fixed after I changed the Kernel from *`Tensorflow 2 (Local)`* to *`Python (Local)`* in Vertex AI&#39;s Notebook as shown in the attached image [Kernel changing option is available on the right-top near the bug symbol]. \r\n\r\n[![enter image description here][1]][1] \r\n\r\n\r\n  [1]: https://i.stack.imgur.com/FwXRS.jpg",
+        "score": 25.03125,
+        "rank": 38,
+        "document_id": "dbdd93e0-fefa-4977-b4f8-ae9b479dd919",
+        "passage_id": 3418
+    },
+    {
+        "content": "Without actual code or lib is this just guessing question.\n\nI am no VC/MFC user but I come across similar problems too:\n\n1. **due to x86/x64 incompatibility?**\n\n   Check if DLL and EXE are for the same platform both must be the same (x86 or x64) and also the exe using the DLL of course else HW stuff handling changes a lot due to WOW64 emulator (usually need some x64 hook). Also class **GUID**s can be different which I found with some USB drivers.\n\n2. **Also check if COM classes aren&#39;t initialized/imported from lib more than once**\n\n   it behaves similar too all functions are not NULL but find no real HW  just **NULL** handles. I found this problem with &#39;MS&#39; Kinect driver which is JUNGO actually :)",
+        "score": 25.015625,
+        "rank": 39,
+        "document_id": "8175b7e8-f4fa-496c-98c7-70eb73cf61f1",
+        "passage_id": 342724
+    },
+    {
+        "content": "There is an API compatibility issue between Liquibase 3.3.0 and Liquibase-Hibernate 3.4. Liquibase-hibernate 3.5 and Liquibase 3.3.1 address the incompatibility and should both be released very soon.",
+        "score": 25.015625,
+        "rank": 40,
+        "document_id": "e3c21c2d-054f-4d2a-a43d-d5ba97bddd81",
+        "passage_id": 374057
+    },
+    {
+        "content": "&gt; 2020-07-17 00:38:44.182011: W\r\n&gt; tensorflow/stream_executor/platform/default/dso_loader.cc:55] Could\r\n&gt; not load dynamic library &#39;cudart64_101.dll&#39;; dlerror: cudart64_101.dll\r\n&gt; not found 2020-07-17 00:38:44.182121: I\r\n&gt; tensorflow/stream_executor/cuda/cudart_stub.cc:29] Ignore above cudart\r\n&gt; dlerror if you do not have a GPU set up on your machine.\r\n\r\nIf you have no GPU on your machine, ignore the error. If you do have one, install CUDA, which provides that missing library.\r\n\r\n&gt; ERROR: apache-beam 2.22.0 has requirement oauth2client&lt;4,&gt;=2.0.1, but you&#39;ll have oauth2client 4.1.3 which is incompatible.\r\n\r\nJust install all incompatible dependencies pip complains of manually with the right version, and you should get it installed.",
+        "score": 25.0,
+        "rank": 41,
+        "document_id": "64caf74d-1660-433a-9630-844bc72ba330",
+        "passage_id": 8129
+    },
+    {
+        "content": "If your version of Eclipse is compatible with the version of the NsightEE Eclipse plugins provided with the CUDA version you&#39;re trying to install for, then - after a successful installation - the `File &gt; New Project...` dialog will have the entry `C/C++ &gt; CUDA C/C++ Project`.\r\n\r\nIf it doesn&#39;t show up, then the installation has failed. I would guess that it might be a version incompatibility, and you might try using an older version of Eclipse (or a newer version of CUDA). Alternatively, perhaps the installation procedure got botched somehow.",
+        "score": 25.0,
+        "rank": 42,
+        "document_id": "7785dbcd-c86d-40d5-bfb4-80d65c5c8e19",
+        "passage_id": 5230
+    },
+    {
+        "content": "Both `SYS_GUID()` and `RAWTOHEX()` functions are non-standard and aren&#39;t fully compatible between Oracle and H2.\r\n\r\nThis incompatibility was fixed in Oracle compatibility mode of H2, so if you can build H2 from its current sources you will be able to use these functions in this compatibility mode.\r\n\r\nYou can get the sources from the GitHub:\r\nhttps://github.com/h2database/h2database\r\n\r\nBuilding instructions are here:\r\nhttps://h2database.com/html/build.html#building\r\n\r\nYou need the jar target.\r\n\r\nDon&#39;t forget to set the compatibility mode by appending `;MODE=Oracle` to your connection URL or by using `SET MODE Oracle;` command.\r\n\r\nIf you cannot use an own build of H2 you need an alternative method for H2 that will use something like `SELECT CAST(CAST(UUID() AS BINARY) AS VARCHAR)`",
+        "score": 25.0,
+        "rank": 43,
+        "document_id": "d3b55d6e-c41b-440b-b3f2-e25be7970f62",
+        "passage_id": 234364
+    },
+    {
+        "content": "I actually found the answer at the bottom of the blog (with the MNIST example I mentioned above) as a comment. Here is the comment:\r\n\r\n&gt; alright, i figured out it was probably the incompatibility of\r\n&gt; different versions of cudnn. I created a new environment with conda\r\n&gt; specifying python=3.6 (conda create --name tf-gpu python=3.6), and\r\n&gt; then installed tensorflow-gpu=1.8.0 (conda install\r\n&gt; tensorflow-gpu=1.8.0). I&#39;m still wondering why exactly this happened\r\n&gt; but at least now all codes on this page run smoothly.\r\n\r\nI created a new conda environment with those specific installations and the code runs smoothly now. I&#39;ll leave this posted in case someone else comes across this issue since my initial issue was not with this MNIST code but some other code.",
+        "score": 24.953125,
+        "rank": 44,
+        "document_id": "b886dcb5-ff57-458a-9e14-476e96663e58",
+        "passage_id": 13757
+    },
+    {
+        "content": "but to complete the set of the possible problems, the following is theoretically possible on some hardware:\r\n - though some people be wrong that a multi-core coherence mechanism always completely coherate data, which is when an object is updated by a core, other cores get the updated value when read, it is possible that a multi-core coherence mechanism does not do some or even all of coherence by itself but only when is triggered by corresponded commands in the code, so that without these corresponded commands the value to be written to an object gets stuck in the cache of the core so that either never or later than appropriate reaches other cores.\r\n\r\nPlease note, appropriate using of reasonably implemented (see the note marked with  `**` below for details) `volatile` modifier for variables if using `volatile` modifier for the type is possible, solves the elimination and the reordering by a compiler problems, but not reordering by hardware and not \u201cgetting stuck\u201d in cache ones.\r\n\r\n`[**]` To regret, actually, the standard of the language says \u201cThe semantics of an access through a volatile glvalue are implementation-defined\u201d (https://timsong-cpp.github.io/cppwp/n4868/dcl.type.cv#5).",
+        "score": 24.953125,
+        "rank": 45,
+        "document_id": "7174e208-0d83-4aaa-abc8-c97a6baa578f",
+        "passage_id": 169467
+    },
+    {
+        "content": "At the time of writing, all CUDA versions were backwards compatible with older CUDA compatible hardware. \r\n\r\nSo the CUDA toolkit through to version 6.5 will work perfectly with a compute 1.1 capability device, although a number features present in the toolkit are not supported on these older devices. However there has been a progressive deprecation of older hardware in newer tool kits since then. As of June 2019:\r\n\r\n - Support for compute 1.x capability devices was removed in CUDA 7. \r\n - Support for compute 2.x capability devices was removed in CUDA 9.",
+        "score": 24.9375,
+        "rank": 46,
+        "document_id": "b4247d72-5e18-49ae-ab87-80a199c85075",
+        "passage_id": 12456
+    },
+    {
+        "content": "&gt; could this approach fail?\r\n\r\nIt could be misunderstood.\r\n\r\nOther than that, I don&#39;t see a problem with the API.\r\n\r\n&gt; I have read that NULL does not necessarily mean a specific number, 0 that is. So, if for example a user links with the library using another compiler, standard or integrates it with C++, is it guaranteed that this equation will always be true?\r\n\r\nNull is null, regardless of what number represents it. There aren&#39;t many direct guarantees in the language standards about compatibility across language / compiler barriers. This is not limited to representation of null, but many aspects of the language implementation. Generally, compilers strive to be compatible with other compilers on same system. If a compiler is compatible with another, then there is no problem. If it is not compatible, then changing API is unlikely to fix the incompatiblity.\r\n\r\nTo use a shared library is to rely on compatibility of compilers used to produce the components. If you cannot rely on the compilers being compatible with one another, then you cannot make function calls across their boundary. Instead, you would have to rely on serialised communication over for example a socket.",
+        "score": 24.921875,
+        "rank": 47,
+        "document_id": "ac5a89fb-8503-4776-83d3-a50b5ac370fc",
+        "passage_id": 204941
+    },
+    {
+        "content": "For code binary compatibility, the &quot;non-tensor-core&quot; members of the Turing family have [hardware in the SM](https://www.anandtech.com/show/13973/nvidia-gtx-1660-ti-review-feat-evga-xc-gaming/2) that will process tensor core instructions, albeit at a relatively low throughput, compared to a tensor core unit.",
+        "score": 24.921875,
+        "rank": 48,
+        "document_id": "85580d9f-22e5-4b2d-99d3-96f49cabd732",
+        "passage_id": 7572
+    },
+    {
+        "content": "Generally, if there are any incompatibility between TF, CUDA and cuDNN version you can observed this behavior. \r\n\r\nFor `GeForce RTX 3060`, support starts from `CUDA 11.x`. Once you upgrade to `TF2.4` or `TF2.5` your issue will be resolved.\r\n\r\nFor the benefit of community providing tested built configuration \r\n\r\n[![enter image description here][1]][1] \r\n\r\n\r\nCUDA Support Matrix\r\n\r\n[![enter image description here][2]][2]\r\n\r\n  [1]: https://i.stack.imgur.com/xAHkR.png\r\n  [2]: https://i.stack.imgur.com/EDP1c.png",
+        "score": 24.90625,
+        "rank": 49,
+        "document_id": "6fa05bc4-99c2-4731-849b-4963eec53440",
+        "passage_id": 6914
+    },
+    {
+        "content": "This optimized code will produce inconsistent results, if the underlying assumptions are invalidated due to multi-threaded manipulation without proper thread safe constructs. This is an accepted inconsistency, within the specification, as a memory model enforcing consistent results at all costs would result in dramatically poor performance. The thread safe constructs, like synchronization or volatile writes and reads, do not only tell the JVM where to insert memory barriers, if the underlying architecture requires it, but also, where and how to restrict the code optimizations.\r\n\r\nThis is the reason why a) proper thread safe constructs are needed when manipulating mutable shared state and b) these constructs may have performance penalties, even if there are no memory barriers needed at the CPU/hardware level.",
+        "score": 24.875,
+        "rank": 50,
+        "document_id": "f6775348-7120-401a-b85c-e4205aa00313",
+        "passage_id": 296265
+    }
+]
