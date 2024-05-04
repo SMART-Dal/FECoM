@@ -1,1 +1,0 @@
-Since the `max_wait_s` parameter for all of these experiments was set to 0, the server did not perform any stable state checking before executing the functions.
