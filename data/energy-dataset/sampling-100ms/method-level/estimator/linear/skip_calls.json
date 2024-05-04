@@ -1,1 +1,3 @@
-["tensorflow.data.Dataset.from_tensor_slices.shuffle()", "tensorflow.data.Dataset.from_tensor_slices.shuffle.batch(batch_size).repeat()", "tensorflow.keras.layers.DenseFeatures([age_column])(feature_batch).numpy()", "tensorflow.keras.layers.DenseFeatures([tf.feature_column.indicator_column(gender_column)])(feature_batch).numpy()", "tensorflow.data.Dataset.from_tensor_slices()", "tensorflow.feature_column.crossed_column()", "tensorflow.estimator.LinearClassifier()"]
+version https://git-lfs.github.com/spec/v1
+oid sha256:990bea98fdf6c430a85cef70b0857b804ba6d3b0b86e5330682033888f7c820e
+size 469

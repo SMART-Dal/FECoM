@@ -1,3 +1,0 @@
-mean CPU temperature: 29.132530120481928
-min CPU temperature: 28
-max CPU temperature: 30

@@ -1,1 +1,3 @@
-["tensorflow.keras.datasets.mnist.load_data()", "tensorflow.data.Dataset.from_tensor_slices(test_images).shuffle(test_size).batch()", "tensorflow.keras.optimizers.Adam()", "tensorflow.random.normal()", "tensorflow.keras.Sequential()", "tensorflow.keras.Model.reparameterize()", "tensorflow.sigmoid()", "tensorflow.split()", "tensorflow.nn.sigmoid_cross_entropy_with_logits()", "tensorflow.math.log()", "tensorflow.keras.optimizers.Adam.apply_gradients()", "tensorflow.keras.metrics.Mean()", "tensorflow.keras.Model.encode()", "tensorflow.keras.Model.sample()", "tensorflow.reshape()", "tensorflow.reshape.numpy()"]
+version https://git-lfs.github.com/spec/v1
+oid sha256:3a698e62d1c90d8b6f9256f7c391c854e53fc87c8f7e45ea8f86ce0bb8a5a9e5
+size 614
