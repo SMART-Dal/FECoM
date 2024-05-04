@@ -1,0 +1,352 @@
+[
+    {
+        "content": "I recently had same problem. about PATCH and looking around found [this article](http://williamdurand.fr/2014/02/14/please-do-not-patch-like-an-idiot/). It also makes references to the [RFC 5789](https://www.rfc-editor.org/rfc/rfc5789) where it says: \r\n\r\n&gt; The difference between the PUT and PATCH requests is reflected in the way the server processes the enclosed entity to modify the resource identified by the Request-URI. In a PUT request, the enclosed entity is considered to be a modified version of the resource stored on the origin server, and the client is requesting that the stored version be replaced. **With PATCH, however, the enclosed entity contains *a set of instructions* describing how a resource currently residing on the origin server should be modified to produce a new version.** The PATCH method affects the resource identified by the Request-URI, and it also MAY have side effects on other resources; i.e., new resources may be created, or existing ones modified, by the application of a PATCH.\r\n\r\ne.g:\r\n\r\n    [\r\n        { &quot;op&quot;: &quot;test&quot; &quot;path&quot;: &quot;",
+        "score": 25.515625,
+        "rank": 1,
+        "document_id": "66e96df0-f554-443a-9fb0-869f6cb49191",
+        "passage_id": 171261
+    },
+    {
+        "content": "The root cause here is that you&#39;ve defined your Deployment as:\r\n\r\n```\r\napiVersion: extensions/v1beta1\r\nkind: Deployment\r\n```\r\n\r\nBut that&#39;s not the correct `apiVersion` for a Deployment; it should be:\r\n\r\n```\r\napiVersion: apps/v1\r\nkind: Deployment\r\n```\r\n\r\nSupport for the `extensions/v1beta1` API was [removed in Kubernetes 1.16](https://kubernetes.io/blog/2019/07/18/api-deprecations-in-1-16/).\r\n\r\nKustomize &quot;knows&quot; about a regular Kubernetes Deployment and will properly merge your configuration; with that single change (and using Kustomize v5.0.1), your patch works correctly.",
+        "score": 25.46875,
+        "rank": 2,
+        "document_id": "83296c2c-1e75-4a63-b282-af4680445b4d",
+        "passage_id": 134085
+    },
+    {
+        "content": "Your steps are correct, however I doubt the way you are generating the patch. You seem to have copied the original file and made changes to original file and then diffing the two. I think an easier way would be to use quit process to generate the patch as described [here][1]\r\n\r\n\r\n  [1]: https://www.yoctoproject.org/docs/2.6/dev-manual/dev-manual.html#using-a-quilt-workflow",
+        "score": 25.109375,
+        "rank": 3,
+        "document_id": "59cd9f19-2526-44cb-b385-1710e675221e",
+        "passage_id": 251785
+    },
+    {
+        "content": "What I feel is that what you want to achieve is not possible because you want to shuffle all the patches from all batches of the dataset image and generate it over the fly without saving it in memory. And because your single image after applying extract_patches is returning 105 patches (because your stride(32) and patch size(64) is not matching) what you can do to achieve rank 4 tensor after applying .batch() is reshaping it as follows,\r\n\r\n    dataset = (tf.data.Dataset.from_tensor_slices(tf.cast(imgs, tf.float32))\r\n                .map(extract_patches, num_parallel_calls=tf.data.AUTOTUNE, deterministic=False)\r\n                .shuffle(10*batch_size, reshuffle_each_iteration=True)\r\n                .batch(batch_size)\r\n                .map(lambda x:tf.reshape(x, (batch_size * 105,64,64,1)))\r\n                .batch(batch_size)\r\n                )\r\n\r\nI&#39;m not sure but you can try this.\r\n\r\n**Correction: this approach won&#39;t work as .batch() will always return the higher rank of dataset element. As tf.data.Dataset.batch() documents mentions \r\n\r\n&gt; Combines consecutive elements of this dataset into batches.",
+        "score": 24.921875,
+        "rank": 4,
+        "document_id": "5bc671af-9497-465b-808d-54e284dca997",
+        "passage_id": 148949
+    },
+    {
+        "content": "`metadata.name`, `spec.containers[0].name`) and the values we wanted to replace, in this case the resource requests and limits. You don&#39;t have to duplicate the entire resource for the patch to apply.\r\n\r\nNow to apply the patch with kustomize, the contents of `cluster/kustomization.yaml`:\r\n```yaml\r\napiVersion: kustomize.config.k8s.io/v1beta1\r\nkind: Kustomization\r\nresources:\r\n  - ../base/main\r\n\r\npatchesStrategicMerge:\r\n  - pod_overlay.yaml\r\n```\r\n\r\nAnother option to consider if you really need templating power is to use Helm.\r\n\r\n[Helm](https://helm.sh/) is a much more robust templating engine that you may want to consider, and you can use a combination of Helm for templating and the Kustomize for resource management, patches for specific configuration, and overlays.",
+        "score": 24.828125,
+        "rank": 5,
+        "document_id": "4dbd558a-c8c1-4c14-8bbb-9bb4ea1cc6c7",
+        "passage_id": 180728
+    },
+    {
+        "content": "A Tomcat upgrade is probably warranted ... and also a general blitz on applying security patches to the machine.\r\n\r\nIf you have the wherewithal, you should try all of these remedies out on your test / UAT system before trying it in production.  Java upgrades and Tomcat upgrades have the potential to introduce problems, and you don&#39;t want experience them first in on a production server.\r\n\r\nSecondly, if this is a once off event, the most productive thing you could do would be to save all of the evidence (log files, dump files, configurations, etc) and put the problem on one side.  Now YMMV, but in general it is only worth investigating this kind of problem if it recurs.  (For a start, with a once-off event, it is really difficult to know that you have identified the cause and implemented the correct remedy ...)",
+        "score": 24.453125,
+        "rank": 6,
+        "document_id": "6705c4a5-cc2e-485d-8ba0-6bb683998524",
+        "passage_id": 394807
+    },
+    {
+        "content": "When I first posed this question I thought that the only problem was how to turn all fields `Optional` in a nested `BaseModel`, but actually that was not difficult to fix.\r\n\r\nThe real problem with partial updates when implementing a `PATCH` call is that the Pydantic `BaseModel.copy` method doesn&#39;t attempt to support nested models when applying it&#39;s `update` parameter. That&#39;s quite an involved task for the generic case, considering you may have fields that are `dict`s, `list`s, or `set`s of another `BaseModel`, just for instance. Instead it just unpacks the `dict` using `**`: https://github.com/pydantic/pydantic/blob/main/pydantic/main.py#L353\r\n\r\nI haven&#39;t got a proper implementation of that for Pydantic, but since I&#39;ve got a working example `PATCH` by cheating, I&#39;m going to post this as an answer and see if anyone can fault it or provide better, possibly even with an implementation of `BaseModel.copy` that supports updates for nested models.",
+        "score": 24.4375,
+        "rank": 7,
+        "document_id": "775ef159-97b3-4094-9806-661f1a1147e6",
+        "passage_id": 36397
+    },
+    {
+        "content": "It is more of a Microsoft convention to stick assembly version number (not file version number) to CLR version (.NET Framework 1.x/2.0/4.0), while sometimes Framework version (3.5). One advantage is that by reading that version number you can immediately know whether you add the correct reference.\r\n\r\nYour expectation is not weird, but that&#39;s only related to file version number, which differs significantly (even hotfixes can change them) as you wished. Windows uses such to track the patch level.\r\n\r\nMicrosoft decides to keep assembly version number unchanged (as in-place upgrade), so we should also get used to that. CLR focuses on assembly version numbers, and ignore file version number in many cases.\r\n\r\nUpdated: You should notice that this convention starts to change a little bit since the introduction of .NET Core. Now assembly version number is used to indicate API surface explicitly, and can change rapidly.",
+        "score": 24.390625,
+        "rank": 8,
+        "document_id": "667a0628-9963-462f-ba89-e5b7a3401ade",
+        "passage_id": 299961
+    },
+    {
+        "content": "s patchset (on top of upstream code) in common branch\r\n* Have upsteam-repo in `paths` section of .hgrc in order to be able to pull from it\r\n* Pull, when needed, from upstream\r\n* [Merge patches with upstream][1]\r\n* For patch-exchange you have two ways\r\n  * if patch-queue was created as repository (`hg qinit -c`) you can push this repository in addition to &quot;base&quot;\r\n  * Using [MQCollab][2] extension on top of MQ will allow you to exchange and synchronize patches with collaborators directly (which have to have also MQ and MQCollab)\r\n\r\n\r\n  [1]: http://mercurial.selenic.com/wiki/MqExtension#Merging_patches_with_new_upstream_revisions\r\n  [2]: http://mercurial.selenic.com/wiki/MqCollabExtension",
+        "score": 24.390625,
+        "rank": 9,
+        "document_id": "1a683cd6-c118-4bc1-a2a5-c8ea2272e589",
+        "passage_id": 98462
+    },
+    {
+        "content": "&gt; I had originally taken this simply as a description of the process,\r\n&gt; but if tensorflow is actually extracting and storing separate\r\n&gt; filter-sized &#39;patches&#39; from the image under the hood, then a\r\n&gt; back-of-the-envelope calculation shows that the intermediate\r\n&gt; computation involved requires ~130GB in my case, well over the limit\r\n&gt; that I could test.\r\n\r\nAs you figured out yourself, this is the reason for the large memory consumption. Tensorflow does this because the filters are usually small and calculating a matrix multiplication is a lot faster than calculating a convolution. \r\n\r\n&gt; can anyone explain why TF would do this when I&#39;m still only debugging\r\n&gt; on a CPU?\r\n\r\nYou can also use tensorflow without having a GPU, therefore the CPU implementations are not just there for debugging. They are also optimized for speed and matrix multiplication is faster on both CPU and GPU.\r\n\r\nTo make convolutions with large filters possible you would have to implement a convolution for large filters in C++ and add it as a new op to tensorflow.",
+        "score": 24.34375,
+        "rank": 10,
+        "document_id": "c9b9968a-ac4b-49f9-98b4-032a8f94ab47",
+        "passage_id": 288647
+    },
+    {
+        "content": "You can [apply a patch to multiple resources](https://github.com/kubernetes-sigs/kustomize/blob/master/examples/patchMultipleObjects.md) using the `target` attribute in a patch. Given your examples (after fixing the errors I pointed out in my comment), we can write a `kustomization.yaml` like this:\r\n\r\n```\r\napiVersion: kustomize.config.k8s.io/v1beta1\r\nkind: Kustomization\r\nresources:\r\n- deployment-v1.yaml\r\n- deployment-v2.yaml\r\n\r\npatches:\r\n  - target:\r\n      kind: Deployment\r\n    patch: |\r\n      apiVersion: apps/v1\r\n      kind: Deployment\r\n      metadata:\r\n        name: this_value_is_ignored\r\n      spec:\r\n        replicas: 10\r\n```\r\n\r\nThe `target` attribute controls to what resources this patch will apply. With the above configuration, running `kustomize build` results in:\r\n\r\n```\r\napiVersion: apps/v1\r\nkind: Deployment\r\nmetadata:\r\n  labels:\r\n    app: web\r\n  name: nginx-deployment\r\nspec:\r\n  replicas: 10\r\n.\r\n.\r\n.",
+        "score": 24.34375,
+        "rank": 11,
+        "document_id": "58a96a6b-0ad0-4956-9d25-31b0fb351e8d",
+        "passage_id": 128070
+    },
+    {
+        "content": "Here&#39;s an older blog post that shows an example of streaming: http://patshaughnessy.net/2010/10/11/activerecord-with-large-result-sets-part-2-streaming-data\r\n\r\nYou might also have luck with the new [Streaming API][1] and [Batches][2]. If I&#39;m reading the documentation correctly, you&#39;d need to do your queries and output formatting in a view template rather than your controller in order to take advantage of the streaming.\r\n\r\nAs for gzipping, it looks like the most common way to do that in Rails is [Rack::Deflator][3]. In older versions of Rails, the [Streaming API didn&#39;t play well Rack::Deflator][4]. That might be fixed now, but if not that SO question has a monkey patch that might help.\r\n\r\nUpdate\r\n------\r\n\r\nHere&#39;s some test code that&#39;s working for me with JRuby on Torquebox:\r\n\r\n    # /app/controllers/test_controller.rb\r\n    def index\r\n      respond_to do |format|\r\n        format.csv do\r\n          render stream: true,",
+        "score": 24.296875,
+        "rank": 12,
+        "document_id": "67f1c242-8dfb-4107-a2fb-830a53d5e941",
+        "passage_id": 389368
+    },
+    {
+        "content": "ISTM, you&#39;re reading too much into to statelessness.  A REST API supports traditional [CRUD operations][1].  The API for [CouchDB][2] is good example of how DB state is updated by a series of stateless transactions.  \r\n\r\nYour task is to identify what the resources are and the &quot;state transfers&quot; between them.  Each step in your workflow is a different state transfer, marked by a different URI.  Each update/change to a resource has an accompanying POST/PATCH or an idempotent PUT or DELETE operation.\r\n\r\nIf you want to gain a better of understanding of what is means to be RESTful and the reasons behind each design choice, I recommend spending a hour reading [Chapter 5 of Roy Fielding&#39;s Dissertation][3].\r\n\r\nWhen making design choices, just think about what the principles of RESTful design are trying to accomplish.  Setup your design so that queries are safe (don&#39;t change state) and that they are done in a ways that can be bookmarkable, cacheable, distributable, etc.",
+        "score": 24.28125,
+        "rank": 13,
+        "document_id": "38c2ea75-8881-4066-bf50-d5561876e7ad",
+        "passage_id": 456676
+    },
+    {
+        "content": "The stack allocation:\r\n\r\n    Object o;\r\n\r\n[does not invoke new](https://stackoverflow.com/questions/1764831/c-object-without-new).  Therefore, for CUDA, it is an unmanaged object/allocation (since your overridden `new` operator would have to be called for the managed memory subsystem to enter the picture).  For unmanaged data, pass-by-reference as a kernel parameter:\r\n\r\n\r\n\r\n    __global__ void aKernel(Object&amp; obj)\r\n                                  ^\r\n\r\nis illegal.\r\n\r\nAnd your code will not run correctly, if you were to run it with `cuda-memcheck`.  You can also validate these assertions by putting a `cout` statement in your `Managed` `new` override, and study where and when it actually prints something.\r\n\r\nIn general, AFAIK, managed stack allocations will require the so-called [linux HMM patch](https://www.phoronix.com/scan.php?page=news_item&amp;px=Linux-HMM-V13), which is not available yet.",
+        "score": 24.25,
+        "rank": 14,
+        "document_id": "f97e8f5d-e080-4490-be06-ec6b3bb469ff",
+        "passage_id": 17418
+    },
+    {
+        "content": "As can be seen on the [assembly output on godbolt.org][1], the stack frame of function `f()` indeed has the return address 16 bytes from the location where the compiler (both gcc and clang) allocate the `array` pointer (`rbp-8`).\r\n\r\nYet gcc and clang generate different code for the `printf(&quot;I am skipped\\n&quot;)`, gcc translates this call to `puts(&quot;I am skipped&quot;)` even without any optimisation turned on. Patching the return address by 10 bytes may work for one compiler and not the other, and probably does not work at all if optimisations are turned on.\r\n\r\nThere is no portable way to determine how to patch memory to skip a given line of code, and if you manage to achieve that, be aware that this result is very brittle as any change in the code or environment may break it.\r\n\r\nPatching an existing executable to skip some code is less brittle as the patched code will not change until a new version is installed, but [modern CPUs have special devices][2] to make it harder, such as authenticated code pointers that would make the posted code fail even if the offsets are correct.",
+        "score": 24.21875,
+        "rank": 15,
+        "document_id": "4c67facc-f9dd-41f8-abae-2e002714b21a",
+        "passage_id": 125687
+    },
+    {
+        "content": "For details, and the patches used to implement this, see the sourceware bug [13304](https://sourceware.org/bugzilla/show_bug.cgi?id=13304).\r\n\r\nIf efficiency is not a problem, then I would simply use e.g.\r\n\r\n    #if defined(__CYGWIN__) &amp;&amp; !defined(__FMA__) &amp;&amp; !defined(__FMA3__) &amp;&amp; !defined(__FMA4__)\r\n    #define fma(x, y, z)  fma_emulation(x, y, z)\r\n\r\n    double fma_emulation(double x, double y, double z)\r\n    {\r\n        /* One of the implementations linked above */\r\n    }\r\n    #endif\r\n\r\nI do not personally use Windows at all, but if anyone does (use Windows and need the fma emulation), I&#39;d suggest they try and push a patch upstream, with a link to the [GNU C library discussion on correct fma emulation](https://sourceware.org/bugzilla/show_bug.cgi?id=13304).",
+        "score": 24.15625,
+        "rank": 16,
+        "document_id": "d1d4e5ce-2561-445a-9804-b182bf1755a4",
+        "passage_id": 72360
+    },
+    {
+        "content": "Using the program below I&#39;m able to empirically get some conclusions (even though I have no guarantees they are correct):\r\n\r\n- `mmap()` takes approximately the same time independently of the allocation area (this is due to efficient memory management by the linux kernel. mapped memory doesn&#39;t take space unless it is written to).\r\n- `mmap()` takes longer depending on the number of already-existing mappings. First 1000 mmaps take around 0.05 seconds; 1000 mmaps after having 64000 mappings take around 34 seconds. I haven&#39;t checked the linux kernel, but probably inserting a mapped region in the index takes `O(n)` instead of the feasible `O(1)` in some structures. Kernel patch possible; but probably it&#39;s not a problem to anyone but me :-)\r\n- `munmap()` needs to be issued on **ALL** processes mapping the same `MAP_ANONYMOUS` region for it to be reclaimed by the kernel. This correctly frees the shared memory region.\r\n\r\n&lt;!-- --&gt;\r\n\r\n    #include &lt;cassert&gt;\r\n    #include &lt;cinttypes&gt;\r\n    #include &lt;",
+        "score": 24.15625,
+        "rank": 17,
+        "document_id": "16711f97-3a1a-4f75-92b9-50819c399deb",
+        "passage_id": 260740
+    },
+    {
+        "content": "Kustomize &quot;knows&quot; about a regular Kubernetes Deployment and will properly merge your configuration; with that single change (and using Kustomize v5.0.1), your patch works correctly.\r\n\r\nCompare before the change:\r\n\r\n```\r\n$ kustomize build overlays/prod | yq .spec.template.spec.containers\r\n[\r\n  {\r\n    &quot;env&quot;: [\r\n      {\r\n        &quot;name&quot;: &quot;ENV_VAR_NAME_1&quot;,\r\n        &quot;value&quot;: &quot;new_value_1&quot;\r\n      },\r\n      {\r\n        &quot;name&quot;: &quot;ENV_VAR_NAME_2&quot;,\r\n        &quot;value&quot;: &quot;new_value_2&quot;\r\n      }\r\n    ],\r\n    &quot;name&quot;: &quot;__NAME__&quot;\r\n  }\r\n]\r\n```\r\n\r\nTo:\r\n\r\n```\r\n$ sed -i &#39;/^apiVersion:/ s|apiVersion:.*|apiVersion: apps/v1|&#39; base/deployment.yaml\r\n$ kustomize build overlays/prod | yq .spec.template.spec.containers\r\n[\r\n  {\r\n    &quot;env&quot;",
+        "score": 24.109375,
+        "rank": 18,
+        "document_id": "83296c2c-1e75-4a63-b282-af4680445b4d",
+        "passage_id": 134086
+    },
+    {
+        "content": "The `$patch: delete` doesn&#39;t seem to work as I would expect.\r\n\r\nIt may be nice to open an issue on kustomize github: https://github.com/kubernetes-sigs/kustomize/issues and ask developers about it.\r\n\r\n---\r\nAlthough here is the patch I tried, and it seems to work:\r\n\r\n    apiVersion: apps/v1\r\n    kind: Deployment\r\n    metadata:\r\n      labels:\r\n        app: grafana\r\n      name: grafana\r\n      namespace: monitoring\r\n    spec:\r\n      template:\r\n        spec:\r\n          volumes:\r\n            - name: grafana-storage\r\n              emptyDir: null\r\n              persistentVolumeClaim:\r\n                claimName: grafana-storage\r\n          containers:\r\n            - name: grafana\r\n              volumeMounts:\r\n                - name: grafana-storage\r\n                  mountPath: /var/lib/grafana\r\n\r\n\r\n---\r\nBased on https://github.com/kubernetes/community/blob/master/contributors/design-proposals/api-machinery/add-new-patchStrategy-to-clear-fields-not-present-in-patch.md\r\n\r\nThe following should also work in theory:\r\n\r\n    spec:\r\n      volumes:\r\n        - $retainKeys:\r\n          - name\r\n          - persistentVolumeClaim\r\n          name: grafana-storage\r\n          persistentVolumeClaim:\r\n            claimName: grafana-storage\r\n\r\nBut in practise it doesn&#39;t, and I think that&#39;s because kustomize has its own implementaions of strategic merge (different that k8s).",
+        "score": 24.078125,
+        "rank": 19,
+        "document_id": "15976515-85b5-4b2a-8e3c-f5d90f1ea9a0",
+        "passage_id": 184696
+    },
+    {
+        "content": "Basically, you got it right. But survivor objects are not immediately copied to the old generation. Instead, they are copied to the Survivor space, where they have to survive a configurable number of garbage collections before they are promoted to the old generation.\n\nBut the fundamental assumption is correct. The efficiency is reduced when objects survive longer than necessary and having to invoke `finalize()` extends the object\u2019s lifetime.\n\nThe fundamental fix is to make this an exceptional case. This is even addressed in [the specification]:\n\n&gt; *For efficiency, an implementation may keep track of classes that do not override the finalize method of class Object, or override it in a trivial way.*\n&gt;\n&gt; *For example:*\n&gt;\n&gt;     protected void finalize() throws Throwable {\n&gt;         super.finalize();\n&gt;     }\n&gt;\n&gt; *We encourage implementations to treat such objects as having a finalizer that is not overridden, and to finalize them more efficiently, as described in &#167;12.6.1.*\n\nIn case of the HotSpot JVM, it recognizes when the method inherited by `Object` has not been overridden or when it has been overridden with an empty method.",
+        "score": 24.0625,
+        "rank": 20,
+        "document_id": "686107b7-1b4a-4340-8a26-d50c5ec9c1ad",
+        "passage_id": 226232
+    },
+    {
+        "content": "In general any workflow that involves editing history is not going to work well.  It&#39;s just not the intended work mode, and no effort goes into making it work well.\r\n\r\nBetter options for you might be:\r\n\r\n1. Versioned Mercurial Queues (`hg qinit --create-repo`) which lets you make multiple commits iterating on a single patch.  You get the full history in your private patch repo and they only get the `qfinish`ed whole.\r\n1. Rather than merge back your task branch and edit history, just re-apply the change as a single commit and push that.  In your example it would be `hg diff -r 1017 -r 1021 | hg import`, which creates a new commit (1022) that is the sum of all the changes 1018::1021, inclusive.  *that* should merge cleanly and be pushable without ever having to push any changesets on your `task-branch` out to them.  You can even `hg commit --close-branch` on the task branch\r\n1. Tell your coworkers to STFU. ;)  High changeset granularity is good practice, and they should adapt.",
+        "score": 24.046875,
+        "rank": 21,
+        "document_id": "8d0ff357-41aa-47eb-8fa2-2ce55a97e3e6",
+        "passage_id": 107660
+    },
+    {
+        "content": "QEMU does not currently emulate unaligned access traps for ARM guest code. This is a reflection of the fact that its traditional primary purpose is &quot;run correct guest code as quickly as possible&quot;; putting in alignment traps slows down correct guest code and only makes a difference on buggy guest code running on older Arm cores (since ARMv7 and above handle unaligned accesses correctly in hardware).\r\n\r\nThat said, we do nowadays have better support in the generic code for emitting relatively efficient alignment checks; we just haven&#39;t bothered to wire these up to the Arm codegen yet. If somebody wanted to write QEMU patches to add that support we&#39;d accept them. (Roughly, the code in target/arm/translate.c would need to add MO_ALIGN to the memop flags when generating guest loads and stores when the guest CPU is in a state that means unaligned accesses should trap; this may differ between different architecture versions and for different types of load and store insn.)",
+        "score": 24.03125,
+        "rank": 22,
+        "document_id": "d81e4f8b-164e-436d-83f0-10ab77578dfc",
+        "passage_id": 261795
+    },
+    {
+        "content": "Vulkan&#39;s compatibility is laid out in the Vulkan specification, and it&#39;s based on version numbers: X.Y.Z.\r\n\r\n`Z` is the &quot;patch&quot; number, which represent mostly editorial or minor behavior changes to the specification. No user-facing APIs are allowed to change based on the patch number. Code that could work with X.Y.(Z-1) must work with X.Y.Z, and vice-versa. So if the SDK can load Vulkan version X.Y, it can load it for every `Z` within that version.\r\n\r\n`Y` is the minor version number, which represents backwards compatible changes to the API. That is, if your code worked with X.(Y-1), it will also work with X.Y. However, the reverse is not necessarily true. So if you&#39;re using the SDK loader intended for version 1.0, it should be *functional* for version 1.1 and above.\r\n\r\nObviously new APIs added in 1.1+ will not be available to you if you use the 1.0 loader.\r\n\r\n`X` represents the major version number. If that changes, *all bets are off*.",
+        "score": 24.03125,
+        "rank": 23,
+        "document_id": "02d61a39-94d4-44b0-8694-008d7c315c92",
+        "passage_id": 20001
+    },
+    {
+        "content": "Because you have variable-sized patches, there are a couple of ways you can handle the classification of these patches using a SVM.  These have their advantages and disadvantages so you will have to decide what you think is best.  Given that you have decided to choose a patch of size `M x N` for your images to be submitted into your SVM for classification, you can try one of the two following approaches:\r\n\r\n# Resize the input image patches\r\n\r\nFor each of your images at test time, resize them so that they all match the size of `M x N`, then run through the SVM classification pipeline to determine which class that image belongs to.  The advantages of this are that the only information you are losing is due to the information lost when subsampling the images.  However, the disadvantage is that if the image is smaller than the target patch size of `M x N` you will introduce bogus information when upsampling to match the target patch size.  This kind of thing has been seen before especially in Deep Learning.  Specifically, [**Region Proposal Networks by Ren et al.",
+        "score": 23.96875,
+        "rank": 24,
+        "document_id": "5be3cc8b-b3e8-423b-b39f-c9f43014d7b4",
+        "passage_id": 313032
+    },
+    {
+        "content": "It needs to know which container you want to patch in the statefulset. You indicate this by including the name of the container.\r\n\r\nAlso, the json structure of your resources field is incorrect. See the example below for a complete working example:\r\n\r\n(replace **???** with the name of the container you want patched)\r\n\r\n```\r\nkubectl patch statefulset test -n test --patch &#39;{&quot;spec&quot;: {&quot;template&quot;: {&quot;spec&quot;: {&quot;containers&quot;: [{&quot;name&quot;: &quot;???&quot;, &quot;resources&quot;: {&quot;limits&quot;: {&quot;cpu&quot;: &quot;4000m&quot;,&quot;memory&quot;: &quot;16Gi&quot;},&quot;requests&quot;: {&quot;cpu&quot;: &quot;3000m&quot;,&quot;memory&quot;: &quot;13Gi&quot;}}}]}}}}&#39;\r\n```",
+        "score": 23.96875,
+        "rank": 25,
+        "document_id": "9951ac37-d061-47e5-9a29-fd00a21fda02",
+        "passage_id": 151114
+    },
+    {
+        "content": "As Yaroslav noted:  [Mean, in particular, was not yet implemented for GPU](https://github.com/tensorflow/tensorflow/blob/master/tensorflow/core/kernels/reduction_ops_mean.cc), but it is now available so these operations should run on the GPU with the latest TensorFlow.  (as per the DEVICE_GPU registration at that link)\r\n\r\nPrior to availability of mean, the status of this was:\r\n\r\n(a)  You can implement mean by hand, because `reduce_sum` [is available on GPU](https://github.com/tensorflow/tensorflow/blob/master/tensorflow/core/kernels/reduction_ops_sum.cc).\r\n\r\n(b)  I&#39;ve re-pinged someone to see if there&#39;s an easy way to add the GPU support, but we&#39;ll see.\r\n\r\nRe `float64` on GPU, someone opened an issue three days ago with a patch for [supporting float64 reductions on GPU](https://github.com/tensorflow/tensorflow/pull/1089).  Currently being reviewed and tested.",
+        "score": 23.953125,
+        "rank": 26,
+        "document_id": "8f9d19a4-2cb4-43ac-b09b-fc7c80ac5cf8",
+        "passage_id": 80491
+    },
+    {
+        "content": "This is not an official answer and I hope one with better knowledge can correct me if I am wrong.\r\n\r\nIn short, both should result in the same performance and behavior.\r\n\r\nWe can observe this using `--disassemble` with the Dart VM 2.17.5, where it looks like `[...list]` is being translated into `List.of(list1)`. The `List.of` is defined here:\r\n```dart\r\n  @patch\r\n  factory List.of(Iterable&lt;E&gt; elements, {bool growable: true}) {\r\n    if (growable) {\r\n      return _GrowableList.of(elements);\r\n    } else {\r\n      return _List.of(elements);\r\n    }\r\n  }\r\n```\r\nhttps://github.com/dart-lang/sdk/blob/9ad08f1c951ae8b5ee0387306f450afaccf4eaba/sdk/lib/_internal/vm/lib/array_patch.dart#L48-L55\r\n\r\nSince we can only create growable lists with the `[]` syntax, then we follow the track into `_GrowableList.of` which is defined as:\r\n```dart\r\n  factory _GrowableList.of(Iterable&lt;T&gt;",
+        "score": 23.9375,
+        "rank": 27,
+        "document_id": "fccbac70-8f9e-4485-a125-b7eeadcd804b",
+        "passage_id": 151471
+    },
+    {
+        "content": "&gt; Does the GC know in the recursive call, within `eps (b: xs)` that head `a` of the list is no longer in scope and then it is collected?\r\n\r\nCorrect.\r\n\r\n&gt; If this is the case, then at each iteration, would the GHC always create and then destroy a location in memory (variable)?\r\n\r\nFor this example, almost certainly yes. There are some cases where list fusion can turn list-based algorithms into tight, non-allocating loops; this is most likely to happen if you use only built-in functions for producing and consuming the list.\r\n\r\n&gt; how can this perform as well as in a procedural language where the variable is always reused?\r\n\r\nThe allocator and GC are tuned for doing lots of allocation and collection. Usually allocation just bumps a pointer. Occasionally you hit a GC, but only one `Float` needs to be copied from the first generation to the second (or only a `Float` and a few closures or whatever -- you get the idea, most of the data need not be touched as it&#39;s not reachable), which is similarly very cheap. There is some overhead, obviously, but usually the computation you&#39;re doing is complicated enough that it takes the majority of the run time.",
+        "score": 23.90625,
+        "rank": 28,
+        "document_id": "646c6318-7135-4613-b277-4d8b26fb7819",
+        "passage_id": 186020
+    },
+    {
+        "content": "Instead of editing git patches, I recommend cherry-picking the interesting commits, and modifying the applied diff in the working directory:\r\n\r\n    git cherry-pick --no-commit upstream/commit1\r\n    (edit changes in working directory)\r\n    git commit\r\n\r\nIf you have a lot of potentially interesting commits, you can try interactive rebase.\r\n\r\n    git checkout upstream/master -b upstream-new\r\n    git rebase -i master\r\n\r\nThis way you can review &amp; cherry-pick a lot of commits easily - for example, choose only commits that affect only a subsystem. You can help the selecting process by running a `git log --oneline subsystem1/ &gt;/tmp/subsystem1_commits.txt` - it will create a file with similar syntax as accepted by `git rebase -i`.\r\n\r\nAbout your workflow: I don&#39;t think there is an easy solution for your problem. If the upstream repository and your branch will diverge for a long time, you will lose git&#39;s main advantage: easy branching _and merging_. What you will have left is almost-manual patching system, which is always a pain.",
+        "score": 23.890625,
+        "rank": 29,
+        "document_id": "27ddbf3c-2e7a-4522-9d6e-ce0d09fb4d78",
+        "passage_id": 230508
+    },
+    {
+        "content": "There are a few things wrong here, I&#39;m addressing the first ones here to get you started:\r\n\r\n**General points**\r\n\r\n - Please check the return values of all CUDA API calls, see [here][1] for more info.\r\n - Please run cuda-memcheck to check for obvious things like out-of-bounds accesses.\r\n\r\n**Specific points**\r\n\r\n - When allocating space for the RNG state, you should have space for one state per thread (not one per matrix element as you have now).\r\n - Your thread ID calculation in setup_kernel() is wrong, should be `threadIdx.x  + blockIdx.x * blockDim.x` (* instead of +).\r\n - You use the thread ID as the sequence number as well as the offset, you should just set the offset to zero as described in the cuRAND manual:\r\n\r\n&gt; For the highest quality parallel pseudorandom number generation, each\r\n&gt; experiment should be assigned a unique seed. Within an experiment,\r\n&gt; each thread of computation should be assigned a unique sequence\r\n&gt; number.\r\n\r\nFinally you&#39;re running two threads per block, that&#39;s incredibly inefficient.",
+        "score": 23.84375,
+        "rank": 30,
+        "document_id": "974e5735-6d43-442a-bb64-f8d86756e7c7",
+        "passage_id": 18830
+    },
+    {
+        "content": "I believe the simplest way is adding something like this unconditionally to your CFLAGS (perhaps from clang&#39;s equivalent of the gcc specfile if you want it to be system-global):\r\n\r\n    -D__thread=&#39;^-^&#39;\r\n\r\nwhere the righthand side can be anything that&#39;s syntactically invalid (a constraint violation) at any point in a C program.\r\n\r\nAs for preventing loading of libraries with TLS, you&#39;d have to patch the linker and/or dynamic linker to reject them. If you&#39;re just talking about `dlopen`, your program could first read the file and parse the ELF headers for TLS relocations, then reject the library (without passing it to `dlopen`) if it has any. This might even be possible with an `LD_PRELOAD` wrapper.\r\n\r\nI agree with you that, especially in its current implementation, TLS is something whose use should generally be avoided, but may I ask if you&#39;ve measured the costs? I think stamping it out *completely* will be fairly difficult on a system that&#39;s designed to use it, and there&#39;s much lower-hanging fruit for cutting bloat.",
+        "score": 23.828125,
+        "rank": 31,
+        "document_id": "1f190bb2-8b2f-4849-9632-aebad42cbca9",
+        "passage_id": 437882
+    },
+    {
+        "content": "So, for CPython: While there is a cost to bound methods, it&#39;s smaller than you might think. Only two references are needed space-wise, and the CPU cost is limited to a small memory allocation, and an extra indirection when calling. Note though that this cost applies to all method calls, not just those which actually make use of bound method features. `a.f()` *has to* call the descriptor and use its return value, because in a dynamic language we don&#39;t know if it&#39;s monkey-patched to do something different.\r\n\r\nIn PyPy, things are more interesting. As it&#39;s an implementation which doesn&#39;t compromise on correctness, the above model is still correct for reasoning about semantics. However, it&#39;s actually faster. Apart from the fact that the JIT compiler inlines and then eliminates the entire mess described above in most cases, they also tackle the problem on bytecode level. There are two [new bytecode instructions][2], which preserve the semantics but omit the allocation of the bound method object in the case of `a.f()`.",
+        "score": 23.78125,
+        "rank": 32,
+        "document_id": "49e253fc-e349-4082-981b-7495d3037095",
+        "passage_id": 437778
+    },
+    {
+        "content": "You should align the patch on a cache line so the processor doesn&#39;t have fetch 2 cache lines to execute the patch.\r\n\r\nIf you insist on counting, you can analyze the instrn1/2/N to see if they care about the flags that &quot;inc&quot; fools with, and only pushf/popf if needed, or you can insert the increment between two instructions in the patch that don&#39;t care.  You must be analyzing these to some extent to handle complications such as instn being **ret** anyway; you can generate a better patch (e.g., don&#39;t &quot;jmp back&quot;).\r\n\r\nYou may find that using **add count,1** is faster than **inc count** because this avoids partial condition code updates and consequent pipeline interlocks.  This will affect your cc-impact-analysis a bit, since **inc** doesn&#39;t set the carry bit, and **add** does.\r\n\r\nAnother possibility is PC sampling. Don&#39;t instrument the code at all; just interrupt the thread periodically and take a sample PC value.   If you know where the basic blocks are, a PC sample anywhere in the basic block is evidence the entire block got executed.",
+        "score": 23.78125,
+        "rank": 33,
+        "document_id": "abcabb53-8605-4ddc-ae3c-94e5e126014c",
+        "passage_id": 427412
+    },
+    {
+        "content": "Simple Vulkan code often gets in the way of performance (and if you don&#39;t care about performance, you shouldn&#39;t be using Vulkan).\r\n\r\nIn any case, there is no &quot;most generally correct way&quot; to do most things in Vulkan. There are lots of definitely *incorrect* ways, but no &quot;generally do this&quot; advice. Vulkan is a low-level, explicit API, and the result of that is that you need to apply Vulkan&#39;s tools to your specific circumstances. And maybe profile on different hardware.\r\n\r\nFor example, if you&#39;re generating completely new vertex data every frame, it may be better to see if the implementation can read vertex data directly from coherent memory, so that there&#39;s no need for a staging buffer at all. Yes, the reads may be slower, but the overall process may be faster than a transfer followed by a read.\r\n\r\nThen again, it may not. It may be faster on some hardware, and slower on others. And some hardware may not allow you to use coherent memory for any buffer that has the vertex input usage at all.",
+        "score": 23.765625,
+        "rank": 34,
+        "document_id": "97ba5ed0-8cf6-4a40-a85f-540a9d1b69c8",
+        "passage_id": 193702
+    },
+    {
+        "content": "Rather than post the implementations separately I am going to update the example given in the question so that it has a working `PATCH` and being a full demonstration of `PATCH` hopefully this will help others more.\r\n\r\nThe two additions are `partial` and `merge`. `partial` is what&#39;s referred to as `optional` in the question code.\r\n\r\n***`partial`***:\r\nThis is a function that takes any `BaseModel` and returns a new `BaseModel` with all fields `Optional`, including sub-object fields. That&#39;s enough for Pydantic to allow through any sub-set of fields without throwing an error for &quot;missing fields&quot;. It&#39;s recursive - not really popular - but given these are nested data models the depth is not expected to exceed single digits.",
+        "score": 23.765625,
+        "rank": 35,
+        "document_id": "775ef159-97b3-4094-9806-661f1a1147e6",
+        "passage_id": 36398
+    },
+    {
+        "content": "Per your question:\r\n\r\n1. Balance your resources. Both Elasticsearch and Your Application will need to try to run at 60-80% of server utilization in order to achieve the best performance. You can achieve this utilization from Application side by using Multiple Processing in python or Unix `xargs` + Elasticsearch `_bulk` API.\r\n\r\n2. Elasticsearch performance grows almost linearly with 99%, as my experience. If you have a correct design of your cluster / index-shards settings. `50,000 records/second` for each node is possible.\r\n\r\nHere are some useful links that would help:\r\n\r\n- https://www.elastic.co/guide/en/elasticsearch/guide/current/indexing-performance.html\r\n\r\n- https://qbox.io/support/article/choosing-a-size-for-nodes\r\n\r\n- https://www.elastic.co/guide/en/elasticsearch/reference/5.6/modules-threadpool.html (for monitoring your cluster during work loads)\r\n\r\nIt&#39;s recommended to do performance testing and then monitor your clusters + application servers closely during workloads. (I used unix htop + newrelic combined :D).",
+        "score": 23.75,
+        "rank": 36,
+        "document_id": "0b5fbbac-a9c1-4bf2-a14a-6f54ae68d881",
+        "passage_id": 255806
+    },
+    {
+        "content": "Kustomize doesn&#39;t do direct variable replacement like a templating engine. But there are some solutions depending on what attributes you need to variabalize.\r\n\r\nUsually variables in deployments, statefulsets, daemonset, pod, job, etc, attributes allow you to use variables powered by a configmap, so you don&#39;t necessarily have to use a variable at compile time. However, this doesn&#39;t work when controlling values like resource limits and requests, as those would be processed before configmaps would be mounted.\r\n\r\nKustomize isn&#39;t designed to be a *templating engine*, it&#39;s designed as a purely declarative approach to configuration management, this includes the ability to use patches for overlays (overrides) and reference resources to allow you to DRY (Do-Not Repeat Yourself) which is especially useful when your configuration powers multiple Kubernetes clusters.\r\n\r\nFor Kustomize, maybe consider if patching might meet your needs. There are several different ways that Kustomize can patch a file.",
+        "score": 23.75,
+        "rank": 37,
+        "document_id": "4dbd558a-c8c1-4c14-8bbb-9bb4ea1cc6c7",
+        "passage_id": 180725
+    },
+    {
+        "content": "There&#39;s a section of the WebPlatform.org docs that explains this:\r\n\r\n&gt; The values are quantized as to not expose private information to attackers. If Chrome is run with the flag `--enable-precise-memory-info` the values are not quantized.\r\n\r\nhttps://webplatform.github.io/docs/apis/timing/properties/memory/\r\n\r\nSo, by default, the number is not precise, and  it only updates every 20 minutes! This should explain why your number doesn&#39;t change. If you use the flag, the number will be precise and current.\r\n\r\nThe [WebKit commit message](https://bugs.webkit.org/attachment.cgi?id=154876&amp;action=prettypatch) explains:\r\n\r\n&gt; This patch adds an option to expose quantized and rate-limited memory  \r\ninformation to web pages.  Web pages can only learn new data every 20  \r\nminutes, which helps mitigate attacks where the attacker compares two  \r\nreadings to extract side-channel information.  The patch also only  \r\nreports 100 distinct memory values, which (combined with the rate  \r\nlimits) makes it difficult for attackers to learn about small changes in  \r\n memory use.",
+        "score": 23.71875,
+        "rank": 38,
+        "document_id": "df98e179-d10e-433c-9dbe-9c2eb0852716",
+        "passage_id": 125930
+    },
+    {
+        "content": "You have plenty of js libs that are able to calculate a diff between two JSON payloads, often under the form a patch that can be later applied\r\n\r\n - either on the original payload to get the new version\r\n - or on the latest version in a reverse mode to get back to original version.\r\n\r\nFor instance:\r\n\r\nhttps://json-delta.readthedocs.io/en/latest/philosophy.html\r\nhttps://github.com/benjamine/jsondiffpatch",
+        "score": 23.71875,
+        "rank": 39,
+        "document_id": "f0091d2e-2eaa-49d1-89c7-ee0a3c970dc3",
+        "passage_id": 245825
+    },
+    {
+        "content": "The use of the patch command in `kubectl` makes the patching less &quot;native&quot; to Jenkins, but the convenience is more than worth it (an alternative would be using the REST API instead for example). The `foreach` structure looks odd, but is needed to avoid a long-standing bug in Jenkins.\r\n\r\n\r\n  [1]: https://plugins.jenkins.io/kubernetes-cli/\r\n  [2]: https://plugins.jenkins.io/snakeyaml-api/\r\n  [3]: https://www.jenkins.io/doc/pipeline/steps/pipeline-utility-steps/#readyaml-read-yaml-from-files-in-the-workspace-or-text",
+        "score": 23.703125,
+        "rank": 40,
+        "document_id": "1d2407ae-4eaa-4f3c-bce5-3991b78a96aa",
+        "passage_id": 186040
+    },
+    {
+        "content": "This kind of thing has been seen before especially in Deep Learning.  Specifically, [**Region Proposal Networks by Ren et al.**](https://arxiv.org/pdf/1506.01497v3.pdf) first take a look at what patches in a larger image are candidates to have an object or something worth taking a look at in the image, they then **resize** the patches to match the input layer into their neural network (convolutional btw) then proceed with the classification.\r\n\r\n# Search for patches over multiple scales\r\n\r\nAnother way is to keep the image size intact but using patch sizes of `M x N`, do a sliding window scheme where you extract overlapping patches of size `M x N`, submit these to your SVM then for each centre of each overlapping patch, determine what the class of that patch would be.  You would do this over multiple scales then have a voting procedure where the most occurring class over the entire image is the class of interest.  Something similar to this was seen in [**Semenet et al. for their Overfeat classification engine**](https://arxiv.org/pdf/1312.6229v4.pdf) - also using convolutional neural networks.",
+        "score": 23.703125,
+        "rank": 41,
+        "document_id": "5be3cc8b-b3e8-423b-b39f-c9f43014d7b4",
+        "passage_id": 313033
+    },
+    {
+        "content": "and simply iterate over the whole programm trying to find this specific method. However, you pattern need to be unique, it should only match one location in the whole binary. This can sometimes be a bit tricky and requires you te be creative. In this case it probably wont be possible to find a unique pattern (the function is too generic). Once you found this function, you can call it to acquire the object or read the address directly from it (parsing `MOV EAX, globalVar`). Although, calling is probably better because the code might change, its functionality/signature usually not.\r\n\r\nActually such *pattern scanning* isnt required if your searching for fucntions, which usually only move on recompilation but not on every start of the programm. However, the above example should give you an impression on how it is done. Also notice that if you dont search for methods but hardcode their addresses, your code will probably break on the next game patch.\r\n\r\nThe hard part is to find the fucntions, identify the structures and simply understand what your target programm does under the hood/ how it works. We call this process *reverse engineering*.",
+        "score": 23.640625,
+        "rank": 42,
+        "document_id": "f1ebd16f-b3c0-457e-93e5-31e172796412",
+        "passage_id": 398069
+    },
+    {
+        "content": "Alternatively, on occasion, the breakage is considered worth it. Either way, it&#39;s time consuming, and falls on a team of volunteers. Of course, when module authors are responsive and can apply provided patches, it&#39;s somewhat less of a problem.\r\n\r\nThe problem with &quot;put a trait on it&quot; is that the decision - at least on the JVM - seems to need to be made up front at the time that the memory holding the data is allocated. In which case, a portable solution probably can&#39;t allow an existing `Buf`/`Blob` to be marked up as such. Perhaps a better way will be for I/O-ish things to be asked to give something `CArray`-like instead, so that zero-copy can be achieved by having the data in the &quot;right kind of memory&quot; in the first place. That&#39;s probably a reasonable feature request.",
+        "score": 23.640625,
+        "rank": 43,
+        "document_id": "e6edafba-12f5-43a6-aac2-8f0b496c01d2",
+        "passage_id": 223235
+    },
+    {
+        "content": "There&#39;s nothing in C++ that intrinsically stop you from &quot;directly calling syscalls&quot;. You&#39;re already doing it, when you call `read()`, `write()`, `open()` and other syscalls.\r\n\r\nAs always, you have to be aware of permissions. From your own link:\r\n\r\n&gt; The current implementation does not use the flags argument. As would\r\n&gt; be expected, copy_to_process() writes data into the target process&#39;s\r\n&gt; address space. Either both processes must have the same ownership or\r\n&gt; the copying process must have the CAP_SYS_PTRACE capability; otherwise\r\n&gt; the copy will not be allowed.\r\n\r\nSo, you can certainly call these functions, but be aware that they may return with an error code, so make sure you have proper error handling in place. Of course, this assumes that your version of the kernel actually supports these syscalls. If you&#39;re new to Linux, it&#39;s probably beyond your abilities to apply the patch referenced in the article to your kernel.",
+        "score": 23.609375,
+        "rank": 44,
+        "document_id": "7ce0448c-e0a1-47f1-90fc-cd08c0213605",
+        "passage_id": 426603
+    },
+    {
+        "content": "The patch will look like\r\n\r\n    @@ -1,5 +1,5 @@\r\n     1\r\n     2\r\n    -3\r\n    -4\r\n    -5\r\n    +3 THREE\r\n    +4 FOUR\r\n    +5 FIVE\r\n\r\nAnd it&#39;s pretty clear that *in this case* the intuitive result is\r\n\r\n    1\r\n    2\r\n    3 THREE\r\n    4 FOUR\r\n    5\r\n\r\nBut writing code that gets this &quot;right&quot; without getting other cases &quot;wrong&quot; (relative to equally intuitive interpretation) is not so easy.  Sometimes it really is open to interpretation.  &quot;Was this one operation that changed three lines?  Or one operation that deleted three lines, followed by three operations that each added a line?  Or...&quot;\r\n\r\nThe automated tooling in git avoids making those interpretive decisions, first by looking at code in hunks of change (rather than arbitrary line ranges) and making you intervene manually if you want something different (i.e. by using patch-edit mode); and then by inserting conflict markers (and again requiring manual intervention) when interpretation still seems to be required.",
+        "score": 23.59375,
+        "rank": 45,
+        "document_id": "71277d12-6822-4e22-b0b4-fa2c69121e65",
+        "passage_id": 44024
+    },
+    {
+        "content": "In fact, it was a bug in `Clang Tidy`. It only happens in the case of exports. This happens in cases such as when the `run-clang-tidy` script is called with `-fix` switch. The main problem is that the fixes stored in the export file should use absolute paths. This usually happens with projects using `CMAKE` to generate the compile commands database. But `MPlayer` uses `Makefile` as the build system and I used `Bear` to generate the database. There are also problems with merging the fixes to the same location.\r\n\r\nTo fix the problem, mainly, I constructed absolute paths and made some other changes similar to those for the code without export. Finally, the `YAML` export file is revised and generated. The patch is [here][1].\r\n\r\n\r\n  [1]: http://lists.llvm.org/pipermail/cfe-commits/Week-of-Mon-20180723/236426.html",
+        "score": 23.5625,
+        "rank": 46,
+        "document_id": "1cace77c-1f08-4f14-98ce-a00185c09772",
+        "passage_id": 69069
+    },
+    {
+        "content": "I think that you already have the correct solution (which is to copy and paste the code into your class).\r\n\r\nI think the JavaFX developers want to maintain a minimum of API which is functional useful and easy to maintain from a security perspective.  Hence, sometimes there are useful functions that are &quot;hidden&quot; inside the JavaFX private implementations and are not readily accessible to application developers (even though the functionality might be useful).  It&#39;s a tradeoff of sorts between maintainability and functionality.  \r\n\r\nSometimes you can work around accessibility issues using reflection to break the encapsulation.  Usually, that isn&#39;t recommended as such code may break for future Java versions because you are invoking code that is not part of the publicly supported API and lacks the backwards compatible compilation guarantees which are provided with public APIs.\r\n\r\nYou can always make a request or provide a patch request to make some functionality available (the [openjfx-dev mailing list][1] is probably the best way to initiate this process).\r\n\r\nIn the past, significant functionality which was previously private in some JavaFX releases has been released in public API in subsequent releases (for example the [Skin classes for Java 9][2]).",
+        "score": 23.546875,
+        "rank": 47,
+        "document_id": "65ae3b2a-9722-4c83-aa82-a6a26f8750ce",
+        "passage_id": 75692
+    },
+    {
+        "content": "Can you first check that `libthread_db.so` exists on the board and that it is unstripped (check `nm` output) ? I&#39;ve never used LTIB personally but from page 2 this [Freescale application note][1]:\r\n&gt; To correctly catch process events like loading a shared library or\r\n&gt; creation of a thread, the shared libraries that implement these common\r\n&gt; functionalities must be deployed on target un-stripped of symbols. For\r\n&gt; Linux userspace those are ld.so, libthread_db.so, libpthread.so, and\r\n&gt; for the particular case of i.MX/LTIB, to achieve that uncheck strip\r\n&gt; options on LTIB Target Image Generation menu.\r\n\r\n\r\n  [1]: http://cache.freescale.com/files/32bit/doc/app_note/AN4553.pdf",
+        "score": 23.53125,
+        "rank": 48,
+        "document_id": "acbc5980-3f3a-4086-9844-c51906171ffe",
+        "passage_id": 425054
+    },
+    {
+        "content": "The patch you have is for the yocto/poky sources themselves (as opposed to the more usual case of having patches for the actual components that yocto builds and bbappends that modify recipes in other layers somehow).\r\n\r\nSo if you really want to use this patch, there&#39;s no need to &quot;integrate&quot; it into yocto, just run run `git am &lt;patchfile&gt;` in your poky root dir or use &quot;patch&quot; command directly. This is not very maintainable since your poky now differs from upstream but might work... \r\n\r\nIt should be possible to do the same changes using bbappends that you could then store in your own layer (this way the poky repo would be untouched) but the patch you have does not do that. This would be the most &quot;proper&quot; way of paching that you asked about in the comment -- but if you know that you aren&#39;t going to ever upgrade poky then it might not be work worth doing.",
+        "score": 23.515625,
+        "rank": 49,
+        "document_id": "e0ed042f-2b83-4971-b315-1bb3ca4b9c85",
+        "passage_id": 61151
+    },
+    {
+        "content": "In general, AFAIK, managed stack allocations will require the so-called [linux HMM patch](https://www.phoronix.com/scan.php?page=news_item&amp;px=Linux-HMM-V13), which is not available yet.\r\n\r\nAlso note that there are a few syntactical errors in the code you have shown, for example I believe:\r\n\r\n    p.foo();  \r\n\r\nshould be:\r\n\r\n    p-&gt;foo();  \r\n\r\nand I believe:\r\n\r\n    class Object : Managed\r\n\r\nshould probably  be:\r\n\r\n    class Object : public Managed\r\n\r\nbut this didn&#39;t seem to be the point of your question (how to get this code to work).  I&#39;ve made the assumption that the inheritance from `Managed` that you show in your question is indeed inheriting from the `Managed` class defined [here](https://devblogs.nvidia.com/parallelforall/unified-memory-in-cuda-6/)",
+        "score": 23.5,
+        "rank": 50,
+        "document_id": "f97e8f5d-e080-4490-be06-ec6b3bb469ff",
+        "passage_id": 17419
+    }
+]
