@@ -1,0 +1,352 @@
+[
+    {
+        "content": "Check your nvidia-smi (nvidia system management interface) as the program runs, looking for Volatile GPU-util.  **The task manager is not a good indication of GPU usage (nor very accurate usages of other resources like RAM and temps imo...)**. The fact that your GPU temp is 71 degrees for a 3080 Ti indicates certainly the GPU is used (unless some other process is using it) \r\n\r\nFor instance, I am training right now with an RTX 3090 and my smi output from the command line looks like (truncating the processes from the screenshot):\r\n\r\n[![enter image description here][1]][1]\r\n\r\nBut my task manager looks like (note the gpu usage):\r\n\r\n[![enter image description here][2]][2]\r\n\r\n\r\nNow if you have some sort of I/O bottleneck, i.e. loading of tensors from the CPU taking too long so the GPU sits idle, well that is a different issue, and can be solved by profiling and other tools for making sure that the loading process is optimized.\r\n\r\n\r\n  [1]: https://i.stack.imgur.com/LYQpo.png\r\n  [2]: https://i.stack.imgur.com/23sgf.png",
+        "score": 28.4375,
+        "rank": 1,
+        "document_id": "9d0fd90c-1abb-47e7-98ec-82fbe271c594",
+        "passage_id": 6157
+    },
+    {
+        "content": "GPU hardware is optimised for working on relatively large amounts of data. You only really see the benefit of GPU computing when you can feed the many processing cores lots of data to keep them busy. Typically this means you need operations working on thousands or millions of elements.\r\n\r\nThe overheads of launching operations on the GPU dwarf the computation time when you&#39;re dealing with scalar quantities, so it is no surprise that they are slower than on the CPU. (This is not peculiar to MATLAB &amp; `gpuArray`).",
+        "score": 27.765625,
+        "rank": 2,
+        "document_id": "6f117c64-0c9a-405b-a19b-c7f393d2bdeb",
+        "passage_id": 14249
+    },
+    {
+        "content": "As always, it depends on the workload.  For workloads that are well-supported by native GPU hardware (e.g. floating point, texture filtering), I doubt an FPGA can compete.  Anecdotally, I&#39;ve heard about image processing workloads where FPGAs are competitive or better.  That makes sense, since GPUs are not optimized to operate on small integers.  (For that reason, GPUs often are uncompetitive with CPUs running SSE2-optimized image processing code.)\r\n\r\nAs for power consumption, for GPUs, suitable workloads generally keep all the execution units busy, so it&#39;s a bit of an all-or-nothing proposition.",
+        "score": 27.546875,
+        "rank": 3,
+        "document_id": "7d809754-42f0-49a7-a84b-eabed7e03d76",
+        "passage_id": 14809
+    },
+    {
+        "content": "Register usage per device can change for different devices, and this can also affect performance; occupancy will be affected in many cases.\r\n\r\n 5. Performance can be improved by targeting specific hardware, so even if your algorithm is perfect for your GPU, it could be better if you optimize it for the new hardware.\r\n\r\nNow, that said, you can probably make some predictions if you run your app through one of the profilers (such as the NVIDIA Compute Profiler), and you look at your occupancy and your SM utilization.  If your GPU has 2 SMs and the one you will eventually run on has 16 SMs, then you will almost certainly see an improvement, but not specifically because of that.\r\n\r\nSo, unfortunately, it isn&#39;t easy to make the type of predictions you want.  If you&#39;re writing something open source, you could post the code and ask others to test it with newer hardware, but that isn&#39;t always an option.",
+        "score": 27.25,
+        "rank": 4,
+        "document_id": "e71ecae8-c06d-4629-af60-9f9d8f838a83",
+        "passage_id": 29550
+    },
+    {
+        "content": "1. There is no concept that says memory utilization must be the same when running apps on more than one GPU.  Furthermore, memory utilization can vary at different points in the application, depending on the underlying activity (such as the point at which allocations are made) when the sampling of memory usage occurs.\r\n\r\n2. The Volatile GPU usage of device 1 probably indicates that the application and/or `nvidia-smi` is causing activity on device 1.\r\n\r\nIt&#39;s not clear why you refer to these as problems.  You are monitoring activity on the device.",
+        "score": 27.171875,
+        "rank": 5,
+        "document_id": "a883e1ce-8f01-4ed4-ab50-bccf7b7661e0",
+        "passage_id": 24034
+    },
+    {
+        "content": "That can be serious issue on GPU, with vector architecture.\r\n 3. If you are not using 4-component format, usually, you are loosing part of performance as many functions process samples from color planes simultaneously. So, payload is decreasing.\r\n\r\nIf we talk about GPU, different parts of hardware are involved into processing of Images &amp; Buffers, so it&#39;s difficult to draw up, how one is better than another. Carefull benchmarking &amp; algorithm optimizations are needed.",
+        "score": 27.078125,
+        "rank": 6,
+        "document_id": "a5949145-1199-461b-85a5-f9426b801310",
+        "passage_id": 384442
+    },
+    {
+        "content": "There are two relevant issues here:\r\n\r\n- A model needs to be &quot;big enough&quot; in order to profit from GPU acceleration, as training data needs to be transferred to the GPU, and new weights need to be downloaded from the GPU, and this overhead reduces the efficiency, making things slower.\r\n- For recurrent layers, paralellizing them is not easy, as they have a lot of sequential computation across timesteps. You might consider using the [CuDNNLSTM][1] layer instead of the normal LSTM, as it is optimized for GPU usage.\r\n\r\nIn general for a small model, training on GPU might not be faster than training on CPU.\r\n\r\n  [1]: https://keras.io/layers/recurrent/#cudnnlstm",
+        "score": 26.921875,
+        "rank": 7,
+        "document_id": "ffcbb23c-2bfd-43d0-8a6d-efa6c4a7133d",
+        "passage_id": 12182
+    },
+    {
+        "content": "Note that the default spaCy input text limit is 1,000,000 characters, however this can be changed by setting `nlp.max_length = your_desired_length`.\r\n\r\n**GPU**. If you opt to use a GPU, processing times can be improved for certain aspects of the pipeline which make use of GPU-based computations. See the section below on *making use of your GPU*. The same general rule as with CPUs applies here too: generally, newer GPUs with higher frequencies, more memory, larger memory bus widths, bigger bandwidth etc. will realise faster spaCy processing times.\r\n\r\n**Overclocking**. If you&#39;re experienced with overclocking and have the correct hardware to be able to do it (adequate power supply, cooling, motherboard chipset), then another effective way to gain extra performance without changing hardware is to overclock your CPU/GPU.\r\n\r\n## 2. Use (optimally) small models/pipelines.\r\nWhen computation resources are limited, and/or accuracy is less of a concern (e.g. when experimenting or testing ideas), load spaCy pipelines that are efficiency focused (i.e. those with smaller models).",
+        "score": 26.90625,
+        "rank": 8,
+        "document_id": "2066777b-7fc8-4058-a2fb-7739db309497",
+        "passage_id": 142498
+    },
+    {
+        "content": "The basic idea is that for repeated processing of a similar workload, we can carefully optimize usage of on-chip data storage (including shared memory but also in particular the use of GPU register space) so as to avoid having to load the data/parameters at kernel launch e.g. from global memory and then (perhaps) store the updated parameters back out to global memory at the conclusion of a kernel.  This can have dramatic processing benefits for particular workloads where there is a large amount of carried parameter usage, and the parameter space can be made to &quot;fit&quot; on-chip.  As newer GPUs have more and more on-chip register storage space, this will probably continue to be of interest for even larger workloads.\r\n\r\nIt&#39;s quite likely that there are other specific use cases also, where a persistent threads approach offers clear advantages over a launch-on-work approach.  These are just two examples.\r\n\r\nIn short, persistent kernels is not a general strategy for replacement of other types of GPU processing paradigms, but in specific cases it can provide benefits over methods that launch kernels repeatedly.  Therefore some interest in persistent kernels will probably continue for some time.",
+        "score": 26.8125,
+        "rank": 9,
+        "document_id": "f47cad2b-61a4-47aa-8b7c-8011da9b0ad3",
+        "passage_id": 18939
+    },
+    {
+        "content": "compared to manually tweaked kernel-designs, tailor fit to respective GPU-silicon-architecture / latencies observed in-vivo  \r\n- data-structures larger than just a few KB remain paying GPU-SM/GDDR-MEM distances of ~ large hundreds of [ns], nearly [us] -v/s- compared to small units ~ small tens of [ns] at CPU/L1/L2/L3/DDRx ) ref. timing details in &gt;&gt;&gt; https://stackoverflow.com/a/33065382  \r\n- not being able to enjoy much of the GPU/SMX power, due to this task&#39;s obvious low-reuse of data points and dataset size beyond the GPU/SM-silicon limits, that causes and must cause GPU/SM-register capacity spillovers in any kind of GPU-kernel design attempts and tweaking  \r\n- the global task is not having a minimum reasonable amount of asynchronous, isolated ( non-communicating islands ) mathematically-dense, yet SMX-local, GPU-kernel processing steps ( there is not much to compute so as to adjust for the add-on overheads and expensive SMX/GDDR memory costs )  \r\n\r\nGPU-s can lovely exhibit it&#39;s best-performance,",
+        "score": 26.765625,
+        "rank": 10,
+        "document_id": "74a224dd-7227-472c-962d-9f45c30dc8d3",
+        "passage_id": 16647
+    },
+    {
+        "content": "That tells nsight compute not to modify cache state in between kernel launches, and is documented [here](https://docs.nvidia.com/nsight-compute/NsightComputeCli/index.html#command-line-options-profile).  Taking a look at the option description there:\r\n\r\n&gt;\tControl the behavior of the GPU caches during profiling. Allowed values:\r\nall: All GPU caches are flushed before each kernel replay iteration during profiling. While metric values in the execution environment of the application might be slightly different without invalidating the caches, this mode offers the most reproducible metric results across the replay passes and also across multiple runs of the target application.\r\nnone: No GPU caches are flushed during profiling. This can improve performance and **better replicates the application behavior** if only a single kernel replay pass is necessary for metric collection. However, some metric results will vary depending on prior GPU work, and between replay iterations. This can lead to inconsistent and out-of-bounds metric values.\r\n\r\nThe reason it can &quot;better replicate application behavior&quot; is due to the fact that when you are not running the profiler, the caches are not invalidated in-between kernel launches.",
+        "score": 26.75,
+        "rank": 11,
+        "document_id": "5d0f3ce7-2a4e-4f93-bbbb-f806f3804c10",
+        "passage_id": 1373
+    },
+    {
+        "content": "If validation errors are reported (see OP&#39;s posting for [an example](http://pastebin.com/4mLZSFcE)), then these should be addressed first, before any attempt is made to debug the user&#39;s P2P code.\r\n\r\nThe best recommendation is to use a system that has been validated by the system vendor for K80 usage.  This is generally good practice for any usage of Tesla GPUs, as these GPUs tend to make significant demands on the host system from the standpoints of:\r\n\r\n - power delivery\r\n - cooling requirements\r\n - system compatibility (two examples are the types of PCIE settings being discussed here, as well as resource mapping and bootability issues also referred to by OP in the comments)\r\n\r\nOEM validated systems will generally have the fewest issues associated with the above requirements/demands that Tesla GPUs place on the host system.\r\n\r\nFor this particular issue, troubleshooting starts with the simpleP2P test.  When validation errors are observed in that test (but no other CUDA runtime errors are reported) then the PCIE settings may be suspect.",
+        "score": 26.703125,
+        "rank": 12,
+        "document_id": "813fd960-f118-46bb-8cf9-a8a67b1fbd19",
+        "passage_id": 12680
+    },
+    {
+        "content": "The result is that only one context ever runs on the hardware at a time. Context switching isn&#39;t free, and there is a performance penalty to having multiple processes contending for a single device.\r\n\r\nFurthermore, every context present on a GPU requires device memory. On the platform you are asking about, linux, there is no memory paging, so every context&#39;s resources must coexist in GPU memory. I don&#39;t believe it would be possible to have 12 non-trivial contexts running on any current GPU simultaneously - you would run out of available memory well before that number. Trying to run more applications would result in an context establishment failure.\r\n\r\nAs for the behaviour of the driver distributing multiple applications on multiple GPUs, AFAIK the linux driver doesn&#39;t do any intelligent distribution of processes amongst GPUs, except when one or more of the GPUs are in a non-default compute mode. If no device is specifically requested, the driver will always try and find the first valid, free GPU it can run a process or thread on. If a GPU is busy and marked compute exclusive (either thread or process) or marked prohibited, then the driver will skip over it when trying to find a GPU to run on.",
+        "score": 26.671875,
+        "rank": 13,
+        "document_id": "ad555f32-ef0d-42e4-97c5-12b3eabc447d",
+        "passage_id": 25505
+    },
+    {
+        "content": "Your analysis is correct on several fronts, but there are a couple of nuances that might help clarify your results and improve GPU performance:\r\n\r\n**1. CPU vs GPU Performance**\r\nIn general, GPU operations have an overhead cost associated with transferring data between the CPU and GPU memory. Therefore, the benefits of GPU acceleration often become apparent with larger data sets, where the benefits of parallelization outweigh this overhead. This overhead cost is likely why the GPU computations are slower for small matrices. To exploit your GPU for solving linear equations, you should focus on larger matrices.\r\n\r\n**2. Torch `solve` vs `torch.linalg.solve`**\r\nThe `torch.solve` function has been deprecated since PyTorch 1.7.0. You might get better performance and more accurate results with `torch.linalg.solve`. \r\n\r\n**3. Numba&#39;s `njit` Performance**\r\nNumba&#39;s `@njit` decorator accelerates Python functions by generating optimized machine code using the LLVM compiler infrastructure at import time. When you use the `@njit` decorator, Numba compiles the function in no-Python mode which may lead to slower performance if the function cannot be fully optimized.",
+        "score": 26.609375,
+        "rank": 14,
+        "document_id": "64bd35a1-1889-40b2-9bf8-f7892c2ed5b3",
+        "passage_id": 1710
+    },
+    {
+        "content": "The benefit a hacker would get from targeting the GPU is &quot;free&quot; computing power without having to deal with the energy cost. The only practical scenario here is crypto-miner viruses, see [this article][1] for example. I don&#39;t know details on how they operate, but the idea is to use the GPU to mine crypto-currencies in the background, since GPUs are much more efficient than CPUs at this. These viruses will cause substential energy consumption if unnoticed.\r\n\r\nRegarding an application running on the GPU causing/using a vulnerability, the use-cases here are rather limited since security-relevant data usually is not processed on GPUs. \r\nAt most you could deliberately make the graphics driver crash and this way sabotage other programs from being properly executed.\r\nThere already are plenty security mechanisms prohibiting reading other processes&#39; VRAM etc., but there always is [some way around][2].\r\n\r\n\r\n  [1]: https://www.avg.com/en/signal/bitcoin-miner-malware\r\n  [2]: https://www.nvidia.com/en-us/security/",
+        "score": 26.515625,
+        "rank": 15,
+        "document_id": "bc4cc0a4-60fe-40d2-80b0-8ee9873b4eec",
+        "passage_id": 8353
+    },
+    {
+        "content": "The answer to that question explains ways to further optimize the kernel, which are great strategies for today&#39;s gpu hardware.\r\n\r\nA more subtle benefit of using 3D work groups is that future hardware might not need to emulate the extra dimensions. Perhaps the memory, processor, etc would be tailored to 3D work groups, and reduce or eliminate the penalty for bad memory access patterns. If you write your code using 1D groups, you will miss out on a potential performance boost on these platforms. Even today it is possible to create FPGA/ASIC chips to handle 3D work groups better than GPUs.",
+        "score": 26.4375,
+        "rank": 16,
+        "document_id": "143b2bbf-7614-4b4c-a4f5-fb8fd117cf7d",
+        "passage_id": 341473
+    },
+    {
+        "content": "The machine does not have infinite capacity.  Once the capacity of the machine has been consumed, exposing additional parallelism (e.g. by attempting to launch independent kernels concurrently) might not yield any improvement.\r\n\r\nGPU scheduling behavior may affect this as well as pointed out by Greg.  Depending on specific GPU and CUDA version and perhaps other factors, two kernels with large numbers of threadblocks may not execute &quot;concurrently&quot; simply because the threadblocks of one kernel may all be scheduled before any of the threadblocks of the other kernel are scheduled.  In my opinion, this behavior is simply another manifestation of a resource issue.  (Also note that scheduling of threadblocks of individual kernels may also be affected by [stream priorities](http://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html#stream-priorities)).\r\n\r\nHowever if we are careful to constrain the resource usage, it&#39;s possible for the parent and child kernels of two dynamic parallelism kernels to be co-resident i.e. execute concurrently.  Here&#39;s a worked example (CUDA 7, Fedora 20, GeForce GT640 cc3.5 GPU):\r\n\r\n    $ cat t815.cu\r\n    #include &lt;stdio.",
+        "score": 26.359375,
+        "rank": 17,
+        "document_id": "b282ea20-da9b-4b5f-b728-a90c12f43f0d",
+        "passage_id": 22127
+    },
+    {
+        "content": "Each process will have its own message pump - this is not shared.\r\n\r\nIf you are not seeing high CPU utilization, then WPF is using hardware rendering, so it could possibly be GPU saturation. Can you get information on GPU utilization?\r\n\r\nThe following post details methods of getting GPU utilization:\r\n\r\nhttps://stackoverflow.com/questions/2160935/programmatically-fetch-gpu-utilization",
+        "score": 26.328125,
+        "rank": 18,
+        "document_id": "8f2453ba-d53e-48a1-8f94-0f8a256a3eb0",
+        "passage_id": 472754
+    },
+    {
+        "content": "The peak performance on GPU usually harder to get compared to CPU. One of the reason is that a lot of kernels are bandwidth-bound rather than computing-bound.\r\n\r\nSince your kernel&#39;s computing complexity is O(n). You probably should use bandwidth metric to calculate the theoretical peak performance as follows\r\n\r\n    1024*1024*64 * sizeof(double) * (9  +   1)     / (144e9    *    8/9)     = 42 ms\r\n    #tetrahedron                     #input #output   peak mem bw   ECC cost\r\n\r\n\r\nOn the other hand, your kernel could be further optimized.\r\n\r\n * Choose blockDim/gridDim carefully, wrong numbers sometimes result in 20% performance lost.\r\n * Instead of computing **one** volume per thread, you could computing **multiple** volumes per thread, which will reduce the thread launching overhead.\r\n * Since you don&#39;t share data between threads, `__syncthreads()` may be able to eliminated.\r\n * Array of Structures (AoS) often slower than Structure of Arrays (SoA) on GPU due to non-coalesced mem access. you could also try to change your data structure.",
+        "score": 26.296875,
+        "rank": 19,
+        "document_id": "f2aff480-564c-40bd-af2c-835219b8e56c",
+        "passage_id": 26258
+    },
+    {
+        "content": "A FINAL NOTE:\r\n\r\n&gt;This effect is particularly severe in devices like Tesla T4&#39;s (which aren&#39;t actively cooled).\r\n\r\nIn my experience with T4, a possible observation is **throttling**.  The T4 GPU is one of the lowest power datacenter-grade GPUs, and its certainly possible for the GPU compute demands to exceed what the power limits (70W) can support.  In this case, the GPU clocks will throttle, and none of the above commands will allow you to override this behavior.  By design, you cannot force the GPU to operate at elevated clocks when the GPU is trying to protect itself, or protect the system it is running in.\r\n\r\nAlso, the fact that a T4 is not actively cooled really should not matter.  The only approved/supported usage setting for a T4 is in [a server that is designed to handle the T4](https://www.nvidia.com/en-us/data-center/resources/vgpu-certified-servers/). (A similar statement is true for any NVIDIA Datacenter GPU). Such servers monitor the T4 GPU temperature and provide server-delivered forced flow-through cooling to the GPU.  This is by design.",
+        "score": 26.265625,
+        "rank": 20,
+        "document_id": "3a0e2c68-dfb5-4817-9966-1cf66625adf2",
+        "passage_id": 3567
+    },
+    {
+        "content": "There is a [fair amount of overhead](http://msdn.microsoft.com/en-us/library/windows/hardware/ff569747(v=vs.85).aspx) in sending GPU hardware commands through the WDDM stack.  \r\n\r\nAs you&#39;ve discovered, this means that under WDDM (only) GPU commands can get &quot;batched&quot; to amortize this overhead.  The batching process may (probably will) introduce some latency, which can be variable, depending on what else is going on.\r\n\r\nThe best solution under windows is to switch the operating mode of the GPU from WDDM to TCC, which can be done via the `nvidia-smi` command, but it is only supported on Tesla GPUs and certain members of the Quadro family of GPUs -- i.e. not GeForce.  (It also has the side effect of preventing the device from being used as a windows accelerated display adapter, which might be relevant for a Quadro device or a few specific older Fermi Tesla GPUs.)",
+        "score": 26.265625,
+        "rank": 21,
+        "document_id": "cc897d2a-9f5e-4ab3-945c-4c96818d42bd",
+        "passage_id": 7854
+    },
+    {
+        "content": "A slightly longer version of @talonmies comment:\r\n\r\nGPUs are awesome, but they still have finite resources. Any competently-built application that uses the GPU will do its best to saturate the device, leaving few resources for other applications. In fact, one of the goals and challenges of optimizing GPU code - whether it be a shader, CUDA or CL kernel - is making sure that all CUs are used as efficiently as possible.\r\n\r\nAssuming that TF is already doing that: When running another GPU-heavy application, or you&#39;re sharing a resource that&#39;s already running full-tilt. So, things slow down. \r\n\r\nSome options are:\r\n\r\n1. Get a second, or faster, GPU. \r\n\r\n2. Optimize your CUDA kernels to reduce requirements and simplify your TF stuff. While this is always important to keep in mind when developing for GPGPU, it&#39;s unlikely to help with your current problem.\r\n\r\n3. Don&#39;t run these things at the same time. This may turn out to be slightly faster than this quasi time-slicing situation that you currently have.",
+        "score": 26.21875,
+        "rank": 22,
+        "document_id": "6eafd5d7-1698-40ef-9e2f-3fdd78bcafe7",
+        "passage_id": 11088
+    },
+    {
+        "content": "You&#39;re going to have a difficult time, for a number of reasons:\r\n\r\n 1. Clock rate and memory speed only have a weak relationship to code speed, because there is a lot more going on under the hood (e.g., thread context switching) that gets improved/changed for almost all new hardware.\r\n\r\n 2. Caches have been added to new hardware (e.g., Fermi) and unless you model cache hit/miss rates, you&#39;ll have a tough time predicting how this will affect the speed.\r\n\r\n 3. Floating point performance in general is very dependent on model (e.g.: Tesla C2050 has better performance than the &quot;top of the line&quot; GTX-480).\r\n\r\n 4. Register usage per device can change for different devices, and this can also affect performance; occupancy will be affected in many cases.\r\n\r\n 5. Performance can be improved by targeting specific hardware, so even if your algorithm is perfect for your GPU, it could be better if you optimize it for the new hardware.",
+        "score": 26.203125,
+        "rank": 23,
+        "document_id": "e71ecae8-c06d-4629-af60-9f9d8f838a83",
+        "passage_id": 29549
+    },
+    {
+        "content": "On modern systems with hardware-enforced privilege separation between user-mode and kernel-mode, and an operating system that functions to correctly configure these mechanisms, you *simply cannot crash the system from a user mode process.*\r\n\r\nAny of those errors are trapped by the CPU, which call exception handlers in the OS which will quickly pull the plug on your system.\r\n\r\nIf I had to guess, a piece of hardware is overheating or malfunctioning:\r\n\r\n- Overheating CPU due to poor thermal conductivity with heatsink\r\n- Failing / under-sized power supply\r\n- Failing DIMMs\r\n- Failing hard drive\r\n- Failing CPU\r\n- Failing / overheating GPU\r\n\r\nI&#39;ve seen cryptocoin-mining software bring a system to its knees because it was pushing the limits of the GPU.  When the card would lock-up/reset, the driver would get confused or lock-up, and the system would end up needed rebooted.\r\n\r\nYour system is doing next to *nothing* when you&#39;re just sitting there browsing the web, etc. But if your system locks up when you start running a CPU-intensive application, it can bring out problems that you didn&#39;t know where there.",
+        "score": 26.15625,
+        "rank": 24,
+        "document_id": "66bfd486-ba0b-47b3-b5c0-f1a1a2cebe31",
+        "passage_id": 377547
+    },
+    {
+        "content": "Yes, the modern games can have thousands of pipeline setups in order to draw a frame. GPUs *are* fast. Modern OpenGL made it easier to have more programs with Separate Shader Objects extension, which helps to make the rendering more modular.\r\n\r\n&gt; 2. (Mini question related to (1)) Where can I find more information regarding correlation between internal GPU bus bandwidth vs performance(or FPS)?\r\n\r\nThis is way too broad to answer and depends heavily on the workload. [This is an interesting document](http://www.stuffedcow.net/files/gpuarch-ispass2010.pdf), though, that might shed some light on your questions and possibly inspire you to do further research.\r\n\r\nAll in all, `glUseProgram` itself will typically do pretty much... *nothing* on a modern driver (in terms of perf). This is because drivers use a form of lazy evaluation and only actually commit the state changes when they are sure what drawcall is going to use them. Now, how efficient a driver is at optimizing out the unnecessary calls, reordering etc. depends entirely on the implementation.\r\n\r\n&gt; 3. Are shaders compiled on client or on device?",
+        "score": 26.15625,
+        "rank": 25,
+        "document_id": "4fe4771c-4fc4-47db-8a55-9b604064f79d",
+        "passage_id": 357264
+    },
+    {
+        "content": "If a GPU is busy and marked compute exclusive (either thread or process) or marked prohibited, then the driver will skip over it when trying to find a GPU to run on. If all GPUs are exclusive and occupied or prohibited, then the application will fail with a no valid device available error. \r\n\r\nSo in summary,for everything other than Hyper-Q devices, there is no performance gain in doing what you are asking about (quite the opposite) and I would expected it to break if you tried. A much saner approach would be to use compute exclusivity in combination with a resource managing task scheduler like Torque or one of the (former) Sun Grid Engine versions, which could schedule your processes to run in an orderly fashion according to the availability of GPUs. This is how most general purpose HPC clusters deal with scheduling in multi-gpu environments.",
+        "score": 26.09375,
+        "rank": 26,
+        "document_id": "ad555f32-ef0d-42e4-97c5-12b3eabc447d",
+        "passage_id": 25506
+    },
+    {
+        "content": "This sounds like an intermittent failure. This can happen on some laptops such as the Surface Book which have two GPUs, one from NVIDIA and an integrated one, and the laptop has shutdown the NVIDIA GPU to conserve energy, e.g. when it is running on battery.\r\n\r\nRegarding default behavior, by default CNTK will choose the best available device and if it is a GPU it will **lock it** so no other process can use it. If you explicitly use `set_default_device(gpu(0))` then the GPU won&#39;t get locked and other processes can use it.",
+        "score": 26.078125,
+        "rank": 27,
+        "document_id": "af6ebf2b-ce5b-4031-a829-c1423d431a69",
+        "passage_id": 308181
+    },
+    {
+        "content": "Whilst GPUs today have got some immense computational power, they are, regardless of things like CUDA and OpenCL limited to a restricted set of uses, whereas the CPU is more suited towards computing general things, with extensions like SSE to speed up specific common tasks. If I&#39;m not mistaken, some GPUs have the inability to do a division of two floating point integers in hardware. Certainly things have improved greatly compared to 5 years ago.\r\n\r\nIt&#39;d be impossible to develop a game to run entirely in a GPU - it would need the CPU at some stage to execute **something**, however making a GPU perform more than just the graphics (and physics even) of a game would certainly be interesting, with the catch that game developers for PC have the biggest issue of having to contend with a variety of machine specification, and thus have to restrict themselves to incorporating backwards compatibility, complicating things. The architecture of a system will be a crucial issue - for example the Playstation 3 has the ability to do multi gigabytes a second of throughput between the CPU and RAM, GPU and Video RAM, however the CPU accessing GPU memory peaks out just past 12MiB/s.",
+        "score": 26.03125,
+        "rank": 28,
+        "document_id": "0977b2db-6daa-4266-9b5e-cdfe228079f4",
+        "passage_id": 20367
+    },
+    {
+        "content": "Actually your model indeed runs on GPU instead of CPU. The reason of low GPU usage is that both your model and batch size are small, which demands low computational cost. You may try increasing the batch size to around 1000, and the GPU usage should be higher. In fact PyTorch prevents operations that mix CPU and GPU data, e.g., you can&#39;t multiply a GPU tensor and a CPU tensor. So usually it is unlikely that part of your network runs on CPU and the other part runs on GPU, unless you deliberately design it.\r\n\r\nBy the way, data shuffling is necessary for neural networks. As your are using mini-batch training, in each iteration you are hoping that the mini batch approximates the whole dataset. Without data shuffling, it is likely that samples in a mini batch are highly correlated, which leads to biased estimation of parameter update. The data loader provided by PyTorch can help you do the data shuffling.",
+        "score": 25.984375,
+        "rank": 29,
+        "document_id": "c41e56c8-1dbb-403f-b137-e6458fdbd2f4",
+        "passage_id": 14879
+    },
+    {
+        "content": "The app launches some combination of GPU and CPU worker threads to utilize all available GPUs and CPU cores.\r\n\r\nOne problem you may run into is that if the CPU is busy, performance of the GPUs may suffer, as slight delays in submitting new work or processing results from the GPUs are introduced. You may need to experiment with the number of threads and their affinity. For instance, you may need to reserve one CPU core for each GPU by manipulating thread affinities.",
+        "score": 25.921875,
+        "rank": 30,
+        "document_id": "5c8ea214-7d35-46fa-a4a1-1da7f5d0605c",
+        "passage_id": 22254
+    },
+    {
+        "content": "&gt; My understanding of this sentence is,\r\n&gt; that for optimal performance one\r\n&gt; should constantly fill and read global\r\n&gt; memory while the GPU is working on the\r\n&gt; kernels\r\n\r\nThat isn&#39;t really a correct interpretation.\r\n\r\nTypical OpenCL devices (ie. GPUs) have extremely high bandwidth, high latency global memory systems. This sort of memory system is highly optimized for access to contiguous or linear memory access. What that piece you quote is really saying is that OpenCL kernels should be designed to access global memory in the sort of contiguous fashion which is optimal for GPU memory. NVIDIA call this sort of optimal, contiguous memory access &quot;coalesced&quot;, and discuss memory access pattern optimization for their hardware in some detail in both their CUDA and OpenCL guides.",
+        "score": 25.90625,
+        "rank": 31,
+        "document_id": "a70bc8c9-048b-42f5-a0b7-208869e13e33",
+        "passage_id": 29031
+    },
+    {
+        "content": "Most importantly, `ptxas` is responsible for register allocation and instruction scheduling, plus all optimizations specific to a particular GPU architecture.\r\n\r\nAs a consequence, any examination of register usage issues needs to be focused on the machine code, which can be extracted with `cuobjdump --dump-sass`. Furthermore, the programmer has very limited influence on the number of registers used, because `ptxas` uses numerous heuristics when determining register allocation, in particular to trade off register usage with performance: scheduling loads early tends to increases register pressure by extension of the life range, so does the creation of temporary variable during CSE or the creation of induction variable for strength reduction in loops. \r\n\r\nModern versions of CUDA that target compute capability of 3.0 and higher usually make excellent choices when determining these trade-offs, and it is rarely necessary for programmers to consider register pressure. It is not clear what motivates asker&#39;s question in this regard.\r\n\r\nThe documented mechanisms in CUDA to control maximum register usage are the `-maxrregcount` command-line flag of `nvcc`, which applies to an entire compilation unit, and the `__launch_bounds__` attribute that allows control on a per-kernel basis.",
+        "score": 25.890625,
+        "rank": 32,
+        "document_id": "5509a096-1a29-41cc-8373-4b4116aa3484",
+        "passage_id": 15476
+    },
+    {
+        "content": "**If the expectations for constant memory usage are satisfied, the use of constant memory is a good idea in the general case. It is allowing your code to take advantage of an additional cache mechanism provided by the GPU hardware, and in so doing putting less pressure on the usage of texture by other parts of your code**.\r\n\r\nSince the constant memory and its cache, as the texture and surface memory and it is own cache are defined by the hardware [Compute Capability][1], the target hardware should be accounted. Thus the option by constant memory and texture memory is dependent of the access pattern and the cache use, as the cache availability.\r\n\r\nThe constant memory performance is related to data broadcast among threads in a warp, so the maximum performance is achieved if all threads request the very same data address and the data is already on the cache. Thus, if in the same warp there are request to multiple address, the service is splitted in multiple requests, since it can retrive a single address per operation. **If the number of splitted requests due to data retrieval from multiple addresses is too high, the texture and surface memory performance may superior over constant memory in this specific situation.**.",
+        "score": 25.875,
+        "rank": 33,
+        "document_id": "9b9ec269-163f-451a-9fec-80a97f82d06f",
+        "passage_id": 2907
+    },
+    {
+        "content": "In general, some benefit may be obtained on systems that allow the GPUs to go into a deep idle mode by setting GPU persistence mode (using `nvidia-smi`).  However this will not be relevant for GeForce GPUs nor will it be generally relevant on a windows system.\r\n\r\nAdditionally, on multi-GPU systems, if the application does not need multiple GPUs, some initialization time can usually be avoided by using the `CUDA_VISIBLE_DEVICES` [environment variable](http://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html#env-vars), to restrict the CUDA runtime to only use the necessary devices.",
+        "score": 25.875,
+        "rank": 34,
+        "document_id": "4b8ac8f0-1bde-4590-9774-1ec542ef56f9",
+        "passage_id": 20737
+    },
+    {
+        "content": "I expect browsers are optimized to display 1, or at most a few canvases at a time. I&#39;m betting each canvas is uploaded to the GPU individually, which would have way more overhead than a single canvas. The GPU has a limited number of resources, and using a lot of canvases could cause a lot of churn if textures and buffers are repeatedly cleared for each canvas. This answer https://stackoverflow.com/questions/36908427/webgl-vs-canvas-2d-hardware-acceleration?rq=1 also claims that Chrome didn&#39;t hardware accelerate canvases under 256px.\r\n\r\nSince you&#39;re trying to do a particle effect with sprites, you&#39;d be better off using a webgl library that&#39;s built for this kind of thing. I&#39;ve had a good experience with https://www.pixijs.com/. If you&#39;re doing 3d, https://threejs.org/ is also popular. It is possible to build your own webgl engine, but it&#39;s very complicated and a lot of work.",
+        "score": 25.84375,
+        "rank": 35,
+        "document_id": "e6c29f08-ecf7-44f9-bd95-13fb1cdee439",
+        "passage_id": 202870
+    },
+    {
+        "content": "EDIT:\r\n\r\nSystem timers can be used to measure total application performance, including time used during the GPU calculation. Note that using system timers in this way applies only to real, or wall-clock, time, rather than process time. Measurements based on the wall-clock time must include time spent waiting for GPU operations to complete.\r\n\r\nIf you want to measure the time taken by a GPU kernel, you have a few options. First, you can use the Compute Visual Profiler to collect a variety of profiling information, and although I&#39;m not sure that it reports time, it must be able to (that&#39;s a basic profiling function). Other profilers - PAPI comes to mind - offer support for CUDA kernels.\r\n\r\nAnother option is to use CUDA events to record times. Please refer to the CUDA 4.0 Programming Guide where it discusses using CUDA events to measure time.\r\n\r\nYet another option is to use system timers wrapped around GPU kernel invocations. Note that, given the asynchronous nature of kernel invocation returns, you will also need to follow the kernel invocation with a host-side GPU synchronization call such as cudaThreadSynchronize() for this method to be applicable.",
+        "score": 25.84375,
+        "rank": 36,
+        "document_id": "e5ca0de3-b657-4fbe-a42e-d226adf6f7db",
+        "passage_id": 15386
+    },
+    {
+        "content": "## TL;DR\r\n\r\n&gt; what is this Device interconnect?\r\n\r\nAs stated by Almog David in the comments, this tells you if one GPU has direct memory access to the other.\r\n\r\n&gt; what influence it has on computation power?\r\n\r\nThe only effect this has is for multi-GPU training. The data transfer is faster if  the two GPUs have device interconnect.\r\n\r\n&gt; why it differ for different GPUs?\r\n\r\nThis depends on the topology of the hardware setup. A motherboard only has so many PCI-e slots that are connected by the same bus. (check topology with `nvidia-smi topo -m`)\r\n\r\n&gt; can it change over time due to hardware reasons (failures, drivers inconsistency...)?\r\n\r\nI don&#39;t think that the order can change over time, unless NVIDIA changes the default enumeration scheme. There is a little more detail [here](https://stackoverflow.com/a/26123645/1097517)\r\n\r\n## Explaination\r\nThis message is generated in the [`BaseGPUDeviceFactory::CreateDevices`](https://github.com/tensorflow/tensorflow/blob/master/tensorflow/core/common_runtime/gpu/gpu_device.cc#L978) function.",
+        "score": 25.796875,
+        "rank": 37,
+        "document_id": "fd2c62d7-6bee-4685-827e-741db5730418",
+        "passage_id": 64459
+    },
+    {
+        "content": "ARM CPUs and GPUs have native support for `half` in their ALUs so you&#39;ll get close to double speed, plus substantial savings in energy consumption. **Edit:** The same goes for PowerVR GPUs.\r\n\r\nDesktop hardware only supports `half` in the load/store and texturing units, AFAIK. Even so, I&#39;d expect `half` textures to perform better than `float` textures or buffers on any GPU. Particularly if you can make some clever use of texture filtering.",
+        "score": 25.78125,
+        "rank": 38,
+        "document_id": "cd81f533-8ea6-4148-86a8-ccc50e78dfb8",
+        "passage_id": 105627
+    },
+    {
+        "content": "They also share the memory bus, so if each thread accesses uncorrelated memory regions, this will massively slow down execution, and you will not be able to feed the ALU/FPU fast enough.\r\n\r\nMemory is also an issue, but not just because of the total amount of VRAM as you point out, but also because local variables use &quot;private&quot; memory, which are actually registers, and which are very much a limited resource (measured in kilobytes at best).\r\n\r\nI recommend looking into the OpenCL optimisation guides published by all the major GPU vendors. This will give you a good idea of what kind of code performs well and what does not, and what considerations to make when deciding what code to offload to the GPU and how.",
+        "score": 25.765625,
+        "rank": 39,
+        "document_id": "5eb0bda2-ba75-4c71-9486-b68117aee643",
+        "passage_id": 13094
+    },
+    {
+        "content": "Note that the inter-context switching/scheduling behavior is unspecified and may also vary depending on machine setup.  Casual observation or micro-benchmarking may suggest that kernels from separate processes on newer devices can run concurrently (outside of MPS) but this is not correct.  [Newer machine setups may have a time-sliced rather than round-robin behavior](https://stackoverflow.com/questions/34709749/how-do-i-use-nvidia-multi-process-service-mps-to-run-multiple-non-mpi-cuda-app/34711344#34711344), but this does not change the fact that at any given instant  in time, code from only one context can run.\r\n\r\nThe &quot;exception&quot; to this case (serialization of GPU activity from independent host processes) would be the CUDA Multi-Process Server.  In a nutshell, the [MPS](https://docs.nvidia.com/deploy/pdf/CUDA_Multi_Process_Service_Overview.pdf) acts as a &quot;funnel&quot; to collect CUDA activity emanating from several host processes, and run that activity as if it emanated from a single host process.",
+        "score": 25.75,
+        "rank": 40,
+        "document_id": "29232505-4866-45fe-be4c-5cb00103b81d",
+        "passage_id": 10180
+    },
+    {
+        "content": "It is using the GPU, as you can see in logs.\r\nThe problem is, that a lot of things can not be done on the GPU and as long your data is small and your complexity is low, you will end up with low GPU usage.\r\n\r\n - Maybe the batch_size is to low -&gt; Increase until you run into OOM Errors\r\n - Your data loading is consuming a lot of time and your gpu has to wait (IO Reads)\r\n - Your RAM is to low and the application uses Disk as a fallback\r\n - Preprocsssing is to slow. If you are dealing with image try to compute everything as a generator or on the gpu if possible\r\n - You are using some operations, which are not GPU accelerated\r\n\r\n[Here][1] is some more detailed explanation.\r\n\r\n\r\n  [1]: http://digital-thinking.de/tensorflow-vs-keras-or-how-to-speed-up-your-training-for-image-data-sets-by-factor-10/",
+        "score": 25.71875,
+        "rank": 41,
+        "document_id": "b1453acc-bf4a-44f5-a23b-01d65f699905",
+        "passage_id": 6459
+    },
+    {
+        "content": "Work groups don&#39;t have to be three dimensional if your application/algorithm does not require it. You can specify 1, 2, or 3 dimensions -- and no doubt more in the future. So use fewer dimensions when is naturally suits your application.\r\n\r\nSo why would the specification allow for more dimensions? Like you pointed out, the higher dimensions can be emulated using a single dimension. One example would be a 3-dinensional N-Body simulation, for physics/molecular simulation.\r\n\r\nOne huge advantage of choosing to use 3D work groups is reducing the code complexity by a fair bit. Under the hood, the SDK you&#39;re running openCL on may be doing the emulation for you. \r\n\r\nAs for the 2x performance gain in your example: this boost was a result of a much better memory access pattern, rather than the hardware inherently being terrible at running on a 2D work group. The answer to that question explains ways to further optimize the kernel, which are great strategies for today&#39;s gpu hardware.\r\n\r\nA more subtle benefit of using 3D work groups is that future hardware might not need to emulate the extra dimensions.",
+        "score": 25.703125,
+        "rank": 42,
+        "document_id": "143b2bbf-7614-4b4c-a4f5-fb8fd117cf7d",
+        "passage_id": 341472
+    },
+    {
+        "content": "You can&#39;t expect miracles from the GPGPU computig. If you compare the floating point peak performance of high end cpus and gpus you get a factor around 4 to 10 depending on the precision.\r\nIf you manage to use your CPU in an somewhat efficient manner, you can expect that you can achieve this as a speedup, if you can utilize the gpu to its full potential. And that is quiete hard. First of all, not all problems are nice for the massive parallel gpu architecture and second optimizing gpu code is hard.\r\n\r\nIf you want to try to squeze more performance out of your gpu, try to optimize your memory access. Thats the point, where you will loose most of the performance.\r\nUnaligned access and random access in global memory will cost you more than 90% of your performance. Try to allign the data and cache it in the shared memory where you can. That will bring you a long way.\r\nOne more trick is to make the kernels use less registers. Generally speaking, the less registers per thread are used, the more can be scheduled simultaneously on one streaming multiprocessor.",
+        "score": 25.6875,
+        "rank": 43,
+        "document_id": "7416f35d-65b8-4ec4-a70e-c02da2b6a60e",
+        "passage_id": 18061
+    },
+    {
+        "content": "It is platform-dependent, but there&#39;s no getting around what you are asking the driver to do when you call cuMemHostUnregister() / cudaHostUnregister(): unmap the memory for the GPU(s), and mark it as pageable by the host operating system again.  These operations likely entail the following:\r\n\r\n1) Synchronize with the GPU, since it is very difficult for the driver to tell whether the memory will be needed by pending GPU commands;\r\n2) Perform a kernel thunk, since the GPU page tables can only be edited in kernel mode;\r\n3) Update hardware registers to unmap the memory.\r\n\r\nOnce the memory is no longer mapped for the GPUs, the driver can un-page-lock it.  That may also be an expensive operation, whose performance is platform-dependent.\r\n\r\nMy suggestion would be to leave memory &#39;registered&#39; for CUDA, unregistering it according to a heuristic (e.g. garbage-collect the registrations, or to &quot;make room&quot; if a register fails).\r\n\r\nNote that if there are multiple GPUs and Unified Virtual Addressing is in effect, the driver must perform these operations for every GPU in the system.",
+        "score": 25.6875,
+        "rank": 44,
+        "document_id": "699e75b5-3b99-4a56-89bb-f7d7efc4b7a6",
+        "passage_id": 26289
+    },
+    {
+        "content": "I don&#39;t think that makes sense.  `__constant__` memory is constant, and can&#39;t be modified directly by threads running on the GPU.  curandState, however, needs to be modified each time a random number is generated by a thread (otherwise, you will get the same number generated, over and over). \r\n\r\nThere&#39;s nothing wrong with giving every particle it&#39;s own state; that would be the typical usage for this scenario.\r\n\r\nSince the retrieval and usage of curandState and the generation of random numbers is being done by an NVIDIA library on the GPU, you can assume that the NVIDIA engineers have done a reasonably good job of optimizing memory accesses so as to be efficient and coalesced, during the operation of retrieving and updating state, and generating random numbers.\r\n\r\n`__constant__` memory also has the characteristic that it services only one 32 bit value per SM per clock, so it&#39;s useful when all threads are accessing the same data element (i.e. broadcast) but not generally useful when each thread is accessing a different element (e.g. separate curandState) *even if* that access would normally coalesce, e.g. if it were in ordinary global memory.",
+        "score": 25.6875,
+        "rank": 45,
+        "document_id": "3c9f2943-1b13-43b6-a4c6-3d8b561ae80c",
+        "passage_id": 27291
+    },
+    {
+        "content": "The usage of GPU constant banks by CUDA is not officially documented to my knowledge. The number and usage of constant banks does differ between GPU generations. These are low-level implementation details that programmers do not have to worry about. \r\n\r\nThe usage of constants banks can be reversed engineered, if so desired, by looking at the machine code (SASS) generated for a given platform. In fact, this is how I came up with the information cited in the original question (this information came from an NVIDIA developer forum post of mine). As I recall, the information I gave there was based on adhoc reverse engineering specifically applied to Fermi-class devices, but I am unable to verify this at this time as the forums are inaccessible at the moment.\r\n\r\nOne reason for having multiple constant banks is to reserve the user visible constant memory for the use of CUDA programmers, while storing additional read-only information provided by hardware or tools in additional constant banks.\r\n\r\nNote that the CUDA math library is provided as source files and the functions get inlined into user code, therefore constant memory usage of CUDA math library functions is included in the statistics for the user-visible constant memory.",
+        "score": 25.6875,
+        "rank": 46,
+        "document_id": "f90579dd-f7f1-4eb9-83e8-90c900ce2879",
+        "passage_id": 16627
+    },
+    {
+        "content": "unrolling                   22.94 : 1.55 (ms)\r\n    SUCCESS: C++ AMP cascading reduction                       20.17 : 0.92 (ms)\r\n    SUCCESS: C++ AMP cascading reduction &amp; unrolling           24.01 : 1.20 (ms)\r\n\r\nNote that none of the examples are taking anywhere near the time you code is. Although it&#39;s fair to say that the CPU is faster and data copy time is a big contributing factor here.\r\n\r\nThis is to be expected. Effective use of a GPU involves moving more than operations like reduction to the GPU. You need to move significant amount of compute to make up for the copy overhead.\r\n\r\nSome things you should consider:\r\n\r\n - What happens with you run the sample from CodePlex?\r\n - Are you running a release build with optimization enabled?\r\n - Are you sure running are running against the actual GPU hardware and not against a WARP (software emulator) accelerator? \r\n\r\nSome more information that would be helpful\r\n\r\n - what hardware are you using?\r\n - How large is your data set, both the input data and the size of the partial result array?\r\n\r\n  [1]: http://ampbook.codeplex.com/",
+        "score": 25.6875,
+        "rank": 47,
+        "document_id": "4225747e-8964-4a04-a054-324696ee16f4",
+        "passage_id": 397332
+    },
+    {
+        "content": "***Update**: The following results are for a hand-written FFT GPU algorithm on 2005 hardware (nVidia 7800 GTX), but shows the principle of CPU-GPU tranfer bottlenecks* \r\n\r\nThe overhead is not the call per-se but compilation of the GPU program and transferring the data between the GPU and the host. The CPU is highly optimized for functions that can be performed entirely in cache and the latency of DDR3 memory is far lower than the PCI-Express bus which services the GPU. I have experienced this myself when writing GPU FFT routines (prior to CUDA). Please see [this related question][1].\r\n\r\n&lt;pre&gt;\r\nN\t\tFFTw (ms)\tGPUFFT (ms)\t\tGPUFFT MFLOPS\tGPUFFT Speedup\r\n8\t\t  0\t\t\t  0.06\t\t\t   3.352705\t\t0.006881\r\n16\t\t  0.001\t\t  0.065\t\t\t   7.882117\t\t0.010217\r\n32\t\t  0.001\t\t  0.075\t\t\t  17.10887\t\t0.014695\r\n64\t\t  0.002\t\t  0.085\t\t\t  36.080118\t\t0.",
+        "score": 25.671875,
+        "rank": 48,
+        "document_id": "1346f947-851b-4f34-9d63-382eae913c20",
+        "passage_id": 9778
+    },
+    {
+        "content": "Run `ps aux | grep 5193` to see which program is using the GPU.\r\n\r\nYour GPUs have ECC enabled, so you will see high CPU or memory utilization.\r\n\r\n&gt; During driver initialization when ECC is enabled one can see high GPU and Memory Utilization readings. This is caused by ECC Memory Scrubbing mechanism that is performed during driver initialization.  \r\n  When Persistence Mode is Disabled, driver deinitializes when there are no clients running (CUDA apps or nvidia-smi or XServer) and needs to initialize again before any GPU application (like nvidia-smi) can query its state thus causing ECC Scrubbing.  \r\nAs a rule of thumb always run with Persistence Mode Enabled. Just run as root `nvidia-smi -pm 1`. This will speed up application lunching by keeping the driver always loaded.\r\n\r\nReference: https://devtalk.nvidia.com/default/topic/539632/k20-with-high-utilization-but-no-compute-processes-/",
+        "score": 25.671875,
+        "rank": 49,
+        "document_id": "43d9b610-8f2a-4a2c-a1f3-39150d0f6082",
+        "passage_id": 312485
+    },
+    {
+        "content": "The R300 architecture is one of the earliest shader model 2 GPUs there is. They&#39;ve been introduced into the market 10 years ago. SM2 is a rather limited programming model with only very little hardware resources, only 4 texture indirections (i.e. texturing operations depending on other texturing operations) are the minimum that must be supported. And there is a hard instruction count limit.\r\n\r\nIn summary this means, that it takes an excellent GLSL compiler to squeeze as much out of the GPU as possible. Unfortunately GLSL compilers were never very much optimized for SM2 hardware \u2013 in fact when it comes to the R300 the proprietary driver&#39;s GLSL compiler produces worse code than the open source one. Most people programmed SM2 hardware in a sort of assembler code. And GLSL compilers became useful only when the next generation of GPUs hit the market, so nobody bothered to work on SM2 hardware target optimization.\r\n\r\nWhat this means for you. Well, your GPU is simply too old to be of any use for GLSL development.",
+        "score": 25.65625,
+        "rank": 50,
+        "document_id": "c29a4b71-a758-4dbe-8db5-cc0a362d61a2",
+        "passage_id": 411145
+    }
+]
