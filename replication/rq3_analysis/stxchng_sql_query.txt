@@ -1,0 +1,28 @@
+SELECT
+p.Id AS [Post ID],
+p.Id AS [Post Link],
+p.Score,
+p.Title AS [Post Title],
+p.Tags,
+p.CreationDate AS [Date Posted],
+p.CommentCount,
+p.Body AS [Post Body],
+a.Id AS [Answer ID],
+a.Body AS [Answer Body]
+FROM Posts p
+JOIN Posts a ON p.AcceptedAnswerId = a.Id
+WHERE p.PostTypeId = 1 -- Question
+AND a.PostTypeId = 2 -- Answer
+AND (
+p.Title LIKE '%instrumentation%'
+OR p.Body LIKE '%instrumentation%'
+OR p.Title LIKE '%overhead%'
+OR p.Body LIKE '%overhead%'
+OR p.Title LIKE '%performance%'
+OR p.Body LIKE '%performance%'
+OR p.Title LIKE '%code%'
+OR p.Body LIKE '%code%'
+OR p.Title LIKE '%energy%'
+OR p.Body LIKE '%energy%'
+)
+ORDER BY p.ViewCount DESC, p.Score DESC, p.CreationDate DESC;
