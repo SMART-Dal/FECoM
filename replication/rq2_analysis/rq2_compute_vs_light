@@ -1,0 +1,115 @@
+(tf2) (base) saurabh@falcon:~/code-energy-consumption/replication$ python plots.py 
+Number of fast APIs (runtime <= 1 seconds): 12
+Number of slow APIs (runtime > 1 seconds): 19
+
+Analysis for Fast APIs:
+Mean values:
+/home/saurabh/code-energy-consumption/replication/plots.py:171: FutureWarning: The default value of numeric_only in DataFrame.mean is deprecated. In a future version, it will default to False. In addition, specifying 'numeric_only=None' is deprecated. Select only valid columns or specify the value of numeric_only to silence this warning.
+  print(group.mean())
+run time              0.770540
+CPU (mean)            0.908742
+CPU (median)          0.671854
+CPU (max)             2.863667
+CPU (min)            -0.299896
+RAM (mean)            0.101554
+RAM (median)          0.074531
+RAM (max)             0.398937
+RAM (min)            -0.108104
+GPU (mean)           -0.428543
+GPU (median)         -0.745234
+GPU (max)             1.810958
+GPU (min)            -1.490313
+Args Size (mean)      0.000591
+Args Size (median)    0.000591
+dtype: float64
+
+Median values:
+/home/saurabh/code-energy-consumption/replication/plots.py:174: FutureWarning: The default value of numeric_only in DataFrame.median is deprecated. In a future version, it will default to False. In addition, specifying 'numeric_only=None' is deprecated. Select only valid columns or specify the value of numeric_only to silence this warning.
+  print(group.median())
+run time              0.765353
+CPU (mean)            0.632575
+CPU (median)          0.366500
+CPU (max)             2.936250
+CPU (min)            -0.148250
+RAM (mean)            0.081325
+RAM (median)          0.044000
+RAM (max)             0.404000
+RAM (min)            -0.113250
+GPU (mean)            0.078419
+GPU (median)          0.000594
+GPU (max)             0.822375
+GPU (min)            -0.144500
+Args Size (mean)      0.000008
+Args Size (median)    0.000008
+dtype: float64
+
+Pearson correlation between Args Size (mean) and CPU (mean): 0.02
+p-value: 9.51e-01
+Effect size: small
+The correlation is not statistically significant.
+
+Pearson correlation between Args Size (mean) and RAM (mean): -0.00
+p-value: 9.98e-01
+Effect size: small
+The correlation is not statistically significant.
+
+Pearson correlation between Args Size (mean) and GPU (mean): 0.10
+p-value: 7.47e-01
+Effect size: small
+The correlation is not statistically significant.
+
+Analysis for Slow APIs:
+Mean values:
+/home/saurabh/code-energy-consumption/replication/plots.py:171: FutureWarning: The default value of numeric_only in DataFrame.mean is deprecated. In a future version, it will default to False. In addition, specifying 'numeric_only=None' is deprecated. Select only valid columns or specify the value of numeric_only to silence this warning.
+  print(group.mean())
+run time                25.984958
+CPU (mean)             316.240205
+CPU (median)           314.164638
+CPU (max)              357.445539
+CPU (min)              289.238658
+RAM (mean)              -0.577814
+RAM (median)            -0.569382
+RAM (max)                4.025803
+RAM (min)               -4.714316
+GPU (mean)            1109.460621
+GPU (median)          1037.622174
+GPU (max)             1355.547967
+GPU (min)              905.430928
+Args Size (mean)       130.559068
+Args Size (median)     130.559068
+dtype: float64
+
+Median values:
+/home/saurabh/code-energy-consumption/replication/plots.py:174: FutureWarning: The default value of numeric_only in DataFrame.median is deprecated. In a future version, it will default to False. In addition, specifying 'numeric_only=None' is deprecated. Select only valid columns or specify the value of numeric_only to silence this warning.
+  print(group.median())
+run time                4.569597
+CPU (mean)             71.240350
+CPU (median)           70.541500
+CPU (max)              74.228500
+CPU (min)              69.520000
+RAM (mean)              0.277625
+RAM (median)            0.300125
+RAM (max)               1.050000
+RAM (min)               0.059000
+GPU (mean)            114.061275
+GPU (median)          114.898000
+GPU (max)             130.693750
+GPU (min)              92.763000
+Args Size (mean)        0.000174
+Args Size (median)      0.000174
+dtype: float64
+
+Pearson correlation between Args Size (mean) and CPU (mean): 0.86
+p-value: 2.00e-06
+Effect size: large
+The correlation is statistically significant.
+
+Pearson correlation between Args Size (mean) and RAM (mean): -0.47
+p-value: 4.17e-02
+Effect size: medium
+The correlation is statistically significant.
+
+Pearson correlation between Args Size (mean) and GPU (mean): 0.90
+p-value: 1.03e-07
+Effect size: large
+The correlation is statistically significant.

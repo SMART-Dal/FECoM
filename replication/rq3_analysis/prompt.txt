@@ -1,0 +1,3 @@
+Give 5 keywords for this challenge that can be used as search query keywords for Stackoverflow. You can use semantically or contextually similar words that can help improve the quality of the search results.
+
+[Challenge goes here]
