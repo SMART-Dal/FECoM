@@ -1,0 +1,1 @@
+["tensorflow.keras.utils.get_file()", "tensorflow.data.Dataset.from_tensor_slices()", "tensorflow.data.Dataset.from_tensor_slices.shuffle(SHUFFLE_BUFFER_SIZE).batch()", "tensorflow.data.Dataset.from_tensor_slices.batch()", "tensorflow.keras.Sequential.compile()"]
