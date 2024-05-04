@@ -8,8 +8,8 @@ import sys
 base_url = 'https://api.stackexchange.com/2.3'
 
 # Set your access token
-access_token = 'AUeP7fNUg6uiYyLwBp98Sg))'
-key = 'aea5naKgNzBJwspLNeXS6g(('
+access_token = ''
+key = ''
 
 # Global variables to store the current results, term, and site
 current_results = []

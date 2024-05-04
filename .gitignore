@@ -79,6 +79,7 @@ fecom/patching/patching_config.py
 replication/rq3_analysis/filtered_posts/ColBERT
 replication/rq3_analysis/filtered_posts/.ragatouille
 replication/data/__MACOSX/mini_speech_commands/down/._6c2dd2d5_nohash_0.wav
-replication/rq3_analysis/filtered_posts
+replication/rq3_analysis/filtered_posts/.ragatouille
+replication/rq3_analysis/filtered_posts/ColBERT
 replication/rq3_analysis/query_results
 
