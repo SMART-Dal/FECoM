@@ -74,3 +74,6 @@ replication/training_checkpoints
 data/code-dataset/Patched-Repositories/distribute/training_checkpoints
 replication/images.tfrecords
 replication/model.tflite
+fecom/patching/patching_config.py
+replication/rq3_analysis/filtered_posts/ColBERT
+replication/rq3_analysis/filtered_posts/.ragatouille

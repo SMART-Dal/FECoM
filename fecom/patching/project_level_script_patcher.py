@@ -14,7 +14,7 @@ def main():
 
     # create nodes to add before and after the method call
     before_execution_call = (
-        "start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT(enable_skip_calls = False)"
+        "start_times_INSERTED_INTO_SCRIPT = before_execution_INSERTED_INTO_SCRIPT(experiment_file_path=EXPERIMENT_FILE_PATH, enable_skip_calls = False)"
     )
     global before_execution_call_node
     before_execution_call_node = ast.parse(before_execution_call)

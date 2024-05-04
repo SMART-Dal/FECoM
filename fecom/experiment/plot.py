@@ -323,20 +323,29 @@ def plot_combined_total_energy_vs_execution_time(method_level_energies: List[Pro
         scatter_max = f"{hardware} {scatter_labels[3]}"
         # ax.plot(total_df.loc[:, "run time"], total_df.loc[:, scatter_1], label=scatter_1)
         # ax.plot(total_df.loc[:, "run time"], total_df.loc[:, scatter_2], label=scatter_2)
-        ax.plot(sorted_total_df["run time"], sorted_total_df[scatter_1], label=scatter_1)
+        ax.plot(sorted_total_df["run time"], sorted_total_df[scatter_1], label='')
         # ax.plot(sorted_total_df["run time"], sorted_total_df[scatter_2], label=scatter_2)
         ax.fill_between(sorted_total_df["run time"], sorted_total_df[scatter_min], sorted_total_df[scatter_max], alpha=0.2)
         
-        ax.set_xlabel("Mean execution time (s)", fontsize=24)
-        ax.set_ylabel("Normalized energy consumption (Joules)", fontsize=24)
-        ax.set_title(hardware, fontsize=28)
-
+        ax.set_xlabel("Mean execution time (s)", fontsize=36)
+        ax.set_ylabel("Energy consumption (Joules)", fontsize=36)
+        ax.set_title(hardware, fontsize=36)
+        ax.tick_params(axis='both', which='major', labelsize=36)
         ax.legend()
 
     
-    plt.yticks(fontsize=18)
-    plt.xticks(fontsize=18)
-    plt.legend(fontsize=20)
+    # plt.yticks(fontsize=36)
+    # plt.xticks(fontsize=36)
+    plt.legend(fontsize=36)
+    
+    def format_y_axis(value, _):
+        if value >= 1000:
+            return f"{value/1000:.0f}K"
+        return value
+
+    # Apply the custom formatter to the y-axis of all subplots
+    for ax in axes:
+        ax.yaxis.set_major_formatter(ticker.FuncFormatter(format_y_axis))
     plt.tight_layout()
     plt.savefig("energy_vs_time_combined_plot.pdf")
     plt.show()
@@ -360,12 +369,20 @@ def plot_project_level_energy_vs_method_level_energy(total_energy_projects):
             project_data.fillna(0, inplace=True)
 
         x.append(project_name)
-        y_cpu_method.append(project_data.loc[project_data['function'] == 'method-level (sum)', 'CPU (mean)'].tolist()[0])
-        y_cpu_project.append(project_data.loc[project_data['function'] == 'project-level', 'CPU (mean)'].tolist()[0])
-        y_gpu_method.append(project_data.loc[project_data['function'] == 'method-level (sum)', 'GPU (mean)'].tolist()[0])
-        y_gpu_project.append(project_data.loc[project_data['function'] == 'project-level', 'GPU (mean)'].tolist()[0])
-        y_ram_method.append(project_data.loc[project_data['function'] == 'method-level (sum)', 'RAM (mean)'].tolist()[0])
-        y_ram_project.append(project_data.loc[project_data['function'] == 'project-level', 'RAM (mean)'].tolist()[0])
+        y_cpu_method.append(project_data.loc[project_data['function'] == 'method-level (sum)', 'CPU (total)'].tolist()[0])
+        y_cpu_project.append(project_data.loc[project_data['function'] == 'project-level', 'CPU (total)'].tolist()[0])
+        y_gpu_method.append(project_data.loc[project_data['function'] == 'method-level (sum)', 'GPU (total)'].tolist()[0])
+        y_gpu_project.append(project_data.loc[project_data['function'] == 'project-level', 'GPU (total)'].tolist()[0])
+        y_ram_method.append(project_data.loc[project_data['function'] == 'method-level (sum)', 'RAM (total)'].tolist()[0])
+        y_ram_project.append(project_data.loc[project_data['function'] == 'project-level', 'RAM (total)'].tolist()[0])
+
+        # y_cpu_method.append(project_data.loc[project_data['function'] == 'method-level (sum)', 'CPU (mean)'].tolist()[0])
+        # y_cpu_project.append(project_data.loc[project_data['function'] == 'project-level', 'CPU (mean)'].tolist()[0])
+        # y_gpu_method.append(project_data.loc[project_data['function'] == 'method-level (sum)', 'GPU (mean)'].tolist()[0])
+        # y_gpu_project.append(project_data.loc[project_data['function'] == 'project-level', 'GPU (mean)'].tolist()[0])
+        # y_ram_method.append(project_data.loc[project_data['function'] == 'method-level (sum)', 'RAM (mean)'].tolist()[0])
+        # y_ram_project.append(project_data.loc[project_data['function'] == 'project-level', 'RAM (mean)'].tolist()[0])
+
 
     attributes = ['CPU Method-Level', 'CPU Project-Level', 'GPU Method-Level', 'GPU Project-Level', 'RAM Method-Level', 'RAM Project-Level']
     measurements = [y_cpu_method, y_cpu_project, y_gpu_method, y_gpu_project, y_ram_method, y_ram_project]
@@ -383,19 +400,30 @@ def plot_project_level_energy_vs_method_level_energy(total_energy_projects):
             ax.bar(x_pos + j * (bar_width + spacing), measurement, bar_width, label=attributes[i * 2 + j])
         
         if i == 1:
-            ax.set_ylabel('Energy consumption (Joules)', fontsize=12)
+            ax.set_ylabel('Energy consumption (Joules)', fontsize=18)
         
         # ax.set_title(attributes[i * 2] + ' vs ' + attributes[i * 2 + 1])
         ax.margins(x=0.01)
         if i == 0:
             ax.legend(labels=['Method-Level', 'Project-Level'], bbox_to_anchor=(0.02, 0.98), loc='upper left')
 
-        ax.text(0.98, 0.94, hardware[i], transform=ax.transAxes, fontsize=12, ha='right', va='top')
+        ax.text(0.98, 0.94, hardware[i], transform=ax.transAxes, fontsize=16, ha='right', va='top')
 
-    axes[-1].set_xlabel('Project', fontsize=12)
-    plt.xticks(x_pos, ["P" + str(x + 1) for x in x_pos], rotation=45, ha='right', fontsize='small')
+    axes[-1].set_xlabel('Project', fontsize=18)
+    plt.xticks(x_pos, ["P" + str(x + 1) for x in x_pos], rotation=45, ha='right', fontsize=12)
+    def format_y_axis(value, _):
+        if value >= 1000:
+            return f"{value/1000:.0f}K"
+        return value
+
+    # Apply the custom formatter to the y-axis
+    # plt.gca().yaxis.set_major_formatter(ticker.FuncFormatter(format_y_axis))
+    # Apply the custom formatter to the y-axis of all subplots
+    for ax in axes:
+        ax.yaxis.set_major_formatter(ticker.FuncFormatter(format_y_axis))
+        ax.yaxis.set_tick_params(labelsize=10)
     plt.tight_layout()
-    plt.savefig('project_vs_method_energy_plot.png', bbox_inches='tight')
+    plt.savefig('project_vs_method_total_energy_plot.png', bbox_inches='tight')
     plt.show()
 
 

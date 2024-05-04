@@ -3,15 +3,17 @@ Replicate experiments for data gathered for RQ1.
 These are the method-level and project-level experiments.
 """
 
-from fecom.experiment.experiment_kinds import ExperimentKinds, PatchedExperiment
+from fecom.experiment.experiment_kinds import ExperimentKinds 
+from fecom.experiment.experiments import PatchedExperiment
 from fecom.experiment.run import run_experiments
 from fecom.patching.patching_config import EXPERIMENT_DIR, CODE_DIR
+from replication.executed_experiments import EXECUTED_RQ1_EXPERIMENTS
 
 ### DO NOT CHANGE THESE VALUES 
 # number of the first experiment
 START = 1
 # total number of experiments
-COUNT = 10
+COUNT = 1
 
 def run_rq1_experiments(project, start=START, count=COUNT):
     # method-level
@@ -36,6 +38,6 @@ if __name__ == "__main__":
     # run_rq1_experiments("quickstart/beginner")
 
     ### if you would like to run all experiments in the study (this will likely take days of time), uncomment the following code
-    # for project in EXECUTED_RQ1_EXPERIMENTS:
-    #     run_rq1_experiments(project)
+    for project in EXECUTED_RQ1_EXPERIMENTS:
+        run_rq1_experiments(project)
     pass

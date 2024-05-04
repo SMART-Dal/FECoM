@@ -179,15 +179,18 @@ def prepare_total_energy_from_project(project_energy_data: ProjectEnergyData) ->
         data_list.append([
             cpu.name,
             cpu.mean_execution_time,
+            cpu.mean_total,
             cpu.mean_total_normalised,
             cpu.median_total_normalised,
+            ram.mean_total,
             ram.mean_total_normalised,
             ram.median_total_normalised,
+            gpu.mean_total,
             gpu.mean_total_normalised,
             gpu.median_total_normalised
         ])
     
-    column_names = ["function", "run time", "CPU (mean)", "CPU (median)", "RAM (mean)", "RAM (median)", "GPU (mean)", "GPU (median)"]
+    column_names = ["function", "run time", "CPU (total)", "CPU (mean)", "CPU (median)", "RAM (total)" ,"RAM (mean)", "RAM (median)", "GPU (total)" ,"GPU (mean)", "GPU (median)"]
 
     return data_list, column_names
 

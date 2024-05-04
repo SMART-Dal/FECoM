@@ -1,6 +1,8 @@
 from pathlib import Path
 from fecom.patching.patching_config import PROJECT_PATH
 
+# TODO : Fix path formatting "/"
+
 # set this to False to surpress some print outs
 DEBUG = True
 
@@ -44,7 +46,18 @@ MEASUREMENT_MODULE_NAME = "start_measurement.py"
 # this is also used for the cpu temperature file
 CPU_FILE_SEPARATOR = ';'
 # set measurement interval for perf & nvidia-smi in milliseconds
+# MEASUREMENT_INTERVAL_MS = 0.2
+# MEASUREMENT_INTERVAL_MS = 1
+# MEASUREMENT_INTERVAL_MS = 10
+# MEASUREMENT_INTERVAL_MS = 50
+# MEASUREMENT_INTERVAL_MS = 100
+# MEASUREMENT_INTERVAL_MS = 200
+# MEASUREMENT_INTERVAL_MS = 300
+# MEASUREMENT_INTERVAL_MS = 400
 MEASUREMENT_INTERVAL_MS = 500
+# MEASUREMENT_INTERVAL_MS = 1000
+
+
 # having the measurement interval in seconds is useful for converting power to energy and vice versa
 MEASUREMENT_INTERVAL_S = MEASUREMENT_INTERVAL_MS / 1000
 # path to find energy data relative to the measurement package
