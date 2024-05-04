@@ -1,0 +1,352 @@
+[
+    {
+        "content": "What you might do to optimize things a little is examine the patched code.  Without such examination, with original code:\r\n\r\n             instrn 1\r\n             instrn 2\r\n             instrn N\r\n      next:\r\n\r\npatched, in general to look like this:\r\n\r\n             jmp patch\r\n             xxx \r\n      next:\r\n\r\nhas to generally have a patch:\r\n\r\n       patch: pushf\r\n              inc   count\r\n              popf\r\n              instrn1\r\n              instrn2\r\n              instrnN\r\n              jmp   back\r\n\r\nIf all you want is *coverage*, you don&#39;t need to increment, and the means you don&#39;t need to save the flags:\r\n\r\n       patch: mov    byte ptr covered,1\r\n              instrn1\r\n              instrn2\r\n              instrnN\r\n              jmp   back\r\n\r\nYou should use a *byte* rather than a word to keep the patch size down.  You should align the patch on a cache line so the processor doesn&#39;t have fetch 2 cache lines to execute the patch.",
+        "score": 26.15625,
+        "rank": 1,
+        "document_id": "abcabb53-8605-4ddc-ae3c-94e5e126014c",
+        "passage_id": 427411
+    },
+    {
+        "content": "and simply iterate over the whole programm trying to find this specific method. However, you pattern need to be unique, it should only match one location in the whole binary. This can sometimes be a bit tricky and requires you te be creative. In this case it probably wont be possible to find a unique pattern (the function is too generic). Once you found this function, you can call it to acquire the object or read the address directly from it (parsing `MOV EAX, globalVar`). Although, calling is probably better because the code might change, its functionality/signature usually not.\r\n\r\nActually such *pattern scanning* isnt required if your searching for fucntions, which usually only move on recompilation but not on every start of the programm. However, the above example should give you an impression on how it is done. Also notice that if you dont search for methods but hardcode their addresses, your code will probably break on the next game patch.\r\n\r\nThe hard part is to find the fucntions, identify the structures and simply understand what your target programm does under the hood/ how it works. We call this process *reverse engineering*.",
+        "score": 25.640625,
+        "rank": 2,
+        "document_id": "f1ebd16f-b3c0-457e-93e5-31e172796412",
+        "passage_id": 398069
+    },
+    {
+        "content": "You should align the patch on a cache line so the processor doesn&#39;t have fetch 2 cache lines to execute the patch.\r\n\r\nIf you insist on counting, you can analyze the instrn1/2/N to see if they care about the flags that &quot;inc&quot; fools with, and only pushf/popf if needed, or you can insert the increment between two instructions in the patch that don&#39;t care.  You must be analyzing these to some extent to handle complications such as instn being **ret** anyway; you can generate a better patch (e.g., don&#39;t &quot;jmp back&quot;).\r\n\r\nYou may find that using **add count,1** is faster than **inc count** because this avoids partial condition code updates and consequent pipeline interlocks.  This will affect your cc-impact-analysis a bit, since **inc** doesn&#39;t set the carry bit, and **add** does.\r\n\r\nAnother possibility is PC sampling. Don&#39;t instrument the code at all; just interrupt the thread periodically and take a sample PC value.   If you know where the basic blocks are, a PC sample anywhere in the basic block is evidence the entire block got executed.",
+        "score": 25.171875,
+        "rank": 3,
+        "document_id": "abcabb53-8605-4ddc-ae3c-94e5e126014c",
+        "passage_id": 427412
+    },
+    {
+        "content": "Another possibility is PC sampling. Don&#39;t instrument the code at all; just interrupt the thread periodically and take a sample PC value.   If you know where the basic blocks are, a PC sample anywhere in the basic block is evidence the entire block got executed.  This won&#39;t necessarily give precise coverage data (you may miss critical PC values), but the overhead is pretty low.\r\n\r\nIf you are willing to patch *source* code, you can do better: just insert &quot;covered[i]=true;&quot; in the beginning the ith basic block, and let the compiler take care of all the various optimizations.   No patches needed.  The really cool part of this is that if you have basic blocks *inside* nested loops, and you insert source probes like this, the compiler will notice that the probe assignments are idempotent with respect to the loop and lift the probe out of the loop.  Viola, zero probe overhead inside the loop.  What more more could you want?",
+        "score": 24.546875,
+        "rank": 4,
+        "document_id": "abcabb53-8605-4ddc-ae3c-94e5e126014c",
+        "passage_id": 427413
+    },
+    {
+        "content": "When you initialise the variable &#39;memory&#39;, you have `set memory (list patch-here)`. At that point, the turtle is sitting on `patch 0 0`, so the origin patch is in the memory. Your code for finding targets excludes those already in the memory `let unvisited patches with [not member? self [memory] of myself]`. It is therefore ineligible to be chosen as a target.",
+        "score": 24.421875,
+        "rank": 5,
+        "document_id": "00923ae6-bed7-47a4-bdd8-08010a85adbf",
+        "passage_id": 222600
+    },
+    {
+        "content": "As can be seen on the [assembly output on godbolt.org][1], the stack frame of function `f()` indeed has the return address 16 bytes from the location where the compiler (both gcc and clang) allocate the `array` pointer (`rbp-8`).\r\n\r\nYet gcc and clang generate different code for the `printf(&quot;I am skipped\\n&quot;)`, gcc translates this call to `puts(&quot;I am skipped&quot;)` even without any optimisation turned on. Patching the return address by 10 bytes may work for one compiler and not the other, and probably does not work at all if optimisations are turned on.\r\n\r\nThere is no portable way to determine how to patch memory to skip a given line of code, and if you manage to achieve that, be aware that this result is very brittle as any change in the code or environment may break it.\r\n\r\nPatching an existing executable to skip some code is less brittle as the patched code will not change until a new version is installed, but [modern CPUs have special devices][2] to make it harder, such as authenticated code pointers that would make the posted code fail even if the offsets are correct.",
+        "score": 24.359375,
+        "rank": 6,
+        "document_id": "4c67facc-f9dd-41f8-abae-2e002714b21a",
+        "passage_id": 125687
+    },
+    {
+        "content": "Personally I find it more reassuring to fix all my code, add tests, and make it harder to do the wrong thing (e.g., use wrapper classes or helper functions).  Another approach would be to instrument your code with your patch to find all the call sites, then go back and fix them.\r\n\r\nEdit - I guess I should add that the probable reason they avoided floats is floats can&#39;t accurately represent all numbers, which is important if you&#39;re dealing with money.",
+        "score": 24.234375,
+        "rank": 7,
+        "document_id": "87541c53-596c-4113-b80f-ef3894d50939",
+        "passage_id": 40335
+    },
+    {
+        "content": "If you insist on instrumenting binaries, pretty much your fastest coverage is the 5-byte jump-out jump-back  trick.  (You&#39;re covering standard ground for binary instrumentation tools.)\r\n\r\nThe INT 3 solution will always involve a trap. Yes, you could handle the trap in your space instead of a debugger space and that would speed up it, but it will never be close to competitive to the jump-out/back patch.    You may need it as backup anyway, if the function you are instrumenting happens to be shorter than 5 bytes (e.g., &quot;inc eax/ret&quot;) because then you don&#39;t have 5 bytes you can patch.\r\n\r\nWhat you might do to optimize things a little is examine the patched code.",
+        "score": 24.09375,
+        "rank": 8,
+        "document_id": "abcabb53-8605-4ddc-ae3c-94e5e126014c",
+        "passage_id": 427410
+    },
+    {
+        "content": "A patch has sides of length 1, but its diagonal is a bit longer (\u221a2). So if a robot is in the bottom left corner, for example, and facing towards the top right, `patch-ahead 1 = patch-here` will be true. In these cases, we look a bit further and set the target to `patch-ahead 2`.\r\n\r\n- It can happen that, after checking all 8 neighbors, you end up facing an obstacle. If that&#39;s the case, you need to keep on turning until you&#39;re clear of the obstacle. And as a matter of fact, doing this takes care of obstacle avoidance nicely, and you might be able to get rid of the `avoid-obstacle` procedure in your code.\r\n\r\n**Edit:**\r\n\r\nHere is the code needed (in addition to the two procedures above) for a fully working example:\r\n\r\n    breed [ robots robot ]\r\n    robots-own [ memory ]\r\n    patches-own [ is-obstacle? ]\r\n    \r\n    to setup\r\n      ca\r\n      ask patches [ set is-obstacle?",
+        "score": 24.046875,
+        "rank": 9,
+        "document_id": "b7ab74de-a0b6-40c6-a723-f1ed152184a4",
+        "passage_id": 381309
+    },
+    {
+        "content": "If  you could find them, I assume you&#39;d replace them by a function call to a routine that loaded a known constant into the registers to avoid your suggested inconsistency problem.    Patching their locations might be pretty awkward; RDTSC is (I think) 2 bytes, and they might be sandwiched between two other instructions that can&#39;t be moved for some reason.   So you might be forced to use just a breakpoint (1 byte) on each RDTSC to trap out to an RDTSC simulator; this creates possibly a performance problem if somebody\r\nis using RDTSC to read nanosecond clock ticks in a timing loop.\r\n\r\nAll in all, this seems like a hard road to take.  How badly do you want to run really old programs, and why?",
+        "score": 23.953125,
+        "rank": 10,
+        "document_id": "3da4fc5c-6314-4a72-aa3f-725e71db638d",
+        "passage_id": 86620
+    },
+    {
+        "content": "Because you have variable-sized patches, there are a couple of ways you can handle the classification of these patches using a SVM.  These have their advantages and disadvantages so you will have to decide what you think is best.  Given that you have decided to choose a patch of size `M x N` for your images to be submitted into your SVM for classification, you can try one of the two following approaches:\r\n\r\n# Resize the input image patches\r\n\r\nFor each of your images at test time, resize them so that they all match the size of `M x N`, then run through the SVM classification pipeline to determine which class that image belongs to.  The advantages of this are that the only information you are losing is due to the information lost when subsampling the images.  However, the disadvantage is that if the image is smaller than the target patch size of `M x N` you will introduce bogus information when upsampling to match the target patch size.  This kind of thing has been seen before especially in Deep Learning.  Specifically, [**Region Proposal Networks by Ren et al.",
+        "score": 23.796875,
+        "rank": 11,
+        "document_id": "5be3cc8b-b3e8-423b-b39f-c9f43014d7b4",
+        "passage_id": 313032
+    },
+    {
+        "content": "Presumably to be guaranteed to have liner complexity, the code is using a jump table made of labels used as values.\r\n\r\n[Labels-as-values][1] is a GNU C extension which allows you to use `&amp;&amp;` to take the address of a label. The address is typed `void *` and you can then use `goto *address;` to jump to it.\r\n\r\nThe little twist with the base label is that instead of storing absolute labels in the table, to code is storing offsets from a `do_uknown_form` label.\r\n\r\nThat saves space (the offset can be an 4 byte int instead of an 8 byte pointer) in the table and helps generated better code for shared libs (hence the `#ifdef SHARED`) as even a `static const` jump table of absolute labels would need to be patched when the code is loaded in a relocatable shared library, but the offsets remain the same so then the need for patching vanishes and the table can be stored in read-only memory. \r\n\r\nThe technique is described in the [How to Write Shared Libraries][2] essay by Ulrich Drepper.",
+        "score": 23.625,
+        "rank": 12,
+        "document_id": "fb05a76e-b572-4f6a-a3a1-17592cf7208f",
+        "passage_id": 62898
+    },
+    {
+        "content": "Also I&#39;m not sure that your code is right, because I don&#39;t see where are strings used in your code.\r\n\r\nTo ensure that issue is missing entries in relocation table, try the following position-independent code:\r\n\r\n    6A 00          // push 0\r\n    6A 00          // push 0\r\n    E8 04 00 00 00 // call $+5+4\r\n    31 32 33 00    // &#39;123&#39;, 0\r\n    6A 00          // push 0\r\n    68 XX XX XX XX // push user32.MessageBoxA address, it&#39;s the same in all processes\r\n    C3             // retn\r\n    E9 XX XX XX XX // jmp OEP\r\n\r\n**Upd:** as [ruslik](https://stackoverflow.com/users/395626/ruslik) noted, if we patch a file, we don&#39;t know the *user32.MessageBoxA* address, so we should find it in another way.",
+        "score": 23.609375,
+        "rank": 13,
+        "document_id": "0a55376b-1a7c-4ac3-a80c-7d2366423e92",
+        "passage_id": 474118
+    },
+    {
+        "content": "In native code, locations of references to allocated entries (addresses stored as pointers) are unknown to the allocator. Existing references would have to be patched to make the allocator action transparent to the caller, that&#39;s not feasible for a general-purpose allocator like `malloc`.\r\n\r\nWhy is it not feasible? Updating existing references would require the following steps:\r\n\r\n- Suspending all threads to stop all allocation entry mutators (unless a so-called &quot;write barrier&quot; is employed)\r\n- Scanning registers, stacks, and the heap for pointers to moved objects\r\n  - The exact location of pointers is unknown, data matching a reference might be mistaken for a reference (not a problem in case of a conservative GC like Boehm, for example, that does not perform copying.",
+        "score": 23.59375,
+        "rank": 14,
+        "document_id": "e03a87d3-761d-48bf-b45a-ace08bd3d198",
+        "passage_id": 191110
+    },
+    {
+        "content": "This kind of thing has been seen before especially in Deep Learning.  Specifically, [**Region Proposal Networks by Ren et al.**](https://arxiv.org/pdf/1506.01497v3.pdf) first take a look at what patches in a larger image are candidates to have an object or something worth taking a look at in the image, they then **resize** the patches to match the input layer into their neural network (convolutional btw) then proceed with the classification.\r\n\r\n# Search for patches over multiple scales\r\n\r\nAnother way is to keep the image size intact but using patch sizes of `M x N`, do a sliding window scheme where you extract overlapping patches of size `M x N`, submit these to your SVM then for each centre of each overlapping patch, determine what the class of that patch would be.  You would do this over multiple scales then have a voting procedure where the most occurring class over the entire image is the class of interest.  Something similar to this was seen in [**Semenet et al. for their Overfeat classification engine**](https://arxiv.org/pdf/1312.6229v4.pdf) - also using convolutional neural networks.",
+        "score": 23.59375,
+        "rank": 15,
+        "document_id": "5be3cc8b-b3e8-423b-b39f-c9f43014d7b4",
+        "passage_id": 313033
+    },
+    {
+        "content": "that&#39;s very impressive code for one day&#39;s experience !\r\n\r\nyes, the list of payoff-memory as a nomads_own variable is how I would do it. But you will have to keep both the position and the payoff or you won&#39;t be able to sort them. You may want to limit the memory (eg only last 5 or best 5 or similar) if it starts slowing down too much because you are basically asking every turtle to keep a list of all patches.\r\n\r\nOn the question of &#39;not doing anything&#39; - it is possible your `while` loop is stuck if there aren&#39;t any available locations. Try doing it this way (which is likely better anyway as it only has to select once):\r\n\r\n    to move-to-empty-one-of [locations]  ;; nomads procedure\r\n      let candidates locations with [not any? nomads-here]\r\n      if any? candidates [ move-to one-of candidates ]\r\n    end\r\n\r\nNOTE: not tested",
+        "score": 23.46875,
+        "rank": 16,
+        "document_id": "d6f5e499-ed4c-4b1f-b854-649e5246d428",
+        "passage_id": 335133
+    },
+    {
+        "content": "It is the address in virtual memory where the executable should be loaded at to avoid any adjustment of absolute jump instructions in the code.\r\nThe OS may load the module to a different address (in case e.g. 2 DLLs needed by the same program have the same image base), but in that case the code needs to be patched when loaded.\r\n\r\nFor more info, see https://msdn.microsoft.com/en-us/library/ms809762.aspx (search for ImageBase there).",
+        "score": 23.390625,
+        "rank": 17,
+        "document_id": "48ed559e-3711-452b-acd5-830f4ec3d6b4",
+        "passage_id": 251758
+    },
+    {
+        "content": "Patching an existing executable to skip some code is less brittle as the patched code will not change until a new version is installed, but [modern CPUs have special devices][2] to make it harder, such as authenticated code pointers that would make the posted code fail even if the offsets are correct.\r\n\r\n\r\n  [1]: https://godbolt.org/z/Ga35vYPrd\r\n  [2]: https://developer.apple.com/documentation/security/preparing_your_app_to_work_with_pointer_authentication",
+        "score": 23.140625,
+        "rank": 18,
+        "document_id": "4c67facc-f9dd-41f8-abae-2e002714b21a",
+        "passage_id": 125688
+    },
+    {
+        "content": "Alright, I&#39;ve come up with something that sits a little easier in the gut.\r\n\r\n6% fudging just feels to horrible to bear.\r\n\r\nBut Ken suggested that rounding could be involved. That means taking control of the rounding should gain one some measure of control over the problem. And it looks like it&#39;s true.\r\n\r\nSo I tried prepending all `moveto` and `lineto` calls with a call to `prep`:\r\n\r\n\r\n    /prep {\r\n        transform\r\n        %2 {\r\n        %    exch\r\n            %floor\r\n            round\r\n            %ceiling\r\n            %2 mul cvi 2 div %round\r\n        %} repeat\r\n        itransform\r\n    } def\r\n\r\nThe comments show the various pieces I tried. Rounding on both device coordinates eliminated all horizontal bleed-lines and leaves very thin vertical bleeds. This seems to make sense assuming Ghostscript rasterizes by horizontal scanlines: it has an easier time with the horizontal ones with just a little help, but near-verticals are tougher. \r\n\r\nBut then I combined this with fudging. And I found that rounding just the device-y &#39;ordinate and fudging the patch dimensions by 2% eliminates all bleeds.",
+        "score": 23.125,
+        "rank": 19,
+        "document_id": "902b2aa6-6901-482f-ac0c-906f6d3f9a3f",
+        "passage_id": 84344
+    },
+    {
+        "content": "The patch will look like\r\n\r\n    @@ -1,5 +1,5 @@\r\n     1\r\n     2\r\n    -3\r\n    -4\r\n    -5\r\n    +3 THREE\r\n    +4 FOUR\r\n    +5 FIVE\r\n\r\nAnd it&#39;s pretty clear that *in this case* the intuitive result is\r\n\r\n    1\r\n    2\r\n    3 THREE\r\n    4 FOUR\r\n    5\r\n\r\nBut writing code that gets this &quot;right&quot; without getting other cases &quot;wrong&quot; (relative to equally intuitive interpretation) is not so easy.  Sometimes it really is open to interpretation.  &quot;Was this one operation that changed three lines?  Or one operation that deleted three lines, followed by three operations that each added a line?  Or...&quot;\r\n\r\nThe automated tooling in git avoids making those interpretive decisions, first by looking at code in hunks of change (rather than arbitrary line ranges) and making you intervene manually if you want something different (i.e. by using patch-edit mode); and then by inserting conflict markers (and again requiring manual intervention) when interpretation still seems to be required.",
+        "score": 23.109375,
+        "rank": 20,
+        "document_id": "71277d12-6822-4e22-b0b4-fa2c69121e65",
+        "passage_id": 44024
+    },
+    {
+        "content": "I recently had same problem. about PATCH and looking around found [this article](http://williamdurand.fr/2014/02/14/please-do-not-patch-like-an-idiot/). It also makes references to the [RFC 5789](https://www.rfc-editor.org/rfc/rfc5789) where it says: \r\n\r\n&gt; The difference between the PUT and PATCH requests is reflected in the way the server processes the enclosed entity to modify the resource identified by the Request-URI. In a PUT request, the enclosed entity is considered to be a modified version of the resource stored on the origin server, and the client is requesting that the stored version be replaced. **With PATCH, however, the enclosed entity contains *a set of instructions* describing how a resource currently residing on the origin server should be modified to produce a new version.** The PATCH method affects the resource identified by the Request-URI, and it also MAY have side effects on other resources; i.e., new resources may be created, or existing ones modified, by the application of a PATCH.\r\n\r\ne.g:\r\n\r\n    [\r\n        { &quot;op&quot;: &quot;test&quot; &quot;path&quot;: &quot;",
+        "score": 23.078125,
+        "rank": 21,
+        "document_id": "66e96df0-f554-443a-9fb0-869f6cb49191",
+        "passage_id": 171261
+    },
+    {
+        "content": "As a general rule, if somebody hands you a machine code binary, you can have an extremely (Turing!) hard time determining which bytes in are instructions, and which are code.   If you can&#39;t get that right, you can&#39;t even find the RDTSC instructions to patch out.  (Worse: some programs *generate* code; now stuff in data areas are runtime might ephemerally contain RDTSC).  In really peculiar programs, some instructions might literally overlap others, leading to some JMPs literally landing in the middle of what is identified as a long instruction. (x86 instructions can be something like 16 bytes long!).\r\n\r\nThe binary reverse engineering guys have this problem.  In general, I don&#39;t know how they succeed.  I suspect it is because most program object code is generated by compilers that aren&#39;t trying to hide anything (watch out when you meet a compiler that does).\r\n\r\nIf  you could find them, I assume you&#39;d replace them by a function call to a routine that loaded a known constant into the registers to avoid your suggested inconsistency problem.",
+        "score": 23.0,
+        "rank": 22,
+        "document_id": "3da4fc5c-6314-4a72-aa3f-725e71db638d",
+        "passage_id": 86619
+    },
+    {
+        "content": "**WARNING:** Do not use this patch if you have swap enabled, because two users [reported](https://gist.github.com/constantoverride/84eba764f487049ed642eb2111a20830#gistcomment-2779445) worse effects. I&#39;ve only tested this patch with swap disabled in kernel! (ie. CONFIG_SWAP is not set)\r\n----\r\n\r\nUntil further notice(or someone comes up with something better), I am using (and it works, for me) the following [patch](https://github.com/constantoverride/qubes-linux-kernel/blob/2a6ea3bf7d8fd5a161badbfa5e838804a1e13d30/patches.addon/le9d.patch#L1) in order to avoid any disk thrashing / OS freeze when about to run Out Of Memory and thus the OOM-killer triggers as soon as possible(max 1 sec):  \r\n\r\n    revision 3\r\n    preliminary patch to avoid disk thrashing (constant reading) under memory pressure before OOM-killer triggers\r\n    more info: https://gist.github.",
+        "score": 22.890625,
+        "rank": 23,
+        "document_id": "c7191c53-c921-4c51-93e9-c3f868e20d04",
+        "passage_id": 232364
+    },
+    {
+        "content": "I faced the same bug just recently. Apparently, the problem is that Gradle 2.2-alpha* doesn&#39;t know how to handle `EditText`&#39;s nine-patch images properly. Especially one that is located in `res/drawable-v21/abc_edit_text_material.xml`. This is a currently open issue in code.google [[Reference]](https://code.google.com/p/android/issues/detail?id=210467)\r\n\r\nThe solution is simple, just downgrade Gradle version to `2.1` for now instead of `2.2-alpha2` or even `2.2-alpha3`. It worked perfectly for me when I did this.\r\n\r\nCheers :)",
+        "score": 22.796875,
+        "rank": 24,
+        "document_id": "d431c727-055a-4cb9-9f8a-c7331253ea84",
+        "passage_id": 325391
+    },
+    {
+        "content": "A lot depends on how you are generating your binary code.  If you use a JIT assembler that handles labels and figuring out offsets, things are pretty easy.  You can stick the constants in a block after the end of the code, using pc-relative references to those labels and end up with a single block of bytes with both the code and the constants (easy management).  If you&#39;re trying to generate binary code on the fly, you already have the problem of figuring out how to handle forward pc-relative references (eg for forward branches).  If you use back-patching, you need to extend that to support references to your constants block.\r\n\r\nYou can avoid the pc-relative offset calculations by putting the constants in a separate block  and passing the address of that block as a parameter to your code.  This is pretty much the &quot;Allocate a separate region for constants&quot; you propose.  You don&#39;t need to know the address of the block if you pass it in as an argument.",
+        "score": 22.75,
+        "rank": 25,
+        "document_id": "8011caf1-f683-4ece-9fd9-a6f84271d534",
+        "passage_id": 388571
+    },
+    {
+        "content": "dll) \r\n    // use the below command in windbg for finding the offset of pattern\r\n    // command must be in single line no line breaks\r\n    // .foreach /pS 4 /ps 4 ( place  { !grep -i -e call -c \r\n    // &quot;# call*RtlpUpdateTagEntry 7c900000 l?20000&quot; } ) { ub place }\r\n    // the instruction we are searching to patch is \r\n    //7c94b8a1 81e3ff0fffff    and     ebx,0FFFF0FFFh \r\n    // patch 0f to 00 at system breakpoint with eb 7c94b8a1+3 00 \r\n    \r\n    #define BUFFERSIZE 100\r\n    #define ALLOCSIZE  0xfdfd1\r\n    //#define ALLOCSIZE  0xfdfd2\r\n    \r\n    typedef int ( __stdcall *g_RtlCreateTagHeap) ( \r\n        HANDLE hHeap ,\r\n        void * unknown, \r\n        wchar_t * BaseString, \r\n        wchar_t * TagString \r\n        );",
+        "score": 22.75,
+        "rank": 26,
+        "document_id": "0b6f2184-4198-4c89-bcda-7adc2ce09261",
+        "passage_id": 137128
+    },
+    {
+        "content": "line 1, in &lt;module&gt;\n      File &quot;example_ext.py&quot; line 15, in new_init\n        a = obj if isinstance( obj, A ) else construct_A ( obj )\n      File &quot;example_ext.py&quot; line 9, in construct_A\n        return A( obj.get_num() )\n    AttributeError: E instance has no attribute &#39;get_num&#39;\n\nSince the patched constructor guarantees an instance of `A` will be passed to `B`, the `A_from_python::construct` will not get invoked.  Hence, the missing print statements in the output.\n\nWhile this approach avoids the C-API, making it easier to perform duck-typing, it does have one major trade-off in that it requires parts of the API to be specifically patched for conversions.  On the other hand, no patching is required when auto-type conversion functions are available.\n\n---\n\nAlso, for what it is worth, access control in both C++ and Python is intended to protect against accidental misuse.  Neither protect against deliberately obtaining access to members with private visibility.",
+        "score": 22.6875,
+        "rank": 27,
+        "document_id": "6c129da0-de69-48f4-a2e6-b15ef09a1cb4",
+        "passage_id": 440613
+    },
+    {
+        "content": "Thus, this neighbor uses a different LOD.\r\n&lt;p&gt;The algorithm depends on the relative position (at left or right or up or down) of the neighbour. It also depends on the different LOD of the neighbor compared to the patch (If you use several LODs the LOD-step from a patch to its neighbour should be just one, but with care you can code a junction between high and low LODs without halfway LOD). There are several combinations.\r\n&lt;p&gt;To allow at least two different LODs you need a 5x5 vertices patch. Low LOD patch will be 3x3 (what you draw).\r\n&lt;p&gt;Then you select vertices for the high-LOD (what you call &quot;modifing the qtree&quot;, right?)",
+        "score": 22.625,
+        "rank": 28,
+        "document_id": "242aab16-d20f-4828-bd1e-d743fed315c8",
+        "passage_id": 292129
+    },
+    {
+        "content": "As the error message reported by Nsight cleared indicated, the error is caused by Nsight having insufficient available memory on the device to interactively debug the code you are running. Quoting from the Nsight documentation:\r\n\r\n&gt; When the CUDA Memory Checker is enabled, it will consume extra memory\r\n&gt; on the GPU. If there is not enough patch RAM for the CUDA Debugger, it\r\n&gt; will give the following error:\r\n&gt; \r\n&gt;     Internal debugger error occurred while attempting to launch &quot;KernelName - CUmodule 0x04e67f10: code patching failed due to lack of code patching memory.\r\n&gt; \r\n&gt; If this happens, increase the patch RAM factor by going to Nsight &gt;\r\n&gt; Options &gt; CUDA &gt; Code Patching Memory Factor.\r\n&gt; \r\n&gt; This is a multiplier of the kernel&#39;s instruction size, which is added\r\n&gt; to a base patch RAM size of 64k.\r\n&gt; \r\n&gt; Another option is to disable the shared or global memory checking, in\r\n&gt; order to use less patch RAM.",
+        "score": 22.53125,
+        "rank": 29,
+        "document_id": "5b5a5974-7f5c-4734-9c0a-61ad0a7b7c35",
+        "passage_id": 19891
+    },
+    {
+        "content": "You only posted one full log so it&#39;s not really possible to spot a pattern here, but the C frame is in a non-executable memory region and outside the code space.  The VM events also show a flurry of re/deoptimizations and a bias revocation. So my guess is that might be a miscompilation.\r\n\r\nThings you can try:\r\n\r\n1. update your JVM. `8.0_60-b27` is not the latest patch level.\r\n2. try `-XX:-UseBiasedLocking -XX:-TieredCompilation`\r\n3. try `-XX:-UseBiasedLocking -XX:TieredStopAtLevel=1`\r\n\r\nIf updating the vm does not fix it but one of the options does then it&#39;s probably a VM bug and you should file with your linux distribution or oracle.",
+        "score": 22.5,
+        "rank": 30,
+        "document_id": "f4b7edae-06e5-48c8-8893-b26a9811e2a5",
+        "passage_id": 322221
+    },
+    {
+        "content": "You&#39;re not clearing the dom objects correctly, you forgot the parentheses:\r\n\r\n    $html-&gt;clear();\r\n    $images-&gt;clear();\r\n\r\nHere&#39;s a [demo](http://phpfiddle.org/main/code/4fp-8qr) of the corrected code\r\n\r\nAnd here&#39;s the ouput: \r\n\r\n![][1]\r\n\r\nAlso, if you have any detected bug or possible patch, feel free to report it to [their bugs/patch tracker](http://sourceforge.net/p/simplehtmldom/bugs/)\r\n\r\n\r\n  [1]: http://i.stack.imgur.com/qTjsh.png",
+        "score": 22.484375,
+        "rank": 31,
+        "document_id": "65344726-0d9e-4e44-a886-bac890805180",
+        "passage_id": 406254
+    },
+    {
+        "content": "As of jOOQ 3.7, that&#39;s a missing feature. See: https://github.com/jOOQ/jOOQ/issues/5009\r\n\r\nYou have several workaround options:\r\n\r\n1. Patch the generated code using a [search-replace Maven plugin][1] by replacing `@Id` by `@Id @javax.persistence.GeneratedValue(javax.persistence.GenerationType.IDENTITY)` (assuming that all your primary keys are `AUTO_INCREMENT`)\r\n2. Patch jOOQ-codegen&#39;s `JavaGenerator`&#39;s `org.jooq.util.JavaGenerator.printColumnJPAAnnotation()` method and add that code yourself.\r\n\r\n\r\n  [1]: https://stackoverflow.com/q/2196394/521799",
+        "score": 22.4375,
+        "rank": 32,
+        "document_id": "9884b790-3f5b-4199-8c8d-0adb33d5afc4",
+        "passage_id": 86602
+    },
+    {
+        "content": "One advantage is allocation performance, another is the simplicity and efficiency of deallocation if it happens in FIFO order or affects the whole allocation space. Stack allocation is one prominent example. JVMs often use linear allocators for object allocation. The Apache webserver uses a variant of that to handle per-request memory allocations.\r\n\r\nUsing linear allocators as general-purpose allocators is more problematic because of the difficulty of space reclamation. To reclaim space, it&#39;s insufficient to mark entries as free because this could lead to high fragmentation and defeats the advantages of linear allocation (merely having to increment a pointer for the actual task of allocation). So, similarly to the filesystem, the allocation space must be compacted so that it only contains allocated entries and the free space can be used for linear allocation. Compacting requires to move allocated entries around -  a process that changes and invalidates their previously known addresses. In native code, locations of references to allocated entries (addresses stored as pointers) are unknown to the allocator. Existing references would have to be patched to make the allocator action transparent to the caller, that&#39;s not feasible for a general-purpose allocator like `malloc`.\r\n\r\nWhy is it not feasible?",
+        "score": 22.4375,
+        "rank": 33,
+        "document_id": "e03a87d3-761d-48bf-b45a-ace08bd3d198",
+        "passage_id": 191109
+    },
+    {
+        "content": "Looking at [the notes associated with the patch introducing physical address sampling](https://lore.kernel.org/lkml/1452078277-15520-1-git-send-email-kan.liang@intel.com/):\r\n\r\n&gt; For kernel direct mapping addresses, the patch uses virt_to_phys to\r\n&gt; convert the virtual addresses from DLA to physical address.\r\n&gt; For user virtual addresses, __get_user_pages_fast is used to walk the\r\n&gt; pages tables for user physical address.\r\n&gt; This does not work for vmalloc addresses. Right now these are not\r\n&gt; resolved, but code to do that could be added.\r\n\r\nChecking the Linux source, [the physical address of a vmalloc address still cannot be determined (at the time of this posting)](https://github.com/torvalds/linux/blob/353f7988dd8413c47718f7ca79c030b6fb62cfe5/kernel/events/core.c#L7151-L7154). Instead, the physical address returned is null (i.e., 0).",
+        "score": 22.4375,
+        "rank": 34,
+        "document_id": "1e747cd5-143f-453a-a0ea-522c730623bc",
+        "passage_id": 150135
+    },
+    {
+        "content": "&gt; Wouldn&#39;t it be useful and a potential memory optimization to have an array type with statically known size in the standard library?\r\n\r\nSure. I suspect if you wrote up your use case carefully and implemented this, GHC HQ would accept a patch. You might want to do the writeup first and double-check that they&#39;re into it to avoid wasting time on a patch they won&#39;t accept, though; I certainly don&#39;t speak for them.\r\n\r\n&gt; Also, the compiler could choose between Array and SmallArray automatically.\r\n\r\nI&#39;m not an expert here, but I kinda doubt this. Usually supporting polymorphism means you need a uniform representation.",
+        "score": 22.375,
+        "rank": 35,
+        "document_id": "2171e044-9f7c-411d-82b0-b31ffb678d9a",
+        "passage_id": 155432
+    },
+    {
+        "content": "windows.h&gt;\r\n    #include &lt;stdio.h&gt;\r\n    \r\n    //heaptags are kinda broken or they are intentionally \r\n    //given only to allocations &gt; 512 kb // allocation &gt; 512 kb\r\n    //go through VirtualAlloc Route for Heap created with maxsize \r\n    //set to 0 uncomment ALLOCSIZE 0xfdfd2 and recompile to watch \r\n    // tagging increase by 100% with ALLOCSIZE  0xfdfd1 only 50 allocs \r\n    // and frees that are &gt; 512 kB will be tagged these magic numbers \r\n    // are related to comment in HeapCreate Documentation that state \r\n    // slightly less than 512 kB will be allocated for 32 bit process \r\n    // tagging can be dramatically increased by patching ntdll when \r\n    // stopped on system breakpoint patch 7c94b8a4 (xpsp3 ntdll.dll) \r\n    // use the below command in windbg for finding the offset of pattern\r\n    // command must be in single line no line breaks\r\n    // .",
+        "score": 22.375,
+        "rank": 36,
+        "document_id": "0b6f2184-4198-4c89-bcda-7adc2ce09261",
+        "passage_id": 137127
+    },
+    {
+        "content": "The first instruction has a reference to 1234 (byte\r\n&gt; reversed, since the x86 uses a right to left byte order) and the\r\n&gt; second a reference to zero since the location of b is unknown.\r\n&gt; \r\n&gt; Now assume that the linker links this code so that the section in\r\n&gt; which a is located is relocated by hex 10000 bytes, and b turns out to\r\n&gt; be at hex 9A12. The linker modifies the code to be:\r\n&gt; \r\n     A1 34 12 01 00 mov a,%eax  \r\n     A3 12 9A 00 00 mov %eax,b\r\n\r\n&gt; \r\n&gt; That is, it adds 10000 to the address in the first instruction so now\r\n&gt; it refers to a&#39;s relocated address which is 11234, and it patches in\r\n&gt; the address for b. These adjustments affect instructions, but any\r\n&gt; pointers in the data part of an object file have to be adjusted as\r\n&gt; well.",
+        "score": 22.359375,
+        "rank": 37,
+        "document_id": "0d9210dd-3350-4dd9-914b-8eec92f3150b",
+        "passage_id": 343731
+    },
+    {
+        "content": "This would also be the case if you have a &quot;patch&quot; file like this already in your `User` package (if you were adding extra color rules for somethign else, for example).\r\n\r\nIf your custom color scheme is in `sublime-color-scheme` format, then you can just add these rules into the `rules` section of your color scheme just like above to have them take effect.\r\n\r\nIf your color scheme is in `tmTheme` format, then instead you&#39;d need to copy the XML version of the settings into your color scheme. Here how you&#39;d do that is not entirely as straight forward as with the `sublime-color-scheme` formatted file due to the XML nature of the file. \r\n\r\nIn this case you&#39;d instead need to note that each rule is a `&lt;dict&gt;&lt;/dict&gt;` tag with specific keys, then examine the color scheme to see where it has similar color rules and inject yours into the correct location.\r\n\r\nGenerally speaking if you get it wrong the color scheme will be ignored (everything will turn black and white) and you&#39;ll get an error dialog to tell you that something has gone wrong.",
+        "score": 22.34375,
+        "rank": 38,
+        "document_id": "7985393b-079c-4dc4-9e9c-7106be872a50",
+        "passage_id": 57811
+    },
+    {
+        "content": "Rather than post the implementations separately I am going to update the example given in the question so that it has a working `PATCH` and being a full demonstration of `PATCH` hopefully this will help others more.\r\n\r\nThe two additions are `partial` and `merge`. `partial` is what&#39;s referred to as `optional` in the question code.\r\n\r\n***`partial`***:\r\nThis is a function that takes any `BaseModel` and returns a new `BaseModel` with all fields `Optional`, including sub-object fields. That&#39;s enough for Pydantic to allow through any sub-set of fields without throwing an error for &quot;missing fields&quot;. It&#39;s recursive - not really popular - but given these are nested data models the depth is not expected to exceed single digits.",
+        "score": 22.34375,
+        "rank": 39,
+        "document_id": "775ef159-97b3-4094-9806-661f1a1147e6",
+        "passage_id": 36398
+    },
+    {
+        "content": "&gt; \r\n&gt; This is a multiplier of the kernel&#39;s instruction size, which is added\r\n&gt; to a base patch RAM size of 64k.\r\n&gt; \r\n&gt; Another option is to disable the shared or global memory checking, in\r\n&gt; order to use less patch RAM.\r\n\r\nThe original poster noted that increasing the code patching memory factor from a ratio of 2 to 16 solved the problem.",
+        "score": 22.34375,
+        "rank": 40,
+        "document_id": "5b5a5974-7f5c-4734-9c0a-61ad0a7b7c35",
+        "passage_id": 19892
+    },
+    {
+        "content": "System.Drawing is a wrapper for GDI+, an unmanaged library that pre-dated the release of .NET by many years.  It suffers from a typical problem with a C api, error reporting is rather poor.  GDI+ has only 20 distinct error codes, not much for such a large chunk of code.  They are also very opaque, a particular doozy is Status::GenericError.  A pretty common error that&#39;s returned for many possible error conditions that have nothing in common.\r\n\r\nSystem.Drawing could do very little to make these error codes more descriptive, given that they were not descriptive by design.  Status::OutOfMemory fits that pattern as well.  Very little it could do with that but generate a managed exception that means the same thing.  Sadly that wasn&#39;t a great choice either since OutOfMemoryException is so very specific in .NET.\r\n\r\nLots of lossage here with few ways to win.  You just need to take the poor error reporting of GDI+ at face value and patch around the problem.  With a high likelihood in this case that avoiding using a dashed pen for very small arcs will solve your problem.  You can&#39;t see the dash pattern anyway.",
+        "score": 22.3125,
+        "rank": 41,
+        "document_id": "a87db4c8-5e6f-4205-b424-ab6eee4aa54b",
+        "passage_id": 426784
+    },
+    {
+        "content": "In a similar way you could iterate over all methods of your class and check the origin of the methods:\r\n\r\n    user.methods.map {|method_name| user.method(method_name).source_location}\r\n\r\n## Monkey Patching\r\n\r\nThis still works with patched classes. When opening a rails console, I can edit my `User` class and look at the `source_location` again:\r\n\r\n    class User &lt; ActiveRecord::Base\r\n      def admin?\r\n        puts &#39;the patched admin? method&#39;\r\n        super\r\n      end\r\n    end\r\n    \r\n    User.first.method(:admin?).source_location\r\n    =&gt; [&quot;(pry)&quot;,2]\r\n\r\nNow, the method&#39;s location is in my console (pry) at statement 2. This works, because my patch creates a new Method-object which replaces the old method in the method dictionary of the `User` class. The new method object returns a different `source_location`.",
+        "score": 22.296875,
+        "rank": 42,
+        "document_id": "7d572397-3d82-4c31-b467-89515fe0d12f",
+        "passage_id": 369258
+    },
+    {
+        "content": "The short answer is that a circle can be drawn using a matplotlib Circle Patch (similar to what you have tried already), or by using a circle shaped marker on a scatter plot.  \r\n\r\nThere are problems with the Circle Patch.  For example, it requires direct access to the Axes object.  Furthermore it may require a coordinates transformation so that it actually appears round.  \r\n\r\nUsing a scatter plot with a circle &#39;o&#39; scatter marker is a much simpler approach, and can be done without accessing the Axes objects by using mplfinance&#39;s `mpf.make_addplot(data,type=&#39;scatter&#39;,...)`.  Also, we won&#39;t need any coordinate transformations to ensure nice round circles.\r\n\r\nBefore I show a specific example, since you said &quot;`I&#39;m open to learn ... to fix my code`,&quot; let me offer some constructive criticism, and I hope it will be accepted in the helpful spirit intended.  As a rule, when there is more than one way to code something, simpler is better.  First allow me to commend you on the excellent quality of you question overall, clearing describing what you are trying to accomplish, *and showing* what you have coded so far.",
+        "score": 22.265625,
+        "rank": 43,
+        "document_id": "1495dc09-3804-4d83-a6de-43a20b23d0d4",
+        "passage_id": 134480
+    },
+    {
+        "content": "s patchset (on top of upstream code) in common branch\r\n* Have upsteam-repo in `paths` section of .hgrc in order to be able to pull from it\r\n* Pull, when needed, from upstream\r\n* [Merge patches with upstream][1]\r\n* For patch-exchange you have two ways\r\n  * if patch-queue was created as repository (`hg qinit -c`) you can push this repository in addition to &quot;base&quot;\r\n  * Using [MQCollab][2] extension on top of MQ will allow you to exchange and synchronize patches with collaborators directly (which have to have also MQ and MQCollab)\r\n\r\n\r\n  [1]: http://mercurial.selenic.com/wiki/MqExtension#Merging_patches_with_new_upstream_revisions\r\n  [2]: http://mercurial.selenic.com/wiki/MqCollabExtension",
+        "score": 22.25,
+        "rank": 44,
+        "document_id": "1a683cd6-c118-4bc1-a2a5-c8ea2272e589",
+        "passage_id": 98462
+    },
+    {
+        "content": "I understand your concern, you can try this out of Tree patch which was not accepted upstream.\r\n\r\nhttps://patchwork.codeaurora.org/patch/2059/\r\n\r\nhttp://lists.infradead.org/pipermail/linux-arm-kernel/2015-July/359435.html\r\n\r\nIt would help you to map PCI resource file in user space.",
+        "score": 22.203125,
+        "rank": 45,
+        "document_id": "26a756b4-b4e5-4bde-985c-da72240500f6",
+        "passage_id": 320588
+    },
+    {
+        "content": "The use of the patch command in `kubectl` makes the patching less &quot;native&quot; to Jenkins, but the convenience is more than worth it (an alternative would be using the REST API instead for example). The `foreach` structure looks odd, but is needed to avoid a long-standing bug in Jenkins.\r\n\r\n\r\n  [1]: https://plugins.jenkins.io/kubernetes-cli/\r\n  [2]: https://plugins.jenkins.io/snakeyaml-api/\r\n  [3]: https://www.jenkins.io/doc/pipeline/steps/pipeline-utility-steps/#readyaml-read-yaml-from-files-in-the-workspace-or-text",
+        "score": 22.1875,
+        "rank": 46,
+        "document_id": "1d2407ae-4eaa-4f3c-bce5-3991b78a96aa",
+        "passage_id": 186040
+    },
+    {
+        "content": "The loader modifies the IAT when the DLL is loaded, filling it with the actual address of the imported functions.  The code in the DLL makes an indirect call through the IAT entry.  Avoids having to patch the code (i.e. modifying the assembly), that kind of patching prevents code sharing.  \r\n\r\nA decent web page that shows the plumbing [is here](http://sandsprite.com/CodeStuff/Understanding_imports.html).",
+        "score": 22.140625,
+        "rank": 47,
+        "document_id": "fd250dd9-1d13-45b2-a7d2-6c76b011983f",
+        "passage_id": 264474
+    },
+    {
+        "content": "This is obviously a limitation of socketio. From what I can see on the web, session handling is typically done at web framework layer rather than web server one. socketio tries to do it on its own, lower layer, and does it in a limited manner. I guess the authors thought a full-fledged solution would be an overkill. In your case, they proved to be wrong.\r\n\r\nThere are only two ways to overcome limitations that require logic change: patching the source and patching in the runtime. Choose whichever pleases you the most (or, well, disgusts the least :^) ). **For the 2nd option, I suggest to replace `request_tokens` and/or the code that creates it with another entity with the same interface.** Due to the reasons stated in the 1st paragraph, I really think that socketio authors are likely to accept a source patch that would allow it to utilize external session handling mechanisms if you propose one.\r\n\r\nStandard locations for session information are: shared memory, files, database. I suggest you change the logic in such a way that socketio uses the same mechanism as your web framework (or whatever composes your pages) does.",
+        "score": 22.09375,
+        "rank": 48,
+        "document_id": "75b71c6c-56e9-4e3e-bf13-02a0c73f8e02",
+        "passage_id": 365661
+    },
+    {
+        "content": "Edit: authoritative response from the V8 team -- you can&#39;t.  But they&#39;ll accept a patch.\r\n\r\nv8::Isolate::SetFatalErrorHandler() should allow you to not crash.   But, my understanding is that the isolate is still unusable after the fact.  Probably no way of getting around that, since the isolate will be left in an unrecoverable statea.\r\n\r\nhttp://v8.paulfryzel.com/docs/master/classv8_1_1_isolate.html#a131f1e2e6a80618ac3c8c266a041851d\r\n\r\n\r\n(maybe.   there seems to be a lot of stuff going on about this in the 2013-2014 timeframe where people at google said the right thing to do was to just let v8 kill the process -- to which a lot of people thought was dumb.   I don&#39;t see any resolution)\r\n\r\nedit: Mailing list response was that you cannot do this.   They will accept a patch if it doesn&#39;t have a performance impact.",
+        "score": 22.09375,
+        "rank": 49,
+        "document_id": "13135e78-2991-431a-a5ab-3f29a816e866",
+        "passage_id": 265469
+    },
+    {
+        "content": "The code indeed has a bug here:\r\n\r\n    printf(&quot;\\nThe decimal point was found at array index %d\\n&quot;, decimal_pos - str);\r\n\r\nThe difference of 2 pointers has type `ptrdiff_t` which may be different from `int` expected for `%d`. You should either use `%td` or cast the difference as `(int)(decimal_pos - str)`.  It is however very surprising that this type mismatch be the cause of your problem.\r\n\r\nNote that you copy the string without testing its length in `strcpy(buffer, str);` which for this example is OK but might have undefined behavior if `str` points to a longer string.\r\n\r\nThe code is too complicated: there is no need for `strtok()` as you already have the offset to the decimal point if any. You can use `atoi()` with a pointer to the beginning of the integral portion without patching the `.` with a null byte. You could also use `strtol()` to avoid `strstr()` too.\r\n\r\nNote also that the code will compute an incorrect price in most cases: `&quot;$3.45&quot;` will be changed to `&quot;$1.22&quot;` which is substantially more than a 50% rebate.",
+        "score": 22.078125,
+        "rank": 50,
+        "document_id": "3a1be3bd-e5fc-4224-98d4-3ead9c07efba",
+        "passage_id": 163216
+    }
+]
