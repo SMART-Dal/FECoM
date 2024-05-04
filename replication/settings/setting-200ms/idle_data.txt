@@ -1,0 +1,11 @@
+cpu_energy_stdv     0.250082
+cpu_energy_mean    15.962180
+ram_energy_stdv     0.027307
+ram_energy_mean     2.293385
+gpu_power_stdv      0.098968
+gpu_power_mean     18.153665
+dtype: float64
+
+cpu_std_mean: 0.016
+ram_std_mean: 0.012
+gpu_std_mean: 0.005
