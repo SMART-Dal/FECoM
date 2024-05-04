@@ -1,0 +1,352 @@
+[
+    {
+        "content": "As @Robert Crovella correctly mentioned in the comment Tensorflow will attempt to allocate the maximum amount of memory it can when you create a session. If necessary you can avoid this occurring: \r\n\r\nhttps://stackoverflow.com/questions/34199233/how-to-prevent-tensorflow-from-allocating-the-totality-of-a-gpu-memory\r\n\r\nIn general it&#39;s perfectly fine to run multiple processes on the same GPU though. The primary issue will just be memory allocation. If Numba allocates the memory it needs up front you&#39;ll have no problem (disclaimer I don&#39;t know Numba well). If Numba needs to allocate memory after your tensorflow session has been allocated, then the link above will need to be followed to avoid the memory allocation issue.\r\n\r\nI am fairly certain that you won&#39;t encounter any kind of CUDA driver conflicts between the systems. At least I&#39;ve never heard of this being an issue and I&#39;ve been using tensorflow daily since v0.12.",
+        "score": 32.03125,
+        "rank": 1,
+        "document_id": "e09d1b08-913b-4fe8-9736-54e55b6984ef",
+        "passage_id": 15420
+    },
+    {
+        "content": "&gt; Am I forced to resort to explicit host and device memory allocation?\r\n\r\nYou are not forced to resort to explicit *host and device memory allocation*, but you will be forced to handle the amount of allocated memory manually. This is because, on current hardware at least, the CUDA unified virtual memory doesn&#39;t allow you to oversubscribe GPU memory. In other words, `cudaMallocManaged` will fail once you allocate more memory than what is available on the device. But that doesn&#39;t mean you can&#39;t use `cudaMallocManaged`, it merely means you have to keep track of the amount of memory allocated and never exceed what the device could support, by &quot;streaming&quot; your data instead of allocating everything at once.\r\n\r\nPure speculation as I can&#39;t speak for NVIDIA, but I believe this could be one of the future improvements on upcoming hardware.",
+        "score": 31.390625,
+        "rank": 2,
+        "document_id": "b8f0e6a0-ba5e-4cd8-9a23-34e568138de2",
+        "passage_id": 19848
+    },
+    {
+        "content": "While you may not currently be sending enough data to the GPU to max out it&#39;s memory, when you do, your `cudaMalloc` will return the error code `cudaErrorMemoryAllocation` which as per the [cuda api docs][1], signals that the memory allocation failed. I note that in your example code you are not checking the return values of the cuda calls. These return codes need to be checked to make sure your program is running correctly. The cuda api does not throw exceptions: you must check the return codes. See [this article][2] for info on checking the errors and getting meaningful messages about the errors\r\n\r\n\r\n  [1]: http://developer.download.nvidia.com/compute/cuda/4_0/toolkit/docs/online/group__CUDART__MEMORY_gc63ffd93e344b939d6399199d8b12fef.html#gc63ffd93e344b939d6399199d8b12fef\r\n  [2]: http://drdobbs.com/high-performance-computing/207603131",
+        "score": 31.0,
+        "rank": 3,
+        "document_id": "766831a0-8998-4c24-bc1b-a2d013343417",
+        "passage_id": 29315
+    },
+    {
+        "content": "The size of your GPU&#39;s DRAM is an upper bound on the amount of memory you can allocate through ```cudaMalloc```, but there&#39;s no guarantee that the CUDA runtime can satisfy a request for all of it in a single large allocation, or even a series of small allocations.\r\n\r\nThe constraints of memory allocation vary depending on the details of the underlying driver model of the operating system. For example, if the GPU in question is the primary display device, then it&#39;s possible that the OS has also reserved some portion of the GPU&#39;s memory for graphics. Other implicit state the runtime uses (such as the heap) also consumes memory resources. It&#39;s also possible that the memory has become fragmented and no contiguous block large enough to satisfy the request exists.\r\n\r\nThe CUDART API function ```cudaMemGetInfo``` reports the free and total amount of memory available.  As far as I know, there&#39;s no similar API call which can report the size of the largest satisfiable allocation request.",
+        "score": 30.828125,
+        "rank": 4,
+        "document_id": "68c3f6f8-eb7f-4fd7-a636-1b998109e25d",
+        "passage_id": 29392
+    },
+    {
+        "content": "The error code `2` corresponds to `CUSOLVER_STATUS_ALLOC_FAILED`:\r\n\r\n[quoting the cuSOLVER documentation:](http://docs.nvidia.com/cuda/cusolver/#cuSolverSPstatus)\r\n\r\n&gt; Resource allocation failed inside the cuSolver library. This is\r\n&gt; usually caused by a cudaMalloc() failure.\r\n&gt; To correct: prior to the function call, deallocate previously\r\n&gt; allocated memory as much as possible.\r\n\r\nThis means memory for your matrix could not be allocated, probably since your GPU&#39;s memory is exceeded. Try deallocating memory (as stated in the documentation), use a smaller input matrix, or use a GPU with more memory.",
+        "score": 30.625,
+        "rank": 5,
+        "document_id": "631bb59b-fe4d-46c1-ac69-300dfb810976",
+        "passage_id": 18935
+    },
+    {
+        "content": "This is an issue of CUDA kernel queue.\r\n\r\nSee the following:\r\n  \r\n* https://github.com/cupy/cupy/issues/1294  \r\n* https://github.com/cupy/cupy/issues/1765  \r\n\r\nThe short execution observed in your code was fake, because cupy returns _immediately_ when the queue is not filled.\r\n\r\nThe actual performance was the last line.\r\n\r\n**Note:** This was NOT an issue of memory allocation \u2014 as I originally suggested in my initial answer \u2014 but I include the original answer for the record here.\r\n\r\n---\r\n\r\n**Original (incorrect) answer**\r\n\r\nMay be due to the reallocation.\r\n\r\nWhen you `import cupy`, cupy allocates &quot;some mount of&quot; GPU memory. When cupy used all of them, it have to allocate more memory. This increases the execution time.",
+        "score": 30.59375,
+        "rank": 6,
+        "document_id": "a6100d1c-3cf3-4e46-86d3-3276e3ed98a7",
+        "passage_id": 13450
+    },
+    {
+        "content": "And dynamic (e.g. `cudaMalloc`) and or static (e.g. `__device__`) allocations that occur prior to this bulk allocation request at kernel launch, will all impact available memory.\r\n\r\nThis is all to explain some of the specifics. The general answer to your question is that the &quot;magic&quot; arises due to the fact that the GPU does not necessarily allocate the stack frame and local memory for all threads in the grid, all at once.  It need only allocate what is required for the *maximum instantaneous capacity* of the device (i.e. SMs * max threads per SM), which may be a number that is significantly less than what would be required for the whole grid.",
+        "score": 30.59375,
+        "rank": 7,
+        "document_id": "568a5042-86e7-44ad-86be-3529ed24a2a0",
+        "passage_id": 21820
+    },
+    {
+        "content": "CUDA Out of Memory issues are very common and are often caused by processing more data **at a time** than your GPU can handle.\r\n\r\nThe most common way to alleviate this problem is to lower the batch size of your loader. Since DataLoader is a generator, it does not actually matter how big your dataset is, but the amount of images you allocate to CUDA and do operations on **at a time** or **single iteration** is very important. Therefore, the most likely issue is you are pulling too much from that generator and thus causing memory issues. \r\n\r\nAlso, The model you sent me does not look too big to give a CUDA memory error by itself. Note: This may actually be the case only if you are using a shared server and someone else is using most of the memory of the GPU on that shared ssh server. If that is the case then I suggest running nvidia-smi or some command to find out how much memory you have. \r\n\r\nSarthak",
+        "score": 30.5625,
+        "rank": 8,
+        "document_id": "ccd4bd7a-12b6-4b19-b1ad-34aa5c38ecea",
+        "passage_id": 6820
+    },
+    {
+        "content": "as per this part of your error,\r\n\r\n```\r\nXGBoostError: [12:32:18] /opt/conda/envs/rapids/conda-bld/xgboost_1603491651651/work/src/c_api/../data/../common/device_helpers.cuh:400: Memory allocation error on worker 0: std::bad_alloc: CUDA error at: ../include/rmm/mr/device/cuda_memory_resource.hpp:68: cudaErrorMemoryAllocation out of memory\r\n- Free memory: 1539047424\r\n- Requested memory: 3091258960\r\n```\r\n\r\n**Your GPU memory isn&#39;t big enough for this particular single GPU notebook**.  \r\nThe easiest solution is to use a `p3` instance to get the 32GB GPU (or `p4dn` if you want to try the A100s @ 40GB)\r\n\r\nIf you need to use a T4 on the `g4` instances for some reason, or just want to get more practice in `dask-cudf`, a bit more effort on your part is required.",
+        "score": 30.46875,
+        "rank": 9,
+        "document_id": "ba2dc7bb-399f-4bd7-b81a-659ce84de452",
+        "passage_id": 7056
+    },
+    {
+        "content": "My response assumes you are running CUDA 9.x or higher, a Pascal or Volta GPU, on Linux.\r\n\r\nYou will be able to oversubscribe GPU memory up to approximately the size of host memory (i.e. whatever the host operating system allows you to allocate), less some reasonable amount that would be typical in any memory allocation process (you should not be expecting to allocate every last byte of host memory, and likewise should not attempt to do the same with managed memory allocations).\r\n\r\nThere is no link between unified memory and files or anything stored on disk.\r\n\r\nJust as you probably cannot load that entire 1TB file into your 32GB of RAM, you cannot access it all at once using managed memory.  Whatever amount the host operating system will allow you to allocate/load, is the size you will have available to the GPU.\r\n\r\nTherefore, in order to process that 1TB file, you would probably need to come up with an algorithm that breaks it into pieces that fit in system RAM.  This concept is completely independent of managed memory.  Thereafter, if you want to access the piece of your file that is in system RAM using CUDA, you can use managed memory, including oversubscription, if you wish, to do so.",
+        "score": 30.453125,
+        "rank": 10,
+        "document_id": "f12b3381-6102-4ccf-a109-29fc8e3b6cb7",
+        "passage_id": 14770
+    },
+    {
+        "content": "With UM on a pre-pascal device, UM &quot;managed&quot; allocations will be moved automatically between CPU and GPU subject to some restrictions, but you cannot oversubscribe GPU memory.  The maximum amount of all ordinary GPU allocations plus UM allocations cannot exceed GPU physical memory.\r\n\r\nWith UM plus CUDA 8.0 or later plus a Pascal or newer GPU, you can oversubscribe GPU memory with UM (&quot;managed&quot;) allocations.  These allocations are then nominally limited to the size of your system memory (minus whatever other demands there are on system memory).  In this case, data is moved back and forth automatically between host and device memory, by the CUDA runtime, using a demand-paging method.\r\n\r\nUVA is not an actual data management technique in CUDA.  It is an underlying technology that enables some features, like certain aspects of mapped memory and generally enables UM features.",
+        "score": 30.390625,
+        "rank": 11,
+        "document_id": "8f11471b-22ad-414d-8d2f-4c24c9455010",
+        "passage_id": 16611
+    },
+    {
+        "content": "It is [illegal](https://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html#um-gpu-exclusive) in a pre-Pascal UM (Unified Memory) regime for host code to touch a managed allocation after a kernel has been launched, but before a `cudaDeviceSynchronize()` has been issued.\r\n\r\nI am guessing this code violates this rule. If I run your repro case on a Maxwell system I get this:\r\n\r\n    $ cuda-memcheck python ./idontthinkso.py\r\n    ========= CUDA-MEMCHECK\r\n    ========= Error: process didn&#39;t terminate successfully\r\n    ========= Fatal UVM CPU fault due to invalid operation\r\n    =========     during write access to address 0x703bc1000\r\n    =========\r\n    ========= ERROR SUMMARY: 1 error\r\n\r\nThat is the managed memory system blowing up.",
+        "score": 30.171875,
+        "rank": 12,
+        "document_id": "789e1d06-8b3f-419c-a991-8e4bccff6fe9",
+        "passage_id": 10485
+    },
+    {
+        "content": "Your dynamic allocations (ie. from `cudaMalloc`) are allocating about 350MB.  But the kernel launch brings the static allocation into play, and then your total footprint rises to over 700MB (2^28 is over 250MB).  If you have a display running on that GPU, it will consume some of the 1GB of memory, leaving you with not enough to run a kernel that requires 700MB.\r\n\r\nIf you want to run on that GPU, see if you can pare your problem size down somehow.\r\n\r\nAnd it&#39;s always good to do [proper cuda error checking](https://stackoverflow.com/questions/14038589/what-is-the-canonical-way-to-check-for-errors-using-the-cuda-runtime-api), but apart from this issue, your code seems to run with no errors for me on devices with more memory.",
+        "score": 30.046875,
+        "rank": 13,
+        "document_id": "c310a1a6-ed2d-42c2-a215-cbdae4a463ce",
+        "passage_id": 25068
+    },
+    {
+        "content": "1. GPU off-chip memory is separated in global, local and constant memory. This three memory types are a virtual memory concept. Global memory is free for all threads, local is just for one thread only (mostly used for register spilling) and constant memory is cached global memory (writable only from host code). Have a look at 5.3.2 from the CUDA C Programming Guide.\r\n\r\n2. EDIT: removed\r\n\r\n3. Memory allocated via `cudaMalloc` does never overlap. For the memory a kernel allocates during runtime should be enough memory available. If you are out of memory and try to start a kernel (only a guess from me) you should get the &quot;unknown error&quot; error message. The driver than was unable to start and/or executes the kernel.",
+        "score": 29.984375,
+        "rank": 14,
+        "document_id": "3478762d-d189-4235-bf78-5041cca1011c",
+        "passage_id": 16131
+    },
+    {
+        "content": "The standard approach is to change the scope and life cycle of objects within the code so that it isn&#39;t necessary to continuously create and destroy objects as part of computations on the device. Memory allocation in most distributed memory architectures (CUDA, HPC clusters, etc) is expensive, and the usual solution is to use it as sparingly as possible and amortise the cost of the operation by extending the lifetime of objects.\r\n\r\nIdeally, create all the objects you need at the beginning of the programming, even if that means pre-allocating a pool of objects which will be consumed as the program runs. That is more efficient that ad-hoc memory allocation and deallocation. It also avoids problems with memory fragmentation, which can get to be an issue on GPU hardware where pages sizes are rather large.",
+        "score": 29.96875,
+        "rank": 15,
+        "document_id": "271b0041-c3bf-4afe-bc2d-e4028edd2d0d",
+        "passage_id": 21185
+    },
+    {
+        "content": "First thing will be to check if compatible CUDA, cuDNN drivers are installed correctly. Then you may try gpu memory resources management by allowing gpu memory growth.  \r\n\r\n**allow_growth** option, attempts to allocate only as much GPU memory based on runtime allocations: it starts out allocating very little memory, and as Sessions get run and more GPU memory is needed, it extend the GPU memory region needed by the TensorFlow process.\r\n  \r\nTo know more see https://www.tensorflow.org/guide/using_gpu#allowing_gpu_memory_growth   \r\nYou can try Allowing GPU memory growth with:\r\n```python\r\nconfig = tf.ConfigProto()\r\nconfig.gpu_options.allow_growth = True\r\nsess = tf.Session(config=config)\r\n```",
+        "score": 29.96875,
+        "rank": 16,
+        "document_id": "dbe94104-a6dd-45dd-a486-ea6e973dce97",
+        "passage_id": 11963
+    },
+    {
+        "content": "When you call `gpu_configuration(&amp;gc)`, the `cudaDeviceReset()` call inside it deallocates all of the previously allocated memory on the current device. Therefore, `d_data` becomes invalid and causes the kernel to fail. \r\n\r\nYou may remove the `cudaDeviceReset()` call to fix the issue. Alternatively, the `gpu_configuration` call should be the first function call in your program so that subsequent memory allocations remain valid.",
+        "score": 29.875,
+        "rank": 17,
+        "document_id": "66282c28-763c-46f9-9c6f-0bd837d5c257",
+        "passage_id": 2238
+    },
+    {
+        "content": "Also, when I access and modify the array on the CPU the free memory on GPU before and after this still remains the same. I don&#39;t understand why this is happening. \r\n\r\nThe amount of memory we are talking about is on the order of 100MB.  Your allocation of `512*sizeof(int)` is insignificant compared to that.  Furthermore, there is no statement in CUDA documentation what will happen with underlying allocations as a result of demand-paging.  You seem to think that demand-paging automatically frees underlying allocations when the content is paged out.  This is not stated anywhere and is not the case.  The exact behavior here is unspecified.  Furthermore, the GPU in your setting has the ability to be oversubscribed, so there is no particular reason to immediately free allocations.\r\n\r\n&gt;When prefetching/processing a unified memory location on CPU shouldn&#39;t the corresponding pages on GPU be evicted and moved to CPU and shouldn&#39;t this free up the GPU memory?\r\n\r\nPrefetching is not the same as eviction.  But, yes, prefetching to CPU means the corresponding pages are no longer resident in that GPU&#39;s memory.",
+        "score": 29.859375,
+        "rank": 18,
+        "document_id": "cfdeca23-87cf-433c-a4e9-e80eb4d8b9f4",
+        "passage_id": 5950
+    },
+    {
+        "content": "asynchronous, sticky, cuda-context-corrupting:\r\n\r\n\r\n\r\n&gt;cudaErrorMisalignedAddress = 74\r\nThe device encountered a load or store instruction on a memory address which is not aligned. The context cannot be used, so it must be destroyed (and a new one should be created). All existing device memory allocations from this context are invalid and must be reconstructed if the program is to continue using CUDA.\r\n\r\n\r\nNote that `cudaDeviceReset()` by itself is insufficient to restore a GPU to proper functional behavior.  In order to accomplish that, the &quot;owning&quot; process must also terminate.  See [here](https://stackoverflow.com/questions/56329377/reset-cuda-context-after-exception/56330491#56330491).",
+        "score": 29.8125,
+        "rank": 19,
+        "document_id": "2c1e5f1f-049e-4d92-b489-a64cc105e5c1",
+        "passage_id": 3432
+    },
+    {
+        "content": "The first problem has nothing to do with CUDA, actually.  When you pass a struct by-value to a function in C or C++, a copy of that struct is made for use by the function.  Modifications to that struct in the function have no effect on the original struct in the calling environment.  This is affecting you in your `memAllocation` function:\r\n\r\n    void memAllocation(int device, int MemoryPerComputation, GPUplan gpuPlan, KernelPlan kernelPlan)\r\n                                                                     ^^^^^^^\r\n                                                                     passed by value\r\n    {\r\n        cudaSetDevice(device); //select device to allocate memory on\r\n        cudaError_t x = cudaGetLastError();\r\n        if (x != cudaSuccess) {\r\n            printf(&quot;Error Selecting device %i: Error %i\\n&quot;, device, x);\r\n        }\r\n        cudaMalloc((void**)&amp;(gpuPlan.d_data_ptr), MemoryPerComputation * kernelPlan.Computations); // device data array memory allocation\r\n                             ^^^^^^^^^^^^^^^^^^\r\n                             modifying the copy, not the original\r\n\r\nThis is fairly easily fixable by passing the `gpuPlan` struct **by reference** rather than by value.",
+        "score": 29.8125,
+        "rank": 20,
+        "document_id": "53fc2a25-6dcf-4808-b602-71e3f487e66c",
+        "passage_id": 12534
+    },
+    {
+        "content": "No it won&#39;t. GPU contexts are tied to threads that created them. If you try running `cublasSetMatrix` or `cudaMemcpy` in another thread without doing anything else, it will make another context. Memory allocations are not portable between contexts, effectively every context has its own virtual address space. The result will be that you wind up with two GPU contexts, and the copy will fail.\r\n\r\nThe requirement for pinned memory comes from the CUDA driver. For overlapping copying and execution, the host memory involved in the copying must be in a physical address range that the GPU can access by DMA over the PCI-e bus. That is why pinning is required, otherwise the host memory could be in swap space or other virtual memory, and the DMA transaction would fail.\r\n\r\nIf you are worried about the amount of pinned host memory required for large problems, try using one or two smaller pinned buffers and executing multiple transfers, using the pinned memory as staging buffers. The performance won&#39;t be quite as good as using a single large pinned buffer and one big transfer, but you can still achieve useful kernel/copy overlap and hide a lot of PCI-e latency in the process.",
+        "score": 29.75,
+        "rank": 21,
+        "document_id": "e0e6a2f0-b081-4b06-a8eb-1b8f1d553d12",
+        "passage_id": 28620
+    },
+    {
+        "content": "Fixed it-- seems like the error was caused by GPU memory conflicts between TensorFlow and TensorRT. Because I&#39;m using both simultaneously in the same program, I assume there were conflicts between how they both handled GPU allocation. The solution was to enter a TensorFlow session with `allow_growth=True`, before allocating buffers and creating an asynchronous stream using Pycuda and TensorRT.\r\n\r\n1. Enter a TensorFlow session (must happen prior to step 2):\r\n\r\n```python\r\ntf.Session(config=tf.ConfigProto(gpu_options=tf.GPUOptions(allow_growth=True))).__enter__()\r\n```\r\n\r\n2. Allocate buffers (after step 1, from https://docs.nvidia.com/deeplearning/sdk/tensorrt-developer-guide/index.html#serial_model_python):\r\n```python\r\nh_input = cuda.pagelocked_empty(trt.volume(engine.get_binding_shape(0)), dtype=np.float32)\r\nh_output = cuda.pagelocked_empty(trt.volume(engine.get_binding_shape(1)), dtype=np.float32)\r\n# Allocate device memory for inputs and outputs.\r\nd_input = cuda.mem_alloc(h_input.nbytes)\r\nd_output = cuda.mem_alloc(h_output.nbytes)\r\n# Create a stream in which to copy inputs/outputs and run inference.",
+        "score": 29.75,
+        "rank": 22,
+        "document_id": "4d0ca896-227c-4464-b92b-356641b52b08",
+        "passage_id": 10844
+    },
+    {
+        "content": "In your static shared memory allocation code you had three issues:\r\n\r\n 1. The size of the statically allocated shared memory should comply with the block size, not with the size of the input array,\r\n 2. You should use local thread index for indexing shared memory, instead of the global one;\r\n 3. You had no array out of bounds checking.\r\n\r\nThe dynamic shared memory allocation code had the same issues #2 and #3 as above, plus the fact that you were indexing global memory with local thread index, instead of global. You can use the third argument to specify the size of the shared memory to be allocated. In particular, you should allocate an amount of `256 int`s, i.e., related to the block size, similarly to the static shared memory allocation case.\r\n\r\nHere is the complete working code:\r\n\r\n    /********************/\r\n    /* CUDA ERROR CHECK */\r\n    /********************/\r\n    #define gpuErrchk(ans) { gpuAssert((ans), __FILE__, __LINE__); }\r\n    inline void gpuAssert(cudaError_t code, char *file, int line, bool abort=true)\r\n    {\r\n        if (code != cudaSuccess) \r\n        {\r\n            fprintf(stderr,&quot;GPUassert: %s %s %d\\n&quot;",
+        "score": 29.65625,
+        "rank": 23,
+        "document_id": "823641c9-87ed-4ee0-9e49-549638d08a51",
+        "passage_id": 2437
+    },
+    {
+        "content": "NVLink integration isn&#39;t there yet.\r\n\r\nAs far as the error, TensorFlow tries to allocate close to GPU max memory so it sounds like some of your GPU memory is already been allocated to something else and the allocation failed. \r\n\r\nYou can do something like below to avoid allocating so much memory\r\n\r\n    config = tf.ConfigProto(log_device_placement=True)\r\n    config.gpu_options.per_process_gpu_memory_fraction=0.3 # don&#39;t hog all vRAM\r\n    config.operation_timeout_in_ms=15000   # terminate on long hangs\r\n    sess = tf.InteractiveSession(&quot;&quot;, config=config)",
+        "score": 29.65625,
+        "rank": 24,
+        "document_id": "a1a55e11-f004-4b95-a817-780ce3d166c2",
+        "passage_id": 17429
+    },
+    {
+        "content": "There are 3 types of memory allocations that are accessible to GPU device code:\r\n\r\n- ordinary (e.g. `cudaMalloc`) \r\n- pinned (e.g. `cudaHostAlloc`) \r\n- managed (e.g. `cudaMallocManaged`)\r\n\r\nNone of these will make use of or have any bearing on traditional linux swap space (or the equivalent on windows).  The first one is limited by available device memory, and the second two are limited by available host memory (or some other lower limit).  All host-based allocations accessible to GPU device code must be resident in non-swappable memory using &quot;swappable&quot; here to refer to the ordinary host virtual memory management system that may swap pages out to disk.\r\n\r\nThe only space that benefits from this form of swapping is host pageable memory allocations, and these are not directly accessible from CUDA device code.",
+        "score": 29.640625,
+        "rank": 25,
+        "document_id": "a498f23f-e7c5-4e84-b1cf-d6d72a7729b5",
+        "passage_id": 3955
+    },
+    {
+        "content": "&gt; Does cuda somehow block and transfer all allocated managed memory to\r\n&gt; the GPU when a kernel is launched?\r\n\r\nYes, provided your device is of compute capability less than 6.0.\r\n\r\nOn these devices managed memory works by copying all managed memory to the GPU before kernel launch, and copying all managed memory back to the host on synchronization. During that timespan, accessing managed memory from the host [will lead to a segmentation fault](http://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html#um-gpu-exclusive).\r\n\r\nYou can be more specific about which memory to copy for a given kernel by [attaching it to a stream using `cudaStreamAttachMemAsync()`](http://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html#um-managing-data) and launching the kernel into that stream.",
+        "score": 29.609375,
+        "rank": 26,
+        "document_id": "3126b34c-a162-45c0-b9c7-a30117b2d082",
+        "passage_id": 18060
+    },
+    {
+        "content": "We have seen three different codes in this question in the first 24 hours of its existence. This answer addresses the final evolution.\r\n\r\nThe underlying problem you are having is with this type of operation:\r\n\r\n    cudaMalloc(&amp;p_gpu, sizeof(Pass));\r\n    cudaMalloc(&amp;p_gpu -&gt; pass, 5 * sizeof(int));\r\n\r\nThe second `cudaMalloc` is illegal. This is attempting to dereference and assign a value to a pointer in device memory from the host. A segfault will result.\r\n\r\nThe correct process to allocate a structure on the device which includes pointers to other memory allocations is as follows:\r\n\r\n 1. Allocate memory for each of the arrays or objects which the structure pointers will point to on the device\r\n 2. Assign those allocations to a copy of the structure in *host memory*\r\n 3.",
+        "score": 29.5625,
+        "rank": 27,
+        "document_id": "02186bfe-bd49-45dd-ba51-fe892c87ff42",
+        "passage_id": 22274
+    },
+    {
+        "content": "Pinned memory is allocated with a call to *cudaMallocHost*.\r\nthis method doesn&#39;t allocate global GPU memory, the memory is allocated on the host side, but with some properties to allow faster copy through PCI-Express.\r\n\r\nMoreover, cudaMallocHost needs contiguous memory, maybe your memory is fragmented into small sparse allocations and cudaMalloc fails.",
+        "score": 29.546875,
+        "rank": 28,
+        "document_id": "1852e0b2-3a81-4f49-afd0-3d2cc71bbe71",
+        "passage_id": 18391
+    },
+    {
+        "content": "I tested up to 1000000, it seemed to work fine.  Eventually, for a large enough problem size, you will run out of memory on your GPU.  You don&#39;t indicate what GPU you have.\r\n\r\nI&#39;ve removed the goto statements, because I am working on linux (apparently you&#39;ve switched back to windows).  I would suggest you come up with a different error handling process than using goto, if for no other reason than that it causes difficulty with thrust constructs.\r\n\r\nAlso note that in-kernel `new` or `malloc` is kind of &quot;slow&quot;.  You could probably speed this up for larger sizes substantially by doing your necessary allocation up-front, with a single `cudaMalloc` call of the appropriate size.  Unfortunately this is complicated by your use of the double-pointer array `dev_sorted_Ips`.  I would suggest that you instead flatten that to a single pointer array, allocate the necessary size once via  `cudaMalloc`, and do the necessary array indexing in your kernel to make it work.  If you profile this code, you&#39;ll discover that the vast majority of execution time for longer cases (e.g.",
+        "score": 29.5,
+        "rank": 29,
+        "document_id": "4414c116-7544-45da-ab22-1bd419c5e9e1",
+        "passage_id": 19378
+    },
+    {
+        "content": "&gt; Will PyTorch, when allocating later GPU memory for some tensors, accidentally overwrite the memory space that is being used for our first CUDA array?\r\n\r\nNo.\r\n\r\n&gt; are they automatically aware of memory regions used by other CUDA programs ...\r\n\r\nThey are not &quot;aware&quot;, but each process gets its own separate context ... \r\n\r\n\r\n&gt; ... or does each one of them see the entire GPU memory as his own?\r\n\r\n.... and contexts have their own address spaces and isolation. So neither, but there is no risk of memory corruption.\r\n\r\n&gt; If it&#39;s the latter, is there a way to make them aware of allocations by other CUDA programs?\r\n\r\nIf by &quot;aware&quot; you mean &quot;safe&quot;, then that happens automatically. If by &quot;aware&quot; you imply some sort of interoperability, then that is possible on some platforms, but it is not automatic.\r\n\r\n&gt;  ... assume that all allocations are done by the same process.\r\n\r\nThat is a different situation. In general, the same process implies a shared context, and shared contexts share a memory space, but all the normal address space protection rules and facilities apply, so there is not a risk of loss of safety.",
+        "score": 29.4375,
+        "rank": 30,
+        "document_id": "2cfe0739-89bb-47cc-8ae5-5199c726d6a4",
+        "passage_id": 10698
+    },
+    {
+        "content": "The memory capacity error was to create two matrix / arrays into device. This part:\r\n\r\n    // GPU Memory allocation\r\n    double *d_X1, *d_X2;  \r\n    cudaMalloc((void **)&amp;d_X1, NX*NY*sizeof(double));   \r\n    cudaMalloc((void **)&amp;d_X2, NX*NY*sizeof(double));\r\n\r\nThe solution: \r\n\r\n\t// GPU Memory allocation\r\n\tdouble *d_X[2];  \r\n\tcudaMalloc((void **)&amp;d_X[0], NX*NY*sizeof(double) );\r\n\tcudaMalloc((void **)&amp;d_X[1], NX*NY*sizeof(double) );\r\n\r\nComplete code:\r\n\r\n\t\t#include &lt;stdio.h&gt;\r\n\t\t#include &lt;stdlib.h&gt;\r\n\t\t#include &lt;math.h&gt;\r\n\t\t#include &lt;string.h&gt;\r\n\t\t#include &lt;sys/time.h&gt;\r\n\t\t#include &lt;getopt.h&gt;\r\n\r\n\t\t#include &lt;cuda.h&gt;\r\n\r\n\t\t#define MAXSTEP     1000\r\n\t\t#define CX          0.001\r\n\t\t#define CY          0.",
+        "score": 29.4375,
+        "rank": 31,
+        "document_id": "1bb90a50-6322-46a7-accb-4d3380aa0f72",
+        "passage_id": 19523
+    },
+    {
+        "content": "&gt; So is cudaMallocManaged() creating synchronized buffers in both RAM and VRAM for convenience of the developer?\r\n\r\nYes, more or less.  The &quot;synchronization&quot; is referred to in the managed memory model as *migration* of data.  Virtual address carveouts are made for all visible processors, and the data is migrated (i.e. moved to, and provided a physical allocation for) the processor that attempts to access it.\r\n\r\n&gt;If so, wouldn&#39;t doing so come with an unnecessary cost in cases where we might never need to touch that buffer with the CPU?\r\n\r\nIf you never need to touch the buffer on the CPU, then what will happen is that the VA carveout will be made in the CPU VA space, but no physical allocation will be made for it.  When the GPU attempts to actually access the data, it will cause the allocation to &quot;appear&quot; and use up GPU memory.  Although there are &quot;costs&quot; to be sure, there is no usage of CPU (physical) memory in this case.",
+        "score": 29.421875,
+        "rank": 32,
+        "document_id": "24f27008-be2f-48a3-b8fa-47150d87e9dd",
+        "passage_id": 9174
+    },
+    {
+        "content": "1. There is considerable overhead to have a fully functional CUDA environment on a GPU.  This may exceed 100MB of space needed for CUDA overhead, not including your data\r\n2. CUDA has a lazy initialization system.\r\n\r\n&gt;During the first prefetch just after cudaMallocManaged() the free memory decreases a lot more than I am allocating. Why?\r\n\r\nBecause CUDA has a lazy initialization system.  This means that it may build up more and more of the necessary environment to run your kernel code, along with the memory overhead involved with that, as you continue to make CUDA runtime API calls in your program.  At the point of kernel launch, most or all of this initialization will be complete, excepting things associated with new resource usage.  So the reduction in free memory is due to your allocation plus the additional overhead for CUDA itself.\r\n\r\n\r\n&gt;The free memory before and after prefetching to the CPU is the same. Also, when I access and modify the array on the CPU the free memory on GPU before and after this still remains the same. I don&#39;t understand why this is happening. \r\n\r\nThe amount of memory we are talking about is on the order of 100MB.",
+        "score": 29.3125,
+        "rank": 33,
+        "document_id": "cfdeca23-87cf-433c-a4e9-e80eb4d8b9f4",
+        "passage_id": 5949
+    },
+    {
+        "content": "In general, I don&#39;t think accessing beyond the end of an array on the host (in ordinary C/C++ code) will immediately trigger a fault (e.g. seg fault, etc.)  \r\n\r\nOn the GPU, there is no hardware mechanism that tracks all allocations down to the byte level.  There is a general hardware mechanism that can track allocated pages of memory, and discover if an access is outside of a valid page, but the granularity is not down to the byte or element level (and I don&#39;t think it is that way on the host CPU either).  \r\n\r\nArchitecturally, newer GPUs have better hw access tracking mechanisms.  Also, cuda-memcheck can do tighter tracking of accesses, at the expense of considerable performance reduction, because it is doing partly SW based tracking and partly HW based tracking, perhaps somewhat analogous to a tool like valgrind on the host. \r\n\r\nSo although you seem to have an expectation that any deviation from allocated space will immediately trigger a fault, the GPU HW itself does not support that (and AFAIK CPU HW does not either, at least in modern demand-paged virtual memory OS&#39;s).   With software intervention (i.e.",
+        "score": 29.3125,
+        "rank": 34,
+        "document_id": "88686f0a-2655-4ad6-ba98-56fb025e2e36",
+        "passage_id": 23572
+    },
+    {
+        "content": "TensorFlow sessions allocate ~all GPU memory on startup, so they can bypass the cuda allocator.\r\n\r\nDo not run more than one cuda-using library in the same process or weird things (like this stream executor error) will happen.",
+        "score": 29.296875,
+        "rank": 35,
+        "document_id": "7293b13a-46ee-4261-a3e6-a3f612a63116",
+        "passage_id": 296077
+    },
+    {
+        "content": "Generally, you cannot make the GPU access memory that Vulkan did not allocate itself for the GPU. The exception to this are external allocations made by other APIs that themselves are allocating GPU-accessible memory.\r\n\r\nJust taking a random stack or global pointer and shoving it at Vulkan isn&#39;t going to work.\r\n\r\n&gt;  I want something like `cudaHostGetDevicePointer` in CUDA\r\n\r\nWhat you&#39;re asking for here is not what that function does. [That function][1] takes a CPU pointer to CPU-accessible memory *which CUDA allocated for you* and which you previously mapped into a CPU address range. The pointer you give it must be within a mapped region of GPU memory.\r\n\r\nYou can&#39;t just shove a stack/global variable at it and expect it to work. The variable would have to be within the mapped allocation, and a global or stack variable can&#39;t be within such an allocation.\r\n\r\nVulkan doesn&#39;t have a way to reverse-engineer a pointer into a mapped range of device memory back to the `VkDeviceMemory` object it was mapped from.",
+        "score": 29.21875,
+        "rank": 36,
+        "document_id": "12e2a414-7b8e-413f-acc9-25bad998c8ea",
+        "passage_id": 177161
+    },
+    {
+        "content": "The `Segmentation Fault` generally comes from the unexpected memory access on native C.\r\n\r\nIt can be caused from Graphic Driver, Pytorch version, CUDA and cuDNN version compatibility, etc...\r\n\r\nIf all the compatibility are checked, try to investigate your GPU memory allocation, like memory leaking or OOM. Most of `Segmentation Fault` is caused from GPU OOM in my case as Pytorch sometimes cannot catch the out of memory.",
+        "score": 29.21875,
+        "rank": 37,
+        "document_id": "5645184d-2d4b-4d04-a5c2-e847b378179e",
+        "passage_id": 221
+    },
+    {
+        "content": "What follows is likely to be embarrassingly obvious to most developers working with CUDA, but may be of value to others - like myself - who are new to the technology.\r\n\r\nThe GPU code is ten times slower than the CPU equivalent because the GPU code exhibits a perfect storm of performance-wrecking characteristics.\r\n\r\nThe GPU code spends most of its time allocating memory on the GPU, copying data to the device, performing a very, very simple calculation (that is supremely fast irrespective of the type of processor it&#39;s running on) and then copying data back from the device to the host.\r\n\r\nAs noted in the comments, if an upper bound exists on the size of the data structures being processed, then a buffer on the GPU can be allocated exactly once and reused.  In the code above, this takes the GPU to CPU runtime down from 10:1 to 4:1.\r\n\r\nThe remaining performance disparity is down to the fact that the CPU is able to perform the required calculations, in serial, millions of times in a very short time span due to its simplicity.  In the code above, the calculation involves reading a value from an array, some multiplication, and finally an assignment\r\nto an array element.",
+        "score": 29.21875,
+        "rank": 38,
+        "document_id": "36c6ba75-fc48-4711-bfb0-05edfc7f6c9b",
+        "passage_id": 19761
+    },
+    {
+        "content": "You&#39;re freeing GPU memory in every iteration so that will never be full. Operating System uses your hardisk as Virtual Memory when the RAM gets full so the code will slow down but it will keep on allocating memory on Host side. Maybe CUDA keeps the pointer to the Device memory on Host memory which might be causing problem when RAM fills up.\r\n\r\nAn easy way to check this is to put a counter and see at which iteration the error comes. Then first run the program allocating memory on GPU alone and later on CPU alone, if the counter increases for both the cases then my assumption is correct.",
+        "score": 29.171875,
+        "rank": 39,
+        "document_id": "dc1a5a1a-8dc2-40df-a625-a0bd36376d11",
+        "passage_id": 29242
+    },
+    {
+        "content": "Thrust sorting operations [require significant extra temporary storage](https://stackoverflow.com/questions/6605498/thrust-sort-by-key-slow-due-to-memory-allocation).\r\n\r\n`nvidia-smi` is effectively sampling memory usage at various times, and the amount of memory in use at the sampling point may not be reflective of the max memory used (or required) by your application.  As you&#39;ve discovered [cudaMemGetInfo](http://docs.nvidia.com/cuda/cuda-runtime-api/group__CUDART__MEMORY.html#group__CUDART__MEMORY_1gd5d6772f4b2f3355078ecd6059e6aa74) may be more useful.\r\n\r\nI&#39;ve generally found thrust to be able to sort arrays up to about 40% of the memory on your GPU.  However there is no specified number and you may need to determine it by trial and error.\r\n\r\nDon&#39;t forget that CUDA uses some overhead memory, and if your GPU is hosting a display, that will consume additional memory as well.",
+        "score": 29.171875,
+        "rank": 40,
+        "document_id": "68bb6425-a392-43c3-8d4d-3f502aa526c0",
+        "passage_id": 25335
+    },
+    {
+        "content": "Right after the creation of `d`:\r\n```\r\n|    0   N/A  N/A      1121      G   /usr/lib/xorg/Xorg                  4MiB |\r\n|    0   N/A  N/A     14701      C   python                           5067MiB |\r\n```\r\nNo further memory allocation, and the OOM error is thrown:\r\n```\r\nTraceback (most recent call last):\r\n  File &quot;&lt;stdin&gt;&quot;, line 1, in &lt;module&gt;\r\nRuntimeError: CUDA out of memory. Tried to allocate 1.86 GiB (GPU 0; 5.80 GiB total capacity; 3.73 GiB already allocated; 858.81 MiB free; 3.73 GiB reserved in total by PyTorch)\r\n```\r\n\r\nObviously:\r\n- The &quot;already allocated&quot; part is included in the &quot;reserved in total by PyTorch&quot; part. You can&#39;t sum them up, otherwise the sum exceeds the total available memory.",
+        "score": 29.15625,
+        "rank": 41,
+        "document_id": "9dac80ec-3048-4940-aec0-e6a043de5490",
+        "passage_id": 6043
+    },
+    {
+        "content": "`malloc()` returns an invalid pointer of NULL when it is unable to service a memory request.  In most cases the C memory allocation routines manage a list or heap of memory available memory with calls to the operating system to allocate additional chunks of memory when a `malloc()` call is made and there is not a block on the list or heap to satisfy the request.\r\n\r\nSo the first case of `malloc()` failing is when a memory request can not be satisfied because (1) there is not a usable block of memory on the list or heap of the C runtime and (2) when the C runtime memory management requested more memory from the operating system, the request was refused.\r\n\r\nHere is an article about [Pointer Allocation Strategies][1].\r\n\r\nThis forum article gives an example of [malloc failure due to memory fragmentation][2].\r\n\r\nAnother reason why `malloc()` might fail is because the memory management data structures have become corrupted probably due to a buffer overflow in which a memory area that was allocated was used for an object larger than the size of the memory allocated.  Different versions of `malloc()` can use different strategies for memory management and determining how much memory to provide when `malloc()` is called.",
+        "score": 29.140625,
+        "rank": 42,
+        "document_id": "9176a47c-db18-4d9d-ad4b-56b544130387",
+        "passage_id": 230720
+    },
+    {
+        "content": "You appear to be on windows, which is a [pre-pascal regime for managed memory](https://stackoverflow.com/questions/54307707/how-to-access-managed-memory-simultaneously-by-cpu-and-gpu-in-compute-capability/54313816#54313816), regardless of what GPU you are running on.\r\n\r\nIn this modality, as soon as you launch a kernel, all managed allocations become inaccessible to host code.  So `big` is a location in host memory, and therefore retrieving the pointer value of `big` is always legal in host code.  But what `big` points to in your case is managed memory.  To get that value, it&#39;s necessary to dereference `big` and retrieve a value offset from that pointer.  That dereference operation results in accessing a managed allocation, which is illegal in host code (in a pre-pascal regime, after a kernel launch, before any `cudaDeviceSynchronize()`).  The kernel launch process involves host code retrieval of the kernel arguments.\r\n\r\nTherefore you are going to hit a seg fault.  \r\n\r\nAnd this doesn&#39;t have much to do with the &quot;same pointer&quot;.",
+        "score": 29.109375,
+        "rank": 43,
+        "document_id": "4180de1e-c1df-47e8-a448-ec6c21cd3d57",
+        "passage_id": 1919
+    },
+    {
+        "content": "This kind of errors within a kernel is tied to a memory access which is not only based upon the thread identifier. \r\n\r\nConsidering that every memory area you use has been **correctly allocated for the GPU**, access based **only** upon something like **threadIdx.x** shouldn&#39;t cause any problem. Thus:\r\n\r\n - either you have a **wrong index calculation** (it is frequent with expressions like `data[blockDim.y * blockDim.x * threadIdx.z + blockDim.x * threadIdx.y + threadIdx.x]` for instance)\r\n - or **you use another variable in your index calculation** which make it exceed your array bounds (for example `data[threadIdx.x + offset]`)\r\n\r\n\r\n---- *edit (following comments)* ----  \r\nSee @Cicada&#39;s answer for the complement on cuobjdump for device &gt; 2.x",
+        "score": 29.109375,
+        "rank": 44,
+        "document_id": "0d97df63-331a-4242-9a73-b6865aa5d9d4",
+        "passage_id": 29612
+    },
+    {
+        "content": "Found the answer and resolved the problem. Depending on my input vertices counts, a CreateBuffer was failing or a malloc/HeapAlloc was failing. \r\n\r\nI&#39;m still not 100% certain if the GPU should be paging memory to main system memory after a certain point, or if this is unavoidable since the scene data must remain on GPU memory during each frame&#39;s computations (depth, lighting, etc), but I think A) paging would only be possible if I manually dealloc&#39;ed/realloc&#39;ed the buffers (would be slow anyway) and B) the size of alloc&#39;ed buffers (vertices,indices..) is the problem, not the per-frame computations on them.\r\n\r\nI tried switching to other buffer usages (USAGE_DYNAMIC), but the allocation failures still occurred at the same levels.\r\n\r\nI made a quick alteration to buffer sizes (the buffers that need padding) and am now up to at least 20 million vertices. My GPU is pretty old so that&#39;s not bad, though some renderers can go well beyond this, I&#39;m aware.\r\n\r\nGoing to focus on workarounds and reducing detail where and when possible.",
+        "score": 29.078125,
+        "rank": 45,
+        "document_id": "18afcc5b-3285-403d-b85b-30b74d4ca445",
+        "passage_id": 300494
+    },
+    {
+        "content": "The real problem is in this code:\r\n\r\n    for (int i=0; i&lt;3; i++){\r\n         matrixd += 3;\r\n    }\r\n\r\n    // Free device memory\r\n    cudaFree(matrixd);   \r\n\r\nYou never allocated `matrixd+9`, so passing it to `cudaFree` is illegal and produces an invalid device pointer error. This error is being propagated to the next time you perform error checking, which is after the subsequent call to `cudaMalloc`. If you read the documentation for any of these API calls you will note that there is a warning that they can return errors from prior GPU operations. This is what is happening in this case.\r\n\r\nError checking in the CUDA runtime API can be subtle to do correctly. There is a robust, ready recipe for how to do it [here][1]. I suggest you use it.\r\n\r\n\r\n  [1]: https://stackoverflow.com/q/14038589/681865",
+        "score": 29.0625,
+        "rank": 46,
+        "document_id": "880ddedb-b7ef-4e39-81b9-fe8b22ea89b4",
+        "passage_id": 18712
+    },
+    {
+        "content": "The problem is that (pre CUDA 4.0) CUDA contexts are tied to the thread in which they were created. When you are using two threads, you have two contexts. The context that the main thread is allocating and reading from, and the context that the thread which runs the kernel inside are not the same. Memory allocations are not portable between contexts. They are effectively separate memory spaces inside the same GPU. \r\n\r\nIf you want to use threads in this way, you either need to refactor things so that one thread only &quot;talks&quot; to the GPU, and communicates with the parent via CPU memory, or use the CUDA context migration API, which allows a context to be moved from one thread to another (via cuCtxPushCurrent and cuCtxPopCurrent). Be aware that context migration isn&#39;t free, and there is latency involved, so if you plan to migrating contexts around frequently, you might find it more efficient to change to a different design which preserves context-thread affinity.",
+        "score": 29.03125,
+        "rank": 47,
+        "document_id": "076aa4ba-7ec8-4f4c-83a6-670c1342b313",
+        "passage_id": 29657
+    },
+    {
+        "content": "It appears you are using multiple processes targeting the same GPU. In each process, JAX will attempt to reserve 75% of the available GPU memory (see [GPU memory allocation](https://jax.readthedocs.io/en/latest/gpu_memory_allocation.html#gpu-memory-allocation)), so attempting this with two or more processes will exhaust the available memory.\r\n\r\nYou could fix this by turning off pre-allocation as mentioned in that doc, by setting the environment variables `XLA_PYTHON_CLIENT_PREALLOCATE=false` or `XLA_PYTHON_CLIENT_MEM_FRACTION=.XX` (with `.XX` set to `.08` or something suitable), but I suspect the end result will be less efficient than if you had just run your full program from a single JAX process: multiple host processes targeting a single GPU device concurrently will just compete with each other for resources and lead to suboptimal results.",
+        "score": 29.03125,
+        "rank": 48,
+        "document_id": "2c7a8aca-48aa-43a1-92d1-a3eb034807dd",
+        "passage_id": 117143
+    },
+    {
+        "content": "data is allocated on GPU like d_data. So cudamemcpy with cudaMemcpyDeviceToHost will crash.\r\n\r\nTo avoid this kind of error, you can use cudaMallocManaged. This allows you to read/write to your buffer from the host and the device without having to worry about memory management. No more need of cudamemcpy!\r\n\r\nRead more here : https://developer.nvidia.com/blog/unified-memory-cuda-beginners/",
+        "score": 29.0,
+        "rank": 49,
+        "document_id": "42d8c2fb-da95-459a-ba1c-f23f4884e09c",
+        "passage_id": 2866
+    },
+    {
+        "content": "The underlying problem is that the only time you instantiate your `photon` class anywhere is on the host, and you are copying that host instance directly to the device. That means that the device code is attempting to de-reference a host pointer on the GPU, which is illegal and produces the runtime error you are seeing. The CUDA APIs don&#39;t do any sort of magic deep copying, so you have to manage this yourself somehow.\r\n\r\nThe obvious solution is to redesign the `photon` class so that `vec` is stored by value rather than reference. Then the whole problem goes away (and the performance will be a lot better on the GPU because you remove a level of pointer indirection during memory access).\r\n\r\nIf you are fixated on having a pointer to `vec`, redesign the constructor so that it takes a pointer from a memory pool, and allocate a device pool for construction. If you pass a device pointer to the constructor, the resulting instance will have a pointer to valid device memory.",
+        "score": 28.984375,
+        "rank": 50,
+        "document_id": "ccfbc287-f34a-420d-8d2a-7bcda63f9aa7",
+        "passage_id": 26235
+    }
+]
