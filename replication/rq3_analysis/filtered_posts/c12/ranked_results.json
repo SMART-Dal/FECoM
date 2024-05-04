@@ -1,0 +1,352 @@
+[
+    {
+        "content": "The problem is indeed sensitive and hard to debug. I suspect it has to do with the underlying hardware on which the docker container is deployed, not with the actual custom Docker container and its corresponding dependencies.\r\n\r\nSince you have a Tesla K80, I suspect NC series video cards (upon which the environments are deployed).\r\n\r\nAs of writing this comment (10th of February 2023), the following observation is valid (https://learn.microsoft.com/en-us/azure/machine-learning/resource-curated-environments):\r\n\r\n&gt; Note\r\n&gt; \r\n&gt; Currently, due to underlying cuda and cluster incompatibilities, on NC\r\n&gt; series only AzureML-ACPT-pytorch-1.11-py38-cuda11.3-gpu with cuda 11.3\r\n&gt; can be used.\r\n\r\nTherefore, in my opinion, this can be traced back to the supported versions of CUDA + PyTorch and Python.",
+        "score": 29.625,
+        "rank": 1,
+        "document_id": "f3d7b020-8604-4138-aa5a-334bfaa7e138",
+        "passage_id": 3314
+    },
+    {
+        "content": "Docker containers with --gpus tag runs fine on wsl without any issues after downgrading docker desktop version to v4.17.0 ( Feb 2023 update ) from v4.17.1 ( march 2023 update ).",
+        "score": 29.46875,
+        "rank": 2,
+        "document_id": "2d676c3c-22fe-4f81-82d1-44198dd0095d",
+        "passage_id": 2867
+    },
+    {
+        "content": "So the main problem was with the Dockerfile indeed.\r\n\r\nThe GPU-enabled azure container instance [documentation][1] specifies a certain base image to be used\r\n\r\n\r\n  [1]: https://learn.microsoft.com/en-us/azure/container-instances/container-instances-gpu\r\n\r\nI was able to combine what I already had in the Dockerfile along with this base image to build my final image as such:\r\n```\r\nFROM python:3.7.8-slim as build\r\nCOPY requirements/common.txt requirements/common.txt\r\nRUN apt-get update &amp;&amp; apt-get install -y build-essential\r\nRUN apt-get install -y cmake\r\nRUN pip install -U pip &amp;&amp; pip install -r requirements/common.txt\r\n\r\nCOPY ./api /app/api\r\nCOPY ./bin /app/bin\r\nCOPY wsgi.py /app/wsgi.py\r\nCOPY ./models /app/models\r\n\r\nFROM nvidia/cuda:9.0-base-ubuntu16.04\r\nCOPY --from=build / /\r\nCOPY --from=build /app/wsgi.py /wsgi.py\r\n\r\nWORKDIR /app\r\nEXPOSE 8080\r\nENTRYPOINT [&quot;bash&quot; &quot;/app/bin/run.sh&quot;",
+        "score": 29.453125,
+        "rank": 3,
+        "document_id": "ea4e1a89-2fc0-4d5f-be05-c15efe66088b",
+        "passage_id": 6337
+    },
+    {
+        "content": "Another hassle free option to set the right dependencies for Tensorflow v2.9 would be to simply use a Docker container provided by the developers, such as one [here](https://hub.docker.com/layers/tensorflow/tensorflow/tensorflow/latest-devel-gpu/images/sha256-aedefcc29671b7ffa709f11f2a9b148935763a9d678588bdff0dd78bda685a01?context=explore). The container should automatically install the right dependencies, and you should be able to spawn Jupyter Notebook / Jupyter Lab from the Docker container without running into any TF dependency issues as the Docker container would be pre-configured.",
+        "score": 29.0,
+        "rank": 4,
+        "document_id": "45d6358d-90e2-4d35-892c-e1ab1b794ddf",
+        "passage_id": 4757
+    },
+    {
+        "content": "&gt;Is this exactly the issue nvidia-docker2 is addressing ?\r\n\r\nThe primary issue has to do with the GPU driver.  The GPU driver has components that run in kernel space and other components that run in user space.  The implication of this is that for successful usage in docker, these components (user-space: inside the container, kernel space: outside the container) must match.\r\n\r\nThat is a key function for the NVIDIA container toolkit/container runtime that augments docker:  To make whatever is inside the container pertaining to the GPU driver match whatever is outside the container.\r\n\r\nOther aspects of the CUDA toolkit (runtime libraries, `nvcc`, etc.) are separate, and regardless of whether you use the NVIDIA container toolkit or not, the code inside the container will need whatever it uses of that (e.g. runtime libraries, `nvcc`, etc.) to be present inside the container.  The stuff outside the container for these items is irrelevant (unless, of course, you are providing it via a mount from outside to inside).\r\n\r\nApart from all that, CUDA itself has [a dependency](https://docs.nvidia.com/deploy/cuda-compatibility/index.html) between the CUDA version of the toolkit, and the driver.",
+        "score": 28.671875,
+        "rank": 5,
+        "document_id": "bdfbeaba-0a30-4a42-b687-efc119112876",
+        "passage_id": 1048
+    },
+    {
+        "content": "I see that your Docker image uses Ubuntu 22.04 LTS as its base. Recently base Java images were rebuilt on top of this LTS version, which caused a lot of issues on older Docker runtimes. Most likely this is what you&#39;re experiencing. It has nothing to do with memory, but rather with Docker incompatibility with a newer Linux version used as a base image.\r\n\r\nYour operational server has Docker server version 20.10.10, while the failing server has version 20.10.09. The incompatibility issue was fixed exactly in Docker 20.10.10. Some more technical details on the incompatibility issue are available [here](https://github.com/adoptium/containers/issues/215#issuecomment-1142046045).\r\n\r\nThe solution would be to upgrade the failing server to at least Docker 20.10.10.",
+        "score": 28.28125,
+        "rank": 6,
+        "document_id": "ec96f7a5-5a05-41c0-8417-6e8664d96c0e",
+        "passage_id": 132347
+    },
+    {
+        "content": "The problem is library incompatibility. This docker container have solved my problem:\r\n\r\nhttps://github.com/Kaggle/docker-python/commit/a6ba32e0bb017a30e079cf8bccab613cd4243a5f",
+        "score": 28.15625,
+        "rank": 7,
+        "document_id": "87905890-d99c-46db-8455-b096f931f1fd",
+        "passage_id": 5902
+    },
+    {
+        "content": "3. These `processes` then perform their actions, and return the response to the `application` which return it to the user.\r\n\r\nNow let&#39;s discuss your current approach(es) that you&#39;ve mentioned above and see what are the challenges that you&#39;ve described.\r\n\r\n### Scaling Design 1 - Simply Scaling Docker Containers\r\nThis means simply creating more containers for your applications. And we know that it doesn&#39;t satisfy the requirements because scaling the application to multiple replicas starts all the `processes` and makes them `active`. This is not what you want, so there is no relationship between these replicas in different containers (since the sub-processes are tied to `application` running in each container, not the overall system). This is obviously because `application`&#39;s in different containers are unaware of each-other (and more importantly, the sub-processes each are spawning). \r\n\r\nSo, this fails to meet our requirement (3), (4), (5).",
+        "score": 28.109375,
+        "rank": 8,
+        "document_id": "fb76e350-e669-49a0-8c1a-2357a96621d5",
+        "passage_id": 39579
+    },
+    {
+        "content": "This is most likely just an installation issue.\r\n\r\nThe error you are getting\r\n\r\n```\r\nThere&#39;s no data transfer registered for copying tensors from DeviceType:1 to DeviceType:0\r\n```\r\nmeans that `ort` is trying to copy data from the GPU (`DeviceType:1`, the torch tensor you explicitly initialized on `cuda:0`) to the CPU (`DeviceType:0`, the `InferenceSession`).\r\n\r\nAs 1) this transfer should be possible and 2) the `InferenceSession` should be on the GPU in the first place, what is probably happening is that your redundant installation of `onnxruntime` *after* `onnxruntime-gpu` in Dockerfile is messing up the dependencies. I.e. your code is using the `onnxruntime` installation which does not have GPU support.\r\n\r\nAdd `print(session.get_providers())` to confirm that your session is defaulting to just `CPUExecutionProvider`, and try rebuilding the container without the unnecessary library installation.",
+        "score": 28.0625,
+        "rank": 9,
+        "document_id": "d2234116-22eb-47d4-a56b-d809df1c7e45",
+        "passage_id": 562
+    },
+    {
+        "content": "I&#39;m also on Pop_OS 20.04 and didn&#39;t install anything other than docker along with dependencies and nvidia-container-toolkit.\r\n\r\nAlso I would highly suggest avoiding the latest tag when creating containers as it might cause you to unknowingly upgrade to a newer image. Go with version numbered images.\r\n\r\nFor example tensorflow/tensorflow:2.3.0-gpu-jupyter.",
+        "score": 27.96875,
+        "rank": 10,
+        "document_id": "4e8d1b64-d2e5-46b9-b99e-f4ddfaf1b7c3",
+        "passage_id": 9649
+    },
+    {
+        "content": "The issue due to multiple reasons,  Did following changes to fix\r\n\r\n - Increased CPU cores (The CPU reaches 100% while performing docker build operation,  Due to this container got exit in between).\r\n- While performing docker build used the &quot;**--memory=16g**&quot; parameter. Refer to [Runtime options with Memory, CPUs, and GPUs for more details][1].\r\n- Application EXE expecting reboot configured &quot;**/noreboot**&quot; in the configuration.\r\n\r\n\r\n  [1]: https://docs.docker.com/config/containers/resource_constraints/",
+        "score": 27.9375,
+        "rank": 11,
+        "document_id": "6b50613b-7508-4ad3-bf08-73d30cc751ef",
+        "passage_id": 203614
+    },
+    {
+        "content": "`nvidia-docker` is a shortcut for `docker --runtime nvidia`. I do hope they merge it one day, but for now it&#39;s a 3rd party runtime. They explain what it is and what it does on their [GitHub page](https://github.com/NVIDIA/nvidia-container-runtime).\r\n\r\n&gt; A modified version of runc adding a custom pre-start hook to all containers.\r\nIf environment variable NVIDIA_VISIBLE_DEVICES is set in the OCI spec, the hook will configure GPU access for the container by leveraging nvidia-container-cli from project libnvidia-container.\r\n\r\nNothing stops you from running images meant for `nvidia-docker` with normal `docker`. They work just fine but if you run something in them that requires the GPU, that will fail.\r\n\r\nI don&#39;t think you can run `nvidia-docker` on a machine without a GPU. It won&#39;t be able to find the CUDA files it&#39;s looking for and will error out.\r\n\r\nTo create an image that can run on both `docker` and `nvidia-docker`, your program inside it needs to be able to know where it&#39;s running.",
+        "score": 27.703125,
+        "rank": 12,
+        "document_id": "427a38c4-0f79-420a-bfad-55af2df1c980",
+        "passage_id": 14341
+    },
+    {
+        "content": "`docker run --rm --gpus all nvidia/cuda nvidia-smi` should NOT return `CUDA Version: N/A` if everything (aka nvidia driver, CUDA toolkit, and nvidia-container-toolkit) is installed correctly on the host machine.\r\n\r\nGiven that `docker run --rm --gpus all nvidia/cuda nvidia-smi` returns correctly. I also had problem with `CUDA Version: N/A` inside of the container, which I had luck in solving:\r\n\r\nPlease see my answer https://stackoverflow.com/a/64422438/2202107 (obviously you need to adjust and install the matching/correct versions of everything)",
+        "score": 27.609375,
+        "rank": 13,
+        "document_id": "4fd09840-fbc9-44b1-bf48-ce437c6036f6",
+        "passage_id": 1350
+    },
+    {
+        "content": "As per the docs [here](https://www.tensorflow.org/install/docker) and [here](https://github.com/NVIDIA/nvidia-docker), you have to add a &quot;gpus&quot; argument when creating a the docker container to have gpu support.\r\n\r\nSo you should start your container something like this. The &quot;--gpus all&quot; makes all the gpus available on the host to be visible to the container.\r\n\r\n```bash\r\ndocker run -it --gpus all -p 8888:8888 tensorflow/tensorflow:latest-gpu-jupyter jupyter notebook --notebook-dir=/tf --ip 0.0.0.0 --no-browser --allow-root --NotebookApp.allow_origin=&#39;https://colab.research.google.com&#39;\r\n```\r\n\r\nAlso you can try running nvidia-smi on the tensorflow image to quickly check if gpu is accessible on the container.\r\n\r\n```bash\r\ndocker run -it --rm --gpus all tensorflow/tensorflow:latest-gpu-jupyter nvidia-smi\r\n```\r\nWould return this in my case.",
+        "score": 27.53125,
+        "rank": 14,
+        "document_id": "4e8d1b64-d2e5-46b9-b99e-f4ddfaf1b7c3",
+        "passage_id": 9646
+    },
+    {
+        "content": "I guess it&#39;s possible, but it will be needed to configure the specific hardware to make it work on the local environment. \r\n\r\nFor Google Cloud Platform,\r\n[the introduction to Deep Learning Containers](https://cloud.google.com/blog/products/ai-machine-learning/introducing-deep-learning-containers-consistent-and-portable-environments),  will you allow to create portable environments.\r\n\r\n&gt; [Deep Learning Containers](https://cloud.google.com/deep-learning-containers/docs) are a set of Docker containers with key data science frameworks, libraries, and tools pre-installed. These containers provide you with performance-optimized, consistent environments that can help you prototype and implement workflows quickly. Learn more.\r\n\r\n\r\n\r\n In addition, please check [Running Instances with GPU accelerators](https://cloud.google.com/container-optimized-os/docs/how-to/run-gpus) \r\n\r\n&gt; Google provides a seamless experience for users to run their GPU workloads within Docker containers on Container-Optimized OS VM instances so that users can benefit from other Container-Optimized OS features such as security and reliability as well.\r\n\r\nTo configure Docker with Virtualbox, please check this [external blog](https://linuxhint.com/setup_docker_machine_virtualbox/).",
+        "score": 27.4375,
+        "rank": 15,
+        "document_id": "f35a5766-1ff1-4d48-aec5-c1f1bdd6968f",
+        "passage_id": 6821
+    },
+    {
+        "content": "My previous solution was deleted I am sorry I am new to stackoverflow\r\n\r\nI got a solution using docker to create an &#39;Image&#39; and then a &#39;container&#39; to run tensorflow 2.4.0 on my gpu. A friend of mine succeded to install it on my linux 20.04 os\r\n\r\nI let his very useful website here if anyone gets the same problem as me, everything you need is indicated : https://dinhanhthi.com/docker/\r\n\r\nAll you need to do is copy/ paste the commands one by one in your terminal:\r\n\r\nFirstly the third paragraph which is &#39;installation&#39;\r\n\r\nThen the sixth to check whether everything has gone right\r\n\r\nThen build an &#39;image&#39; with the nineth and a &#39;container&#39; with the tenth\r\nAn image is kind of like a virtual machine, like when you create a virtual linux distribution from windows.",
+        "score": 27.375,
+        "rank": 16,
+        "document_id": "66333e80-052e-4e6b-9c20-7ecd12be86c8",
+        "passage_id": 6683
+    },
+    {
+        "content": "It is not an abnormal exit. It is an indication that the **Server is ready to receive the Inference Requests.** \r\n\r\nFor clarification, please find the below explanation:\r\n\r\n\r\n\r\n    docker run --runtime=nvidia -p 8501:8501 \\\r\n      --mount type=bind,\\ source=/tmp/tfserving/serving/tensorflow_serving/servables/tensorflow/testdata/saved_model_half_plus_two_gpu,\\\r\n      target=/models/half_plus_two \\\r\n      -e MODEL_NAME=half_plus_two -t tensorflow/serving:latest-gpu &amp;\r\n\r\nThis will run the docker container with the nvidia-docker runtime, launch the TensorFlow Serving Model Server, bind the REST API port 8501, and map our desired model from our host to where models are expected in the container. We also pass the name of the model as an environment variable, which will be important when we query the model.",
+        "score": 27.359375,
+        "rank": 17,
+        "document_id": "436b34d9-528f-4d30-949f-85e769e6d212",
+        "passage_id": 231336
+    },
+    {
+        "content": "**Q1: Is there anyone who successfully make this work ?**\n\nMy experience is... **No**. I tried NFS, MySQL and Docker Swarm (v1.12) some months ago and I also did fail with that.\n\nThey are pretty clear with that indeed, from [MySQL documentation][1]:\n\n&gt; **Using NFS with MySQL**\n&gt;\n&gt; Caution is advised when considering using NFS with MySQL. Potential issues, which vary by operating system and NFS version, include:\n&gt;\n&gt; - MySQL data and log files placed on NFS volumes becoming locked and unavailable for use...\n&gt; - Data inconsistencies...\n&gt; - Maximum file size limitations\n\nI also experienced [file locks][2], slow queries and slow writes...\n\n**Q2: Or any suggestion to me?**\n\nOne of `docker-swarm` tricky part is indeed with the data, especially with databases. You don&#39;t know on witch host the mysql container will be run. I&#39;ve used two alternatives so overcome this:\n\n**1.",
+        "score": 27.296875,
+        "rank": 18,
+        "document_id": "5c12ac7e-7aa9-4d88-837c-f05c194c9949",
+        "passage_id": 295638
+    },
+    {
+        "content": "There are three problems here:\r\n\r\n1.  Starting a single container should not increase the count of `veth` interfaces on your system by 2, because when Docker creates a `veth` pair, one end of the pair is isolated in the container namespace and is not visible from the host.\r\n\r\n1. It looks like you&#39;re not able to start a container:\r\n\r\n        Error response from daemon: Cannot start container ...\r\n\r\n1. Docker should be cleaning up the `veth` interfaces automatically.\r\n\r\nThese facts make me suspect that there is something fundamentally wrong in your environment.  Can you update your question with details about what distribution you&#39;re using, which kernel version, and which Docker version?\r\n\r\n&gt; How I can identify which interfaces are linked with existing containers, and how I can remove extra interface which was linked with removed contrainers?\r\n\r\nWith respect to manually deleting `veth` interfaces: A `veth` interface isn&#39;t a bridge, so of course you can&#39;t delete one with `brctl`.",
+        "score": 27.1875,
+        "rank": 19,
+        "document_id": "fda47b5d-4315-43f3-af50-7bd57883d10a",
+        "passage_id": 163094
+    },
+    {
+        "content": "First off, it would be really helpful if you shared the full project. I suspect it looks somewhat similar to this one:\r\n\r\nhttps://github.com/amilairoshan/SpringBoot-MySql-With-Docker-Compose\r\n\r\nI successfully cloned it and fired it up by running:\r\n\r\n```bash\r\ndocker-compose up\r\n```\r\n\r\nThe errors you observed were due to MySQL still performing database initialization while the app attempted to connect to it.\r\n\r\nAfter a few seconds, once the database fully initializes, the errors disappear.\r\n\r\nThis behavior is documented on the MySQL DockerHub [page](https://hub.docker.com/_/mysql):\r\n\r\n&gt; ## No connections until MySQL init completes\r\n&gt; If there is no initialized database when the container starts, a default database will be created. While this is expected behavior, it means that the container will not accept incoming connections until the initialization completes. This may cause issues when using automation tools, such as Docker Compose, which start several containers simultaneously.\r\n&gt; \r\n&gt; If the application you&#39;re trying to connect to MySQL does not handle MySQL downtime or waiting for MySQL to start gracefully, putting a connect-retry loop before the service starts might be necessary.",
+        "score": 27.171875,
+        "rank": 20,
+        "document_id": "9d3af5c2-7ea6-47c1-a49b-23aee2307859",
+        "passage_id": 120803
+    },
+    {
+        "content": "When using docker inside GCP, i would consider using the GCR (Google Container Registry).\r\n\r\nYour 502, probably causes a container restarting duo to health checks forever. a problem which. So an infinitive restart loop. With an always pull policy.\r\n\r\nAre you running docker on a VM? or are you using GKE(Google Kubernetes Engine)\r\n\r\nAnyway, if you decide to use GCR, you never pay for image pulls...\r\nAs long as your VM/GKE lives in the samen zone/region\r\n\r\n\r\nYou can choose to pull the images from a specific location using, another host:\r\n\r\neu.gcr.io instead of gcr.io\r\n\r\nSee: https://cloud.google.com/container-registry/docs/pushing-and-pulling\r\n\r\nYou probably also have to build it new on de eu.gcr.io\r\n\r\nGoogle Container Registry is store on a Cloud Storage Bucket.\r\nYou can just wipe the bucket, to be sure it&#39;s gone.\r\n\r\nCheck the storage browser from cloud console:\r\nhttps://console.cloud.google.com/storage/browser?project=PROJECT_ID_HERE\r\n\r\nThe bucket should look like this:\t\r\n&lt;region&gt;.artifacts.&lt;project_id&gt;.appspot.com \r\n\r\nPlease make sure to browse it first, as removing the bucket will wipe all your artifacts.",
+        "score": 27.15625,
+        "rank": 21,
+        "document_id": "3da6d4e4-0591-43cc-81ff-6fdb79aee7d5",
+        "passage_id": 205129
+    },
+    {
+        "content": "As far as my knowledge goes, Kubernetes does not support sharing of GPU, which was asked [here][0].\r\n\r\nThere is an ongoing discussion [Is sharing GPU to multiple containers feasible? #52757][1]\r\n\r\nI was able to find a docker image with examples which *&quot;support share GPUs unofficially&quot;*, available here [cvaldit/nvidia-k8s-device-plugin][2].\r\n\r\nThis can be used in a following way:\r\n\r\n```apiVersion: v1\r\nkind: Pod\r\nmetadata:\r\n  name: gpu-pod\r\nspec:\r\n  containers:\r\n    - name: cuda-container\r\n      image: nvidia/cuda:9.0-devel\r\n      resources:\r\n        limits:\r\n          nvidia.com/gpu: 2 # requesting 2 GPUs\r\n    - name: digits-container\r\n      image: nvidia/digits:6.0\r\n      resources:\r\n        limits:\r\n          nvidia.com/gpu: 2 # requesting 2 GPUs\r\n```\r\n\r\nThat would expose 2 GPUs inside the container to run your job in, also locking those 2 GPUs from further use until job ends.",
+        "score": 27.109375,
+        "rank": 22,
+        "document_id": "cf51a74a-03fe-475b-8352-1bf17df79bc4",
+        "passage_id": 252759
+    },
+    {
+        "content": "CUDA is included in the container image, you don&#39;t need it on host machine.\r\n\r\nHere&#39;s an example `docker-compose.yml` to start a container with `tensorflow-gpu`. All the container does is a test whether any of GPU devices available.\r\n```yaml\r\nversion: &quot;2.3&quot;  # the only version where &#39;runtime&#39; option is supported\r\n\r\nservices:\r\n  test:\r\n    image: tensorflow/tensorflow:2.3.0-gpu\r\n    # Make Docker create the container with NVIDIA Container Toolkit\r\n    # You don&#39;t need it if you set &#39;nvidia&#39; as the default runtime in\r\n    # daemon.json.\r\n    runtime: nvidia\r\n    # the lines below are here just to test that TF can see GPUs\r\n    entrypoint:\r\n      - /usr/local/bin/python\r\n      - -c\r\n    command:\r\n      - &quot;import tensorflow as tf; tf.test.is_gpu_available(cuda_only=False, min_cuda_compute_capability=None)&quot;\r\n```\r\nRunning this with `docker-compose up` you should see a line with GPU specs in it.",
+        "score": 27.09375,
+        "rank": 23,
+        "document_id": "badec2ac-6f37-4aad-94f6-6578f41c6c1f",
+        "passage_id": 6333
+    },
+    {
+        "content": "Check your nvidia-container-runtime parameters. For NVENC you need to enable the ```video``` capability. Example for docker run:\r\n\r\n    docker run --gpu all,capabilities=video -it nvidia/cuda:12.0.1-devel-ubuntu20.04 /bin/bash\r\n\r\nIn docker-compose.yml under your deploy/resources/reservations/devices/capabilities must include the value ```video```:\r\n\r\n    version: &#39;2.2&#39;\r\n    services:\r\n      name_of_your_service:\r\n        deploy:\r\n          resources:\r\n            reservations:\r\n              devices:\r\n                - driver: nvidia\r\n                  device_ids: [&#39;0&#39;]\r\n                  capabilities: [gpu,video]\r\n\r\nEmpty (or only the value gpu) will NOT link NVENC resulting in the error above. I think privileged mode will also enable all gpu capabilities. The default apt pre-build ffmpeg ubunutu package does work with NVENC but the same steps regarding capabilities are needed in docker.",
+        "score": 27.09375,
+        "rank": 24,
+        "document_id": "0db31cb3-99c2-4d05-9a43-c611c7ad5afb",
+        "passage_id": 3034
+    },
+    {
+        "content": "Having several CUDA versions is possible with Docker. Moreover, none of them needs to be at your host machine, you can have CUDA in a container and that&#39;s IMO is the best place for it.\r\n\r\nTo enable GPU support in container and make use of CUDA in it you need to have all of these installed:\r\n* [Docker](https://docs.docker.com/get-docker/)\r\n* (optionally but recommended) [docker-compose](https://docs.docker.com/compose/install)\r\n* [NVIDIA Container Toolkit](https://github.com/NVIDIA/nvidia-docker)\r\n* [NVIDIA GPU Driver](https://www.nvidia.com/Download/index.aspx)\r\n\r\nOnce you&#39;ve obtained these you can simply grab one of the official [tensorflow](https://hub.docker.com/r/tensorflow/tensorflow/tags?page=1&amp;ordering=last_updated&amp;name=gpu) images (if the built-in python version fit your needs), install pip packages and start working in minutes. CUDA is included in the container image, you don&#39;t need it on host machine.\r\n\r\nHere&#39;s an example `docker-compose.yml` to start a container with `tensorflow-gpu`.",
+        "score": 27.078125,
+        "rank": 25,
+        "document_id": "badec2ac-6f37-4aad-94f6-6578f41c6c1f",
+        "passage_id": 6332
+    },
+    {
+        "content": "PyTorch is generally backwards-compatible with previous CUDA versions, so uninstalling CUDA 11.6 and installing CUDA 11.2 should not break your PyTorch GPU support. However, you may need to reinstall PyTorch with the appropriate CUDA version specified in order for it to work properly.\r\n\r\nTo get both TensorFlow and PyTorch working with your GPU you could use multiple versions of CUDA and cuDNN (this library required by both TensorFlow and PyTorch to run on the GPU) in your system. You can install CUDA 11.2 and cuDNN 8.0.4 (the latest version that supports CUDA 11.2) for TensorFlow, and keep CUDA 11.6 and cuDNN 11.0 for PyTorch. Then you can use the appropriate version of CUDA and cuDNN for each library by specifying the correct environment variables or by creating separate conda/virtual environments for each library.\r\n\r\nYou could also use Docker and create a container for each library with the appropriate CUDA and cuDNN versions and use them separately.",
+        "score": 27.0,
+        "rank": 26,
+        "document_id": "289728a4-73cf-4a85-96f5-1ac4809014dc",
+        "passage_id": 214
+    },
+    {
+        "content": "I have experienced this issue before as a cuDF developer. I think you can fix this by changing one line in your Dockerfile. Try making your Docker image from the &quot;devel&quot; flavor of the CUDA containers:\r\n```\r\nFROM nvidia/cuda:12.0.1-devel-ubuntu22.04\r\n```\r\n\r\nWhen you import `cudf`, it imports `numba` as a dependency. However, `numba` fails at import time because it only finds part of its CUDA Toolkit requirements. The `runtime` CUDA images are fairly minimal and don&#39;t have some of the NVVM pieces that Numba needs. \r\n\r\nBackground: The cuDF library supports user-defined functions (UDFs) for features like `df.apply`. To execute user-defined Python code on the GPU, cuDF calls Numba to perform just-in-time (JIT) CUDA compilation. Numba requires some pieces of the CUDA Toolkit to do this, including NVVM. The CUDA Toolkit that comes with the `nvidia/cuda` &quot;runtime&quot; image does not include all the pieces that are needed, because NVVM and related tools that Numba needs are considered to be compilers.",
+        "score": 26.84375,
+        "rank": 27,
+        "document_id": "1a516fff-ceb0-403c-acb0-3460663b2ed4",
+        "passage_id": 778
+    },
+    {
+        "content": "[![Unresolved dependency found with the tool named above][17]][17]\r\n\r\nAdressing Tensorflow CPU/GPU issues\r\n-----------------------------------\r\nOne of the possible sources for your trouble is incompatibilities with Tensorflow-GPU. This is because the default TF package contains both the CPU and GPU versions since [the TF 2.1 release][18]. \r\n\r\nTo check if this causes some of your problems, a CPU-only variant can be tried first. You could for example try to install the correct tensorflow-CPU wheel from [here][19] (this is python 3.7 and tensorflow 2.0, decide weather to use AVX or not depending on the capabilities of your processor) or [the google source][11] named above.\r\n\r\n\r\n----------\r\n\r\nFor Tensorflow-GPU, the following prerequisites have to be met:\r\n\r\nInstallation of NVIDIA cuDNN (a GPU-accelerated library of primitives for deep neural networks) as e.g. `cudnn-11.0-windows-x64-v8.0.1.13` here.\r\nAfter registration for the NVIDIA developer program, this can be accessed [here][20].\r\n\r\nPlease pay attention to the **correct versions** for a compatible CUDA Installation - see above!",
+        "score": 26.8125,
+        "rank": 28,
+        "document_id": "5ec8d0ba-e1c3-438f-9e82-ae70207fdaab",
+        "passage_id": 9678
+    },
+    {
+        "content": "Your problem is cuda7.5. As far as I understand, TensorFlow is linked in a way that it only works with cuda7.0. You either need to build it from source, or degrade your local cuda version to 7.0 (as an option, create a docker container and install lower version of cuda there, if you need 7.5 for other purposes).",
+        "score": 26.75,
+        "rank": 29,
+        "document_id": "ee7dba72-47a7-431f-a385-431b57b0e905",
+        "passage_id": 20352
+    },
+    {
+        "content": "## Why is Docker using a user space process at all?\r\n\r\nNigel Brown has written a detailed article on [The docker-proxy][1] which explains the how and why. \r\n\r\n&gt; The `docker-proxy`, then, is a &#39;catch all&#39; method for allowing container\r\n&gt; port forwarding to the Docker host. However, it&#39;s generally considered\r\n&gt; that the `docker-proxy` is an inelegant solution to the problems\r\n&gt; highlighted above, and when a large range of container ports are\r\n&gt; exposed, it consumes considerable memory. An attempt was previously\r\n&gt; made to remove the dependency for the `docker-proxy`, but this fell foul\r\n&gt; of the limitations of the aged kernel in RHEL 6.x and CentOS 6.x,\r\n&gt; which the Docker project feels duty bound to support. Hence, the\r\n&gt; `docker-proxy` remains a major constituent part of the Docker experience\r\n&gt; in all Docker versions up to the current version 1.5.",
+        "score": 26.71875,
+        "rank": 30,
+        "document_id": "4bc68974-16df-4e00-b78a-530a5c0b243a",
+        "passage_id": 229647
+    },
+    {
+        "content": "This is how you can run/create docker containers with specific GPUs using the Docker SDK for Python:\r\n\r\n    client.containers.run(&#39;ubuntu&#39;,\r\n                              &quot;nvidia-smi&quot;,\r\n                               device_requests=[\r\n                               docker.types.DeviceRequest(device_ids=[&quot;0,2&quot;], capabilities=[[&#39;gpu&#39;]])]) \r\n\r\nThis way you can also use other GPU resource options specified here: \r\nhttps://docs.docker.com/config/containers/resource_constraints/",
+        "score": 26.671875,
+        "rank": 31,
+        "document_id": "98ddcf53-08a0-4fbc-876b-443ee075a1da",
+        "passage_id": 1692
+    },
+    {
+        "content": "Since no one took this up, I decided to post my own non-conclusive answer. \r\n\r\nThe problem (socket error) seems to occur when too much I/O operations occur over a websocket. Since a docker container communicates with docker volumes via websockets, there is a limit to the number of operations per unit of time that can take place. \r\n\r\nIn my case there was a lot of reading from a volume and simultaneously a lot of writing to a volume.\r\n\r\nPossible solutions include: \r\n\r\n 1. limiting operation amount per unit of time\r\n 2. building the volumes into the docker image that is being run, if that is possible\r\n\r\nOption 1 could be too slow for some applications, and option 2 might not always be possible due to the changing contents of the volumes.",
+        "score": 26.640625,
+        "rank": 32,
+        "document_id": "cfe43943-f8b7-4b8d-87a1-b213ff6bddbe",
+        "passage_id": 207300
+    },
+    {
+        "content": "One solution is to use Docker Container Environment, which would only need the Nvidia Driver to be of version `XYZ.AB`; in this way, you can use both PyTorch and TensorFlow versions.\r\n\r\nA very good starting point for your problem would be this one(ML-WORKSPACE) : https://github.com/ml-tooling/ml-workspace",
+        "score": 26.609375,
+        "rank": 33,
+        "document_id": "7f8e70d3-e36d-4080-8ac6-a70b49c35374",
+        "passage_id": 5565
+    },
+    {
+        "content": "It still seems like the Docker container is not able to access the GPUs on the host machine even though you are passing --gpus all as an argument. A few things to try:\r\n\r\n1. Make sure the Nvidia container toolkit is installed on the host - this is required for Docker to access Nvidia GPUs. You can install it with:\r\n\r\n```\r\ndistribution=$(. /etc/os-release;echo $ID$VERSION_ID) \\\r\n   &amp;&amp; curl -s -L https://nvidia.github.io/nvidia-docker/gpgkey | sudo apt-key add - \\\r\n   &amp;&amp; curl -s -L https://nvidia.github.io/nvidia-docker/$distribution/nvidia-docker.list | sudo tee /etc/apt/sources.list.d/nvidia-docker.list\r\n\r\nsudo apt-get update\r\nsudo apt-get install -y nvidia-docker2\r\nsudo systemctl restart docker\r\n```\r\n\r\n2. Pass additional runtime arguments to expose the GPUs:\r\n\r\n```\r\n--runtime=nvidia \\\r\n--gpus all \\\r\n-e NVIDIA_VISIBLE_DEVICES=all\r\n```\r\n\r\n3. Make sure the TensorFlow Docker image has GPU support\r\n\r\n4. Double check GPU drivers are up-to-date on the host machine.\r\n\r\nSome combination of these steps should allow the container to access the GPUs properly...",
+        "score": 26.46875,
+        "rank": 34,
+        "document_id": "4491a65c-7e6e-4a02-9cb8-c943fb88d3b8",
+        "passage_id": 1593
+    },
+    {
+        "content": "For finding the compatible versions of CUDA, Tensorflow, Python, cuDNN, you can visit the official site: [www.tensorflow.org/install/source#gpu][1].   \r\nPlease check, if you have the right versions.\r\n\r\n\r\n(off topic) In case you are also using Docker containers:\r\nI would recommend an image like this: [nvidia/cuda:10.1-cudnn7-devel-ubuntu16.04][2]\r\n\r\nWhere:\r\n - CUDA_VERSION=10.1.243\r\n - CUDNN_VERSION=7.6.5.32   \r\n\r\nAlso make sure you have compatible versions of tf, python:\r\n - Tensorflow-2.2.0 or 2.3.0\r\n - Python 3.5-3.8\r\n\r\nNext thing to is to make sure your GPU driver is up to date, or update it accordingly.",
+        "score": 26.4375,
+        "rank": 35,
+        "document_id": "c4a0bf1d-545c-4e52-98a6-3fb92277bcc4",
+        "passage_id": 6491
+    },
+    {
+        "content": "I solve the problem. It was caused by a Container Port mismatching. Basically, Tensorflow Serving was trying to use default 8501 port for the rest API, but actually, Heroku assigned a different port to expose the container. The solution was to tell the tensorFlow model server and update the ```/usr/bin/tf_serving_entrypoint.sh``` file, to use the ports assigned by Heroku.\r\n\r\nThis is the new Dockerfile:\r\n```\r\nFROM tensorflow/serving\r\nLABEL maintainer=&quot;Whitman Bohorquez&quot; description=&quot;Build tf serving based image.",
+        "score": 26.421875,
+        "rank": 36,
+        "document_id": "82284d72-d763-49ba-b591-3a5b6fcc7cfd",
+        "passage_id": 214391
+    },
+    {
+        "content": "Didn&#39;t get much feedback, but I did more research and the issue is now stable so I wanted to post my findings.\r\n\r\nI have isolated the issue with the docker container. Nginx works fine with the same app running on the VM directly.\r\n\r\nI updated my docker container image from ```node:12-alpine``` to ```node:14-alpine```. The site has been up for 42 hours without issue. \r\n\r\nIf it randomly fails again, then it&#39;s probably due to load.\r\n\r\nI hope this solves someone&#39;s issue.\r\n\r\n#### Update 2021-10-24\r\nThe same issue started and I&#39;ve narrowed it down to the port and/or docker on my version of Ubuntu. May I recommend...\r\n* changing the port\r\n* rebooting your PC\r\n* installing the latest OS and docker updates",
+        "score": 26.421875,
+        "rank": 37,
+        "document_id": "5bdddc15-ed57-4d09-ae0c-8556d238589c",
+        "passage_id": 168299
+    },
+    {
+        "content": "Mesos only supports &quot;Posix&quot; isolation on Macs, which is really more for monitoring than actual resource limiting, so testing Mesos on a Mac will not be able to demonstrate true resource isolation.\r\n\r\nIf you test Mesos on a Linux machine/VM, you can set:\r\n\r\n    --isolation=&#39;cgroups/cpu,cgroups/mem&#39;\r\n\r\nwhen starting each slave to enable cgroups isolation, which will create a container and run your script/process inside it. The cgroups isolator will throttle cpu utilization when a container/process exceeds its cpu share (not fixed cpus), and will kill a process (destroy the container) if it exceeds its memory limit.\r\n\r\nAlso note that Mesos 0.21 now supports a network isolator, and pluggable isolator modules so you could build your own gpu isolator, cache isolator, etc.\r\n\r\nIf you want to enable the Docker containerizer (0.20+), just set: \r\n\r\n    --containerizers=&#39;docker,mesos&#39;\r\n\r\nwhen starting the slaves, and then you can launch arbitrary docker images and run commands inside them.",
+        "score": 26.390625,
+        "rank": 38,
+        "document_id": "54365ada-50f6-4568-8618-01ab70e64dc8",
+        "passage_id": 338827
+    },
+    {
+        "content": "I managed to debug the problem. Due to a stupid **encoding** issue.\r\n\r\nAdding :\r\n\r\n```Dockerfile\r\nENV LANG C.UTF-8\r\n```\r\n\r\nto my Dockerfile managed to make the container run (my original pastebin mentioned this line but after doublecheck, I didn&#39;t have it).\r\n\r\nI was able to find out this idea because of this more accurate backtrace from GDB : \r\n\r\n```\r\nroot@f42846d26d89:/opencv-4.2.0/build# gdb --args python3 -u /usr/app/scripts/extract.py\r\nGNU gdb (Ubuntu 8.1-0ubuntu3.2) 8.1.0.20180409-git\r\nCopyright (C) 2018 Free Software Foundation, Inc.\r\nLicense GPLv3+: GNU GPL version 3 or later &lt;http://gnu.org/licenses/gpl.html&gt;\r\nThis is free software: you are free to change and redistribute it.\r\nThere is NO WARRANTY, to the extent permitted by law.  Type &quot;show copying&quot;\r\nand &quot;show warranty&quot; for details.\r\nThis GDB was configured as &quot;x86_64-linux-gnu&quot;.",
+        "score": 26.375,
+        "rank": 39,
+        "document_id": "4a3d7b3b-658b-48a8-87c1-6cfa06ecc715",
+        "passage_id": 10348
+    },
+    {
+        "content": "The question has been asked on the `docker-user` mailing list, and after some investigation, we found out that performance of `veth` in VMs with kernel 3.8 was &quot;not great&quot;, and was significantly improved with kernel 3.10.\r\n\r\nIn other words:\r\n\r\n- if you run containers on bare metal, you will be fine (and see very fast transfer speeds between containers), regardless of the kernel version that you are using;\r\n- if you run containers in a VM (tested with Xen, VirtualBox, and KVM), you might see a huge drop in container-to-container transfer speed, if you run with kernel up to 3.8;\r\n- if you run kernel 3.10 or above, performance will be fine, regardless of the setup.\r\n\r\nWe haven&#39;t pinpointed the source of the problem yet, though.",
+        "score": 26.359375,
+        "rank": 40,
+        "document_id": "800819b2-3fe7-40df-912c-199a0a59142a",
+        "passage_id": 409802
+    },
+    {
+        "content": "Thumb rule for any volume mount related issues is to synchronize user and group ids of the file server user and the key user running the processes in the docker container. I am able to solve my problem by synchronizing the uid and gid of the mysql user and mysql group of my docker container with that of my freenas user.",
+        "score": 26.328125,
+        "rank": 41,
+        "document_id": "2347cbdf-80e9-4da3-a521-c77a2fcb6377",
+        "passage_id": 344624
+    },
+    {
+        "content": "I found the solution for the same. Actually, things become difficult to run from docker-compose when you are trying to run multiple images in single container. \r\n\r\nSo I build the image using DockerFile for application and separate image for Ngnix and enable communication of both the container with unix socket connections.\r\n\r\nMy updated dockerfile for application:\r\n```\r\n#pull the nvidia cuda GPU docker image\r\nFROM nvidia/cuda\r\n\r\n#pull python 3.6.8 docker image\r\nFROM python:3.6.8\r\nENV PYTHONDONTWRITEBYTECODE 1\r\nENV PYTHONUNBUFFERED 1\r\n#create a directory to serve static files \r\nRUN mkdir -p /home/app/staticfiles/app/uploaded_videos/\r\nWORKDIR /app\r\nCOPY ./requirements.txt /app/requirements.txt\r\nRUN python -m pip install --upgrade pip\r\nRUN pip install cmake\r\nRUN pip install opencv-python==4.2.0.32\r\nRUN pip install -r requirements.txt\r\nCOPY . /app\r\nRUN python manage.py collectstatic --noinput\r\nRUN pip install gunicorn\r\nRUN mkdir -p /app/uploaded_videos/app/uploaded_videos/\r\n\r\nVOLUME /app/run/\r\nENTRYPOINT [&quot;/app/bin/gunicorn_start.",
+        "score": 26.3125,
+        "rank": 42,
+        "document_id": "8798bfef-0afa-41dd-8545-951f1dcefa0e",
+        "passage_id": 5038
+    },
+    {
+        "content": "The problem is, there is no sufficient shared memory in docker container(default is 64 MB).\r\n\r\nThe problem was solved by giving the option `--shm-size` while running docker image.\r\n\r\n**Run :** sudo docker run **--shm-size** 1G sample:latest\r\n\r\n&lt;b&gt;docker-compose file&lt;/b&gt;\r\n\r\n    version: &quot;3.1&quot;\r\n    services:\r\n        julia:\r\n            image: ramidavalapati/julia:v-1\r\n            shm_size: 1g\r\n            volumes:\r\n                - /home/ram/adagram_data/40MBfull.embed:/julia/full.embed\r\n            ports:\r\n                - 8080:80\r\n            command: [&quot;sleep&quot;, &quot;1h&quot;]\r\n\r\nIf we want to work in `swarm mode`, we need to refer shared memory in volume section.",
+        "score": 26.296875,
+        "rank": 43,
+        "document_id": "1a4cf6d3-ba45-4c25-bc4c-0e16b023c004",
+        "passage_id": 261563
+    },
+    {
+        "content": "Definitely explore the tensorflow docker images:\r\nhttps://hub.docker.com/r/tensorflow/tensorflow/tags\r\n\r\nThere are a good range of precompiled images which work with gpu, providing you set `--runtime=nvidia` parameter on `docker run`\r\n\r\nSome resources on the nvidia runtime:\r\nhttps://www.tensorflow.org/install/docker\r\nhttps://docs.nvidia.com/datacenter/cloud-native/container-toolkit/user-guide.html\r\n\r\nthe nvidia docs above are bit complicated looking. On Debian I was able to install with `apt-get install nvidia-container-runtime` (more info: https://github.com/NVIDIA/nvidia-container-runtime). Setting the nvidia runtime as default is not required.\r\n\r\nYou can then launch a GPU enabled tensorflow container with:\r\n```\r\ndocker run -it --rm --runtime=nvidia -v $(pwd):/my-src -u $(id -u):$(id -g) tensorflow/tensorflow:2.2.2-gpu /bin/bash\r\n```\r\n\r\ninside the container:\r\n```\r\npython -c &quot;import tensorflow&quot;\r\n```\r\nwill verify the setup.\r\n\r\nIn practice, I&#39;ve always been able to use the latest nvidia drivers even with older tensorflow versions.",
+        "score": 26.234375,
+        "rank": 44,
+        "document_id": "3c2d55bf-0293-40ab-ba27-d05bffc66e1c",
+        "passage_id": 7867
+    },
+    {
+        "content": "that `arangodb/arangodb:3.4.0` instead of `arangodb/arangodb` when executing `docker run`, it&#39;s best practice, avoid to run containers without specified version, it will pull `arangodb/arangodb:latest` which can cause, that your staging or prod can pull newer version than you have on dev, which could be a problem if newer version is minor or major** \r\n\r\n**also never run arangodb with `ARANGO_NO_AUTH=1` in production or on publicly accesible server**\r\n\r\nmore details related to Docker are at https://hub.docker.com/_/arangodb/",
+        "score": 26.21875,
+        "rank": 45,
+        "document_id": "9a716804-4b0e-4077-9b4e-866cf6920696",
+        "passage_id": 250612
+    },
+    {
+        "content": "You can [limit the memory][1] a container is allowed to use, with docker itself. If a container exceeds this memory and throws an OOM error, it is killed.\r\n\r\n```\r\ndocker run --memory=128m --restart on-failure myapp\r\n```\r\n\r\nYou can also enable [health checks][2], which on their own do not much other than letting you know if a container is healthy according to the configured health command. It is up to the operator, or operating framework, to act upon this information.\r\n\r\n```\r\ndocker run --health-cmd &lt;some-cmd&gt; myapp\r\n```\r\n\r\nIn order to do something useful with that, you need to [inspect][3] the container, or as mentioned, let your operating framework decide what to do.\r\n\r\nThat said, while these options are good for safety measurement, you shouldn&#39;t rely on them for your regular workflow. If you know your container crashes all the time, or is causing other problems with your system, you should fix the root of the problem instead of simply restarting it over and over.\r\n\r\nIn your case, this might involve using an adequately equipped machine to begin with.",
+        "score": 26.171875,
+        "rank": 46,
+        "document_id": "024ebd0f-468e-4461-90e8-f5fd4d68fe68",
+        "passage_id": 156918
+    },
+    {
+        "content": "\\e[0;33m&quot;\r\n    \r\n    if [[ $EUID -eq 0 ]]; then\r\n      cat &lt;&lt;WARN\r\n    WARNING: You are running this container as root, which can cause new files in\r\n    mounted volumes to be created as the root user on your host machine.\r\n    \r\n    To avoid this, run the container by specifying your user&#39;s userid:\r\n    \r\n    $ docker run -u \\$(id -u):\\$(id -g) args...\r\n    WARN\r\n    else\r\n      cat &lt;&lt;EXPL\r\n    You are running this container as user with ID $(id -u) and group $(id -g),\r\n    which should map to the ID and group for your user on the Docker host. Great!\r\n    EXPL\r\n    fi\r\n    \r\n    # Turn off colors\r\n    echo -e &quot;\\e[m&quot;\r\n\r\n  [1]: https://towardsdatascience.com/how-to-properly-use-the-gpu-within-a-docker-container-4c699c78c6d1",
+        "score": 26.140625,
+        "rank": 47,
+        "document_id": "fd3990e5-95a8-4d2a-82be-9747c2499870",
+        "passage_id": 9910
+    },
+    {
+        "content": "I had a similar problem.\r\n\r\nWhen deploying the new build to EB, it fails to list docker containers with out of memory error. After this happened, re-deplying to the EB shown as success, but actually none of the changes were applied. (I added `.platform/hooks/prebuild/setup_swap.sh` similar to the URL in the question)  \r\n\r\nIt seemed like the process didn&#39;t run because of out-of-memory, so that adding swap was not possible.\r\n\r\nI ended up manually adding swap to the instance with `eb ssh`, after that everything worked just fine.",
+        "score": 26.140625,
+        "rank": 48,
+        "document_id": "c62d77be-1fd4-418a-9686-e42f76e2a1b7",
+        "passage_id": 148869
+    },
+    {
+        "content": "your post looked a little like [this one][1], which turned out to be a problem with volumes. \r\n\r\n\r\n  [1]: https://stackoverflow.com/questions/31057910/mesos-cannot-deploy-container-from-private-docker-registry",
+        "score": 26.09375,
+        "rank": 49,
+        "document_id": "f6d96f34-4d59-46d9-9c84-c5a61bfd0f23",
+        "passage_id": 262368
+    },
+    {
+        "content": "I found the problem myself.\r\nIn my Docker compose file, I specified an order of containers via &quot;depends_on&quot;. This order prevented my memory from filling up at once. However, after a reboot/crash the &quot;restart:always&quot; function kicked in and started all 11 containers at once.\r\n\r\nNote: As docker-compose I also used a docker container (aarch64 - problems) which could possibly lead to this problem.",
+        "score": 26.0625,
+        "rank": 50,
+        "document_id": "f1204ddc-a63d-492c-87a5-de9c2de98c9f",
+        "passage_id": 190406
+    }
+]
