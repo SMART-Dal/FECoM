@@ -1,0 +1,352 @@
+[
+    {
+        "content": "Make sure you are not measuring performance on a debug build, or running in a debugger. Debugging adds overhead.\r\n\r\nMake sure that your work sample is large enough that it is significantly above the &quot;noise floor&quot;. A test run that takes a few seconds to complete will be measuring more of your function and less of the ambient noise of the environment than a test run that completes in milliseconds.  You can always divide the units of work by the test execution time to arrive at a sexy &quot;units per nanosecond&quot; figure, but you don&#39;t actually measure it that way.",
+        "score": 25.859375,
+        "rank": 1,
+        "document_id": "855e774b-7bc5-4adb-9f37-b89264c99656",
+        "passage_id": 28306
+    },
+    {
+        "content": "Yet another thing to keep in mind when trying to isolate effects is that long-running functions will get compiled in the background while they run, and will then at some point be replaced on the stack (&quot;OSR&quot;), which adds all sorts of noise to your measurements. When you invoke them with different loop lengths for warmup, they&#39;ll still get compiled in the background however, and there&#39;s no way to reliably wait for that background job. You could resort to command-line flags intended for development, but then you wouldn&#39;t be measuring regular behavior any more.\r\n\r\nAnyhow, the following is an attempt to craft a test similar to yours that produces plausible results (about `100 180 280` on my machine):\r\n\r\n    function Point() {}\r\n\r\n    // These three functions are identical, but they will be called with different\r\n    // inputs and hence collect different type feedback:\r\n    function processPointMonomorphic(N, point) {\r\n      let sum = 0;\r\n      for (let i = 0; i &lt; N; i++) {\r\n        sum += point.a;\r\n      }\r\n      return sum;\r\n    }\r\n    function processPointPolymorphic(N,",
+        "score": 25.75,
+        "rank": 2,
+        "document_id": "a762c7d9-0d9d-464a-b0f0-61de81635bf4",
+        "passage_id": 236291
+    },
+    {
+        "content": "You are using `Stopwatch` to time your method.  This calculates the total *clock* time taken during your method call, which could include [the time required for .Net to initially JIT your method](https://stackoverflow.com/questions/1255803/does-the-net-clr-jit-compile-every-method-every-time/1255832#1255832), [interruptions for garbage collection](http://msdn.microsoft.com/en-us/library/vstudio/bb384202%28v=vs.110%29.aspx), or slowdowns caused by system loads from other processes.  Noise from these sources will likely dominate noise due to cache misses.\r\n\r\n[This answer](https://stackoverflow.com/questions/969290/exact-time-measurement-for-performance-testing/16157458#16157458) gives some suggestions as to how you can minimize some of the noise from garbage collection or other processes.  To eliminate JIT noise, you should call your method once without timing it -- or show the time taken by the first call in a separate column in your results table since it will be so different.",
+        "score": 24.453125,
+        "rank": 3,
+        "document_id": "9fdbe10f-96e6-420a-98aa-a303351a38a5",
+        "passage_id": 380961
+    },
+    {
+        "content": "Unfortunately, it is really not possible to get very accurate distance estimates over 10 meters.  The problem is that the signal gets relatively weak at that distance and the noise overwhelms the RSSI measurement -- at least for quick responses.  The signal to noise ratio, as it is known, is a general problem in all radio applications.  For Bluetooth LE applications, you either have to accept inaccurate distance estimates at greater distances, or average the RSSI samples over a very long period to help filter out the noise.",
+        "score": 24.453125,
+        "rank": 4,
+        "document_id": "20c25970-4a76-4b0c-ba80-c49bc99b53a3",
+        "passage_id": 92716
+    },
+    {
+        "content": "Your measurements seem to be directed at determining the *relative* power consumption when running with 400 different variants of the code. It does not seem critical that steady-state power consumption is achieved, just that the conditions under which each variant is tested are as equal as is practically achievable. Keep in mind that the GPU&#39;s power sensors are not designed to provide high-precision measurements, so for comparison purposes you would want to assume a noise level on the order of 5%. For an accurate comparison you may even want to average measurements from more than one GPU of the same type, as manufacturing tolerances could cause variations in power draw between multiple &quot;identical&quot; GPUs.\r\n\r\nI would therefore suggest the following protocol: Run each variant for 30 seconds, measuring power consumption close to the end of that interval. Then let the GPU idle for 30 seconds to let it cool down before running the next kernel. This should give roughly equal starting conditions for each variant. You may need to lengthen the proposed idle time a bit if you find that the temperature stays elevated for a longer time. The temperature data reported by `nvidia-smi` can guide you here.",
+        "score": 24.421875,
+        "rank": 5,
+        "document_id": "6f47dae6-71b1-4936-b66e-892d43ed3358",
+        "passage_id": 11806
+    },
+    {
+        "content": "Such instrumentation is from 2x slow or slower, especially for memory bandwidth / latency limited core. The paper lists and explains instrumentation overhead and Caveats:\r\n\r\n&gt; **Instrumentation Overhead**: Instrumentation involves\r\ninjecting extra code dynamically or statically into the\r\ntarget application. The additional code causes an\r\napplication to spend extra time in executing the original\r\napplication ... Additionally, for multi-threaded\r\napplications, instrumentation can modify the ordering of\r\ninstructions executed between different threads of the\r\napplication. As a result, IDS with multi-threaded\r\napplications comes at the lack of some fidelity\r\n&gt;\r\n&gt; **Lack of Speculation**: Instrumentation only observes\r\ninstructions executed on the correct path of execution. As\r\na result, IDS may not be able to support wrong-path ...\r\n&gt;\r\n&gt; **User-level Traffic Only**: Current binary instrumentation\r\ntools only support user-level instrumentation. Thus,\r\napplications that are kernel intensive are unsuitable for\r\nuser-level IDS.",
+        "score": 24.0625,
+        "rank": 6,
+        "document_id": "99e9edab-d2a4-4aa3-8241-1cd37ee18d47",
+        "passage_id": 296375
+    },
+    {
+        "content": "Such instrumentation is from 2x slow or slower, especially for memory bandwidth / latency limited core. The paper lists and explains instrumentation overhead and Caveats:\r\n\r\n&gt; **Instrumentation Overhead**: Instrumentation involves\r\ninjecting extra code dynamically or statically into the\r\ntarget application. The additional code causes an\r\napplication to spend extra time in executing the original\r\napplication ... Additionally, for multi-threaded\r\napplications, instrumentation can modify the ordering of\r\ninstructions executed between different threads of the\r\napplication. As a result, IDS with multi-threaded\r\napplications comes at the lack of some fidelity\r\n&gt;\r\n&gt; **Lack of Speculation**: Instrumentation only observes\r\ninstructions executed on the correct path of execution. As\r\na result, IDS may not be able to support wrong-path ...\r\n&gt;\r\n&gt; **User-level Traffic Only**: Current binary instrumentation\r\ntools only support user-level instrumentation. Thus,\r\napplications that are kernel intensive are unsuitable for\r\nuser-level IDS. \r\n\r\n\r\n  [1]: https://software.intel.com/en-us/articles/intel-sdm",
+        "score": 24.03125,
+        "rank": 7,
+        "document_id": "49df2682-33ed-42d6-8993-472bad0685e3",
+        "passage_id": 38150
+    },
+    {
+        "content": "# A word of warning\r\n\r\nUsing locks in performance measurement code is dangerous. So is memory allocation, which also often implies using locks. This means, that `start_time` has significant cost and the performance will even get worse with more threads. That doesn&#39;t even consider the cache invalidation from having one thread allocating a chunk of memory (record) and then another thread modifying it (tail pointer).\r\n\r\nNow that may be fine if the sections you measure take seconds, but it will cause great overhead and perturbation when your sections are only hundreds of cycles.\r\n\r\nTo create a scalable performance tracing facility, you must pre-allocate thread-local memory in larger chunks and have each thread write only to it&#39;s local part.\r\n\r\nYou can also chose to use some of the existing measurement infrastructures, such as [Score-P][2].\r\n\r\n# Overhead &amp; perturbation\r\n\r\nFirst, distinguish between the two (linked concepts). *Overhead* is extra time you spend, while *perturbation* refers to the impact on what you measure (i.e. you now measure something different than what happens without the measurement). Overhead is undesirable in large quantities, but perturbation is much worse.",
+        "score": 23.90625,
+        "rank": 8,
+        "document_id": "8f5b3723-01a9-4d14-b6f0-b42b5eb2795b",
+        "passage_id": 311108
+    },
+    {
+        "content": "&gt; Is this an issue with my signal processing understanding or my code?\r\n\r\nYour code looks fine to me.\r\n\r\nThe frequencies you want to detect are the fundamental frequencies of your pitches (the problem is also known as &quot;f0 estimation&quot;).\r\n\r\nSo before using something like `freq_from_fft` I&#39;d bandpass filter the signal to get rid of garbage transients and low frequency noise\u2014the stuff that&#39;s in the signal, but irrelevant to your problem.\r\n\r\nThink about, which range your fundamental frequencies are going to be in. For an acoustic guitar that&#39;s E2 (82 Hz) to F6 (1,397 Hz). That means you can get rid of anything below ~80 Hz and above ~1,400 Hz (for a bandpass example, see [here](https://stackoverflow.com/questions/12093594/how-to-implement-band-pass-butterworth-filter-with-scipy-signal-butter)). After filtering, do your peak detection to find the pitches (assuming the fundamental actually has the most energy).",
+        "score": 23.796875,
+        "rank": 9,
+        "document_id": "2cf04245-50e3-4332-a72b-de630db1c1ee",
+        "passage_id": 77361
+    },
+    {
+        "content": "You are running into the practical limitations on this technology.  Getting estimation accuracy of +/- 50 cm may be possible under ideal conditions at short distances (under 2 meters) not at long distances of over 10 meters.\r\n\r\nI wrote a longer blog post about the limits here: http://developer.radiusnetworks.com/2014/12/04/fundamentals-of-beacon-ranging.html\r\n\r\nTo answer your specific questions:\r\n\r\n1. No, there is no practical way to know what part of a single RSSI measurement comes from signal and what part comes from noise.  You can take an average over many samples, which partially removes noise if the transmitter and receiver are stationary over the sample interval.\r\n\r\n2. The techniques you ask about do work to give you distance estimate, but they have the limitations of the technology described above.",
+        "score": 23.421875,
+        "rank": 10,
+        "document_id": "0038f8ae-b53e-4008-a58f-abe8fd3da621",
+        "passage_id": 69786
+    },
+    {
+        "content": "Looking at JMeter code, I found the section below to be the one of interest. So basically the background thread is one that sleeps for `NANOTHREAD_SLEEP` milliseconds and then when it wakes up, it asks the time.\r\n\r\nThis value has to stay as high as possible not to add to much overhead to the sampling, but has to stay as low as possible to provide sufficient accuracy.\r\n\r\nIf you don&#39;t use the nanothread, then all the times are computed using System.nanoTime() and that may or may not give extra accuracy. Generally the high precision counters are very affected by frequency variations (e.g. due to power saving modes). My opinion is that you don&#39;t need to worry about using System.nanoTime() because **you won&#39;t be able to have a repeatability of the test with an accuracy at nanosecond level**. Even millisecond seems a very tight interval for that.\r\n\r\n**Why would you use a background thread for computing time?** I think this is because if the thread only measures time, you can ask it the current time anytime you want during the execution.",
+        "score": 23.40625,
+        "rank": 11,
+        "document_id": "55cc9383-9925-40c0-807a-00d9e7fcdf23",
+        "passage_id": 92480
+    },
+    {
+        "content": "The reason you are seeing power consumption increase over time is that the GPU is heating up under a sustained load. Electronic components draw more power at increased temperature mostly due to an increase in Ohmic resistance. In addition, the Tesla K20c is an actively cooled GPU: as the GPU heats up, the fan on the card spins faster and therefore requires more power.\r\n\r\nI have run experiments on a K20c that were very similar to yours, out to about 10 minutes. I found that the power draw plateaus after 5 to 6 minutes, and that there are only noise-level oscillations of +/-2 W after that. These may be due to hysteresis in the fan&#39;s temperature-controlled feedback loop, or due to short-term fluctuations from incomplete utilization of the GPU at the end of every kernel. Difference in power draw due to fan speed difference were about 5 W. The reason it takes fairly long for the GPU to reach steady state is the heat capacity of the entire assembly, which has quite a bit of mass, including a solid metal back plate.\r\n\r\nYour measurements seem to be directed at determining the *relative* power consumption when running with 400 different variants of the code.",
+        "score": 23.328125,
+        "rank": 12,
+        "document_id": "6f47dae6-71b1-4936-b66e-892d43ed3358",
+        "passage_id": 11805
+    },
+    {
+        "content": "Benchmarking is a tricky business in any programming language, and particularly so in CLP.  Especially if you plan to publish your results, you should be extremely thorough and make absolutely sure you are measuring what you claim to measure.\r\n\r\n&gt;**Timers:** Are you measuring real time, process cpu time, thread cpu time? Including time spent in system calls? Including or excluding garbage collection? ...\r\n\r\nSee the different timers offered by the [statistics/2][1] primitive.\r\nThere is a real-time high-resolution timer that can be accessed via [statistics(hr_time,T)][1].\r\n\r\n&gt;**Timer resolution:** In your example the timer resolution seems to be 1/60 sec.  That means, to get 3 significant digits in your time measurement, you have to measure at least a runtime of 1000*1/60 = 16.7 seconds.\r\n\r\nIf your benchmark runtime is too short, you have to run it multiple times.\r\n\r\n&gt;**Runtime variance:** On modern machines it is increasingly difficult to get reproducible timings. This is due to effects that have nothing to do with the program you are measuring, such as cache behaviour, paging, context switches, power management hardware, memory alignment, etc.",
+        "score": 23.28125,
+        "rank": 13,
+        "document_id": "926ac064-0625-47ad-8872-6ea7fcbec557",
+        "passage_id": 85633
+    },
+    {
+        "content": "Your first gpu measurement is far from the others,i&#39;ve experienced the same thing. The first call to an opencv kernel (erode/dilate/etc...) is longer than the others following.\r\nIn an application, while we initializes GPU memory, we have made a first call to cv::gpu::XX in order to not having this measurement noise.\r\n\r\nI&#39;ve also seen that cv::gpu uses cudaDeviceSynchronize after each calls without an cv::gpu::Stream parameter. This can be long and cause you noisy measurements.\r\nThen opencv probably allocates memory for a temporary buffer to store the kernel you use to blur the image.\r\n\r\nI don&#39;t see the allocation of gpuImage0Blurred in your example, can you be sure that your destination image is correctly allocated outside the loop, else you&#39;ll too measure the allocation time for this matrix.\r\n\r\nUsing nvvp can give you clues of what is really happening when your application runs to remove unnecessary operations.\r\n\r\n\r\nEDIT:\r\n\r\n\r\n    #include &lt;iostream&gt;\r\n    #include &quot;opencv2/highgui/highgui.hpp&quot;\r\n    #include &quot;opencv2\\gpu\\gpu.hpp&quot;",
+        "score": 23.265625,
+        "rank": 14,
+        "document_id": "ecd80745-89af-40d5-93a7-dc0ba8a2bbb3",
+        "passage_id": 21922
+    },
+    {
+        "content": "**In your first two tests**, you&#39;re not doing anything to generate a consistent amount of off-core memory traffic, so **all you&#39;re measuring is the background &quot;noise&quot; on a mostly-idle system**.  (System-wide for the first test with `-a`, for the second just interrupt handlers which run some code that does miss in cache while this task is the `current` on a logical core.)\r\n\r\nYou never said anything about whether those differences are repeatable across runs, e.g. with `perf stat ... -r5` to re-run the same test 5 times, and print average and variance.  I&#39;d expect it&#39;s not repeatable, just random fluctuation of background stuff like network and keyboard/mouse interrupts, but if the `:D` version makes a consistent or statistically significant difference that might be interesting.\r\n\r\n----\r\n\r\nIn your 2nd test, the loop you used won&#39;t create any extra memory traffic; it will either be purely registers, or if compiled without optimization will load/store the same one cache line so everything will hit in L1d cache.",
+        "score": 23.125,
+        "rank": 15,
+        "document_id": "82b3fcf9-7e64-4904-aaa7-153ec84f1667",
+        "passage_id": 142174
+    },
+    {
+        "content": "At the lowest levels (gate networks, control signalling etc.), an external individual no longer has any means to observe or measure what&#39;s going on but there as well, things are in a changing state, a variable amount of electricity is being used and thus a variable amount of heat generated.\r\n\r\nPertaining to your second question: that&#39;s basically what your task manager does. There are countless examples and articles on the internet on how to get that done in a plethora of programming languages.\r\n\r\nThat is, unless some of the _actually_ smart people in this merry little community of keytappers and screengazers say that it IS actually possible, at which point I will be thoroughly amazed...\r\n\r\n**EDIT:** Monitoring the processes is a first step in what you&#39;re looking for. take a look at https://stackoverflow.com/questions/8455873/how-to-detect-a-process-start-end-using-c-sharp-in-windows and be sure to follow up on duplicates like the one mentioned by Hans.",
+        "score": 23.078125,
+        "rank": 16,
+        "document_id": "b1128976-0e80-4dce-8aa3-c46c2f11610f",
+        "passage_id": 427750
+    },
+    {
+        "content": "No fine grained timing.\r\n\r\nPS: Scholars who study SpecCPU for memory access worked with memory access dumps/traces, and dumps were generated slowly: \r\n\r\n* http://www.bu.edu/barc2015/abstracts/Karsli_BARC_2015.pdf - LLC misses recorded to offline analysis, no timing was recorded from tracing runs\r\n* http://users.ece.utexas.edu/~ljohn/teaching/382m-15/reading/gove.pdf - all load/stores instrumented by writing into additional huge tracing buffer to periodic (rare) online aggregation. Such instrumentation is from 2x slow or slower, especially for memory bandwidth / latency limited core.\r\n* http://www.jaleels.org/ajaleel/publications/SPECanalysis.pdf (by Aamer Jaleel of Intel Corporation, VSSAD) - Pin-based instrumentation - program code was modified and instrumented to write memory access metadata into buffer. Such instrumentation is from 2x slow or slower, especially for memory bandwidth / latency limited core. The paper lists and explains instrumentation overhead and Caveats:\r\n\r\n&gt; **Instrumentation Overhead**: Instrumentation involves\r\ninjecting extra code dynamically or statically into the\r\ntarget application.",
+        "score": 23.046875,
+        "rank": 17,
+        "document_id": "49df2682-33ed-42d6-8993-472bad0685e3",
+        "passage_id": 38149
+    },
+    {
+        "content": "No fine grained timing.\r\n\r\nPS: Scholars who study SpecCPU for memory access worked with memory access dumps/traces, and dumps were generated slowly: \r\n\r\n* http://www.bu.edu/barc2015/abstracts/Karsli_BARC_2015.pdf - LLC misses recorded to offline analysis, no timing was recorded from tracing runs\r\n* http://users.ece.utexas.edu/~ljohn/teaching/382m-15/reading/gove.pdf - all load/stores instrumented by writing into additional huge tracing buffer to periodic (rare) online aggregation. Such instrumentation is from 2x slow or slower, especially for memory bandwidth / latency limited core.\r\n* http://www.jaleels.org/ajaleel/publications/SPECanalysis.pdf (by Aamer Jaleel of Intel Corporation, VSSAD) - Pin-based instrumentation - program code was modified and instrumented to write memory access metadata into buffer. Such instrumentation is from 2x slow or slower, especially for memory bandwidth / latency limited core. The paper lists and explains instrumentation overhead and Caveats:\r\n\r\n&gt; **Instrumentation Overhead**: Instrumentation involves\r\ninjecting extra code dynamically or statically into the\r\ntarget application.",
+        "score": 23.046875,
+        "rank": 18,
+        "document_id": "99e9edab-d2a4-4aa3-8241-1cd37ee18d47",
+        "passage_id": 296374
+    },
+    {
+        "content": "__memset_sse2\r\n    \r\n    \r\n    # Samples: 866  of event &#39;L1-dcache-stores&#39;\r\n    # Event count (approx.): 98243116\r\n    #\r\n    # Overhead  Command      Shared Object             Symbol\r\n    # ........  .......  .................  .................\r\n    #\r\n        53.69%       xx  [kernel.kallsyms]  [k] 0xffffffff811176ee\r\n        30.62%       xx  xx                 [.] bench\r\n        15.69%       xx  libc-2.12.so       [.] __memset_sse2\r\n\r\nAnd there you have it. The page faults happened during the call to `memset` and some during dynamic linking, the noise that was previously in main now happens during `memset`, `bench` itself doesn&#39;t have any loads and around 30 million stores. Just like we expected. An amusing note here is that `memset` knows how to be efficient on this machine and only did half the stores compared to your test to fill the same amount of memory.",
+        "score": 23.0,
+        "rank": 19,
+        "document_id": "1872bc50-5aa5-4da0-9550-f0dc419bff1e",
+        "passage_id": 374326
+    },
+    {
+        "content": "That is because of the Mini-batch gradient descent effect during training process. You can find good explanation [Here][1] that I mention some notes from that link here:\r\n\r\n&gt; Batch size is a slider on the learning process.\r\n&gt; \r\n&gt; 1. Small values give a learning process that converges quickly at the\r\n&gt; cost of noise in the training process.\r\n&gt; 2. Large values give a learning\r\n&gt; process that converges slowly with accurate estimates of the error\r\n&gt; gradient.\r\n\r\nand also one important note from that link is :\r\n\r\n&gt; The presented results confirm that using small batch sizes achieves the **best training stability** and generalization performance, for a\r\n&gt; given computational cost, across a wide range of experiments. In all\r\n&gt; cases the best results have been obtained with batch sizes m = 32 or\r\n&gt; smaller\r\n\r\nWhich is the result of [**this paper**][2].\r\n\r\n**EDIT**\r\n\r\nI should mention two more points Here:\r\n\r\n \r\n\r\n1. because of the **inherent randomness in machine learning algorithms** concept, generally you should not expect machine learning algorithms (like Deep learning algorithms) to have same results on different runs.",
+        "score": 22.953125,
+        "rank": 20,
+        "document_id": "185cfeb3-b27c-450a-a623-2b57d434a6c3",
+        "passage_id": 64245
+    },
+    {
+        "content": "*Overhead* is extra time you spend, while *perturbation* refers to the impact on what you measure (i.e. you now measure something different than what happens without the measurement). Overhead is undesirable in large quantities, but perturbation is much worse.\r\n\r\nYes, you can avoid some of the perturbation by pausing the timer during your expensive measurement runtime (the overhead remains). However, in a multi-threaded context this is still very problematic.\r\n\r\n - Slowing down progress in one thread, may lead to other threads waiting for it e.g. during an implicit barrier. How do you attribute the waiting time of that thread and others that follow transitively?\r\n - Memory allocation is usually locked - so if you allocate memory during measurement runtime, you will slow down other threads that depend on memory allocation. You could try to mitigate with memory pools, but I&#39;d avoid the linked list in the first place.\r\n\r\n\r\n  [1]: https://stackoverflow.com/q/2396430/620382\r\n  [2]: http://score-p.org/",
+        "score": 22.953125,
+        "rank": 21,
+        "document_id": "8f5b3723-01a9-4d14-b6f0-b42b5eb2795b",
+        "passage_id": 311109
+    },
+    {
+        "content": "On my machine, on ext4 filesystem, running tests\r\n\r\n    ./bench - 4096 4096 4096000\r\n    ./bench testfile 4096 4096 4096000\r\n\r\nyields 1.307 seconds wall clock time for the anonymous memory map, and 1.343 seconds for the file-backed memory map, meaning the file backed mapping is about 2.75% slower.\r\n\r\nThis test starts with one page memory map, then enlarges it by one page a thousand times. For tests like `4096000 4096 8192000` the difference is even smaller. The time measured does include constructing the initial file (and using `posix_fallocate()` to allocate the blocks on disk for the file).\r\n\r\nRunning the test on tmpfs, on ext4 over swRAID0, and on ext4 over swRAID1, on the same machine, does not seem to affect the results; all differences are lost in the noise.\r\n\r\nWhile I would prefer to test this on multiple machines and kernel versions before making any sweeping statements, I do know something about how the kernel manages these memory maps.",
+        "score": 22.921875,
+        "rank": 22,
+        "document_id": "34122821-b59e-429d-add2-f7877955559b",
+        "passage_id": 393404
+    },
+    {
+        "content": "Using a longer focal point might alleviate some of this. The result is that we won&#39;t know which edge to measure, does the object include the gray region, or does it not?\r\n\r\nOnce we get to the measurement, we can replicate some of the processing you do in OpenCV with DIPlib, by tracing the outline as a polygon and doing polygon measurements. This would not necessarily produce better results than you get with OpenCV, except for the perimeter measurement (which OpenCV always overestimates). You could, in your existing code, compute the diameter based on the area instead of the perimeter for a much more precise result.\r\n\r\nAlso the `minRect` measurement is imprecise, because it is affected by individual pixels, some noise will introduce a bias. Instead, fit an ellipse to the polygon, and use the ellipse&#39;s diameters in your `elliptic` measure.\r\n\r\nLikewise, the `burrdistance` measurement is gives the distance of the centroid to the nearest pixel in the outline, which is easily influenced by noise and therefore biased. `burrpercentage` depends on that value, and therefore is also possibly biased.",
+        "score": 22.859375,
+        "rank": 23,
+        "document_id": "7a0f980a-ad4f-4d70-9f06-5cf1f2ba50a6",
+        "passage_id": 56488
+    },
+    {
+        "content": "&gt;**Runtime variance:** On modern machines it is increasingly difficult to get reproducible timings. This is due to effects that have nothing to do with the program you are measuring, such as cache behaviour, paging, context switches, power management hardware, memory alignment, etc.\r\n\r\nRun enough repetitions, run on a quiet machine, make sure your results are reproducible.\r\n\r\n&gt;**Repeating benchmarks:** In a system like ECLiPSe, running benchmarks repeatedly must be done carefully to ensure that the successive runs really do the same computation, and ideally have same or similar cache and garbage collection behaviour.\r\n\r\nIn your code, you run the benchmark successively in a conjunction. This is not recommended because variable instantiations, delayed goals or garbage can survive from previous runs and slow down or speed up subsequent runs. As suggested above, you could use the pattern\r\n\r\n    run_n_times(N,Goal) :- \\+ ( between(1,N,1,_), \\+ Goal ).",
+        "score": 22.8125,
+        "rank": 24,
+        "document_id": "926ac064-0625-47ad-8872-6ea7fcbec557",
+        "passage_id": 85634
+    },
+    {
+        "content": "**Listeners** should be disabled **during load tests**. Enabling them causes **additional overheads**, which consume valuable resources (more memory) that are needed by more important elements of your test.\r\n\r\n- Always try to use the **Up-to-date software**. Keep your Java and JMeter updated.\r\n\r\n- Don\u2019t forget that when it comes to storing requests and response headers, assertion results and response data can consume a **lot of memory**! So try not to store these values on JMeter **unless it\u2019s absolutely necessary**. \r\n\r\n\r\nAlso, you need to **monitor** whether your machine&#39;s **`Memory consumption`**, **`CPU usages`** are running **below 80 %** or not. If these usages exceed 80 % consider those tests as unreliable as report.\r\n\r\n\r\nAfter all of these, if you can&#39;t generate 1000 threads from your machine, then you must try with the [Distributed Load Testing](http://jmeter.apache.org/usermanual/remote-test.html).\r\n\r\nHere is a document for [JMeter Distributed Testing Step-by-step](http://jmeter.apache.org/usermanual/jmeter_distributed_testing_step_by_step.pdf).",
+        "score": 22.75,
+        "rank": 25,
+        "document_id": "1c359db1-e6fd-4003-b5e6-ebc2c6b6019d",
+        "passage_id": 316090
+    },
+    {
+        "content": "There are two basic approaches:\r\n\r\n* Oversample the smaller class (duplicate vectors so the proportions are more equal, you can also apply some small noise to these data for more &quot;valuable&quot; data)\r\n* Use some class-weighting scheme, which is supported by your model\r\n\r\nIn particular, heve a look at [the exact problem for Support Vector Machines][1]\r\n\r\nAnd one more thing - some evaluation measures are constructed to deal with such disproportion, in partiular `MCC` (Mathews Correlation Coefficient) can be used to evaluate model quality on the non proportional data. \r\n\r\n  [1]: https://stackoverflow.com/questions/18078084/how-should-i-teach-machine-learning-algorithm-using-data-with-big-disproportion/18088148#18088148",
+        "score": 22.734375,
+        "rank": 26,
+        "document_id": "a77b10fe-5c9b-49d7-a894-87ff65d5b876",
+        "passage_id": 101391
+    },
+    {
+        "content": "This is not recommended because variable instantiations, delayed goals or garbage can survive from previous runs and slow down or speed up subsequent runs. As suggested above, you could use the pattern\r\n\r\n    run_n_times(N,Goal) :- \\+ ( between(1,N,1,_), \\+ Goal ).\r\nwhich is essentially a way of repeating N times the sequence\r\n\r\n    once(Goal), fail\r\nThe point of this is that the combination of `once/1` and `fail` undoes all of `Goal`&#39;s computation, so that the next iteration starts as much as possible from a similar machine state.  Unfortunately, this undo-process itself adds extra runtime, which distorts the measurement...\r\n\r\n&gt;**Test overheads:** If you run your benchmark several times, you need a test framework that does that for you, and this contributes to the runtime you measure.\r\n\r\nYou either have to make sure that the overhead is negligible, or you have to measure the overhead (e.g.",
+        "score": 22.703125,
+        "rank": 27,
+        "document_id": "926ac064-0625-47ad-8872-6ea7fcbec557",
+        "passage_id": 85635
+    },
+    {
+        "content": "* modern processors use branch prediction and/or speculative execution, which is a form of instruction cacheing that affect the cycle count in substantial ways and is typically non reproducible.\r\n* the hardware may interfere too: depending on CPU temperature, the clock speed and/or CPU voltage may be adjusted by the motherboard, affecting the run times and possibly the clock counts.\r\n* recent CPUs may even include non predictive adjustments for instructions that read the clock counts or use some other precise timing measurements in order to prevent [side channel attacks][1] that rely on clock measurements to determine protected memory contents.\r\n\r\nPrecise timings of selected program fragments are still possible but not down the the clock count and require advanced skills to try and prevent interference from the above issues and others.  Repeating short tests a large number of times and keeping the best times is a good start, but will always include some range of uncertainty, so with limited accuracy.\r\n\r\nMore important aspects of the algorithm must be studied: time and space complexity, best, average and worst case scenarios, and above all, **correctness** and range limitations.\r\n\r\n\r\n  [1]: https://en.wikipedia.org/wiki/Side-channel_attack",
+        "score": 22.625,
+        "rank": 28,
+        "document_id": "c36feaa8-3d9b-479f-8d06-256a67edf4d7",
+        "passage_id": 32598
+    },
+    {
+        "content": "For this reason, CUDA offers a relatively light-weight alternative to CPU timers via the CUDA event API. The CUDA event API includes calls to create and destroy events, record events, and compute the elapsed time in milliseconds between two recorded events.\r\n\r\nThis means the actual results on measures you provided, could be a little &quot;distorted&quot; by the use of ```cudaDeviceSynchronize()```.\r\nFurthermore it&#39;s not necessary to use a synchronization mechanism if you use simple ```cudaMemcpy```, since it&#39;s a synchronous call.\r\n\r\n\r\n - Also think about to include H2D/D2H transfers, according to me it&#39;s important to take into account this overhead in a CPU/GPU comparison (but this choice is up to you);\r\n - About the measures you gave in the picture, are they a direct result\r\n   or an average of repeated different executions (possibly discarding\r\n   outlayers values)?\r\n\r\nI think you should sample new measures following these above suggestions, and make considerations on new measures obtained.\r\n\r\nBtw you said\r\n&gt; Case 1 has more parallelism than the case 3 due to the larger image size.",
+        "score": 22.59375,
+        "rank": 29,
+        "document_id": "825a1b04-d111-4a24-9204-953d7ddc4141",
+        "passage_id": 12453
+    },
+    {
+        "content": "If it doesn&#39;t crash on Simulator and the crash is &quot;silent&quot;, it seems to be memory overhead. And if you load all resources at once there will be no memory warnings in console. \r\n\r\nTry to run the app with Activity Monitor in Instruments - it measures real memory usage. And try to skip loading textures (inside `CCTexture2D` class comment `glTexImage2D(...)`.",
+        "score": 22.515625,
+        "rank": 30,
+        "document_id": "ee50e5a7-5e57-4d22-a69f-e6d44627a114",
+        "passage_id": 454710
+    },
+    {
+        "content": "As pointed out in the comments, performing computations on the GPU is not necessarily faster. Instead, the impact on performance depends on the additional overhead of data conversion and transfer.\r\n\r\nUsually, the overhead can be influenced via the batch size, but the [trainAutoencoder](https://ch.mathworks.com/help/nnet/ref/trainautoencoder.html) function does not provide that option.\r\n\r\nFor general measurement and improvement of GPU performance in MATLAB, see [this link](https://ch.mathworks.com/help/distcomp/measure-and-improve-gpu-performance.html).",
+        "score": 22.5,
+        "rank": 31,
+        "document_id": "92a59931-94f6-495e-bf45-2d9576f23645",
+        "passage_id": 17751
+    },
+    {
+        "content": "It appears to me that you want to measure the number of memory accesses per rank in order to estimate the the per-rank energy from the total DRAM energy, but this is not trivial at all for the following reasons:\r\n\r\n - Not all CAS commands are of the same energy cost. Precharge and activate commands are not counted by any event and may consume significant energy, especially with high row buffer miss rates.\r\n - Even if there are zero requests in the IMC, as long as there is at least one active core, the memory channels are powered and do consume energy.\r\n - The amount of time it takes to process a request of the same type and to the same address may vary depending surrounding requests due to timing delays required by rank-to-rank turnarounds and read-write switching.\r\n\r\nDespite of all of that, I imagine it may be possible to build a good model of upper and lower bounds on per-rank energy given a representative estimate of the number of requests to each rank (as discussed above).\r\n\r\nThe bottom line is that there is no easy way to get the luxury of per-rank counting like on server processors.",
+        "score": 22.46875,
+        "rank": 32,
+        "document_id": "edae2328-33fd-44a7-aedd-7f20465becfa",
+        "passage_id": 185654
+    },
+    {
+        "content": "---\r\n\r\nEDIT (question updated - bytecode instrumentation only): With bytecode instrumentation you are basically very close to what an instrumenting profiler does. Your main problem now is that you can not easily establish a relationship between objects and memory addresses. I can think of two approaches to circumvent this:\r\n\r\n* There is a (JRE private, but usable) class sun.misc.Unsafe that *can* get you the absolute memory address of objects, fields and arrays (it has lots of methods to do just that). If you instrument the bytecode to make calls to utility methods for counting they can use Unsafe to determine the address that will be used. However Unsafe is implementation specific and there may be problems with the garbage collector moving objects around the heap. This may or may not be what you want to measure. At least this could be implemented with reasonable amount of effort.\r\n\r\n* You could abandon the concept of *memory addresses* completely and replace it with *object identity* and *field* (array identity and index respectively). Your profiling instrumentation would then need to keep track of objects and accessed fields.",
+        "score": 22.453125,
+        "rank": 33,
+        "document_id": "b636a8bb-55b0-4fc9-9021-0f8841dfe58a",
+        "passage_id": 442311
+    },
+    {
+        "content": "that overhead seems likely to be in the noise compared to the expense of doing the sort itself.  And a benefits of using Block are that (a) subsequent operations on the array will be load-balanced and (b) the location of any element can be found using O(1) math.\r\n\r\nThat&#39;s not to say that an &quot;imbalanced block&quot; distribution wouldn&#39;t be of interest in some cases.  Note that it would likely require O(numLocales) memory per locale to store the partitioning of the global index set and O(lg(numLocales)) time to determine where any given element lives.  But neither of those are likely to be big concerns on today&#39;s systems.  So the main downside is that it&#39;s a distribution that hasn&#39;t been written (yet). \r\n\r\n  [1]: https://github.com/chapel-lang/chapel/issues",
+        "score": 22.453125,
+        "rank": 34,
+        "document_id": "c85ddea3-e911-46cf-81ee-4fca6c2d4da3",
+        "passage_id": 153483
+    },
+    {
+        "content": "JDK Flight Recorder (JFR) can measure allocation rate per allocation site (method), but it&#39;s sample based, so it trades accuracy for overhead. You need a few thousands samples. The overhead of recording the stack trace (or method) for every allocation is enormous and would bring the application to a halt. \r\n\r\nJDK 16 introduced a new event (ObjectAllocationSample) that caps the number of events per second. You should be able to see it in JMC. If not, here is a small program that will give you a histogram of allocation per method. \r\n\r\n    import java.io.IOException;\r\n    import java.nio.file.Path;\r\n    import java.util.*;\r\n    import jdk.jfr.consumer.*;\r\n\r\n    public class AllocationHistogram {\r\n\t  public static void main(String[] args) throws IOException {\r\n\t\tif (args.length != 1) {\r\n\t      System.err.println(&quot;Must specify a recording file.&quot;);\r\n          return;\r\n\t\t}\r\n\t\tMap&lt;String, Long&gt; histogram = new HashMap&lt;&gt;();\r\n\t\ttry (var es = EventStream.openFile(Path.of(args[0]))) {\r\n\t\t  es.onEvent(&quot;",
+        "score": 22.375,
+        "rank": 35,
+        "document_id": "427f560f-d7c1-4eb9-b64e-6e61273c89e6",
+        "passage_id": 161991
+    },
+    {
+        "content": "If you are computing the floating-point FFT of an input **signal**, then that signal will include noise, thus have a signal-to-noise ratio, including sensor noise, thermal noise, quantization noise, timing jitter noise, etc.\r\n\r\nThus the threshold for discarding FFT results as below your noise floor most likely isn&#39;t a matter of computational mathematics, but part of your physical or electronic data acquisition analysis.  You will have to plug that number in, and set the phase to 0.0 or NaN or whatever your default flagging value is for a non-useful (at or below the noise floor) FFT result.",
+        "score": 22.359375,
+        "rank": 36,
+        "document_id": "a6d59fa8-b8e5-424b-874e-b0e1ab7d4b89",
+        "passage_id": 61771
+    },
+    {
+        "content": "This is because SpriteKit&#39;s default physics and motion/transform handling is not corrected to/by delta time. Instead it stutters whenever the frame rate drops due to system calls or other interruptions. These things happen a LOT on iOS devices. The iOS system is constantly checking networks and monitoring other states of all sorts of background activities, and responding to information coming to it.\r\n\r\nThere are two ways to deal with it.\r\n\r\n1. Turn on Airplane mode, close all background updating apps and severely restrict just about all apps from doing background processes in their settings; this reduces OS noise and overhead.\r\n\r\n2. Roll your own adjustments and compensation mechanisms using delta time so things appear to continue moving at their correct rate to anticipated destinations, even when a frame or two are skipped.\r\n\r\n\r\n---------------------\r\n\r\nIf you&#39;re not limited to SpriteKit, or not needing its physics, you can include another physics engine and use that. This will ultimately mean you could use SceneKit, Core Animation or even Metal to do your rendering.... or SpriteKit\r\n\r\nThe two most sensible options are Box2D and Chipmunk2D.",
+        "score": 22.34375,
+        "rank": 37,
+        "document_id": "453eef5f-d2e8-4a9a-a835-4617f73e77b1",
+        "passage_id": 250686
+    },
+    {
+        "content": "Noise is 0.5 mg/Hz^-1, which tells you how much noise there will be for a given measurement bandwidth, e.g. if you filter your signal with a 100 Hz low pass filter you can expect 5 mg of noise.\r\n\r\nAs for sensitivity, there are 3 programmable ranges. The most sensitive range is 2 g. The output is 10 bits (signed, presumably) so you get 4 mg per bit, i.e. the smallest signal you can detect at a level of +/- 1 bit is 4 mg.",
+        "score": 22.328125,
+        "rank": 38,
+        "document_id": "49a794ab-ff86-47a7-872b-3e8012c3c9a8",
+        "passage_id": 92106
+    },
+    {
+        "content": "Some systems measure whole units like milliseconds or nanoseconds instead, let&#39;s cover that next.\r\n\r\n# Maximum precision\r\n\r\nThe double type gives more precision. While this might sound counter-intuitive, bear with me. Some durations that could be measured in a counter would be total time spent performing some task. Garbage collection, DB processing, etc.  Some of those events take nanoseconds. While I wouldn&#39;t recommend Micrometer as a replacement for a profiler, measuring small time units would cause confusion (see [Who Wants Seconds](https://www.robustperception.io/who-wants-seconds) where a Prometheus engineer explains this reasoning further)\r\n\r\nIf a registry were to standardize on nanoseconds for all measurements, those orders of magnitude that a `long` (9 quintillion in a long versus 9 quadrillion in a double) would use up the extra precision of the long anyways.\r\n\r\nYou&#39;ll note that Micrometer uses doubles to measure total duration in timers and the beauty of that metric is that is is actually a counter in its core (a monotonically incrementing number).",
+        "score": 22.328125,
+        "rank": 39,
+        "document_id": "5f842a3e-de9a-4dff-80fe-89651a539317",
+        "passage_id": 60918
+    },
+    {
+        "content": "and precision/resolution (snapshots/sampling [aggregating writes] vs. instrumentation [recording each individual write]).\r\n\r\nIn terms of performance, doing the monitoring at the JVM level tends to be more efficient as only the actual Java heap writes have to be taken into account. Integrating your monitoring solution into the VM and taking advantage of the GC write barrier could be a low-overhead solution, but would also be the least portable one (tied to a specific JVM implementation/version).\r\n\r\nIf you need to record each individual write, you have to go the instrumentation route and it will most likely turn out to have a significant runtime overhead. You cannot aggregate writes, so there&#39;s no optimization potential.\r\n\r\nIn terms of sampling/snapshotting, implementing a JVMTI agent could be a good compromise. It provides high portability (works with many JVMs) and high flexibility (the iteration and processing can be tailored to your needs, as opposed to relying on standard HPROF heap dumps).",
+        "score": 22.3125,
+        "rank": 40,
+        "document_id": "401224f3-6c9a-4f24-951a-13dca0b49c61",
+        "passage_id": 210474
+    },
+    {
+        "content": "You can use the [`java.lang.instrumentation`][1] package.\r\n\r\n\r\nIt has a method that can be used to get the implementation specific approximation of object size, as well as overhead associated with the object.\r\n\r\n\r\nThe answer that Sergey linked has a great example, which I&#39;ll repost here, but you should have already looked at from his comment:\r\n\r\n    import java.lang.instrument.Instrumentation;\r\n    \r\n    public class ObjectSizeFetcher {\r\n        private static Instrumentation instrumentation;\r\n    \r\n        public static void premain(String args, Instrumentation inst) {\r\n            instrumentation = inst;\r\n        }\r\n    \r\n        public static long getObjectSize(Object o) {\r\n            return instrumentation.getObjectSize(o);\r\n        }\r\n    }\r\n\r\n\r\nUse `getObjectSize`:\r\n\r\n    public class C {\r\n        private int x;\r\n        private int y;\r\n    \r\n        public static void main(String [] args) {\r\n            System.out.println(ObjectSizeFetcher.getObjectSize(new C()));\r\n        }\r\n    }\r\n\r\n[Source][2]\r\n\r\n\r\n  [1]: http://docs.oracle.com/javase/7/docs/api/java/lang/instrument/Instrumentation.html\r\n  [2]: https://stackoverflow.com/questions/52353/in-java-what-is-the-best-way-to-determine-the-size-of-an-object#52682",
+        "score": 22.296875,
+        "rank": 41,
+        "document_id": "5ec2d9e0-3d74-47ab-a2ca-cf756cb3d307",
+        "passage_id": 179073
+    },
+    {
+        "content": "I wanna say &quot;no&quot;. GPUs are typically for processing at bulk, not for background tasks.\r\n\r\nReal answer is you have to measure. And you have to be aware that there are HW differences, so even if it is beneficial on your PC, it might be annoying on someone else&#39;s PC (draining battery, causing noise, etc).",
+        "score": 22.25,
+        "rank": 42,
+        "document_id": "36982cff-ba21-4b23-90b9-94358290b041",
+        "passage_id": 192202
+    },
+    {
+        "content": "- Then, add **memory allocation rate** \r\n\r\n   `NEW=-XX:NewSize=128m -XX:MaxNewSize=512m`\r\n\r\nThis means memory will be **increased at this rate**. You should be careful, because, if your **load generation is very high at the beginning**, this might need to increase. Keep in mind, it will fragment your heap space inside JVM if the range too broad. If so **Garbage Collector** needs to work harder to clean up.\r\n\r\n\r\n- JMeter is Java **GUI application**. It also has the non-GUI edition which is very resource intensive(CPU/RAM). If we run Jmeter in **non-GUI mode** , it will consume less resource and we can run more thread.\r\n\r\n- **Disable all the Listeners** during the Test Run. They are only for debugging and use them to design your desired script.\r\n\r\n**Listeners** should be disabled **during load tests**. Enabling them causes **additional overheads**, which consume valuable resources (more memory) that are needed by more important elements of your test.\r\n\r\n- Always try to use the **Up-to-date software**. Keep your Java and JMeter updated.",
+        "score": 22.25,
+        "rank": 43,
+        "document_id": "1c359db1-e6fd-4003-b5e6-ebc2c6b6019d",
+        "passage_id": 316089
+    },
+    {
+        "content": "The x-axis represents element indices and the y-axis represents latencies in TSC cycles. I have configured my system so that a TSC cycle approximately equals a core cycle. I have plotted measurements for two runs of `forfor` called `forfor1` and `forfor2`. The average per-element latencies are as follows:\r\n\r\n - `forfor1`: 9.9 cycles.\r\n - `forfor2`: 15 cycles.\r\n - `forback`: 35.8 cycles.\r\n - `backback`: 40.3 cycles.\r\n\r\nL1 access latencies are particularly sensitive to any measurement noise. The L2 access latency is supposed to be [12 cycles][1] on average, but we might still get a latency of 12 cycles for L1 hits because of noise of few cycles. In the first run of `forfor`, the majority of latencies are 4 cycles, which clearly indicate L1 hits. In the second run of `forfor`, the majority of latencies are 8 or 12 cycles. I think these are probably L1 hits as well. In both cases, there are some L3 hits and few main memory accesses.",
+        "score": 22.234375,
+        "rank": 44,
+        "document_id": "f7b55161-1b16-4b94-8e62-087a02858e44",
+        "passage_id": 134125
+    },
+    {
+        "content": "Firstly, I would like to express my gratitude to [Holger](https://stackoverflow.com/users/2711488/holger) and [boneill](https://stackoverflow.com/users/458561/boneill) for their help in pinpointing the original problem and in identifying the root cause of the issue.\r\n\r\nThe actual problem lies not with the JIT compiler or build optimizations. Holger&#39;s comment provides a clear and concise explanation of it:\r\n&gt;  This is not how a JIT compiler works. After the profiler injected the code, it is part of the method and inlining the method implies retaining the behaviour of the entire code, including the injected code. \r\n\r\nSo, the issue clearly lies with the YourKit profiler, which incorporates a concept of &quot;trivial methods&quot;. These methods are intentionally ignored during profiling in CPU tracing mode as a means to reduce profiling overhead: \r\n\r\n&gt; CPU profiling: the range of trivial methods like getters and setters excluded from CPU tracing instrumentation for performance consideration has been extended.",
+        "score": 22.234375,
+        "rank": 45,
+        "document_id": "228fd313-1028-4c07-a666-93c33d482915",
+        "passage_id": 33643
+    },
+    {
+        "content": "I think you want [Windows Management Instrumentation.][1]\r\n\r\nEDIT: See here:\r\n\r\nhttps://stackoverflow.com/questions/1754638/measure-a-process-cpu-and-ram-usage\r\n\r\nhttps://stackoverflow.com/questions/278071/how-to-get-the-cpu-usage-c\r\n\r\n\r\n\r\n  [1]: http://msdn.microsoft.com/en-us/library/ms257340(VS.80).aspx",
+        "score": 22.203125,
+        "rank": 46,
+        "document_id": "4ff7e1bb-c020-4be5-96d9-9dcc90194551",
+        "passage_id": 223377
+    },
+    {
+        "content": "AQTime is an instrumenting profiler. Instrumenting profilers often aren&#39;t suitable for measuring code time, particularly in microbenchmarks like yours, because the cost of the instrumentation often outweighs the cost of the thing being measured. Instrumenting profilers, on the other hand, excel at profiling memory and other resource usage.\r\n\r\nSampling profilers, which periodically check the location of the CPU, are usually better for measuring code time.\r\n\r\nIn any case, here&#39;s another microbenchmark which indeed shows that a `case` statement is faster than `CharInSet`. However, note that the set check can still be used with a typecast to eliminate the truncation warning (actually this is the only reason that CharInSet exists):\r\n\r\n    {$apptype console}\r\n    \r\n    uses Windows, SysUtils;\r\n    \r\n    const\r\n      SampleString = &#39;foo bar baz blah de;blah de blah.&#39;\r\n    \r\n    procedure P1;\r\n    var\r\n      cp: PChar;\r\n    begin\r\n      cp := PChar(SampleString);\r\n      while not CharInSet(cp^, [#0, &#39;&#39; &#39;&#39;]) do\r\n        Inc(cp);\r\n    end;",
+        "score": 22.1875,
+        "rank": 47,
+        "document_id": "e57ea5ad-7ff9-4c5f-a544-6ee827e131e8",
+        "passage_id": 469111
+    },
+    {
+        "content": "Profilers can be divided into two categories: instrumenting and sampling. VisualVM includes both, but both of them have disadvantages.\r\n\r\n**Instrumenting profilers** use bytecode instrumentation to modify classes. They basically insert the special tracing code into every method entry and exit. This allows to record all executed methods and their running time. However, this approach is associated with a big overhead: first, because the tracing code itself can take much time (sometimes even more than the original code); second, because the instrumented code becomes more complicated and prevents from certain JIT optimizations that could be applied to the original code.\r\n\r\n**Sampling profilers** are different. They do not modify your application; instead they periodically take a snapshot of what the application is doing, i.e. the stack traces of currently running threads. The more often some method occurs in these stack traces - the longer (statistically) is the total execution time of this method.\r\n\r\nSampling profilers typically have much smaller overhead; furthermore, this overhead is manageable, since it directly depends on the profiling interval, i.e. how often the profiler takes thread snapshots.\r\n\r\nThe problem with sampling profilers is that JDK&#39;s public API for getting stack traces is flawed.",
+        "score": 22.125,
+        "rank": 48,
+        "document_id": "ffd99fcc-ddd4-44dd-87d7-9e5b5d9143f9",
+        "passage_id": 210000
+    },
+    {
+        "content": "Basically, the problem is that decompilers are &quot;incomplete&quot; in that they can&#39;t handle all possible binaries.  Then too, with both decompilers and binary instrumentation, there&#39;s the problem of determining what in the binary is code and what is data -- it&#39;s generally undecidable and you just want to instrument the code, not alter the data.\r\n\r\nWith binary instrumentation, you can more readily deal with this incrementally, only instrumenting what you know to be code, with &quot;instrumentation&quot; where execution might leave the known code to interrupt and instrument more (or when what was thought to be code is accessed as data, &quot;undo&quot; the instrumentation for the access).\r\n\r\nAs with everything, there are performance tradeoffs -- the most extreme instrumentation is using an emulator to execute the code while extracting information, but the cost of that is high.  Partial instrumentation by inserting breakpoints or inserting code has much lower cost, but is less complete.  Decompiling and recompiling may allow for lower runtime cost but higher up-front cost.",
+        "score": 22.09375,
+        "rank": 49,
+        "document_id": "3813342c-f0d5-4d9e-9192-5ef3e92239a3",
+        "passage_id": 210616
+    },
+    {
+        "content": "This metric measures three such events: memory ordering violations, self-modifying code, and certain loads to illegal address ranges.\r\n&gt;\r\n&gt; Possible Issues\r\n&gt;\r\n&gt; A significant portion of execution time is spent handling machine clears. Examine the MACHINE_CLEARS events to determine the specific cause.\r\n\r\nSMC: http://software.intel.com/sites/products/documentation/doclib/stdxe/2013/amplifierxe/win/win_reference/snb/events/machine_clears.html\r\n\r\n&gt;MACHINE_CLEARS Event Code: 0xC3\r\n&gt; SMC  Mask: 0x04\r\n&gt;\r\n&gt; Self-modifying code (SMC) detected.\r\n&gt;\r\n&gt; Number of self-modifying-code machine clears detected.\r\n\r\nIntel also says about smc http://software.intel.com/en-us/forums/topic/345561 (linked from [Intel Performance Bottleneck Analyzer&#39;s taxonomy][3]\r\n\r\n&gt; This event fires when self-modifying code is detected. This can be typically used by folks who do binary editing to force it to take certain path (e.g. hackers). This event counts the number of times that a program writes to a code section.",
+        "score": 22.078125,
+        "rank": 50,
+        "document_id": "f7fcf6d6-9f0b-4efc-a30a-783219c2c30b",
+        "passage_id": 140658
+    }
+]
