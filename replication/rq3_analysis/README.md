@@ -35,7 +35,7 @@ To replicate the RQ3 analysis, follow these steps:
 4. **Manual Analysis**:
    - Manually analyze the filtered corpus of Stack Overflow posts to identify the ones discussing challenges and potential mitigation strategies relevant to the context.
    - Review multiple posts for each challenge, extract relevant mitigation strategies, and summarize them.
-   - The mapping between the specific posts used for this analysis and the corresponding identified challenges can be found in the Excel sheet `replication/rq3_analysis/filtered_posts/challenges_mitigation_analysis.xlsx`.
+   - The mapping between the specific posts used for this analysis and the corresponding identified challenges can be found in `c1/`, `c2/`, ..., `c12/` in `filtered_posts`.
 
 ## Folder Structure
 
@@ -46,8 +46,7 @@ To replicate the RQ3 analysis, follow these steps:
   - `rq3_data.py`: Contains JSON data with all challenges information.
   - `filtered_posts/`: Contains files related to corpus filtering.
     - `filter_posts.py`: Script to create the search index and IR model.
-    - `challenges_mitigation_analysis.xlsx`: Excel sheet containing mapping between posts and challenges used in manual analysis.
-  - `c1/`, `c2/`, ..., `c12/`: Folders corresponding to each challenge, containing ranked results of documents returned by the IR model.
+  - `c1/`, `c2/`, ..., `c12/`: Folders corresponding to each challenge, containing ranked results of documents returned by the IR model, along with the mapped documents used during manual analysis for each challanges mitigation strategy.
 
 ## References
 
