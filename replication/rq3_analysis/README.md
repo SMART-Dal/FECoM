@@ -47,6 +47,7 @@ To replicate the RQ3 analysis, follow these steps:
   - `filtered_posts/`: Contains files related to corpus filtering.
     - `filter_posts.py`: Script to create the search index and IR model.
   - `c1/`, `c2/`, ..., `c12/`: Folders corresponding to each challenge, containing ranked results of documents returned by the IR model, along with the mapped documents used during manual analysis for each challanges mitigation strategy.
+  - - `challenges_mitigation_analysis.xlsx`: Excel file containing the manual analysis results for each challenge.
 
 ## References
 
