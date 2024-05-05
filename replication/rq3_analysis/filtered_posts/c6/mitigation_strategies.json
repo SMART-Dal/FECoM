@@ -1,0 +1,27 @@
+[
+    {
+        "mitigation": "Be aware of the limited granularity of existing APIs such as GetSystemTime() on Windows, which may have actual precision limitations despite reporting millisecond precision.",
+        "document_ids": [
+            "644f0369-4578-4282-9afc-b6b44826bc33"
+        ]
+    },
+    {
+        "mitigation": "Understand that instrumentation and tracing memory accesses introduces overhead that limits achievable granularity. Target reasonable sampling rates based on these constraints.",
+        "document_ids": [
+            "49df2682-33ed-42d6-8993-472bad0685e3"
+        ]
+    },
+    {
+        "mitigation": "Utilize newer hardware capabilities for finer-grained measurement where available, such as Intel Processor Trace on recent Xeon processors, while being aware of their limitations.",
+        "document_ids": [
+            "99e9edab-d2a4-4aa3-8241-1cd37ee18d47",
+            "49df2682-33ed-42d6-8993-472bad0685e3"
+        ]
+    },
+    {
+        "mitigation": "Set appropriate expectations that perfect nanosecond-level measurements are not feasible in software. Be pragmatic about the level of precision truly needed for the specific use case.",
+        "document_ids": [
+            "4301882c-1d65-4e17-9e5a-8ec57048a83c"
+        ]
+    }
+]

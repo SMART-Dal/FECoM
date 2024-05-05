@@ -1,0 +1,42 @@
+[
+    {
+     "mitigation":"Ensure cuda and cuDNN versions are compatible with the TensorFlow version being used, referring to tested build configurations and downgrading or upgrading as needed.",
+     "document_ids":[
+      "5ec8d0ba-e1c3-438f-9e82-ae70207fdaab",
+      "c39f891d-a9c8-42be-9c48-5932d6d3e4b5",
+      "cd776dc5-7d5d-4c31-b38f-18cc1986ce7e",
+      "bd7b7a0a-e83c-4b37-bd97-0a15a422f1b0",
+      "fb3863db-5240-4213-bfd4-e6379754d6e5"
+     ]
+    },
+    {
+     "mitigation":"When running TensorFlow in containerized environments, be aware of underlying cuda and cluster incompatibilities and select the appropriate environment based on the hardware.",
+     "document_ids":[
+      "f3d7b020-8604-4138-aa5a-334bfaa7e138"
+     ]
+    },
+    {
+     "mitigation":"If experiencing issues with TensorFlow-gpu, install a cpu-only variant first to isolate the problem and determine if it's related to gpu incompatibilities.",
+     "document_ids":[
+      "5ec8d0ba-e1c3-438f-9e82-ae70207fdaab"
+     ]
+    },
+    {
+     "mitigation":"Manage dependencies carefully when using multiple frameworks with shared dependencies, considering subdividing the application into different deployables or services to manage framework requirements separately.",
+     "document_ids":[
+      "8fdc0d12-cac2-4518-94f4-30b2874d2dcf"
+     ]
+    },
+    {
+     "mitigation":"Investigate kernel parameters or BIOS settings that may resolve hardware-related errors such as PCIe bus errors, such as setting pci=nommconf to disable message signaled interrupts (MSI).",
+     "document_ids":[
+      "f62b1780-bd07-4b31-b68b-4583551481b0"
+     ]
+    },
+    {
+     "mitigation":"Verify that the installed graphics card supports the system configuration, and try removing it to see if the problem persists if experiencing issues with a specific card.",
+     "document_ids":[
+      "397816fe-0412-4f0f-9ba2-4e40a8b7f645"
+     ]
+    }
+    ]

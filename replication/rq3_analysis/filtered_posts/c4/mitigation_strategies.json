@@ -1,0 +1,33 @@
+[
+    {
+     "mitigation":"Use hardware performance counters such as perf that provide a consistent interface for performance measurements across systems.",
+     "document_ids":[
+      "24901a32-c325-403c-9a80-3eb290403dc8"
+     ]
+    },
+    {
+     "mitigation":"Employ techniques such as repeating short tests multiple times and keeping the best times to calibrate timings while accounting for hardware factors.",
+     "document_ids":[
+      "c36feaa8-3d9b-479f-8d06-256a67edf4d7",
+      "69f0c4d9-e26a-4182-902d-190cc2df1603"
+     ]
+    },
+    {
+     "mitigation":"For gpus, reduce kernel execution time during calibration by using smaller datasets or multiple kernel launches to avoid performance counter overflows.",
+     "document_ids":[
+      "411a4227-0d11-4d06-bc5e-ea6b39a5d81d"
+     ]
+    },
+    {
+     "mitigation":"Store calibrated values for stable energy consumption, maximum allowed temperatures, and wait times specific to the hardware configuration for reuse.",
+     "document_ids":[
+      
+     ]
+    },
+    {
+     "mitigation":"Understand the expected range of variation for your hardware and incorporate that knowledge into interpreting energy measurements and making decisions.",
+     "document_ids":[
+      
+     ]
+    }
+    ]

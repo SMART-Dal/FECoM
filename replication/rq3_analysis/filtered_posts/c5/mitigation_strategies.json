@@ -1,0 +1,48 @@
+[
+    {
+     "mitigation":"Monitor gpu utilization using tools such as nvidia-smi to get accurate metrics such as Volatile gpu-Util.",
+     "document_ids":[
+      "9d0fd90c-1abb-47e7-98ec-82fbe271c594"
+     ]
+    },
+    {
+     "mitigation":"Ensure the workload is large enough to benefit from gpu acceleration, focusing on datasets where parallelization outweighs data transfer overhead",
+     "document_ids":[
+      "6f117c64-0c9a-405b-a19b-c7f393d2bdeb",
+      "ffcbb23c-2bfd-43d0-8a6d-efa6c4a7133d",
+      "64bd35a1-1889-40b2-9bf8-f7892c2ed5b3"
+     ]
+    },
+    {
+     "mitigation":"Optimize kernel design and execution parameters based on the specific gpu architecture, experimenting with different configurations for optimal performance",
+     "document_ids":[
+      "e71ecae8-c06d-4629-af60-9f9d8f838a83",
+      "b282ea20-da9b-4b5f-b728-a90c12f43f0d"
+     ]
+    },
+    {
+     "mitigation":"Use gpu-optimized libraries and functions when available, such as torch.linalg.solve in PyTorch.",
+     "document_ids":[
+      "64bd35a1-1889-40b2-9bf8-f7892c2ed5b3"
+     ]
+    },
+    {
+     "mitigation":"Be aware of potential throttling issues, ensuring the gpu runs within its power limits and the server provides adequate cooling.",
+     "document_ids":[
+      "7d809754-42f0-49a7-a84b-eabed7e03d76"
+     ]
+    },
+    {
+     "mitigation":"Profile and optimize I/O bottlenecks, such as loading tensors from the cpu, to maximize gpu utilization.",
+     "document_ids":[
+      "9d0fd90c-1abb-47e7-98ec-82fbe271c594"
+     ]
+    },
+    {
+     "mitigation":"Monitor gpu memory usage and ensure the application's resource requirements fit within the available gpu memory, being mindful of limitations when running multiple contexts or applications concurrently.",
+     "document_ids":[
+      "a883e1ce-8f01-4ed4-ab50-bccf7b7661e0",
+      "ad555f32-ef0d-42e4-97c5-12b3eabc447d"
+     ]
+    }
+    ]

@@ -1,0 +1,43 @@
+[
+    {
+     "mitigation":"Ensure that the NVIDIA drivers and Container Toolkit are properly set up on the host system, using the '--gpus all' flag when starting containers.",
+     "document_ids":[
+      "4e8d1b64-d2e5-46b9-b99e-f4ddfaf1b7c3",
+      "f35a5766-1ff1-4d48-aec5-c1f1bdd6968f" 
+     ]
+    },
+    {
+     "mitigation":"Be aware of compatibility issues between specific gpu models, cuda versions, and deep learning frameworks, selecting a suitable base image from nvidia/cuda tags.",
+     "document_ids":[
+      "f3d7b020-8604-4138-aa5a-334bfaa7e138",
+      "bdfbeaba-0a30-4a42-b687-efc119112876"
+     ]
+    },
+    {
+     "mitigation":"If encountering issues with a custom Docker image, try using an official Docker container provided by the framework developers, such as the TensorFlow gpu images on Docker Hub.",
+     "document_ids":[
+      "45d6358d-90e2-4d35-892c-e1ab1b794ddf",
+      "66333e80-052e-4e6b-9c20-7ecd12be86c8"
+     ]
+    },
+    {
+     "mitigation":"When building custom Docker images, avoid overwriting or messing up dependencies through redundant library installations.",
+     "document_ids":[
+      "d2234116-22eb-47d4-a56b-d809df1c7e45",
+      "87905890-d99c-46db-8455-b096f931f1fd"
+     ]
+    },
+    {
+     "mitigation":"Use version-numbered images instead of the 'latest' tag when creating containers to avoid accidentally upgrading to a newer, potentially incompatible image.",
+     "document_ids":[
+      "4e8d1b64-d2e5-46b9-b99e-f4ddfaf1b7c3"
+     ]
+    },
+    {
+     "mitigation":"Be aware that incompatibility issues can also arise from the base OS image used in the Dockerfile, and upgrading to a newer Docker runtime may be necessary.",
+     "document_ids":[
+      "ec96f7a5-5a05-41c0-8417-6e8664d96c0e",
+      "2d676c3c-22fe-4f81-82d1-44198dd0095d"
+     ]
+    }
+    ]

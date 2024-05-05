@@ -1,0 +1,53 @@
+[
+    {
+     "mitigation":"Configure TensorFlow to allocate gpu memory only as needed during runtime using the allow_growth option.",
+     "document_ids":[
+      "dbe94104-a6dd-45dd-a486-ea6e973dce97"
+     ]
+    },
+    {
+     "mitigation":"Manually handle the amount of allocated memory by streaming data and never exceeding the total memory supported by the device.",
+     "document_ids":[
+      "b8f0e6a0-ba5e-4cd8-9a23-34e568138de2",
+      "e09d1b08-913b-4fe8-9736-54e55b6984ef"
+     ]
+    },
+    {
+     "mitigation":"Check return values of cuda memory allocation calls such as cudaMalloc to detect cudaError-MemoryAllocation errors and deallocate memory if needed.",
+     "document_ids":[
+      "766831a0-8998-4c24-bc1b-a2d013343417",
+      "e09d1b08-913b-4fe8-9736-54e55b6984ef"
+     ]
+    },
+    {
+     "mitigation":"Use the cudaMemGetInfo function to query the free and total amount of memory available on the gpu.",
+     "document_ids":[
+      "68c3f6f8-eb7f-4fd7-a636-1b998109e25d" 
+     ]
+    },
+    {
+     "mitigation":"Reduce the batch size of data loaders to process fewer samples at a time and alleviate memory pressure.",
+     "document_ids":[
+      "ccd4bd7a-12b6-4b19-b1ad-34aa5c38ecea"
+     ]
+    },
+    {
+     "mitigation":"Select a gpu instance with more memory, such as NVIDIA Tesla P100 (16 GB) or V100 (32 GB), or use multiple gpus for large workloads.",
+     "document_ids":[
+      "ba2dc7bb-399f-4bd7-b81a-659ce84de452"
+     ]
+    },
+    {
+     "mitigation":"Utilize cuda Unified Memory to oversubscribe gpu memory up to the system ram size on Pascal and newer gpus with cuda 8+.",
+     "document_ids":[
+      "f12b3381-6102-4ccf-a109-29fc8e3b6cb7",
+      "8f11471b-22ad-414d-8d2f-4c24c9455010"
+     ]
+    },
+    {
+     "mitigation":"Change the scope and lifecycle of objects to avoid continuously creating and destroying them, pre-allocating a pool of reusable objects to amortize allocation costs and sidestep fragmentation issues.",
+     "document_ids":[
+      "271b0041-c3bf-4afe-bc2d-e4028edd2d0d"
+     ]
+    }
+    ]

@@ -275,7 +275,7 @@ if __name__ == "__main__":
     # rq1_plot_total_energy_vs_time_combined()
     # rq1_plot_project_level_energy_vs_method_level_energy()
     # rq1_plot_tail_power_states_gpu()
-    # rq1_plot_tail_power_states_cpu()
+    rq1_plot_tail_power_states_cpu()
     # rq1_plot_tail_power_states_ram()
     # rq2_plot_data_size_vs_energy()
     # rq2_plot_data_size_vs_energy_scatter()
@@ -286,5 +286,5 @@ if __name__ == "__main__":
     # rq2_plot_args_size_vs_gpu_mean()
     # rq2_plot_data_size_vs_energy()
     # rq2_analyze_api_groups_memory("/home/saurabh/code-energy-consumption/replication/rq2_analysis/rq2_analysis.csv")
-    rq2_analyze_api_groups_compute("/home/saurabh/code-energy-consumption/replication/rq2_analysis/rq2_analysis.csv")
+    # rq2_analyze_api_groups_compute("/home/saurabh/code-energy-consumption/replication/rq2_analysis/rq2_analysis.csv")
     pass

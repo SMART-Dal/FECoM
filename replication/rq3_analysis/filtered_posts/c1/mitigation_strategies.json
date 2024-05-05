@@ -1,0 +1,39 @@
+[
+    {
+        "mitigation": "Minimize instrumentation points by focusing on key methods, loops, or blocks that significantly impact energy usage.",
+        "document_ids": [
+            "228fd313-1028-4c07-a666-93c33d482915",
+            "fb8c0737-7485-4833-8ce3-4129fa3fa4f7"
+        ]
+    },
+    {
+        "mitigation": "Use lightweight instrumentation techniques such as binary instrumentation, sampling profilers, or hardware performance counters to reduce overhead.",
+        "document_ids": [
+            "ffd99fcc-ddd4-44dd-87d7-9e5b5d9143f9",
+            "3813342c-f0d5-4d9e-9192-5ef3e92239a3"
+        ]
+    },
+    {
+        "mitigation": "Optimize instrumentation logic by avoiding expensive operations, memory allocations, and locking within instrumented regions.",
+        "document_ids": [
+            "8f5b3723-01a9-4d14-b6f0-b42b5eb2795b",
+            "fb8c0737-7485-4833-8ce3-4129fa3fa4f7",
+            "19007483-1ee8-4c3f-aac5-7a34b7e341bf"
+        ]
+    },
+    {
+        "mitigation": "Quantify and subtract instrumentation overhead from energy measurements to get accurate consumption of the target code",
+        "document_ids": [
+            "99e9edab-d2a4-4aa3-8241-1cd37ee18d47",
+            "49df2682-33ed-42d6-8993-472bad0685e3"
+        ]
+    },
+    {
+        "mitigation": "Avoid instrumentation skew by being aware of potential changes in code behavior due to heavy instrumentation.",
+        "document_ids": [
+            "99e9edab-d2a4-4aa3-8241-1cd37ee18d47",
+            "49df2682-33ed-42d6-8993-472bad0685e3",
+            "228fd313-1028-4c07-a666-93c33d482915"
+        ]
+    }
+]

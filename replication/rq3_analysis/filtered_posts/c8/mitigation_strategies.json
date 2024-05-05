@@ -1,0 +1,54 @@
+[
+    {
+     "mitigation":"Follow proper format and structure for patches as specified in relevant standards (e.g., RFC 5789 for HTTP PATCH method)",
+     "document_ids":[
+      "66e96df0-f554-443a-9fb0-869f6cb49191"
+     ]
+    },
+    {
+     "mitigation":"Use the correct apiVersion for the resource kind being patched when applying patches with tools such as Kustomize", 
+     "document_ids":[
+      "83296c2c-1e75-4a63-b282-af4680445b4d",
+      "4dbd558a-c8c1-4c14-8bbb-9bb4ea1cc6c7",
+      "58a96a6b-0ad0-4956-9d25-31b0fb351e8d"
+     ]
+    },
+    {
+     "mitigation":"Consider using a robust templating engine such as Helm for more complex templating of patches, combined with Kustomize for resource management, specific config via patches, and overlays.",
+     "document_ids":[
+      "4dbd558a-c8c1-4c14-8bbb-9bb4ea1cc6c7" 
+     ]
+    },
+    {
+     "mitigation":"Manually validate generated patches by reviewing the diff between the original and patched code.",
+     "document_ids":[
+      "59cd9f19-2526-44cb-b385-1710e675221e"
+     ]
+    },
+    {
+     "mitigation":"Write automated tests that apply the patches and verify the patched code still compiles, runs, and produces the expected output.",
+     "document_ids":[
+      "6705c4a5-cc2e-485d-8ba0-6bb683998524"
+     ]
+    },
+    {
+     "mitigation":"Submit patch changes upstream to the open-source project for review, citing relevant discussions and standards to justify the approach.", 
+     "document_ids":[
+      "1a683cd6-c118-4bc1-a2a5-c8ea2272e589",
+      "d1d4e5ce-2561-445a-9804-b182bf1755a4"
+     ]
+    },
+    {
+     "mitigation":"Document the specific versions of compilers, interpreters, and dependencies the patch is compatible with.",
+     "document_ids":[
+      "667a0628-9963-462f-ba89-e5b7a3401ade",
+      "4c67facc-f9dd-41f8-abae-2e002714b21a"  
+     ]
+    },
+    {
+     "mitigation":"Fall back to a safe emulation or unoptimized approach using conditional compilation when in doubt about patch correctness for performance optimizations.",
+     "document_ids":[
+      "d1d4e5ce-2561-445a-9804-b182bf1755a4"
+     ]
+    }
+    ]

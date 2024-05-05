@@ -1,0 +1,38 @@
+[
+    {
+     "mitigation":"Examine the patched code to optimize and ensure proper coverage, checking for flags between instructions, using byte-sized patches, and aligning patches on cache lines to avoid fetching multiple lines.",
+     "document_ids":[
+      "abcabb53-8605-4ddc-ae3c-94e5e126014c"
+     ]
+    },
+    {
+     "mitigation":"Consider using PC sampling instead of instrumenting code, periodically interrupting the thread and sampling the program counter (PC) value to provide coverage data with low overhead.",
+     "document_ids":[
+      "abcabb53-8605-4ddc-ae3c-94e5e126014c"
+     ]
+    },
+    {
+     "mitigation":"If patching source code, insert covered[i]=true; probes at the start of each basic block and let the compiler optimize them, potentially reducing probe overhead to zero for blocks inside loops.",
+     "document_ids":[
+      "abcabb53-8605-4ddc-ae3c-94e5e126014c"
+     ]
+    },
+    {
+     "mitigation":"After instrumenting binaries to find call sites, fix the original code, add tests, and use techniques such as wrapper classes or helper functions to make incorrect usage harder.",
+     "document_ids":[
+      "87541c53-596c-4113-b80f-ef3894d50939"
+     ]
+    },
+    {
+     "mitigation":"Validate instrumentation correctness by manually reviewing the patched code, ensuring all desired locations are patched and no unintended code is affected.",
+     "document_ids":[
+      "4c67facc-f9dd-41f8-abae-2e002714b21a"
+     ]
+    },
+    {
+     "mitigation":"Be aware that determining how to patch arbitrary code to skip lines is not portable and may break with compiler or environment changes, as offsets for patching can differ between compilers and optimization levels.",
+     "document_ids":[
+      "4c67facc-f9dd-41f8-abae-2e002714b21a"
+     ]
+    }
+    ]

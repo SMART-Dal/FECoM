@@ -1,0 +1,54 @@
+[
+    {
+     "mitigation":"Use standardized hardware of the same make, model, and configuration of cpu, gpu, ram, storage, power supply, etc., for all energy measurements.",
+     "document_ids":[
+      "6157b40d-7cd6-4709-878c-aa11260e002d",
+      "f7e0d560-a097-4228-9d30-f5ced27f5e40",
+      "6e19cd1c-fc0c-4a0e-a25f-d0c0ec3c305c"
+     ]
+    },
+    {
+     "mitigation":"Ensure key hardware components are performing consistently by running benchmarks and replacing underperforming outliers.",
+     "document_ids":[
+      "6157b40d-7cd6-4709-878c-aa11260e002d",
+      "12996b39-38ab-4487-8efe-8b440b1d9830",
+      "308d2941-5c75-4723-86db-1128d6358d3e" 
+     ]
+    },
+    {
+     "mitigation":"Thoroughly document the exact hardware configuration, including component specs, firmware versions, and custom settings.",
+     "document_ids":[
+      "f7e0d560-a097-4228-9d30-f5ced27f5e40",
+      "6157b40d-7cd6-4709-878c-aa11260e002d",
+      "e62be16e-987c-4aa9-81ef-37761f64d3cb"
+     ]
+    },
+    {
+     "mitigation":"Ensure a temperature-controlled environment and document ambient temperature.",
+     "document_ids":[
+      "6157b40d-7cd6-4709-878c-aa11260e002d"
+     ]
+    },
+    {
+     "mitigation":"Disable power management features such as dynamic voltage/frequency scaling to maintain consistent behavior.",
+     "document_ids":[
+      "308d2941-5c75-4723-86db-1128d6358d3e",
+      "6157b40d-7cd6-4709-878c-aa11260e002d"
+     ]
+    },
+    {
+     "mitigation":"Take multiple measurements to characterize the expected range of variation for a given configuration.",
+     "document_ids":[
+      "6157b40d-7cd6-4709-878c-aa11260e002d",
+      "77fa15b8-eb8d-4046-bc1c-a47c9bb1ba43",
+      "80e3187f-bd6c-4298-aec7-e8117c31674c"
+     ]
+    },
+    {
+     "mitigation":"Avoid concurrent workloads on the measured hardware to minimize interference.",
+     "document_ids":[
+      "6157b40d-7cd6-4709-878c-aa11260e002d",
+      "12996b39-38ab-4487-8efe-8b440b1d9830"
+     ]
+    }
+    ]

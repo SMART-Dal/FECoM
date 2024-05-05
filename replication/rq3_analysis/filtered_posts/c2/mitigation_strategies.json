@@ -1,0 +1,36 @@
+[
+    {
+        "mitigation": "Run code on an idle system with minimal background processes to reduce noise from unrelated activity.",
+        "document_ids": [
+            "855e774b-7bc5-4adb-9f37-b89264c99656",
+            "9fdbe10f-96e6-420a-98aa-a303351a38a5",
+            "82b3fcf9-7e64-4904-aaa7-153ec84f1667"
+        ]
+    },
+    {
+        "mitigation": "Take a baseline energy measurement of the idle system and subtract it from the code measurements to isolate the code's energy consumption.",
+        "document_ids": [
+            "6f47dae6-71b1-4936-b66e-892d43ed3358"
+        ]
+    },
+    {
+        "mitigation": "Use replicate systems to measure baseline energy simultaneously and cancel out correlated noise.",
+        "document_ids": [
+            "6f47dae6-71b1-4936-b66e-892d43ed3358"
+        ]
+    },
+    {
+        "mitigation": "Characterize background noise patterns using statistical techniques like auto-correlation and apply filtering to remove noise",
+        "document_ids": [
+            "20c25970-4a76-4b0c-ba80-c49bc99b53a3",
+            "2cf04245-50e3-4332-a72b-de630db1c1ee"
+        ]
+    },
+    {
+        "mitigation": "Take multiple measurements and use robust statistical summaries like the median to mitigate occasional noise spikes.",
+        "document_ids": [
+            "6f47dae6-71b1-4936-b66e-892d43ed3358",
+            "926ac064-0625-47ad-8872-6ea7fcbec557"
+        ]
+    }
+]
