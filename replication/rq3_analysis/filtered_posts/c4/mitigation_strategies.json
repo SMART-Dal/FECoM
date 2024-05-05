@@ -21,13 +21,13 @@
     {
      "mitigation":"Store calibrated values for stable energy consumption, maximum allowed temperatures, and wait times specific to the hardware configuration for reuse.",
      "document_ids":[
-      
+        "d706dc7b-10c0-4975-8b65-1b27312bb7d5"
      ]
     },
     {
      "mitigation":"Understand the expected range of variation for your hardware and incorporate that knowledge into interpreting energy measurements and making decisions.",
      "document_ids":[
-      
+        "4301882c-1d65-4e17-9e5a-8ec57048a83c"
      ]
     }
     ]
